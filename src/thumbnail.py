@@ -211,13 +211,26 @@ def generate_thumbnail(
         )
         cursor_y += int(height * 0.10)
 
-    title_font_size = int(height * 0.145)
-    title_font = _load_font(font_path, title_font_size, weight="Black")
-    # break_long_words=False: uzun bir kelime (ör. "PEYGAMBERİMİZDEN") tek
-    # satıra sığmasa bile ORTADAN BÖLÜNMEZ; o satır sadece hedef genişlikten
-    # biraz taşar (sonraki `_fit_title_font` benzeri bir mekanizma yoksa bile
-    # görsel olarak kelimenin yarısının kesilmesinden çok daha az rahatsız edicidir).
+    # Başlık uzunluğu değişken olabilir (ör. "tema" videolarında merak uyandırıcı,
+    # uzun sorular). Önce standart boyutla sarmalanır; satır sayısı sınırı
+    # aşarsa font kademeli olarak küçültülür ki metin ASLA tuvalden taşmasın.
+    # Yine de sığmazsa (çok uzun bir başlıksa) son satır "…" ile kısaltılır.
+    base_font_size = int(height * 0.145)
+    min_font_size = int(height * 0.07)
+    max_lines = 4
+    font_size = base_font_size
+    title_font = _load_font(font_path, font_size, weight="Black")
     wrapped = textwrap.wrap(title_text, width=14, break_long_words=False, break_on_hyphens=False)
+    while len(wrapped) > max_lines and font_size > min_font_size:
+        font_size = max(min_font_size, int(font_size * 0.88))
+        title_font = _load_font(font_path, font_size, weight="Black")
+        wrap_chars = max(8, int(14 * base_font_size / font_size))
+        wrapped = textwrap.wrap(title_text, width=wrap_chars, break_long_words=False, break_on_hyphens=False)
+    if len(wrapped) > max_lines:
+        wrapped = wrapped[:max_lines]
+        last = wrapped[-1].rstrip()
+        wrapped[-1] = (last[:-1].rstrip() + "…") if len(last) > 3 else last
+    title_font_size = font_size
     line_gap = int(title_font_size * 0.18)
 
     title_y = cursor_y

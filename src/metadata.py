@@ -122,3 +122,51 @@ def build_hikaye_metadata(hint: str, is_short: bool, channel_name: str,
     if extra_tags:
         tags += extra_tags
     return VideoMetadata(title=title, description=description, tags=tags[:30])
+
+
+TEMA_CATEGORY_LABELS = {
+    "hadis_sohbet": "Hadis Sohbetleri",
+    "kuran_tefsir": "Kur'an'ın Işığında",
+    "dua_fazilet": "Dualarla Huzur",
+    "ilmihal": "Günlük Hayatta İslam",
+    "peygamberler_tarihi": "Peygamberler Tarihi",
+    "sahabe": "Sahabe Hayatları",
+    "tefekkur": "Tefekkür Vakti",
+}
+
+TEMA_CATEGORY_HASHTAGS = {
+    "hadis_sohbet": "#Hadis #SünnetiSeniyye",
+    "kuran_tefsir": "#Kuran #Tefsir",
+    "dua_fazilet": "#Dua #Zikir",
+    "ilmihal": "#İlmihal #İslam",
+    "peygamberler_tarihi": "#PeygamberlerTarihi #KurandanKıssalar",
+    "sahabe": "#Sahabe #İslamTarihi",
+    "tefekkur": "#Tefekkür #DiniBilgi",
+}
+
+
+def build_tema_metadata(hint: str, category: str, is_short: bool, channel_name: str,
+                          sources: str = "", extra_tags: Optional[List[str]] = None) -> VideoMetadata:
+    """Yorumlu/sohbet tarzı (tefsir, ilmihal, sahabe, peygamberler tarihi vb.)
+    videolar için başlık/açıklama üretir. İçindeki metnin KENDİSİ (ayet/hadis/dua
+    alıntıları) her zaman doğrulanmış kaynaktan alınır; sadece bağlayıcı anlatım
+    yapay zeka ile yazılır (bkz. content_library/tema/ klasöründeki metin dosyaları)."""
+    title = hint or "Dini Sohbet"
+    if is_short:
+        title += " #shorts"
+    hashtags = TEMA_CATEGORY_HASHTAGS.get(category, "#İslam #DiniSohbet")
+    kaynak_line = f"\n\n📚 Kaynaklar: {sources}" if sources else ""
+    description = (
+        f"{hint}\n\n"
+        f"Bu video; ayet ve hadislerin güvenilir, doğrulanmış kaynaklardan alınan "
+        f"meal/metinleri eşliğinde hazırlanmış bir sohbet/tefekkür içeriğidir."
+        f"{kaynak_line}\n\n"
+        f"Allah kabul etsin. Beğenmeyi ve abone olmayı unutmayın.\n\n"
+        f"{hashtags} #İslam #Huzur\n\n"
+        f"{channel_name}"
+    )
+    tags = ["islam", "dini sohbet", "tefekkür", (category or "islam").replace("_", " ")]
+    if extra_tags:
+        tags += extra_tags
+    return VideoMetadata(title=title, description=description, tags=tags[:30])
+

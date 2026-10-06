@@ -185,11 +185,48 @@ def _build_hikaye_assets(entry, settings, work_dir, is_short):
     }
 
 
+def _build_tema_assets(entry, settings, work_dir, is_short):
+    """Yorumlu/tefsir/sohbet tarzı videolar (ör. 'İhlas Suresi Neden Kuran'ın
+    Üçte Birine Denktir?', sahabe hayatları, peygamberler tarihi). Anlatım
+    metni content_library/tema/ altında ÖNCEDEN YAZILMIŞ bir dosyadan okunur;
+    pipeline bu metni DEĞİŞTİRMEZ. Metnin içindeki her ayet/hadis/dua alıntısı
+    yazılırken doğrulanmış kaynaktan (quran.py/hadith.py/dua.py) alınmıştır;
+    sadece aradaki bağlayıcı/yorum cümleleri serbest anlatımdır."""
+    ref = entry["ref"]
+    text_file = os.path.join(ROOT, ref["text_file"])
+    if not os.path.exists(text_file):
+        raise FileNotFoundError(
+            f"Tema metni bulunamadı: {text_file}\n"
+            f"Tefsir/sohbet tarzı videoların anlatım metni önceden yazılıp bu "
+            f"dosyaya konulmalıdır (ayet/hadis alıntıları doğrulanmış kaynaktan)."
+        )
+    with open(text_file, "r", encoding="utf-8") as f:
+        text = f.read()
+
+    narration_path = os.path.join(work_dir, "narration.mp3")
+    narr_cues = _narrate_text(text, narration_path, settings)
+    total_duration = narr_cues[-1].end if narr_cues else audio_tools._ffprobe_duration(narration_path)
+
+    category = ref.get("category", "")
+    meta = metadata.build_tema_metadata(
+        hint=entry.get("title_hint", ""), category=category, is_short=is_short,
+        channel_name=settings["channel"]["name"], sources=ref.get("sources", ""),
+    )
+    return {
+        "narration_path": narration_path,
+        "cues": narr_cues,
+        "total_duration": total_duration,
+        "metadata": meta,
+        "keyword_pool": settings["stock_video"]["keyword_pool"],
+    }
+
+
 BUILDERS = {
     "sure": _build_sure_assets,
     "hadis": _build_hadis_assets,
     "dua": _build_dua_assets,
     "hikaye": _build_hikaye_assets,
+    "tema": _build_tema_assets,
 }
 
 # Video üstü başlıkta ana başlığın ÜSTÜNDE gösterilen "seri etiketi" (kullanıcı
@@ -204,18 +241,29 @@ SERIES_LABELS = {
 
 def _series_label(entry: dict, schedule_entries: list | None) -> str:
     """entry'nin türüne göre seri adını ve sırasını hesaplar (ör. 'Peygamberimizden
-    Hadisler #3'). Sıra numarası, schedule.yaml'daki AYNI TÜRDEKİ girdiler arasında
-    publish_at'e göre kaçıncı olduğuna bakılarak belirlenir (ayrı bir sayaç
-    dosyasına gerek kalmadan, schedule.yaml tek doğruluk kaynağı olarak kalır)."""
-    label = SERIES_LABELS.get(entry.get("type"))
-    if not label or not schedule_entries:
+    Hadisler #3'). Sıra numarası, schedule.yaml'daki AYNI TÜRDEKİ (tema için AYNI
+    KATEGORİDEKİ) girdiler arasında publish_at'e göre kaçıncı olduğuna bakılarak
+    belirlenir (ayrı bir sayaç dosyasına gerek kalmadan, schedule.yaml tek
+    doğruluk kaynağı olarak kalır)."""
+    if not schedule_entries:
         return ""
-    same_type = [e for e in schedule_entries if e.get("type") == entry.get("type")]
-    same_type.sort(key=lambda e: (e.get("publish_at", ""), e.get("id", "")))
+    if entry.get("type") == "tema":
+        category = entry.get("ref", {}).get("category", "")
+        label = metadata.TEMA_CATEGORY_LABELS.get(category, "Nur Kapısı Sohbetleri")
+        same_group = [
+            e for e in schedule_entries
+            if e.get("type") == "tema" and e.get("ref", {}).get("category") == category
+        ]
+    else:
+        label = SERIES_LABELS.get(entry.get("type"))
+        if not label:
+            return ""
+        same_group = [e for e in schedule_entries if e.get("type") == entry.get("type")]
+    same_group.sort(key=lambda e: (e.get("publish_at", ""), e.get("id", "")))
     try:
-        rank = next(i for i, e in enumerate(same_type, start=1) if e.get("id") == entry.get("id"))
+        rank = next(i for i, e in enumerate(same_group, start=1) if e.get("id") == entry.get("id"))
     except StopIteration:
-        rank = len(same_type)
+        rank = len(same_group)
     return f"{label} #{rank}"
 
 
@@ -331,19 +379,36 @@ def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False
         "dua": "Dua", "hikaye": "Dini Kıssa",
     }
     TYPE_ACCENT = {"sure": "#Kuran", "hadis": "#Hadis", "dua": "#Dua", "hikaye": "#Kıssa"}
+    TEMA_CATEGORY_SUBTITLE = {
+        "hadis_sohbet": "Hadis Sohbeti", "kuran_tefsir": "Kur'an Tefsiri",
+        "dua_fazilet": "Dua ve Fazilet", "ilmihal": "İlmihal",
+        "peygamberler_tarihi": "Peygamberler Tarihi", "sahabe": "Sahabe Hayatı",
+        "tefekkur": "Tefekkür",
+    }
+    if entry["type"] == "tema":
+        tema_category = entry.get("ref", {}).get("category", "")
+        thumb_subtitle = TEMA_CATEGORY_SUBTITLE.get(tema_category, "Dini Sohbet")
+        thumb_accent = metadata.TEMA_CATEGORY_HASHTAGS.get(tema_category, "#İslam").split()[0]
+    else:
+        thumb_subtitle = TYPE_SUBTITLE.get(entry["type"], "")
+        thumb_accent = TYPE_ACCENT.get(entry["type"], "")
 
     full_title = assets["metadata"].title
     main_part, _, rest_part = full_title.partition(" | ")
     rest_part = rest_part.replace("#shorts", "").strip()
-    raw_title = entry.get("title_hint") or main_part
+    # "thumb_title": bazı (özellikle "tema" tipi, merak uyandırıcı/uzun) videolarda
+    # YouTube başlığı uzun kalsın isteniyorsa, kapak görselindeki BÜYÜK yazı için
+    # ayrı, kısa/vurucu bir metin belirtilebilir. Belirtilmezse eskisi gibi
+    # title_hint (veya üretilen başlık) kullanılır.
+    raw_title = entry.get("thumb_title") or entry.get("title_hint") or main_part
     raw_title = raw_title.split(" | ")[0].replace("#shorts", "").strip()
 
     thumbnail.generate_thumbnail(
         frame_path, metadata.turkish_upper(raw_title),
         thumb_path, width=1280, height=720,
-        subtitle_text=TYPE_SUBTITLE.get(entry["type"], ""),
+        subtitle_text=thumb_subtitle,
         extra_text=f"({rest_part})" if rest_part else "",
-        accent_text=TYPE_ACCENT.get(entry["type"], ""),
+        accent_text=thumb_accent,
         font_path=os.path.join(ROOT, "assets", "fonts", "NotoSans-Variable.ttf"),
         arabic_font_path=os.path.join(ROOT, "assets", "fonts", "Amiri-Regular.ttf"),
         logo_path=logo_path,

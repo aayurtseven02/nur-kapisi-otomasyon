@@ -41,3 +41,63 @@ videos:
     text_file: content_library/hikayeler/ashab-i-kehf.txt
   title_hint: Ashab-ı Kehf Kıssası
   background_mode: none
+
+# ==========================================================
+# 30 GÜNLÜK İÇERİK TAKVİMİ (kullanıcı tarafından sağlanan plan)
+# Her gün: 2 yatay (normal) + 2 short video = günde 4 video.
+# type: tema -> content_library/tema/ altında ÖNCEDEN YAZILMIŞ, içindeki her
+# ayet/hadis/dua alıntısı doğrulanmış kaynaktan alınmış metinleri seslendirir.
+# ==========================================================
+
+# --- GÜN 1 ---
+- id: 2026-10-09-gun01-normal1-sabir
+  status: pending
+  publish_at: '2026-10-09T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun01_normal1_sabir.txt
+    category: kuran_tefsir
+    sources: "Bakara 2:153,155-157; İnşirah 94:5-6 (Diyanet Meali, alquran.cloud)"
+  title_hint: "Ayetler Işığında Sabır: Zorluklarla Başa Çıkma Rehberi"
+  thumb_title: "Sabrın Sırrı"
+  background_mode: none
+
+- id: 2026-10-09-gun01-short1-niyet
+  status: pending
+  publish_at: '2026-10-09T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun01_short1_niyet.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Buhari, Hadis No: 1"
+  title_hint: "\"Ameller Niyetlere Göredir\" Hadisinin Günlük Hayattaki Anlamı"
+  thumb_title: "Niyetin Gücü"
+  background_mode: none
+
+- id: 2026-10-09-gun01-normal2-ihlas
+  status: pending
+  publish_at: '2026-10-09T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun01_normal2_ihlas.txt
+    category: kuran_tefsir
+    sources: "İhlas Suresi (112:1-4, Diyanet Meali); Sahih-i Buhari, Hadis No: 5013"
+  title_hint: "İhlas Suresi Neden Kuran'ın Üçte Birine Denktir? (Derinlemesine Tefsir)"
+  thumb_title: "İhlas Suresi'nin Sırrı"
+  background_mode: none
+
+- id: 2026-10-09-gun01-short2-korumaduasi
+  status: pending
+  publish_at: '2026-10-09T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun01_short2_korumaduasi.txt
+    category: dua_fazilet
+    sources: "Ayetel Kürsi, Bakara 2:255 (Diyanet Meali); Hısnu'l Müslim"
+  title_hint: "Sabah ve Akşam Okunacak En Etkili Korunma Duası"
+  thumb_title: "En Güçlü Koruma Duası"
+  background_mode: none

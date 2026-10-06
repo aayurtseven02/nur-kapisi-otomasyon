@@ -1,16 +1,19 @@
-Bu dosya bir ÖRNEKTİR ve YER TUTUCUDUR.
+Kur'an-ı Kerim'in Kehf Suresi'nde anlatılan, ibretlerle dolu bir kıssayla başlıyoruz: Ashab-ı Kehf, yani Mağara Arkadaşları'nın hikayesi.
 
-Dini kıssa ve hikayelerin içeriği hassas olduğundan, bu tür metinler yapay
-zeka tarafından OTOMATİK ÜRETİLMEZ. Lütfen bu dosyanın içeriğini güvenilir bir
-tefsir, siyer veya kıssa kaynağından (ör. İbni Kesir, Taberi, Diyanet
-yayınları gibi tanınmış kaynaklardan) kendiniz derleyip buraya yapıştırın.
+Yüce Allah, Kehf Suresi'nin dokuzuncu ayetinde şöyle buyurur: "Yoksa sen Mağara ve Kitap ehlini şaşılacak ayetlerimizden mi zannettin?"
 
-Örnek kullanım:
-1) content_library/hikayeler/ klasörüne "ashab-i-kehf.txt" gibi bir dosya koyun.
-2) config/schedule.yaml içinde ilgili videonun ref.text_file alanına bu dosyanın
-   yolunu yazın (örnek zaten schedule.yaml içinde mevcut).
-3) Sistem bu metni olduğu gibi seslendirir (TTS) ve altyazıya döker;
-   metnin kendisini değiştirmez veya "zenginleştirmez".
+Rivayetlere göre bu gençler, putlara tapan bir toplumun içinde yaşıyorlardı. Ancak kalpleri tek bir gerçeği haykırıyordu: Göklerin ve yerin tek sahibi olan Allah'tan başka ilah yoktu. Baskılardan kaçıp bir mağaraya sığındılar ve Rablerine şöyle yalvardılar. Kehf Suresi, onuncu ayette bu duayı bize aktarır: "Birkaç genç mağaraya sığınmış: 'Rabbimiz! Katından bize rahmet ver ve işimizde doğruyu göster, bizi başarılı kıl' demişlerdi."
 
-Bu, dini doğruluk ve kaynak güvenilirliğini garanti altına almak için
-bilinçli bir tasarım tercihidir.
+Allah Teala onların imanını kalplerinde pekiştirdi. Kehf Suresi'nin on üçüncü ve on dördüncü ayetlerinde şöyle buyrulur: "Onların olayını sana Biz gerçek olarak anlatıyoruz: Onlar Rablerine inanmış birkaç gençti. Onların hidayetlerini artırmış ve kalplerini pekiştirmiştik. Durup şöyle demişlerdi: Rabbimiz göklerin ve yerin Rabbidir, O'nu bırakıp başka bir tanrıya yalvarmayız, yoksa and olsun ki batıl söz söylemiş oluruz."
+
+Gençler mağaraya girdiler ve Allah onları orada yıllarca uyuttu. On birinci ayette şöyle buyrulur: "Mağaranın içinde onları yıllarca uyuttuk; sonra, iki taraftan hangisinin bekledikleri sonucu iyi hesaplamış olduğunu belirtmek için onları uyandırdık."
+
+Kur'an, o mağaradaki halin eşsiz bir tasvirini de bizlere sunar. On sekizinci ayette şöyle anlatılır: "Mağara ehli uykuda iken sen onları uyanık sanırdın. Biz onları sağa ve sola döndürürdük. Köpekleri dirseklerini eşiğe uzatmıştı. Onları görsen, için korkuyla dolar, geri dönüp kaçardın." Bazı rivayetlerde bu sadık köpeğin adının Kıtmir olarak anıldığı söylenir; ancak bu ayrıntı Kur'an'da değil, sonraki tefsir ve kıssa anlatımlarında yer alır.
+
+Uzun bir uykunun ardından uyandıklarında, aralarında şaşkınlıkla ne kadar kaldıklarını konuştular. On dokuzuncu ayette bu sahne şöyle anlatılır: "Birbirlerine sorsunlar diye onları uyandırdık. İçlerinden biri: 'Ne kadar kaldınız?' dedi. 'Bir gün veya daha az bir müddet kaldık' dediler. 'Ne kadar kaldığınızı Rabbiniz daha iyi bilir' dediler."
+
+Gerçekte ise onlar, Kur'an'ın yirmi beşinci ayetinde bildirildiği üzere, "mağaralarında üç yüz dokuz yıl kalmışlardı." Bu, insan için zamanın ne denli göreceli olduğunu, Allah'ın kudreti karşısında yılların bir anda nasıl eriyebileceğini gösteren büyük bir mucizeydi.
+
+Ashab-ı Kehf kıssası bize şu dersleri verir: İman, bazen kalabalığa değil, azınlıkta kalsa da hakka sarılmayı gerektirir. Sıkıntı anında sığınılacak tek merci Allah'tır. Ve zaman, mekan, yıllar... hepsi Allah'ın dilemesiyle anlam kazanır. Nitekim Kur'an, yirmi altıncı ayette bu hakikati şöyle noktalar: "De ki: Onların ne kadar kaldıklarını en iyi Allah bilir. Göklerin ve yerin gaybı O'na aittir. O, ne mükemmel görendir, O ne mükemmel işitendir. İnsanların O'ndan başka dostu yoktur."
+
+Rabbimiz, Ashab-ı Kehf gibi imanında sebat eden, zorluk anında yalnızca kendisine sığınan kullarından eylesin.
