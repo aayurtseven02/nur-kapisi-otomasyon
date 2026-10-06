@@ -419,3 +419,321 @@ videos:
   title_hint: "Evden Çıkarken Okunan Koruma Duası"
   thumb_title: "Evden Çıkış Duası"
   background_mode: none
+
+# --- GÜN 8 ---
+- id: 2026-10-16-gun08-normal1-ibrahimputlar
+  status: pending
+  publish_at: '2026-10-16T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun08_normal1_ibrahimputlar.txt
+    category: peygamberler_tarihi
+    sources: "Enbiya 21:57-67 (Diyanet Meali)"
+  title_hint: "Hz. İbrahim'in Putları Kırması: Tevhid Mücadelesi"
+  thumb_title: "Hz. İbrahim'in Putları Kırması"
+  background_mode: none
+
+- id: 2026-10-16-gun08-short1-yolculukduasi
+  status: pending
+  publish_at: '2026-10-16T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun08_short1_yolculukduasi.txt
+    category: dua_fazilet
+    sources: "Sahih-i Müslim 2/998; Hısnu'l Müslim dua no: 207"
+  title_hint: "Yola Çıkmadan Önce Okunan Dua"
+  thumb_title: "Yolculuk Duası"
+  background_mode: none
+
+- id: 2026-10-16-gun08-normal2-yusufkiskanclik
+  status: pending
+  publish_at: '2026-10-16T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun08_normal2_yusufkiskanclik.txt
+    category: peygamberler_tarihi
+    sources: "Yusuf 12:4-6, 12:15-18 (Diyanet Meali)"
+  title_hint: "Hz. Yusuf Kıssası: Kıskançlık, Kuyu ve Güzel Sabır"
+  thumb_title: "Hz. Yusuf'un Kıssası"
+  background_mode: none
+
+- id: 2026-10-16-gun08-short2-ibrahimates
+  status: pending
+  publish_at: '2026-10-16T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun08_short2_ibrahimates.txt
+    category: peygamberler_tarihi
+    sources: "Enbiya 21:68-70 (Diyanet Meali)"
+  title_hint: "Hz. İbrahim'in Ateşe Atılması ve Mucizevi Kurtuluşu"
+  thumb_title: "İbrahim'in Ateşten Kurtuluşu"
+  background_mode: none
+
+# --- GÜN 9 ---
+- id: 2026-10-17-gun09-normal1-omeradalet
+  status: pending
+  publish_at: '2026-10-17T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun09_normal1_omeradalet.txt
+    category: sahabe
+    sources: "Sahih-i Buhari, Hadis No: 3689"
+  title_hint: "Hz. Ömer'in Adaleti: \"Muhaddes\" Olarak Müjdelenen Sahabi"
+  thumb_title: "Hz. Ömer'in Adaleti"
+  background_mode: none
+
+- id: 2026-10-17-gun09-short1-selamiyaymak
+  status: pending
+  publish_at: '2026-10-17T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun09_short1_selamiyaymak.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Müslim 1/74; Hısnu'l Müslim dua no: 224"
+  title_hint: "Selamı Yaymak: Cennete Girmenin Bir Anahtarı"
+  thumb_title: "Selamı Yaymak"
+  background_mode: none
+
+- id: 2026-10-17-gun09-normal2-osmancomertlik
+  status: pending
+  publish_at: '2026-10-17T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun09_normal2_osmancomertlik.txt
+    category: sahabe
+    sources: "Tirmizi, Hadis No: 3714 (hasen); tarihi rivayetler (Rume Kuyusu, Tebük Seferi)"
+  title_hint: "Hz. Osman'ın Cömertliği: Rume Kuyusu ve Tebük Seferi"
+  thumb_title: "Hz. Osman'ın Cömertliği"
+  background_mode: none
+
+- id: 2026-10-17-gun09-short2-alicesaret
+  status: pending
+  publish_at: '2026-10-17T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun09_short2_alicesaret.txt
+    category: sahabe
+    sources: "Sahih-i Buhari, Hadis No: 4210; tarihi rivayetler (Hendek Savaşı)"
+  title_hint: "Hz. Ali'nin Cesareti: Hayber ve Hendek"
+  thumb_title: "Hz. Ali'nin Cesareti"
+  background_mode: none
+
+# --- GÜN 10 ---
+- id: 2026-10-18-gun10-normal1-olumgercegi
+  status: pending
+  publish_at: '2026-10-18T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun10_normal1_olumgercegi.txt
+    category: tefekkur
+    sources: "Al-i İmran 3:185 (Diyanet Meali)"
+  title_hint: "Kaçamayacağımız Tek Gerçek: Ölüm Üzerine Tefekkür"
+  thumb_title: "Ölüm Gerçeği"
+  background_mode: none
+
+- id: 2026-10-18-gun10-short1-sukur
+  status: pending
+  publish_at: '2026-10-18T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun10_short1_sukur.txt
+    category: tefekkur
+    sources: "İbrahim 14:7 (Diyanet Meali)"
+  title_hint: "Nimetlerin Artmasının Sırrı: Şükür"
+  thumb_title: "Şükrün Sırrı"
+  background_mode: none
+
+- id: 2026-10-18-gun10-normal2-imanislamihsan
+  status: pending
+  publish_at: '2026-10-18T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun10_normal2_imanislamihsan.txt
+    category: ilmihal
+    sources: "Sahih-i Müslim, Hadis No: 97 (Cibril Hadisi)"
+  title_hint: "İman, İslam ve İhsan Nedir? Cibril Hadisi"
+  thumb_title: "İman-İslam-İhsan"
+  background_mode: none
+
+- id: 2026-10-18-gun10-short2-dunyagecici
+  status: pending
+  publish_at: '2026-10-18T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun10_short2_dunyagecici.txt
+    category: tefekkur
+    sources: "Hadid 57:20 (Diyanet Meali)"
+  title_hint: "Dünya Hayatının Gerçek Yüzü: Kuran'dan Bir Benzetme"
+  thumb_title: "Dünya Hayatının Gerçeği"
+  background_mode: none
+
+# --- GÜN 11 ---
+- id: 2026-10-19-gun11-normal1-guzelahlak
+  status: pending
+  publish_at: '2026-10-19T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun11_normal1_guzelahlak.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Buhari, Hadis No: 3559, 6035"
+  title_hint: "\"Aranızda En Sevdiklerim\": Güzel Ahlakın Fazileti"
+  thumb_title: "Güzel Ahlakın Fazileti"
+  background_mode: none
+
+- id: 2026-10-19-gun11-short1-emanet
+  status: pending
+  publish_at: '2026-10-19T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun11_short1_emanet.txt
+    category: hadis_sohbet
+    sources: "Nisa 4:58 (Diyanet Meali); Sahih-i Buhari, Hadis No: 6496"
+  title_hint: "Emanete Riayet Etmenin Önemi"
+  thumb_title: "Emanete Riayet"
+  background_mode: none
+
+- id: 2026-10-19-gun11-normal2-hucuratahlak
+  status: pending
+  publish_at: '2026-10-19T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun11_normal2_hucuratahlak.txt
+    category: kuran_tefsir
+    sources: "Hucurat 49:11-13 (Diyanet Meali)"
+  title_hint: "Alay Etmeyin, Gıybet Etmeyin: Hucurat Suresi'nin Mesajı"
+  thumb_title: "Hucurat'ın Mesajı"
+  background_mode: none
+
+- id: 2026-10-19-gun11-short2-yalansoylememe
+  status: pending
+  publish_at: '2026-10-19T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun11_short2_yalansoylememe.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Buhari, Hadis No: 2749; Sahih-i Müslim, Hadis No: 213"
+  title_hint: "Münafığın Üç Alameti: Yalan, İhanet, Sözünde Durmama"
+  thumb_title: "Münafığın Alametleri"
+  background_mode: none
+
+# --- GÜN 12 ---
+- id: 2026-10-20-gun12-normal1-lokmanoğutleri
+  status: pending
+  publish_at: '2026-10-20T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun12_normal1_lokmanoğutleri.txt
+    category: kuran_tefsir
+    sources: "Lokman 31:12-19 (Diyanet Meali)"
+  title_hint: "Lokman'ın Oğluna Öğütleri: Bir Babadan Miras Kalan Hikmet"
+  thumb_title: "Lokman'ın Öğütleri"
+  background_mode: none
+
+- id: 2026-10-20-gun12-short1-zikirkorunma
+  status: pending
+  publish_at: '2026-10-20T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun12_short1_zikirkorunma.txt
+    category: dua_fazilet
+    sources: "Ebu Davud 4/323, Tirmizi 5/465 (hasen); Hısnu'l Müslim dua no: 86"
+  title_hint: "Sabah Akşam Okunursa Hiçbir Şeyin Zarar Veremediği Zikir"
+  thumb_title: "Zararsız Kılan Zikir"
+  background_mode: none
+
+- id: 2026-10-20-gun12-normal2-nurayeti
+  status: pending
+  publish_at: '2026-10-20T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun12_normal2_nurayeti.txt
+    category: kuran_tefsir
+    sources: "Nur 24:35 (Diyanet Meali)"
+  title_hint: "Nur Ayeti: Allah'ın Nurunu Anlatan En Derin Tasvir"
+  thumb_title: "Nur Ayeti'nin Sırrı"
+  background_mode: none
+
+- id: 2026-10-20-gun12-short2-anababahakki
+  status: pending
+  publish_at: '2026-10-20T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun12_short2_anababahakki.txt
+    category: kuran_tefsir
+    sources: "İsra 17:23-24 (Diyanet Meali)"
+  title_hint: "Ana Babaya \"Öf\" Bile Dememek: İsra Suresi'nin Öğüdü"
+  thumb_title: "Ana Baba Hakkı"
+  background_mode: none
+
+# --- GÜN 13 ---
+- id: 2026-10-21-gun13-normal1-hastalikduasi
+  status: pending
+  publish_at: '2026-10-21T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun13_normal1_hastalikduasi.txt
+    category: dua_fazilet
+    sources: "Sahih-i Buhari (Fethu'l-Bari 10/118); Tirmizi, İbn Mace (hasta ziyareti fazileti); Hısnu'l Müslim dua no: 147, 149"
+  title_hint: "Hasta Ziyaretinin Fazileti ve Okunacak Dua"
+  thumb_title: "Hasta Ziyaretinin Fazileti"
+  background_mode: none
+
+- id: 2026-10-21-gun13-short1-yemekduasi
+  status: pending
+  publish_at: '2026-10-21T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun13_short1_yemekduasi.txt
+    category: dua_fazilet
+    sources: "Ebu Davud 3/347, Tirmizi 4/288; Hısnu'l Müslim dua no: 178, 180"
+  title_hint: "Yemekten Önce ve Sonra Okunan Dualar"
+  thumb_title: "Yemek Duaları"
+  background_mode: none
+
+- id: 2026-10-21-gun13-normal2-sabahaksamzikri
+  status: pending
+  publish_at: '2026-10-21T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun13_normal2_sabahaksamzikri.txt
+    category: dua_fazilet
+    sources: "Sahih-i Müslim 4/2088; Hısnu'l Müslim dua no: 77"
+  title_hint: "Sabah Akşam Zikirlerinin Gün Boyu Koruyucu Etkisi"
+  thumb_title: "Sabah Akşam Zikirleri"
+  background_mode: none
+
+- id: 2026-10-21-gun13-short2-borcduasi
+  status: pending
+  publish_at: '2026-10-21T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun13_short2_borcduasi.txt
+    category: dua_fazilet
+    sources: "Tirmizi 5/560; Hısnu'l Müslim dua no: 136"
+  title_hint: "Borç ve Maddi Sıkıntı İçin Okunan Dua"
+  thumb_title: "Borç Sıkıntısına Dua"
+  background_mode: none
