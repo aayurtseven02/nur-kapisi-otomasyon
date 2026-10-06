@@ -1532,3 +1532,109 @@ videos:
   title_hint: "Abdest Konusunda Vesveseye Düşmeyin: Peygamberimizin Tavsiyesi"
   thumb_title: "Abdesti Bozan Şeyler"
   background_mode: none
+
+# --- GÜN 29 ---
+- id: 2026-11-06-gun29-normal1-muhammedindogumu
+  status: pending
+  publish_at: '2026-11-06T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun29_normal1_muhammedindogumu.txt
+    category: peygamberler_tarihi
+    sources: "Duha 93:6-8 (Diyanet Meali)"
+  title_hint: "Peygamberimizin Doğumu ve Zorlu Çocukluğu"
+  thumb_title: "Peygamberimizin Çocukluğu"
+  background_mode: none
+
+- id: 2026-11-06-gun29-short1-miracgecesi
+  status: pending
+  publish_at: '2026-11-06T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun29_short1_miracgecesi.txt
+    category: peygamberler_tarihi
+    sources: "İsra 17:1 (Diyanet Meali)"
+  title_hint: "Miraç Gecesi: Namazın Göklerde Farz Kılındığı Gece"
+  thumb_title: "Miraç Gecesi'nin Mesajı"
+  background_mode: none
+
+- id: 2026-11-06-gun29-normal2-vedahutbesi
+  status: pending
+  publish_at: '2026-11-06T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun29_normal2_vedahutbesi.txt
+    category: peygamberler_tarihi
+    sources: "Tirmizi, Hadis No: 2158"
+  title_hint: "Veda Hutbesi: Kanınız, Malınız ve Namusunuz Haramdır"
+  thumb_title: "Veda Hutbesi'nin Mesajı"
+  background_mode: none
+
+- id: 2026-11-06-gun29-short2-isaninogumu
+  status: pending
+  publish_at: '2026-11-06T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun29_short2_isaninogumu.txt
+    category: peygamberler_tarihi
+    sources: "Meryem 19:22-26 (Diyanet Meali)"
+  title_hint: "Hz. İsa'nın Doğumu: Hurma Ağacının Dibindeki Teselli"
+  thumb_title: "Hz. İsa'nın Doğumu"
+  background_mode: none
+
+# --- GÜN 30 ---
+- id: 2026-11-07-gun30-normal1-ebueyyupevsahipligi
+  status: pending
+  publish_at: '2026-11-07T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun30_normal1_ebueyyupevsahipligi.txt
+    category: sahabe
+    sources: "Mainstream siyer narrative (Peygamberimizin ilk ev sahibi)"
+  title_hint: "Ebu Eyyüb el-Ensari: Peygamberimizin İlk Ev Sahibi"
+  thumb_title: "Ebu Eyyüb el-Ensari'nin Ev Sahipliği"
+  background_mode: none
+
+- id: 2026-11-07-gun30-short1-meclisduasi
+  status: pending
+  publish_at: '2026-11-07T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun30_short1_meclisduasi.txt
+    category: dua_zikir
+    sources: "Hısnu'l Müslim, Dua No: 196 (Keffaretü'l Meclis)"
+  title_hint: "Her Meclisin Sonunda Okunan Kefaret Duası"
+  thumb_title: "Meclis Duası"
+  background_mode: none
+
+- id: 2026-11-07-gun30-normal2-otugunozeti
+  status: pending
+  publish_at: '2026-11-07T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun30_normal2_otugunozeti.txt
+    category: tefekkur
+    sources: "Nahl 16:97 (Diyanet Meali)"
+  title_hint: "30 Günün Özeti: Bu Yolculuktan Ne Öğrendik?"
+  thumb_title: "30 Günün Kapanışı"
+  background_mode: none
+
+- id: 2026-11-07-gun30-short2-hayirlihayatduasi
+  status: pending
+  publish_at: '2026-11-07T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun30_short2_hayirlihayatduasi.txt
+    category: dua_zikir
+    sources: "Sahih-i Buhari, Fethu'l-Bari (6/35)"
+  title_hint: "Hayırlı Bir Hayat ve Güzel Bir Son İçin Dua"
+  thumb_title: "Hayırlı Hayat Duası"
+  background_mode: none
