@@ -1320,3 +1320,109 @@ videos:
   title_hint: "Allah'ın Nimetlerini Saymaya Kalksanız Bitiremezsiniz"
   thumb_title: "Şükrün Önemi"
   background_mode: none
+
+# --- GÜN 25 ---
+- id: 2026-11-02-gun25-normal1-misafirperverlik
+  status: pending
+  publish_at: '2026-11-02T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun25_normal1_misafirperverlik.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Müslim, Hadis No: 176"
+  title_hint: "İmanın Göstergesi: Misafire İkram, Komşuya İhsan"
+  thumb_title: "Misafirperverliğin Fazileti"
+  background_mode: none
+
+- id: 2026-11-02-gun25-short1-duakabulusartlari
+  status: pending
+  publish_at: '2026-11-02T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun25_short1_duakabulusartlari.txt
+    category: hadis_sohbet
+    sources: "İbn Mace, Hadis No: 3862"
+  title_hint: "Kabul Olunduğundan Şüphe Olmayan Üç Dua"
+  thumb_title: "Kabul Olan Üç Dua"
+  background_mode: none
+
+- id: 2026-11-02-gun25-normal2-buyuklereyaygi
+  status: pending
+  publish_at: '2026-11-02T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun25_normal2_buyuklereyaygi.txt
+    category: hadis_sohbet
+    sources: "Tirmizi, Hadis No: 1919"
+  title_hint: "\"Büyüklerimize Saygı Göstermeyen Bizden Değildir\""
+  thumb_title: "Büyüklere Saygının Önemi"
+  background_mode: none
+
+- id: 2026-11-02-gun25-short2-kuslugusurdurmemek
+  status: pending
+  publish_at: '2026-11-02T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun25_short2_kuslugusurdurmemek.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Buhari, Hadis No: 6065"
+  title_hint: "Küslüğün Üç Günden Fazla Süremeyeceği Hadisi"
+  thumb_title: "Küslüğü Sürdürmemek"
+  background_mode: none
+
+# --- GÜN 26 ---
+- id: 2026-11-03-gun26-normal1-yusufkardesplanlari
+  status: pending
+  publish_at: '2026-11-03T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun26_normal1_yusufkardesplanlari.txt
+    category: kuran_tefsir
+    sources: "Yusuf 12:8-14 (Diyanet Meali)"
+  title_hint: "Yusuf Kıssası: Kardeşlerin Kurduğu Plan"
+  thumb_title: "Yusuf Kıssası: Kardeşlerin Planı"
+  background_mode: none
+
+- id: 2026-11-03-gun26-short1-filsuresi
+  status: pending
+  publish_at: '2026-11-03T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun26_short1_filsuresi.txt
+    category: kuran_tefsir
+    sources: "Fil Suresi 105:1-5 (Diyanet Meali)"
+  title_hint: "Fil Suresi: Kabe'yi Yıkmaya Gelen Orduya Ne Oldu?"
+  thumb_title: "Fil Suresi'nin Kıssası"
+  background_mode: none
+
+- id: 2026-11-03-gun26-normal2-fetihsuresi
+  status: pending
+  publish_at: '2026-11-03T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun26_normal2_fetihsuresi.txt
+    category: kuran_tefsir
+    sources: "Fetih 48:1-4 (Diyanet Meali)"
+  title_hint: "Fetih Suresi: Görünmeyen Bir Zaferin Hikayesi"
+  thumb_title: "Fetih Suresi'nin Mesajı"
+  background_mode: none
+
+- id: 2026-11-03-gun26-short2-kureyssuresi
+  status: pending
+  publish_at: '2026-11-03T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun26_short2_kureyssuresi.txt
+    category: kuran_tefsir
+    sources: "Kureyş Suresi 106:1-4 (Diyanet Meali)"
+  title_hint: "Kureyş Suresi: Ticaret Güvenliğinin Arkasındaki Nimet"
+  thumb_title: "Kureyş Suresi'nin Mesajı"
+  background_mode: none
