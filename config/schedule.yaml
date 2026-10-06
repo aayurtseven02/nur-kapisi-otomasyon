@@ -101,3 +101,109 @@ videos:
   title_hint: "Sabah ve Akşam Okunacak En Etkili Korunma Duası"
   thumb_title: "En Güçlü Koruma Duası"
   background_mode: none
+
+# --- GÜN 2 ---
+- id: 2026-10-10-gun02-normal1-tovbe
+  status: pending
+  publish_at: '2026-10-10T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun02_normal1_tovbe.txt
+    category: tefekkur
+    sources: "Taha Suresi 20:121-122 (Diyanet Meali)"
+  title_hint: "Hz. Adem'den Günümüze Tövbe Kapısı ve Bağışlanma"
+  thumb_title: "Tövbe Kapısı Hiç Kapanmaz"
+  background_mode: none
+
+- id: 2026-10-10-gun02-short1-istigfar
+  status: pending
+  publish_at: '2026-10-10T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun02_short1_istigfar.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Müslim, Hadis No: 6858"
+  title_hint: "Günde 100 Defa Estağfirullah Demenin Mucizesi"
+  thumb_title: "100 Defa İstiğfarın Sırrı"
+  background_mode: none
+
+- id: 2026-10-10-gun02-normal2-felaknas
+  status: pending
+  publish_at: '2026-10-10T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun02_normal2_felaknas.txt
+    category: kuran_tefsir
+    sources: "Felak Suresi (113); Nas Suresi (114) - Diyanet Meali"
+  title_hint: "Felak ve Nas Surelerinin Sırrı: Manevi Zırh Nasıl Kuşanılır?"
+  thumb_title: "Manevi Zırhınız: Felak ve Nas"
+  background_mode: none
+
+- id: 2026-10-10-gun02-short2-encokdua
+  status: pending
+  publish_at: '2026-10-10T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun02_short2_encokdua.txt
+    category: dua_fazilet
+    sources: "Bakara 2:201 (Diyanet Meali); Sahih-i Buhari, Hadis No: 6389"
+  title_hint: "Peygamberimizin (s.a.v.) En Çok Okuduğu Kısa Dua"
+  thumb_title: "Peygamberimizin En Çok Okuduğu Dua"
+  background_mode: none
+
+# --- GÜN 3 ---
+- id: 2026-10-11-gun03-normal1-esma
+  status: pending
+  publish_at: '2026-10-11T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun03_normal1_esma.txt
+    category: tefekkur
+    sources: "Zariyat 51:58; Talak 65:2-3 (Diyanet Meali)"
+  title_hint: "Rızık ve Bereket Kapılarını Açan 5 Esmaül Hüsna Sırrı"
+  thumb_title: "Rızık Kapılarını Açan 5 Esma"
+  background_mode: none
+
+- id: 2026-10-11-gun03-short1-rizikdarlik
+  status: pending
+  publish_at: '2026-10-11T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun03_short1_rizikdarlik.txt
+    category: dua_fazilet
+    sources: "İbn Mace, Hadis No: 925 (hasen); Hısnu'l Müslim"
+  title_hint: "Rızık Darlığı Çekenler İçin Tavsiye Edilen Dua"
+  thumb_title: "Rızık Darlığına Çare Dua"
+  background_mode: none
+
+- id: 2026-10-11-gun03-normal2-ayetelkursi
+  status: pending
+  publish_at: '2026-10-11T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun03_normal2_ayetelkursi.txt
+    category: kuran_tefsir
+    sources: "Bakara 2:255 (Diyanet Meali); Sahih-i Müslim, Hadis No: 1885"
+  title_hint: "Ayetel Kürsi Neden Bu Kadar Güçlüdür? Kelime Kelime Analiz"
+  thumb_title: "Ayetel Kürsi'nin Sırrı"
+  background_mode: none
+
+- id: 2026-10-11-gun03-short2-komsu
+  status: pending
+  publish_at: '2026-10-11T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun03_short2_komsu.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Buhari, Hadis No: 6015, 6016"
+  title_hint: "\"Komşusu Açken Tok Yatan Bizden Değildir\" Sözünün Evrensel Mesajı"
+  thumb_title: "Komşuluk Hakkı"
+  background_mode: none
