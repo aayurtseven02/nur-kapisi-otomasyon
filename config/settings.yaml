@@ -1,0 +1,115 @@
+# ==========================================================
+# GENEL AYARLAR
+# ==========================================================
+
+channel:
+  name: "Nur Kapısı"
+  language: "tr"
+
+# Kanal logosu: HER videoya (sağ alt köşe, saydam filigran) ve thumbnail'e
+# (sağ alt köşe rozet) otomatik olarak, hep AYNI konumda eklenir.
+branding:
+  logo_path: "assets/branding/logo.png"
+  position: "bottom_right"
+  video_size_ratio: 0.16    # logonun, videonun kısa kenarına oranı
+  video_opacity: 0.92
+  video_margin_ratio: 0.035
+  thumb_size_ratio: 0.17    # logonun, thumbnail yüksekliğine oranı
+  thumb_margin_ratio: 0.03
+
+
+# Kur'an kıraati için varsayılan hafız (islamic.network edition kodu)
+# Alternatifler: ar.husary, ar.abdurrahmaansudais, ar.hudhaify, ar.shaatree
+quran:
+  default_reciter: "ar.alafasy"
+  translation_edition: "tr.diyanet"   # Diyanet meali
+
+# Hadis kaynağı (fawazahmed0/hadith-api edition adları)
+# Alternatifler: tur-muslim, tur-abudawud, tur-ibnmajah, tur-malik, tur-nawawi
+hadith:
+  default_collection: "tur-bukhari"
+
+# Türkçe seslendirme (edge-tts sesleri)
+# Türkçe seslendirme ayarları
+# engine: "edge"         -> edge-tts (ücretsiz, hesapsız, Microsoft Edge TTS - varsayılan/yedek)
+# engine: "google_cloud" -> Google Cloud TTS Chirp3-HD (daha doğal, 1M karakter/ay ücretsiz,
+#                           ancak Google Cloud hesabına kart eklenmesi ve GOOGLE_TTS_API_KEY
+#                           ortam değişkeni/secret'ı gerekir - bkz README "Google Cloud TTS Kurulumu")
+tts:
+  engine: "google_cloud"
+  voice_male: "tr-TR-AhmetNeural"
+  voice_female: "tr-TR-EmelNeural"
+  default_voice: "voice_male"
+  rate: "-15%"      # sadece engine: edge için geçerli - yavaş/vakur tempo (kullanıcı onayladı)
+  pitch: "-2Hz"      # sadece engine: edge için geçerli
+  google_cloud:
+    voice_name: "tr-TR-Chirp3-HD-Algieba"   # erkek, doğal ton - kullanıcı onayladı (karşılaştırmalı dinleme sonrası)
+    language_code: "tr-TR"
+    speaking_rate: 0.92   # 1.0 = normal hız; kullanıcı talebiyle bir tık yavaşlatıldı
+
+# Arka plan sesi politikası (dini hassasiyet gereği kullanıcı talebiyle ayarlandı)
+# "none"        -> hiçbir arka plan sesi yok, sadece anlatım/kıraat
+# "nature"      -> sadece doğa/ambiyans sesi (enstrümantal müzik yok)
+# "vocal_only"  -> sadece vokal ilahi (enstrümansız)
+audio:
+  background_mode: "none"
+  background_volume_db: -22     # anlatımın çok altında, kısık ses
+  ambience_type: "water"        # "water" (su/dalga sesi) | "wind" (rüzgar sesi) - sentetik, lisans sorunu yok
+
+# Stok görüntü kaynakları (ücretsiz API anahtarı gerekir - bkz README)
+stock_video:
+  providers: ["pexels", "pixabay"]
+  # İnsan yüzü/figürü olmayan, sakin, saygılı görüntüler için arama kelime havuzu
+  keyword_pool:
+    - "nature sunrise"
+    - "mosque architecture"
+    - "islamic calligraphy"
+    - "quran book"
+    - "starry night sky"
+    - "desert dunes"
+    - "ocean waves"
+    - "misty forest"
+    - "clouds timelapse"
+    - "candle flame"
+    - "rain window"
+    - "mountains fog"
+    - "autumn leaves"
+
+video:
+  long_form:
+    width: 1920
+    height: 1080
+    fps: 30
+  short_form:
+    width: 1080
+    height: 1920
+    fps: 30
+  max_short_seconds: 59
+
+subtitles:
+  font_family: "Noto Sans"       # assets/fonts/ içindeki font ailesi adı (dosya adı değil)
+  fonts_dir: "assets/fonts"      # ffmpeg'e bu klasörden fontu yüklemesini söylüyoruz (sistem kurulumu gerekmez)
+  font_size_long: 54
+  font_size_short: 64
+  font_color: "&H00FFFFFF"
+  outline_color: "&H00000000"
+  position: "bottom"   # bottom | center
+
+# Video üstünde BÜYÜK HARF başlık bindirmesi (en üstte, baştan sona görünür)
+title_overlay:
+  enabled: true
+  font_size_long: 58
+  font_size_short: 56
+  max_chars_per_line_long: 38
+  max_chars_per_line_short: 20
+
+youtube:
+  category_id: "22"     # People & Blogs (dini içerik için yaygın), istersen 27 (Education) de kullanılabilir
+  privacy_flow: "scheduled"   # videolar 'private' yüklenip publishAt ile zamanlanır
+  made_for_kids: false
+  default_tags:
+    - "islam"
+    - "kuran"
+    - "hadis"
+    - "dua"
+    - "dini video"

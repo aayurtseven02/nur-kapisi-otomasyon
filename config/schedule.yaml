@@ -1,0 +1,65 @@
+# ==========================================================
+# YAYIN TAKVİMİ
+# Bu dosya sizin "programınız"dır. Her girdi bir videoyu temsil eder.
+# scheduler.py bu listeyi tarar, zamanı gelen (publish_at <= şimdi + lead_time
+# ve status: pending olan) görevleri bulup pipeline.py'yi tetikler ve
+# status alanını "done" (veya hata olursa "failed") olarak günceller.
+#
+# format: "long"  -> normal yatay video (16:9)
+# format: "short" -> YouTube Shorts (9:16, <=59sn)
+#
+# type alanına göre content modülü otomatik veri çeker:
+#   sure   -> Kur'an sureleri/ayetleri (gerçek hafız sesi + Diyanet meali)
+#   hadis  -> Hadis-i şerif (gerçek, kaynak gösterilen hadis metni)
+#   dua    -> Hısnu'l Müslim duaları
+#   hikaye -> Dini kıssa/hikaye (GÜVENLİK: metin burada veya text_file ile
+#             SİZİN tarafınızdan sağlanır; uydurma içerik üretilmez)
+#
+# YENİ VİDEO EKLEMEK İÇİN: aşağıya aynı formatta yeni bir "- id: ..." bloğu
+# ekleyin. status her zaman "pending" olarak başlamalı.
+# ==========================================================
+
+videos:
+  - id: "2026-10-07-yasin-1-20"
+    status: "pending"
+    publish_at: "2026-10-07T07:00:00+03:00"
+    format: "long"
+    type: "sure"
+    ref:
+      surah_number: 36        # Yasin Suresi
+      ayah_start: 1
+      ayah_end: 20
+      reciter: "ar.alafasy"
+    title_hint: "Yasin Suresi (1-20. Ayetler) Türkçe Meali ile"
+    background_mode: "none"
+
+  - id: "2026-10-07-short-niyet-hadisi"
+    status: "pending"
+    publish_at: "2026-10-07T12:00:00+03:00"
+    format: "short"
+    type: "hadis"
+    ref:
+      collection: "tur-bukhari"
+      hadithnumber: 1
+    title_hint: "Ameller Niyetlere Göredir"
+    background_mode: "none"
+
+  - id: "2026-10-07-aksam-duasi"
+    status: "pending"
+    publish_at: "2026-10-07T18:30:00+03:00"
+    format: "short"
+    type: "dua"
+    ref:
+      dua_id: 1
+    title_hint: "Uyanınca Okunacak Dua"
+    background_mode: "none"
+
+  - id: "2026-10-08-ashab-kissasi"
+    status: "pending"
+    publish_at: "2026-10-08T09:00:00+03:00"
+    format: "long"
+    type: "hikaye"
+    ref:
+      text_file: "content_library/hikayeler/ashab-i-kehf.txt"
+    title_hint: "Ashab-ı Kehf Kıssası"
+    background_mode: "none"

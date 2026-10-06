@@ -1,0 +1,16 @@
+Bu dosya bir ÖRNEKTİR ve YER TUTUCUDUR.
+
+Dini kıssa ve hikayelerin içeriği hassas olduğundan, bu tür metinler yapay
+zeka tarafından OTOMATİK ÜRETİLMEZ. Lütfen bu dosyanın içeriğini güvenilir bir
+tefsir, siyer veya kıssa kaynağından (ör. İbni Kesir, Taberi, Diyanet
+yayınları gibi tanınmış kaynaklardan) kendiniz derleyip buraya yapıştırın.
+
+Örnek kullanım:
+1) content_library/hikayeler/ klasörüne "ashab-i-kehf.txt" gibi bir dosya koyun.
+2) config/schedule.yaml içinde ilgili videonun ref.text_file alanına bu dosyanın
+   yolunu yazın (örnek zaten schedule.yaml içinde mevcut).
+3) Sistem bu metni olduğu gibi seslendirir (TTS) ve altyazıya döker;
+   metnin kendisini değiştirmez veya "zenginleştirmez".
+
+Bu, dini doğruluk ve kaynak güvenilirliğini garanti altına almak için
+bilinçli bir tasarım tercihidir.

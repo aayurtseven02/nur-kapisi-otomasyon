@@ -1,0 +1,20 @@
+# Kimlik/credential dosyaları - ASLA commit etmeyin
+client_secret*.json
+token.pickle
+*.env
+.env
+
+# Üretilen/cache dosyaları (repo'yu şişirmesin diye hariç tutulur)
+assets/cache/
+output/
+*.pyc
+__pycache__/
+.DS_Store
+
+# Kullanıcının kendi royalty-free doğa sesi dosyaları isterse commit edilebilir,
+# aşağıdaki satırı siz kaldırabilirsiniz:
+# assets/library/
+
+# Ses motoru karşılaştırma/test örnekleri (deliverable değil, sadece değerlendirme içindi)
+voice_samples/
+

@@ -1,0 +1,90 @@
+name: Otonom İçerik Yayınlama
+
+# Bu workflow TAMAMEN ÜCRETSİZDİR:
+#  - Public repo'da GitHub Actions dakika limiti yoktur.
+#  - Private repo'da ayda 2000 dakika ücretsiz kota vardır (bu pipeline için fazlasıyla yeterli).
+#
+# Ne yapar:
+#  1) Her 30 dakikada bir (ve istenirse elle) tetiklenir.
+#  2) config/schedule.yaml içinde yayın zamanı yaklaşmış (varsayılan: 6 saat içinde)
+#     ve durumu "pending" olan EN FAZLA 1 videoyu üretir.
+#  3) Videoyu "private" + zamanlanmış (publishAt) olarak YouTube'a yükler.
+#     Gerçek "herkese açık yayın" anını YouTube'un kendi altyapısı yönetir.
+#  4) config/schedule.yaml'daki durumu ("done"/"failed") repoya geri commit'ler.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      no_upload:
+        description: "true ise YouTube'a yüklemeden sadece üretir (test modu)"
+        required: false
+        default: "false"
+      lead_time_hours:
+        description: "Kaç saat öncesinden üretime başlansın"
+        required: false
+        default: "6"
+
+concurrency:
+  group: islami-otomasyon-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Repo'yu çek
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: ffmpeg kur
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-noto-core
+
+      - name: Bağımlılıkları kur
+        run: pip install -r requirements.txt
+
+      - name: Scheduler'ı çalıştır
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          GOOGLE_TTS_API_KEY: ${{ secrets.GOOGLE_TTS_API_KEY }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          EXTRA_ARGS=""
+          if [ "${{ github.event.inputs.no_upload }}" = "true" ]; then
+            EXTRA_ARGS="--no-upload"
+          fi
+          LEAD="${{ github.event.inputs.lead_time_hours }}"
+          if [ -z "$LEAD" ]; then LEAD=6; fi
+          python -m src.scheduler --lead-time-hours "$LEAD" --max-videos 1 $EXTRA_ARGS
+
+      - name: Üretilen videoları artifact olarak sakla (yedek/inceleme)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: output-${{ github.run_id }}
+          path: output/**
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Takvim durumunu repoya geri yaz
+        run: |
+          git config user.name "islami-otomasyon-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add config/schedule.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: schedule durumu güncellendi [skip ci]"
+            git push
+          else
+            echo "Değişiklik yok, commit atlanıyor."
+          fi
