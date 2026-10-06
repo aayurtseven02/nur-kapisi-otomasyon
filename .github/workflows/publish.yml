@@ -30,6 +30,9 @@ concurrency:
   group: islami-otomasyon-publish
   cancel-in-progress: false
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
