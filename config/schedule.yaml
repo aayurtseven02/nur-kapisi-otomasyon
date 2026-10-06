@@ -896,3 +896,162 @@ videos:
   title_hint: "Mus'ab bin Umeyr'in Fedakarlığı: Zenginlikten Şehadete"
   thumb_title: "Mus'ab bin Umeyr'in Fedakarlığı"
   background_mode: none
+
+# --- GÜN 17 ---
+- id: 2026-10-25-gun17-normal1-tevbekapisi
+  status: pending
+  publish_at: '2026-10-25T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun17_normal1_tevbekapisi.txt
+    category: tefekkur
+    sources: "Zümer 39:53 (Diyanet Meali)"
+  title_hint: "Umudunuzu Kesmeyin: Tevbe Kapısı Her Zaman Açık"
+  thumb_title: "Tevbe Kapısı Açık"
+  background_mode: none
+
+- id: 2026-10-25-gun17-short1-kalphuzuru
+  status: pending
+  publish_at: '2026-10-25T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun17_short1_kalphuzuru.txt
+    category: tefekkur
+    sources: "Rad 13:28 (Diyanet Meali)"
+  title_hint: "Gerçek Huzurun Kaynağı: Kalpler Ancak Onunla Huzur Bulur"
+  thumb_title: "Kalp Huzurunun Sırrı"
+  background_mode: none
+
+- id: 2026-10-25-gun17-normal2-cennettasviri
+  status: pending
+  publish_at: '2026-10-25T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun17_normal2_cennettasviri.txt
+    category: tefekkur
+    sources: "Muhammed 47:15 (Diyanet Meali)"
+  title_hint: "Cennet Nasıl Bir Yer? Kuran'dan Çarpıcı Bir Tasvir"
+  thumb_title: "Cennetin Tasviri"
+  background_mode: none
+
+- id: 2026-10-25-gun17-short2-rizikendisesi
+  status: pending
+  publish_at: '2026-10-25T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun17_short2_rizikendisesi.txt
+    category: tefekkur
+    sources: "Hud 11:6 (Diyanet Meali)"
+  title_hint: "Rızık Endişesine Kuran'dan Güçlü Bir Cevap"
+  thumb_title: "Rızık Endişesine Çare"
+  background_mode: none
+
+# --- GÜN 18 ---
+- id: 2026-10-26-gun18-normal1-kulhakki
+  status: pending
+  publish_at: '2026-10-26T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun18_normal1_kulhakki.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Müslim, Hadis No: 6579 (Müflis Hadisi)"
+  title_hint: "Gerçek Müflis Kimdir? İbadeti Çok Ama Kul Hakkı Yiyen"
+  thumb_title: "Gerçek Müflis Kimdir?"
+  background_mode: none
+
+- id: 2026-10-26-gun18-short1-ilimfazileti
+  status: pending
+  publish_at: '2026-10-26T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun18_short1_ilimfazileti.txt
+    category: hadis_sohbet
+    sources: "İbn Mace, Hadis No: 223"
+  title_hint: "İlim Öğrenmenin Fazileti: Peygamberlerin Mirası"
+  thumb_title: "İlmin Fazileti"
+  background_mode: none
+
+- id: 2026-10-26-gun18-normal2-silairahim
+  status: pending
+  publish_at: '2026-10-26T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun18_normal2_silairahim.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Buhari, Hadis No: 5986"
+  title_hint: "Rızkın Bollaşmasının Sırrı: Sıla-i Rahim"
+  thumb_title: "Sıla-i Rahimin Bereketi"
+  background_mode: none
+
+- id: 2026-10-26-gun18-short2-affetmek
+  status: pending
+  publish_at: '2026-10-26T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun18_short2_affetmek.txt
+    category: hadis_sohbet
+    sources: "Sahih-i Müslim, Hadis No: 6592"
+  title_hint: "Affetmek Zayıflık Değil, Şereftir"
+  thumb_title: "Affetmenin Fazileti"
+  background_mode: none
+
+# --- GÜN 19 ---
+- id: 2026-10-27-gun19-normal1-rahmansuresi
+  status: pending
+  publish_at: '2026-10-27T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun19_normal1_rahmansuresi.txt
+    category: kuran_tefsir
+    sources: "Rahman 55:1-13 (Diyanet Meali)"
+  title_hint: "Rahman Suresi: \"Hangi Nimetlerimi Yalanlarsınız?\""
+  thumb_title: "Rahman Suresi'nin Mesajı"
+  background_mode: none
+
+- id: 2026-10-27-gun19-short1-adaletayeti
+  status: pending
+  publish_at: '2026-10-27T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun19_short1_adaletayeti.txt
+    category: kuran_tefsir
+    sources: "Nahl 16:90 (Diyanet Meali)"
+  title_hint: "Kuran'ın En Kapsamlı Ayetlerinden Biri: Adalet Ayeti"
+  thumb_title: "Adalet Ayeti"
+  background_mode: none
+
+- id: 2026-10-27-gun19-normal2-amenerrasulu
+  status: pending
+  publish_at: '2026-10-27T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun19_normal2_amenerrasulu.txt
+    category: kuran_tefsir
+    sources: "Bakara 2:285-286 (Diyanet Meali)"
+  title_hint: "Amenerrasulu: Bakara Suresi'nin Son İki Ayeti"
+  thumb_title: "Amenerrasulu'nun Fazileti"
+  background_mode: none
+
+- id: 2026-10-27-gun19-short2-meryemiffeti
+  status: pending
+  publish_at: '2026-10-27T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun19_short2_meryemiffeti.txt
+    category: kuran_tefsir
+    sources: "Ali İmran 3:42-44 (Diyanet Meali)"
+  title_hint: "Hz. Meryem'in İffeti: \"Dünyaların Kadınlarından Üstün\""
+  thumb_title: "Hz. Meryem'in İffeti"
+  background_mode: none
