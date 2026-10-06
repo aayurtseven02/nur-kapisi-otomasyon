@@ -12,7 +12,7 @@ videos:
   title_hint: Yasin Suresi (1-20. Ayetler) Türkçe Meali ile
   background_mode: none
 - id: 2026-10-07-short-niyet-hadisi
-  status: pending
+  status: done
   publish_at: '2026-10-07T12:00:00+03:00'
   format: short
   type: hadis
@@ -21,6 +21,8 @@ videos:
     hadithnumber: 1
   title_hint: Ameller Niyetlere Göredir
   background_mode: none
+  youtube_video_id: MDzCLhDcSno
+  youtube_url: https://www.youtube.com/watch?v=MDzCLhDcSno
 - id: 2026-10-07-aksam-duasi
   status: pending
   publish_at: '2026-10-07T18:30:00+03:00'
