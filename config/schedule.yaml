@@ -1214,3 +1214,109 @@ videos:
   title_hint: "Hicret Yolculuğu: Sabrın ve Tevekkülün Hikayesi"
   thumb_title: "Hicret Yolculuğu"
   background_mode: none
+
+# --- GÜN 23 ---
+- id: 2026-10-31-gun23-normal1-aisyeninilmi
+  status: pending
+  publish_at: '2026-10-31T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun23_normal1_aisyeninilmi.txt
+    category: sahabe
+    sources: "Sahih-i Buhari, Hadis No: 3411"
+  title_hint: "Hz. Aişe'nin İlmi: Tiridin Yemeklere Üstünlüğü Gibi"
+  thumb_title: "Hz. Aişe'nin İlmi"
+  background_mode: none
+
+- id: 2026-10-31-gun23-short1-ebuhureyre
+  status: pending
+  publish_at: '2026-10-31T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun23_short1_ebuhureyre.txt
+    category: sahabe
+    sources: "Mainstream siyer narrative (Ebu Hureyre'nin hadis rivayeti)"
+  title_hint: "Ebu Hureyre'nin Hadis İlmindeki Eşsiz Yeri"
+  thumb_title: "Ebu Hureyre'nin Hadis İlmi"
+  background_mode: none
+
+- id: 2026-10-31-gun23-normal2-halidbinvelid
+  status: pending
+  publish_at: '2026-10-31T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun23_normal2_halidbinvelid.txt
+    category: sahabe
+    sources: "Sahih-i Buhari, Hadis No: 5391 (Seyfullah)"
+  title_hint: "Halid bin Velid: Allah'ın Kılıcı Unvanının Hikayesi"
+  thumb_title: "Halid bin Velid: Seyfullah"
+  background_mode: none
+
+- id: 2026-10-31-gun23-short2-fatimaninornekligi
+  status: pending
+  publish_at: '2026-10-31T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun23_short2_fatimaninornekligi.txt
+    category: sahabe
+    sources: "Sahih-i Buhari, Hadis No: 6285"
+  title_hint: "Hz. Fatıma'ya Verilen Özel Müjde"
+  thumb_title: "Hz. Fatıma'nın Örnekliği"
+  background_mode: none
+
+# --- GÜN 24 ---
+- id: 2026-11-01-gun24-normal1-kiyametalametleri
+  status: pending
+  publish_at: '2026-11-01T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun24_normal1_kiyametalametleri.txt
+    category: tefekkur
+    sources: "Sahih-i Buhari, Hadis No: 6808"
+  title_hint: "Peygamberimizin Haber Verdiği Kıyamet Alametleri"
+  thumb_title: "Kıyamet Alametleri"
+  background_mode: none
+
+- id: 2026-11-01-gun24-short1-sabrinmukafati
+  status: pending
+  publish_at: '2026-11-01T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun24_short1_sabrinmukafati.txt
+    category: tefekkur
+    sources: "Zümer 39:10 (Diyanet Meali)"
+  title_hint: "Sabrın Mükâfatı: Hesapsız Bir Şekilde Ödenecek"
+  thumb_title: "Sabrın Mükâfatı"
+  background_mode: none
+
+- id: 2026-11-01-gun24-normal2-ihlasinonemi
+  status: pending
+  publish_at: '2026-11-01T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun24_normal2_ihlasinonemi.txt
+    category: tefekkur
+    sources: "Beyyine 98:5 (Diyanet Meali)"
+  title_hint: "İbadetin Kabulünün Tek Şartı: İhlas"
+  thumb_title: "İhlasın Önemi"
+  background_mode: none
+
+- id: 2026-11-01-gun24-short2-sukur
+  status: pending
+  publish_at: '2026-11-01T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun24_short2_sukur.txt
+    category: tefekkur
+    sources: "Nahl 16:18 (Diyanet Meali)"
+  title_hint: "Allah'ın Nimetlerini Saymaya Kalksanız Bitiremezsiniz"
+  thumb_title: "Şükrün Önemi"
+  background_mode: none
