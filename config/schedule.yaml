@@ -737,3 +737,162 @@ videos:
   title_hint: "Borç ve Maddi Sıkıntı İçin Okunan Dua"
   thumb_title: "Borç Sıkıntısına Dua"
   background_mode: none
+
+# --- GÜN 14 ---
+- id: 2026-10-22-gun14-normal1-namazinonemi
+  status: pending
+  publish_at: '2026-10-22T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun14_normal1_namazinonemi.txt
+    category: ilmihal
+    sources: "Nisa 4:103 (Diyanet Meali)"
+  title_hint: "Namazın Dindeki Yeri: Belirli Vakitlere Bağlı Bir Farz"
+  thumb_title: "Namazın Önemi"
+  background_mode: none
+
+- id: 2026-10-22-gun14-short1-gusulabdesti
+  status: pending
+  publish_at: '2026-10-22T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun14_short1_gusulabdesti.txt
+    category: ilmihal
+    sources: "Maide 5:6 (Diyanet Meali)"
+  title_hint: "Gusül Abdesti Ne Zaman Farz Olur?"
+  thumb_title: "Gusül Abdesti Nedir?"
+  background_mode: none
+
+- id: 2026-10-22-gun14-normal2-orucunhikmeti
+  status: pending
+  publish_at: '2026-10-22T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun14_normal2_orucunhikmeti.txt
+    category: ilmihal
+    sources: "Bakara 2:183 (Diyanet Meali)"
+  title_hint: "Orucun Hikmeti: Sadece Aç Kalmak Değil, Takva Kazanmak"
+  thumb_title: "Orucun Hikmeti"
+  background_mode: none
+
+- id: 2026-10-22-gun14-short2-teyemmum
+  status: pending
+  publish_at: '2026-10-22T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun14_short2_teyemmum.txt
+    category: ilmihal
+    sources: "Maide 5:6 (Diyanet Meali)"
+  title_hint: "Su Bulunmadığında Namaz Nasıl Kılınır? Teyemmüm"
+  thumb_title: "Teyemmüm Nasıl Yapılır?"
+  background_mode: none
+
+# --- GÜN 15 ---
+- id: 2026-10-23-gun15-normal1-musafiravun
+  status: pending
+  publish_at: '2026-10-23T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun15_normal1_musafiravun.txt
+    category: peygamberler_tarihi
+    sources: "Taha 20:24-29 (Diyanet Meali)"
+  title_hint: "Hz. Musa'nın Firavun'a Gitmeden Önceki Duası"
+  thumb_title: "Hz. Musa'nın Duası"
+  background_mode: none
+
+- id: 2026-10-23-gun15-short1-zekeriyaduasi
+  status: pending
+  publish_at: '2026-10-23T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun15_short1_zekeriyaduasi.txt
+    category: peygamberler_tarihi
+    sources: "Meryem 19:2-6 (Diyanet Meali)"
+  title_hint: "Hz. Zekeriya'nın Yaşlılığında Ettiği Dua"
+  thumb_title: "Hz. Zekeriya'nın Duası"
+  background_mode: none
+
+- id: 2026-10-23-gun15-normal2-suleymankarinca
+  status: pending
+  publish_at: '2026-10-23T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun15_normal2_suleymankarinca.txt
+    category: peygamberler_tarihi
+    sources: "Neml 27:17-19 (Diyanet Meali)"
+  title_hint: "Hz. Süleyman ve Karınca Kıssası: Gücün İçindeki Adalet"
+  thumb_title: "Hz. Süleyman ve Karınca"
+  background_mode: none
+
+- id: 2026-10-23-gun15-short2-davudcalut
+  status: pending
+  publish_at: '2026-10-23T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun15_short2_davudcalut.txt
+    category: peygamberler_tarihi
+    sources: "Bakara 2:250-251 (Diyanet Meali)"
+  title_hint: "Hz. Davud'un Calut'u Yenmesi: Küçük Ordunun Büyük Zaferi"
+  thumb_title: "Davud ve Calut Kıssası"
+  background_mode: none
+
+# --- GÜN 16 ---
+- id: 2026-10-24-gun16-normal1-haticefedakarlik
+  status: pending
+  publish_at: '2026-10-24T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun16_normal1_haticefedakarlik.txt
+    category: sahabe
+    sources: "Sahih-i Buhari, Hadis No: 3820"
+  title_hint: "Hz. Hatice'nin Fedakarlığı: Cennetle Müjdelenen Sahabi"
+  thumb_title: "Hz. Hatice'nin Fedakarlığı"
+  background_mode: none
+
+- id: 2026-10-24-gun16-short1-selmanhikmet
+  status: pending
+  publish_at: '2026-10-24T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun16_short1_selmanhikmet.txt
+    category: sahabe
+    sources: "Siyer kaynakları (ihtilafsız tarihi rivayetler)"
+  title_hint: "Selman-ı Farisi'nin Hakikat Arayışı"
+  thumb_title: "Selman-ı Farisi'nin Yolculuğu"
+  background_mode: none
+
+- id: 2026-10-24-gun16-normal2-bilalsabri
+  status: pending
+  publish_at: '2026-10-24T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun16_normal2_bilalsabri.txt
+    category: sahabe
+    sources: "Sahih-i Buhari, Hadis No: 1149"
+  title_hint: "Bilal-i Habeşi'nin Sabrı: \"Ehad, Ehad\""
+  thumb_title: "Bilal-i Habeşi'nin Sabrı"
+  background_mode: none
+
+- id: 2026-10-24-gun16-short2-musabfedakarlik
+  status: pending
+  publish_at: '2026-10-24T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun16_short2_musabfedakarlik.txt
+    category: sahabe
+    sources: "Ahzab 33:23 (Diyanet Meali); siyer kaynakları"
+  title_hint: "Mus'ab bin Umeyr'in Fedakarlığı: Zenginlikten Şehadete"
+  thumb_title: "Mus'ab bin Umeyr'in Fedakarlığı"
+  background_mode: none
