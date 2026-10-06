@@ -1426,3 +1426,109 @@ videos:
   title_hint: "Kureyş Suresi: Ticaret Güvenliğinin Arkasındaki Nimet"
   thumb_title: "Kureyş Suresi'nin Mesajı"
   background_mode: none
+
+# --- GÜN 27 ---
+- id: 2026-11-04-gun27-normal1-evlilikduasi
+  status: pending
+  publish_at: '2026-11-04T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun27_normal1_evlilikduasi.txt
+    category: dua_zikir
+    sources: "Hısnu'l Müslim, Dua No: 190-191"
+  title_hint: "Peygamberimizin Evlenenlere Öğrettiği Dua"
+  thumb_title: "Evlilik Duası"
+  background_mode: none
+
+- id: 2026-11-04-gun27-short1-rabbenaheblena
+  status: pending
+  publish_at: '2026-11-04T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun27_short1_rabbenaheblena.txt
+    category: dua_zikir
+    sources: "Furkan 25:74 (Diyanet Meali)"
+  title_hint: "Gözümüzün Aydınlığı Olacak Bir Aile İçin Dua"
+  thumb_title: "Rabbena Heb Lena Duası"
+  background_mode: none
+
+- id: 2026-11-04-gun27-normal2-ayetelkursifazileti
+  status: pending
+  publish_at: '2026-11-04T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun27_normal2_ayetelkursifazileti.txt
+    category: dua_zikir
+    sources: "Nesai, Amelu'l-Yevmi ve'l-Leyle (h.100)"
+  title_hint: "Namazdan Sonra Ayetel Kürsi Okuyana Verilen Müjde"
+  thumb_title: "Ayetel Kürsi'nin Fazileti"
+  background_mode: none
+
+- id: 2026-11-04-gun27-short2-yagmurduasi
+  status: pending
+  publish_at: '2026-11-04T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun27_short2_yagmurduasi.txt
+    category: dua_zikir
+    sources: "Hısnu'l Müslim, Dua No: 169-174 (İstiska Duaları)"
+  title_hint: "Peygamberimizin Yağmur İçin Öğrettiği Dualar"
+  thumb_title: "Yağmur Duası"
+  background_mode: none
+
+# --- GÜN 28 ---
+- id: 2026-11-05-gun28-normal1-itikaf
+  status: pending
+  publish_at: '2026-11-05T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun28_normal1_itikaf.txt
+    category: ilmihal
+    sources: "Bakara 2:187 (Diyanet Meali)"
+  title_hint: "İtikaf: Mescidde Allah'a Kapanmanın İbadeti"
+  thumb_title: "İtikaf İbadeti"
+  background_mode: none
+
+- id: 2026-11-05-gun28-short1-namazvakitlerininhikmeti
+  status: pending
+  publish_at: '2026-11-05T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun28_short1_namazvakitlerininhikmeti.txt
+    category: ilmihal
+    sources: "İsra 17:78 (Diyanet Meali)"
+  title_hint: "Namaz Vakitlerinin Hikmeti: Sabah Namazına Melekler Şahit"
+  thumb_title: "Namaz Vakitlerinin Hikmeti"
+  background_mode: none
+
+- id: 2026-11-05-gun28-normal2-zekatsadakafarki
+  status: pending
+  publish_at: '2026-11-05T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun28_normal2_zekatsadakafarki.txt
+    category: ilmihal
+    sources: "Bakara 2:271 (Diyanet Meali)"
+  title_hint: "Zekat ile Sadaka Arasındaki Fark Nedir?"
+  thumb_title: "Zekat-Sadaka Farkı"
+  background_mode: none
+
+- id: 2026-11-05-gun28-short2-abdestibozanseyler
+  status: pending
+  publish_at: '2026-11-05T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun28_short2_abdestibozanseyler.txt
+    category: ilmihal
+    sources: "Sahih-i Müslim, Hadis No: 805"
+  title_hint: "Abdest Konusunda Vesveseye Düşmeyin: Peygamberimizin Tavsiyesi"
+  thumb_title: "Abdesti Bozan Şeyler"
+  background_mode: none
