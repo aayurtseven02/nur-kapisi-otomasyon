@@ -1,6 +1,6 @@
 videos:
 - id: 2026-10-07-yasin-1-20
-  status: pending
+  status: skipped
   publish_at: '2026-10-07T07:00:00+03:00'
   format: long
   type: sure
