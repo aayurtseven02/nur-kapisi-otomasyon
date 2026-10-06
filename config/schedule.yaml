@@ -1055,3 +1055,162 @@ videos:
   title_hint: "Hz. Meryem'in İffeti: \"Dünyaların Kadınlarından Üstün\""
   thumb_title: "Hz. Meryem'in İffeti"
   background_mode: none
+
+# --- GÜN 20 ---
+- id: 2026-10-28-gun20-normal1-istigfarinetkileri
+  status: pending
+  publish_at: '2026-10-28T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun20_normal1_istigfarinetkileri.txt
+    category: dua_zikir
+    sources: "Nuh 71:10-12 (Diyanet Meali)"
+  title_hint: "İstiğfarın Hayatınıza Getireceği Bereket"
+  thumb_title: "İstiğfarın Gücü"
+  background_mode: none
+
+- id: 2026-10-28-gun20-short1-namazsonrasitesbih
+  status: pending
+  publish_at: '2026-10-28T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun20_short1_namazsonrasitesbih.txt
+    category: dua_zikir
+    sources: "Sahih-i Müslim (1/418)"
+  title_hint: "Namaz Sonrası Bu Tesbihi Yapan Affedilir"
+  thumb_title: "Namaz Sonrası Tesbih"
+  background_mode: none
+
+- id: 2026-10-28-gun20-normal2-zikrullah
+  status: pending
+  publish_at: '2026-10-28T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun20_normal2_zikrullah.txt
+    category: dua_zikir
+    sources: "Ahzab 33:41-42 (Diyanet Meali)"
+  title_hint: "Allah'ı Çok Anın: Zikrin Kalbe Kattığı Huzur"
+  thumb_title: "Zikrin Gücü"
+  background_mode: none
+
+- id: 2026-10-28-gun20-short2-sabahduasi
+  status: pending
+  publish_at: '2026-10-28T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun20_short2_sabahduasi.txt
+    category: dua_zikir
+    sources: "İbn Mace, Sahih-i İbn-i Mace (1/152)"
+  title_hint: "Sabah Namazından Sonra Okunan Üç Kelimelik Dua"
+  thumb_title: "Sabah Duası"
+  background_mode: none
+
+# --- GÜN 21 ---
+- id: 2026-10-29-gun21-normal1-zekatinhikmeti
+  status: pending
+  publish_at: '2026-10-29T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun21_normal1_zekatinhikmeti.txt
+    category: ilmihal
+    sources: "Tevbe 9:103 (Diyanet Meali)"
+  title_hint: "Zekatın Hikmeti: Malı ve Kalbi Arındıran İbadet"
+  thumb_title: "Zekatın Hikmeti"
+  background_mode: none
+
+- id: 2026-10-29-gun21-short1-cumanamazi
+  status: pending
+  publish_at: '2026-10-29T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun21_short1_cumanamazi.txt
+    category: ilmihal
+    sources: "Cuma 62:9-10 (Diyanet Meali)"
+  title_hint: "Cuma Namazının Önemi: Koşarak Gidilmesi Emredilen İbadet"
+  thumb_title: "Cuma Namazının Önemi"
+  background_mode: none
+
+- id: 2026-10-29-gun21-normal2-hacibadeti
+  status: pending
+  publish_at: '2026-10-29T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun21_normal2_hacibadeti.txt
+    category: ilmihal
+    sources: "Al-i İmran 3:97 (Diyanet Meali)"
+  title_hint: "Hac İbadeti Özeti: Gücü Yetene Farz Olan Yolculuk"
+  thumb_title: "Hac İbadetinin Özeti"
+  background_mode: none
+
+- id: 2026-10-29-gun21-short2-kurbanibadeti
+  status: pending
+  publish_at: '2026-10-29T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun21_short2_kurbanibadeti.txt
+    category: ilmihal
+    sources: "Hac 22:37; Kevser 108:1-3 (Diyanet Meali)"
+  title_hint: "Kurban İbadetinde Asıl Önemli Olan Nedir?"
+  thumb_title: "Kurban İbadetinin Özü"
+  background_mode: none
+
+# --- GÜN 22 ---
+- id: 2026-10-30-gun22-normal1-nuhtufani
+  status: pending
+  publish_at: '2026-10-30T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun22_normal1_nuhtufani.txt
+    category: peygamberler_tarihi
+    sources: "Hud 11:40-44 (Diyanet Meali)"
+  title_hint: "Hz. Nuh ve Tufan: Kurtuluş İmanla Gerçekleşir"
+  thumb_title: "Hz. Nuh ve Tufan"
+  background_mode: none
+
+- id: 2026-10-30-gun22-short1-ismailinkurbani
+  status: pending
+  publish_at: '2026-10-30T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun22_short1_ismailinkurbani.txt
+    category: peygamberler_tarihi
+    sources: "Saffat 37:102-107 (Diyanet Meali)"
+  title_hint: "Hz. İsmail'in Kurban Kıssası: \"Beni Sabredenlerden Bulacaksın\""
+  thumb_title: "Hz. İsmail'in Teslimiyeti"
+  background_mode: none
+
+- id: 2026-10-30-gun22-normal2-hiramagarasi
+  status: pending
+  publish_at: '2026-10-30T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun22_normal2_hiramagarasi.txt
+    category: peygamberler_tarihi
+    sources: "Alak 96:1-5 (Diyanet Meali)"
+  title_hint: "Hira Mağarası'nda İlk Vahiy: \"Oku!\""
+  thumb_title: "Hira Mağarası'nda İlk Vahiy"
+  background_mode: none
+
+- id: 2026-10-30-gun22-short2-hicretyolculugu
+  status: pending
+  publish_at: '2026-10-30T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun22_short2_hicretyolculugu.txt
+    category: peygamberler_tarihi
+    sources: "Mainstream siyer narrative (Sevr Mağarası, Süraka, Kuba)"
+  title_hint: "Hicret Yolculuğu: Sabrın ve Tevekkülün Hikayesi"
+  thumb_title: "Hicret Yolculuğu"
+  background_mode: none
