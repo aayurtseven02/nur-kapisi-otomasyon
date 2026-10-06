@@ -6,6 +6,8 @@ YouTube'a yükler.
 """
 from __future__ import annotations
 import os
+import glob
+import hashlib
 import datetime
 import yaml
 
@@ -14,6 +16,20 @@ from . import tts, subtitles, visuals, video_builder, thumbnail, metadata, audio
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 SETTINGS_PATH = os.path.join(ROOT, "config", "settings.yaml")
+THUMB_TEMPLATES_DIR = os.path.join(ROOT, "assets", "branding", "thumb_templates")
+
+
+def _pick_thumb_template(entry_id: str) -> str | None:
+    """Yatay (long) videolar için sabit şablon havuzundan, video id'sine göre
+    DETERMİNİSTİK (her zaman aynı video için aynı sonucu veren) ama havuz
+    genelinde dengeli dağılan bir arka plan şablonu seçer. Şort videolar bu
+    fonksiyonu KULLANMAZ; onlar gerçek video karesini kullanmaya devam eder.
+    """
+    templates = sorted(glob.glob(os.path.join(THUMB_TEMPLATES_DIR, "*.png")))
+    if not templates:
+        return None
+    h = int(hashlib.sha256(entry_id.encode("utf-8")).hexdigest(), 16)
+    return templates[h % len(templates)]
 
 
 def load_settings():
@@ -295,9 +311,20 @@ def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False
         )
         os.replace(logo_out, final_video_path)
 
-    frame_path = os.path.join(work_dir, "frame.jpg")
-    thumbnail.extract_frame(final_video_path, frame_path, timestamp=min(1.5, assets["total_duration"] / 2))
+    is_short = entry["format"] == "short"
     thumb_path = os.path.join(output_dir, f"{entry['id']}_thumb.jpg")
+    if is_short:
+        # Short videolar: değişmez karar -- GERÇEK video karesi kullanılır.
+        frame_path = os.path.join(work_dir, "frame.jpg")
+        thumbnail.extract_frame(final_video_path, frame_path, timestamp=min(1.5, assets["total_duration"] / 2))
+    else:
+        # Yatay (long) videolar: kullanıcının onayladığı referans tasarımlara
+        # benzeyen, önceden üretilmiş sabit İslami şablon havuzundan video
+        # id'sine göre deterministik olarak seçilen bir arka plan kullanılır.
+        template_path = _pick_thumb_template(entry["id"])
+        frame_path = template_path if template_path else os.path.join(work_dir, "frame.jpg")
+        if not template_path:
+            thumbnail.extract_frame(final_video_path, frame_path, timestamp=min(1.5, assets["total_duration"] / 2))
 
     TYPE_SUBTITLE = {
         "sure": "Kur'an-ı Kerim", "hadis": "Hadis-i Şerif",
