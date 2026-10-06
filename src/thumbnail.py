@@ -213,7 +213,11 @@ def generate_thumbnail(
 
     title_font_size = int(height * 0.145)
     title_font = _load_font(font_path, title_font_size, weight="Black")
-    wrapped = textwrap.wrap(title_text, width=14)
+    # break_long_words=False: uzun bir kelime (ör. "PEYGAMBERİMİZDEN") tek
+    # satıra sığmasa bile ORTADAN BÖLÜNMEZ; o satır sadece hedef genişlikten
+    # biraz taşar (sonraki `_fit_title_font` benzeri bir mekanizma yoksa bile
+    # görsel olarak kelimenin yarısının kesilmesinden çok daha az rahatsız edicidir).
+    wrapped = textwrap.wrap(title_text, width=14, break_long_words=False, break_on_hyphens=False)
     line_gap = int(title_font_size * 0.18)
 
     title_y = cursor_y
