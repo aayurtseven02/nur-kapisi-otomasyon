@@ -207,3 +207,215 @@ videos:
   title_hint: "\"Komşusu Açken Tok Yatan Bizden Değildir\" Sözünün Evrensel Mesajı"
   thumb_title: "Komşuluk Hakkı"
   background_mode: none
+
+# --- GÜN 4 ---
+- id: 2026-10-12-gun04-normal1-abdest
+  status: pending
+  publish_at: '2026-10-12T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun04_normal1_abdest.txt
+    category: ilmihal
+    sources: "Nevevi 40 Hadis, Hadis No: 23 (Sahih-i Müslim kaynaklı)"
+  title_hint: "Abdestin Bedene ve Ruha Faydaları: \"Temizlik İmanın Yarısıdır\""
+  thumb_title: "Abdestin Gizli Faydaları"
+  background_mode: none
+
+- id: 2026-10-12-gun04-short1-abdestduasi
+  status: pending
+  publish_at: '2026-10-12T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun04_short1_abdestduasi.txt
+    category: dua_fazilet
+    sources: "Ebu Davud, İbn Mace, Ahmed; Sahih-i Müslim 1/209; Hısnu'l Müslim dua no: 12-13"
+  title_hint: "Abdestten Önce ve Sonra Okunan Dualar"
+  thumb_title: "Abdest Duaları"
+  background_mode: none
+
+- id: 2026-10-12-gun04-normal2-yasinkalp
+  status: pending
+  publish_at: '2026-10-12T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun04_normal2_yasinkalp.txt
+    category: kuran_tefsir
+    sources: "Yasin 36:55-58 (Diyanet Meali)"
+  title_hint: "Yasin Suresi'nin Kalbi: Cennetteki En Büyük Nimet Hangi Ayette?"
+  thumb_title: "Yasin'in Kalbi Ayet"
+  background_mode: none
+
+- id: 2026-10-12-gun04-short2-tebessum
+  status: pending
+  publish_at: '2026-10-12T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun04_short2_tebessum.txt
+    category: hadis_sohbet
+    sources: "Tirmizi, hasen (Riyazüs Salihin'de de yer alır)"
+  title_hint: "Parasız Sadaka: Tebessüm Etmek Neden Sadaka Sayılır?"
+  thumb_title: "Tebessüm Bir Sadakadır"
+  background_mode: none
+
+# --- GÜN 5 ---
+- id: 2026-10-13-gun05-normal1-asrsuresi
+  status: pending
+  publish_at: '2026-10-13T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun05_normal1_asrsuresi.txt
+    category: kuran_tefsir
+    sources: "Asr 103:1-3 (Diyanet Meali)"
+  title_hint: "Asr Suresi: Üç Ayette Gizli Kurtuluş Reçetesi"
+  thumb_title: "Asr Suresi'nin Sırrı"
+  background_mode: none
+
+- id: 2026-10-13-gun05-short1-cumasalavat
+  status: pending
+  publish_at: '2026-10-13T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun05_short1_cumasalavat.txt
+    category: dua_fazilet
+    sources: "İbn Mace, Hadis No: 1085 (Ebu Davud, Nesai, Ahmed'de de rivayet edilir)"
+  title_hint: "Cuma Günü Salavat Getirmenin Fazileti"
+  thumb_title: "Cuma Günü Salavat"
+  background_mode: none
+
+- id: 2026-10-13-gun05-normal2-eyupsabri
+  status: pending
+  publish_at: '2026-10-13T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun05_normal2_eyupsabri.txt
+    category: peygamberler_tarihi
+    sources: "Enbiya 21:83-84 (Diyanet Meali)"
+  title_hint: "Hz. Eyüp'ün Sabrı ve Allah'a Sığınma Duası"
+  thumb_title: "Hz. Eyüp'ün Sabrı"
+  background_mode: none
+
+- id: 2026-10-13-gun05-short2-yunusduasi
+  status: pending
+  publish_at: '2026-10-13T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun05_short2_yunusduasi.txt
+    category: peygamberler_tarihi
+    sources: "Enbiya 21:87-88 (Diyanet Meali)"
+  title_hint: "Hz. Yunus'un Karanlıkta Ettiği Dua (Zünnun Duası)"
+  thumb_title: "Hz. Yunus'un Duası"
+  background_mode: none
+
+# --- GÜN 6 ---
+- id: 2026-10-14-gun06-normal1-ebubekir
+  status: pending
+  publish_at: '2026-10-14T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun06_normal1_ebubekir.txt
+    category: sahabe
+    sources: "Tevbe 9:40 (Diyanet Meali)"
+  title_hint: "Hz. Ebubekir'in Sadakati: Mağara Ayetinin Hikayesi"
+  thumb_title: "Hz. Ebubekir'in Sadakati"
+  background_mode: none
+
+- id: 2026-10-14-gun06-short1-ikigunesit
+  status: pending
+  publish_at: '2026-10-14T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun06_short1_ikigunesit.txt
+    category: tefekkur
+    sources: "Sahih-i Buhari, Hadis No: 6412 (meşhur sözün temelindeki sahih hadis)"
+  title_hint: "\"İki Günü Eşit Olan Ziyandadır\" Sözünün Temeli"
+  thumb_title: "İki Günün Eşitliği"
+  background_mode: none
+
+- id: 2026-10-14-gun06-normal2-kevser
+  status: pending
+  publish_at: '2026-10-14T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun06_normal2_kevser.txt
+    category: kuran_tefsir
+    sources: "Kevser 108:1-3 (Diyanet Meali)"
+  title_hint: "Kevser Suresi: Kur'an'ın En Kısa Suresindeki Büyük Müjde"
+  thumb_title: "Kevser Suresi'nin Sırrı"
+  background_mode: none
+
+- id: 2026-10-14-gun06-short2-uykuduasi
+  status: pending
+  publish_at: '2026-10-14T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun06_short2_uykuduasi.txt
+    category: dua_fazilet
+    sources: "Sahih-i Buhari, Sahih-i Müslim (Fethu'l-Bari 9/62, Müslim 4/1723); Hısnu'l Müslim dua no: 99"
+  title_hint: "Huzurlu Bir Uyku İçin Yatmadan Önce Yapılacaklar"
+  thumb_title: "Huzurlu Uyku Sünneti"
+  background_mode: none
+
+# --- GÜN 7 ---
+- id: 2026-10-15-gun07-normal1-kabirhayati
+  status: pending
+  publish_at: '2026-10-15T09:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun07_normal1_kabirhayati.txt
+    category: ilmihal
+    sources: "Muminun 23:99-100 (Diyanet Meali)"
+  title_hint: "Kabir Hayatı (Berzah) Hakkında Kur'an Ne Diyor?"
+  thumb_title: "Berzah Hayatı Nedir?"
+  background_mode: none
+
+- id: 2026-10-15-gun07-short1-lahavle
+  status: pending
+  publish_at: '2026-10-15T12:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun07_short1_lahavle.txt
+    category: dua_fazilet
+    sources: "Sahih-i Buhari, Hadis No: 6409"
+  title_hint: "Cennet Hazinelerinden Bir Söz: La Havle Vela Kuvvete İlla Billah"
+  thumb_title: "Cennet Hazinesi Zikir"
+  background_mode: none
+
+- id: 2026-10-15-gun07-normal2-mulksuresi
+  status: pending
+  publish_at: '2026-10-15T15:00:00+03:00'
+  format: long
+  type: tema
+  ref:
+    text_file: content_library/tema/gun07_normal2_mulksuresi.txt
+    category: kuran_tefsir
+    sources: "Mülk 67:1-2 (Diyanet Meali); İbn Mace Hadis No: 3786, Ebu Davud Hadis No: 1400"
+  title_hint: "Mülk Suresi: Kabir Azabından Koruyan Kalkan"
+  thumb_title: "Kabri Koruyan Sure"
+  background_mode: none
+
+- id: 2026-10-15-gun07-short2-evdencikis
+  status: pending
+  publish_at: '2026-10-15T19:00:00+03:00'
+  format: short
+  type: tema
+  ref:
+    text_file: content_library/tema/gun07_short2_evdencikis.txt
+    category: dua_fazilet
+    sources: "Ebu Davud 4/325, Tirmizi 5/490; Hısnu'l Müslim dua no: 16"
+  title_hint: "Evden Çıkarken Okunan Koruma Duası"
+  thumb_title: "Evden Çıkış Duası"
+  background_mode: none
