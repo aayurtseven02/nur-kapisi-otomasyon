@@ -33,10 +33,12 @@ quran:
   #   Aşağıdaki edisyonlar 114 surenin TAMAMI tek tek doğrulanmıştır ve
   #   hatasızdır: tr.golpinarli, tr.ates, tr.ozturk, tr.bulac, tr.yuksel
   #
-  #   Varsayılan olarak Gölpınarlı mealı kullanılır. src/content/quran.py
-  #   her çekimde veriyi doğrular; bozulma görülürse sessizce yanlış dini
-  #   metin yayınlamak yerine hata verir.
-  translation_edition: "tr.golpinarli"
+  #   Varsayılan olarak Süleyman Ateş mealı kullanılır (kullanıcı tercihi):
+  #   Gölpınarlı mealına göre daha akıcı/sade Türkçe ile yazıldığı için
+  #   TTS ile seslendirildiğinde daha doğal okunuyor.
+  #   src/content/quran.py her çekimde veriyi doğrular; bozulma görülürse
+  #   sessizce yanlış dini metin yayınlamak yerine hata verir.
+  translation_edition: "tr.ates"
 
 # Hadis kaynağı (fawazahmed0/hadith-api edition adları)
 # Alternatifler: tur-muslim, tur-abudawud, tur-ibnmajah, tur-malik, tur-nawawi
@@ -99,11 +101,12 @@ video:
     height: 1920
     fps: 30
   # Short formatı için hedef üst süre sınırı.
-  # Not: YouTube, Ekim 2024'ten bu yana Shorts için 3 dakikaya (180 sn) kadar
-  # izin veriyor; 59 sn eski/katı bir eşiktir. Takvimin 62 short videosundan
-  # 32'sinin tahmini süresi bu eşiği aştığı için varsayılan politika "warn"
-  # olarak bırakıldı — aksi halde takvimin yarısı üretilemez olurdu.
-  max_short_seconds: 59
+  # YouTube, Ekim 2024'ten bu yana Shorts için 3 dakikaya (180 sn) kadar izin
+  # veriyor. Eşik, kullanıcı kararıyla YouTube'un gerçek limitine çekildi
+  # (eski 59 sn değeri, takvimin 62 short videosundan 32'sini gereksizce
+  # işaretliyordu). Politikası yine de güvenlik ağı olarak duruyor: 180 sn'i
+  # aşan bir içerik üretilirse uyarı verilir (ya da 'fail' ile durdurulur).
+  max_short_seconds: 180
   # "warn" -> sınırı aşan short videoları uyarı vererek yine de üret/yükle
   # "fail" -> sınırı aşan videolarda hata ver, görevi 'failed' işaretle
   short_over_limit_action: "warn"

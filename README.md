@@ -55,7 +55,7 @@ src/scheduler.py        -> takvimi tarar, zamanı gelenleri işler
 | İhtiyaç | Kaynak | Not |
 |---|---|---|
 | Kur'an metni (Arapça) | `api.alquran.cloud` | Ücretsiz, anahtar gerekmez |
-| Kur'an Türkçe meali | `api.alquran.cloud` (Gölpınarlı) | Ücretsiz, anahtar gerekmez — **bkz. uyarı** |
+| Kur'an Türkçe meali | `api.alquran.cloud` (Süleyman Ateş) | Ücretsiz, anahtar gerekmez — **bkz. uyarı** |
 | Hafız ses kaydı (Alafasy, Hüseyin, Sudais...) | `islamic.network` CDN | Ücretsiz, anahtar gerekmez |
 | Hadis metinleri (Buhari, Müslim, Ebu Davud, İbni Mace, Muvatta, Nevevi) | `fawazahmed0/hadith-api` (GitHub, CC0) | Ücretsiz, açık kaynak |
 | Dua metinleri (Hısnu'l Müslim, 273 dua) | GitHub açık veri seti | Ücretsiz, açık kaynak |
@@ -93,8 +93,8 @@ src/scheduler.py        -> takvimi tarar, zamanı gelenleri işler
 >
 > | Edisyon | Meal | Durum |
 > |---|---|---|
-> | `tr.golpinarli` | **Abdulbaki Gölpınarlı** (varsayılan) | ✅ 114/114 sure hatasız |
-> | `tr.ates` | Süleyman Ateş | ✅ 114/114 sure hatasız (daha akıcı, sade Türkçe) |
+> | `tr.ates` | **Süleyman Ateş** (varsayılan) | ✅ 114/114 sure hatasız (daha akıcı, sade Türkçe) |
+> | `tr.golpinarli` | Abdulbaki Gölpınarlı | ✅ 114/114 sure hatasız (klasik) |
 > | `tr.ozturk` | Yaşar Nuri Öztürk | ✅ 114/114 sure hatasız |
 > | `tr.bulac` | Ali Bulaç | ✅ 114/114 sure hatasız |
 > | `tr.yuksel` | Edip Yüksel | ✅ 114/114 sure hatasız |
@@ -109,6 +109,12 @@ src/scheduler.py        -> takvimi tarar, zamanı gelenleri işler
 > **Mealı değiştirmek isterseniz:** `config/settings.yaml` →
 > `quran.translation_edition` değerini yukarıdaki temiz edisyonlardan biriyle
 > değiştirmek yeterli (tek satır).
+>
+> **Varsayılan neden Süleyman Ateş?** Gölpınarlı mealı klasik ve güvenilir olsa
+> da Türkçe'si yerinden ağırdır; TTS ile seslendirildiğinde örneğin Nas 4. ayet
+> *"Gizlice, sinsisinsi vesveseler verenin şerrinden"* gibi cümleler kaba
+> duyulabilir. Ateş meali daha akıcı/sade Türkçe ile yazıldığı için
+> seslendirmede daha doğal okunur.
 
 ---
 
@@ -116,7 +122,7 @@ src/scheduler.py        -> takvimi tarar, zamanı gelenleri işler
 
 | `type` | Kaynak | Yapay zeka üretir mi? |
 |---|---|---|
-| `sure` | alquran.cloud (Arapça metin + Gölpınarlı meali + gerçek hafız sesi) | ❌ Hayır |
+| `sure` | alquran.cloud (Arapça metin + Süleyman Ateş meali + gerçek hafız sesi) | ❌ Hayır |
 | `hadis` | fawazahmed0/hadith-api (Kütüb-i Sitte) | ❌ Hayır — sadece TTS ile seslendirilir |
 | `dua` | Hısnu'l Müslim veri seti | ❌ Hayır — sadece TTS ile seslendirilir |
 | `hikaye` | **Sizin sağladığınız metin dosyası** (`content_library/hikayeler/*.txt`) | ❌ Hayır — sistem sadece seslendirir/altyazılar, metni üretmez |
@@ -310,12 +316,12 @@ yayın anı tam istediğiniz saatte YouTube tarafından gerçekleştirilir.
   siz sağlarsınız. Bu, dini doğruluğu garanti etmenin tek güvenli yoludur.
 - **Video üretim süresi:** Uzun bir sure (ör. 20 ayet) videosu, GitHub Actions
   sunucusunda birkaç dakika sürebilir; bu süre free tier limitlerinin çok altındadır.
-- **Short süre sınırı (`video.max_short_seconds`):** Varsayılan eşik 59
-  saniyedir. Ancak YouTube, Ekim 2024'ten bu yana Shorts için **3 dakikaya
-  (180 sn) kadar** izin veriyor; 59 sn eski/katı bir eşiktir. Takvimin 62
-  short videosundan **32'sinin tahmini süresi bu eşiği aştığı** için varsayılan
-  politika `warn` olarak bırakıldı — aksi halde takvimin yarısı üretilemez olur.
-  İsterseniz `config/settings.yaml` → `video.short_over_limit_action` değerini
+- **Short süre sınırı (`video.max_short_seconds`):** Eşik, YouTube'un gerçek
+  Shorts limiti olan **180 saniyeye** (3 dakika) çekildi — YouTube Ekim 2024'ten
+  bu yana bu süreye kadar izin veriyor. Eski 59 sn değeri, takvimin 62 short
+  videosundan 32'sini gereksizce işaretliyordu. Politika güvenlik ağı olarak
+  durmaya devam ediyor: 180 sn'i aşan bir içerik üretilirse uyarı verilir;
+  isterseniz `config/settings.yaml` → `video.short_over_limit_action` değerini
   `fail` yaparak sınırı aşan short videolarda durmayı zorunlu kılabilirsiniz.
 - **Thumbnail yüklenemezse video yine de yüklenir:** YouTube, kanal telefonla
   doğrulanmamışsa `thumbnails().set()` çağrısını reddeder. Sistem artık bu
