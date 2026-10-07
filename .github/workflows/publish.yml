@@ -50,28 +50,94 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: ffmpeg önbelleğini geri yükle
+        # ffmpeg'i apt ile KURMUYORUZ. GitHub runner'larında `apt-get update`
+        # zaman zaman sessizce asılı kalıyor (izlenen gerçek olaylar:
+        # 2026-10-07 19:xx'te 50+ dk, 20:18 ve 20:46'daki iki koşuda 10 dk
+        # zaman aşımı). `concurrency.cancel-in-progress: false` olduğu için
+        # asılı kalan bir koşu SONRAKİ TÜM koşuları kuyrukta bekletiyor.
+        # Bu yüzden tek kaynak: hazır statik derleme (deterministik, ağ dışı
+        # bağımlılığı yok). İlk koşuda indirilir, sonrakilerde önbellekten gelir.
+        id: ff-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/ffmpeg-static
+          key: ffmpeg-static-gpl-v1
+
       - name: ffmpeg kur
-        # NOT: Bu adımın zaman aşımı bilinçli olarak kısa (10 dk) tutuldu.
-        # GitHub runner'larında `apt-get update` bazen sonsuza kadar asılı
-        # kalabiliyor (izlenen gerçek olay: 2026-10-07'de bir koşu bu adımda
-        # 50+ dakika takıldı). `concurrency.cancel-in-progress: false` olduğu
-        # için asılı kalan bir koşu SONRAKİ TÜM koşuları kuyrukta bekletiyordu.
-        # Adım zaman aşımına uğarsa koşu hızlıca başarısız olur ve kuyruk açılır.
-        timeout-minutes: 10
+        id: ff-install
+        # NOT: Zaman aşımı bilinçli olarak kısa tutulur. Bir şey ters giderse
+        # koşu hızlıca başarısız olur, kuyruk açık kalır.
+        timeout-minutes: 15
         run: |
-          if command -v ffmpeg >/dev/null 2>&1; then
-            # ubuntu-latest görüntülerinde ffmpeg çoğunlukla hazır gelir;
-            # gereksiz apt trafiği ve asılı kalma riskini tamamen eleyiz.
-            echo "ffmpeg zaten kurulu, apt atlanıyor."
-          else
-            APT_OPTS="-o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 -o Acquire::Retries=3"
-            sudo apt-get update -qq $APT_OPTS
-            sudo apt-get install -y -qq $APT_OPTS ffmpeg fonts-noto-core
+          set -uo pipefail
+          FF_DIR="$HOME/.cache/ffmpeg-static"
+          GITHUB_PATH="${GITHUB_PATH:-/dev/null}"
+          mkdir -p "$FF_DIR"
+
+          # 1) Sistemde zaten libass destekli bir ffmpeg + ffprobe var mı?
+          #    NOT: Filtre listesini bir DOSYAYA yazıp grep'liyoruz. Doğrudan
+          #    `ffmpeg -filters | grep -q` kullanmak `pipefail` altında hatalı
+          #    sonuç verir: grep -q eşleşmeyi bulunca hemen çıkar, ffmpeg ise
+          #    SIGPIPE ile ölr ve pipefail boru hattını "başarısız" sayar.
+          have_system=0
+          if command -v ffmpeg >/dev/null 2>&1 && command -v ffprobe >/dev/null 2>&1; then
+            ffmpeg -hide_banner -filters >/tmp/ff_filters.txt 2>/dev/null || true
+            if grep -qE '\bsubtitles\b' /tmp/ff_filters.txt; then
+              have_system=1
+            fi
           fi
+          rm -f /tmp/ff_filters.txt
+
+          if [ -x "$FF_DIR/ffmpeg" ]; then
+            echo "Önbellekteki statik ffmpeg kullanılıyor."
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+          elif [ "$have_system" -eq 1 ]; then
+            echo "Sistemdeki ffmpeg (libass destekli) kullanılıyor, indirme gerekmiyor."
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Uygun sistem ffmpeg'i yok; statik derleme indiriliyor (~149 MB)..."
+            curl -fsSL --retry 3 --retry-delay 5 --connect-timeout 30 --max-time 600 \
+              -o /tmp/ffmpeg.tar.xz \
+              "https://github.com/BtbN/FFmpeg-Builds/releases/latest/download/ffmpeg-master-latest-linux64-gpl.tar.xz" \
+              || { echo "HATA: ffmpeg indirilemedi (ağ sorunu)."; exit 1; }
+            # Sadece ihtiyacımız olan iki ikiliyi çıkarıyoruz (ffplay ve kütüphanelere
+            # gerek yok) — disk kullanımını ~505 MB'tan ~336 MB'a düşürür.
+            rm -rf /tmp/ff-extract && mkdir -p /tmp/ff-extract
+            tar -xJf /tmp/ffmpeg.tar.xz -C /tmp/ff-extract --strip-components=1 \
+                --wildcards '*/bin/ffmpeg' '*/bin/ffprobe' \
+              || { echo "HATA: ffmpeg arşivi açılamadı."; exit 1; }
+            rm -f /tmp/ffmpeg.tar.xz
+            install -m 0755 /tmp/ff-extract/bin/ffmpeg "$FF_DIR/ffmpeg" \
+              || { echo "HATA: ffmpeg kurulamadı (disk dolu olabilir)."; exit 1; }
+            install -m 0755 /tmp/ff-extract/bin/ffprobe "$FF_DIR/ffprobe" \
+              || { echo "HATA: ffprobe kurulamadı (disk dolu olabilir)."; exit 1; }
+            rm -rf /tmp/ff-extract
+            echo "installed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Bu adımın kendi kabuğunda da görünür olsun (sonraki adımlar
+          # $GITHUB_PATH sayesinde görür).
+          export PATH="$FF_DIR:$PATH"
+          echo "$FF_DIR" >> "$GITHUB_PATH"
+
+          echo "--- doğrulama ---"
           ffmpeg -version | head -1
-          ffmpeg -hide_banner -filters 2>/dev/null | grep -qE "\bsubtitles\b" \
+          ffprobe -version | head -1
+          command -v ffmpeg >/dev/null 2>&1 || { echo "HATA: ffmpeg bulunamadı!"; exit 1; }
+          command -v ffprobe >/dev/null 2>&1 || { echo "HATA: ffprobe bulunamadı!"; exit 1; }
+          ffmpeg -hide_banner -filters >/tmp/ff_filters.txt 2>/dev/null || true
+          grep -qE '\bsubtitles\b' /tmp/ff_filters.txt \
             && echo "OK: subtitles (libass) filtresi mevcut" \
             || { echo "HATA: ffmpeg libass (subtitles) desteği olmadan kurulu!"; exit 1; }
+          rm -f /tmp/ff_filters.txt
+
+      - name: ffmpeg önbelleğine kaydet
+        if: steps.ff-install.outputs.installed == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/ffmpeg-static
+          key: ffmpeg-static-gpl-v1
 
       - name: Bağımlılıkları kur
         run: pip install -r requirements.txt
