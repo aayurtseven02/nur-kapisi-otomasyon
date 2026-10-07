@@ -21,9 +21,8 @@ tahmini/yaklaşık değildir.
 from __future__ import annotations
 import base64
 import os
-import re
+
 import requests
-from dataclasses import dataclass
 from typing import List
 
 from .tts import SubtitleCue, split_into_sentences, strip_suffix_apostrophes

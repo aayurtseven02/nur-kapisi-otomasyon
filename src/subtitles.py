@@ -8,10 +8,18 @@ from .tts import SubtitleCue
 
 
 def _fmt_srt_time(t: float) -> str:
-    h = int(t // 3600)
-    m = int((t % 3600) // 60)
-    s = int(t % 60)
-    ms = int(round((t - int(t)) * 1000))
+    """Saniyeyi SRT zaman biçimine çevirir.
+
+    Not: ``round`` sonucu 1000 milisaniyeye çıkabilir (örn. 1.9996 sn).
+    Eski kod bunu "00:00:01,1000" olarak yazıp GEÇERSİZ bir SRT üretiyordu;
+    bu yüzden taşma bir üst birime devredilir.
+    """
+    total_ms = int(round(t * 1000))
+    ms = total_ms % 1000
+    total_s = total_ms // 1000
+    h = total_s // 3600
+    m = (total_s % 3600) // 60
+    s = total_s % 60
     return f"{h:02d}:{m:02d}:{s:02d},{ms:03d}"
 
 
@@ -28,10 +36,18 @@ def write_srt(cues: List[SubtitleCue], out_path: str):
 
 
 def _fmt_ass_time(t: float) -> str:
-    h = int(t // 3600)
-    m = int((t % 3600) // 60)
-    s = int(t % 60)
-    cs = int(round((t - int(t)) * 100))
+    """Saniyeyi ASS zaman biçimine (h:mm:ss.cc) çevirir.
+
+    Santisaniye yuvarlaması 100'e çıkabilir (örn. 1.999 sn); bu durumda
+    "0:00:01.100" gibi geçersiz bir değer üretilmesin diye taşma bir üst
+    birime devredilir.
+    """
+    total_cs = int(round(t * 100))
+    cs = total_cs % 100
+    total_s = total_cs // 100
+    h = total_s // 3600
+    m = (total_s % 3600) // 60
+    s = total_s % 60
     return f"{h:01d}:{m:02d}:{s:02d}.{cs:02d}"
 
 

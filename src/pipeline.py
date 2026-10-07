@@ -43,9 +43,16 @@ def _dims(settings, is_short: bool):
     return v["width"], v["height"], v["fps"]
 
 
-def _narrate_text(text: str, narration_path: str, settings: dict):
+def _narrate_text(text: str, narration_path: str, settings: dict, work_dir: str | None = None):
     """Ayarlarda seçilen motora göre (edge-tts veya Google Cloud Chirp3-HD)
-    metni seslendirir ve altyazı zaman damgalarını (SubtitleCue listesi) döndürür."""
+    metni seslendirir ve altyazı zaman damgalarını (SubtitleCue listesi) döndürür.
+
+    Her iki motorda da ``split_long_cues`` uygulanır: uzun cümleler virgül /
+    noktalı virgul gibi doğal duraklama noktalarından bölünür, böylece ekranda
+    tek seferde okunamayacak kadar uzun metin bloğu görünmez. (Daha önce bu
+    bölme SADECE edge dalında yapılıyordu; varsayılan motor olan
+    ``google_cloud`` uzun cümleleri tek blok halinde bırakıyordu.)
+    """
     engine = settings["tts"].get("engine", "edge")
     if engine == "google_cloud":
         from . import tts_google_cloud
@@ -58,11 +65,16 @@ def _narrate_text(text: str, narration_path: str, settings: dict):
                 "bölümüne bakın ya da tts.engine değerini 'edge' yapın."
             )
         gc = settings["tts"]["google_cloud"]
-        return tts_google_cloud.narrate(
+        kwargs = {}
+        if work_dir:
+            kwargs["work_dir"] = work_dir
+        cues = tts_google_cloud.narrate(
             text, narration_path, api_key=api_key,
             voice_name=gc["voice_name"], language_code=gc["language_code"],
             speaking_rate=gc.get("speaking_rate", 1.0),
+            **kwargs,
         )
+        return tts.split_long_cues(cues)
     else:
         voice = settings["tts"][settings["tts"]["default_voice"]]
         return tts.split_long_cues(tts.narrate(
@@ -74,9 +86,12 @@ def _narrate_text(text: str, narration_path: str, settings: dict):
 def _build_sure_assets(entry, settings, work_dir, is_short):
     ref = entry["ref"]
     reciter = ref.get("reciter", settings["quran"]["default_reciter"])
+    translation_edition = ref.get(
+        "translation_edition", settings["quran"]["translation_edition"]
+    )
     ayahs = quran.get_surah_ayahs(
         ref["surah_number"], ref["ayah_start"], ref["ayah_end"],
-        reciter=reciter, translation_edition=settings["quran"]["translation_edition"],
+        reciter=reciter, translation_edition=translation_edition,
     )
     audio_paths = [quran.download_ayah_audio(a) for a in ayahs]
     durations = audio_tools.get_durations(audio_paths)
@@ -102,8 +117,10 @@ def _build_sure_assets(entry, settings, work_dir, is_short):
     meta = metadata.build_sure_metadata(
         surah_name_tr=surah_name,
         ayah_start=ref["ayah_start"], ayah_end=ref["ayah_end"],
-        reciter_display=reciter, is_short=is_short,
+        reciter_display=quran.reciter_display_name(reciter),
+        is_short=is_short,
         channel_name=settings["channel"]["name"],
+        meal_display=quran.translation_display_name(translation_edition),
     )
     return {
         "narration_path": narration_path,
@@ -118,13 +135,14 @@ def _build_hadis_assets(entry, settings, work_dir, is_short):
     ref = entry["ref"]
     h = hadith.get_hadith(ref["collection"], ref["hadithnumber"])
     narration_path = os.path.join(work_dir, "narration.mp3")
-    narr_cues = _narrate_text(h.text, narration_path, settings)
+    narr_cues = _narrate_text(h.text, narration_path, settings, work_dir=work_dir)
     total_duration = narr_cues[-1].end if narr_cues else audio_tools._ffprobe_duration(narration_path)
 
     meta = metadata.build_hadis_metadata(
         collection_display=h.collection_display, hadith_number=h.hadith_number,
         hint=entry.get("title_hint", ""), is_short=is_short,
         channel_name=settings["channel"]["name"],
+        extra_tags=settings.get("youtube", {}).get("default_tags"),
     )
     return {
         "narration_path": narration_path,
@@ -139,12 +157,13 @@ def _build_dua_assets(entry, settings, work_dir, is_short):
     ref = entry["ref"]
     d = dua.get_dua(ref["dua_id"])
     narration_path = os.path.join(work_dir, "narration.mp3")
-    narr_cues = _narrate_text(d.turkish, narration_path, settings)
+    narr_cues = _narrate_text(d.turkish, narration_path, settings, work_dir=work_dir)
     total_duration = narr_cues[-1].end if narr_cues else audio_tools._ffprobe_duration(narration_path)
 
     meta = metadata.build_dua_metadata(
         dua_title=d.title, source=d.source, is_short=is_short,
         channel_name=settings["channel"]["name"],
+        extra_tags=settings.get("youtube", {}).get("default_tags"),
     )
     return {
         "narration_path": narration_path,
@@ -169,12 +188,13 @@ def _build_hikaye_assets(entry, settings, work_dir, is_short):
         text = f.read()
 
     narration_path = os.path.join(work_dir, "narration.mp3")
-    narr_cues = _narrate_text(text, narration_path, settings)
+    narr_cues = _narrate_text(text, narration_path, settings, work_dir=work_dir)
     total_duration = narr_cues[-1].end if narr_cues else audio_tools._ffprobe_duration(narration_path)
 
     meta = metadata.build_hikaye_metadata(
         hint=entry.get("title_hint", ""), is_short=is_short,
         channel_name=settings["channel"]["name"],
+        extra_tags=settings.get("youtube", {}).get("default_tags"),
     )
     return {
         "narration_path": narration_path,
@@ -204,13 +224,14 @@ def _build_tema_assets(entry, settings, work_dir, is_short):
         text = f.read()
 
     narration_path = os.path.join(work_dir, "narration.mp3")
-    narr_cues = _narrate_text(text, narration_path, settings)
+    narr_cues = _narrate_text(text, narration_path, settings, work_dir=work_dir)
     total_duration = narr_cues[-1].end if narr_cues else audio_tools._ffprobe_duration(narration_path)
 
     category = ref.get("category", "")
     meta = metadata.build_tema_metadata(
         hint=entry.get("title_hint", ""), category=category, is_short=is_short,
         channel_name=settings["channel"]["name"], sources=ref.get("sources", ""),
+        extra_tags=settings.get("youtube", {}).get("default_tags"),
     )
     return {
         "narration_path": narration_path,
@@ -236,6 +257,20 @@ SERIES_LABELS = {
     "dua": "Dualarla Huzur",
     "sure": "Kur'an-ı Kerim'den",
     "hikaye": "Dini Kıssalar",
+}
+
+# "tema" tipindeki videoların kategorisine göre kapak (thumbnail) üzerinde küçük
+# şekilde gösterilen tür etiketi. Modül sabiti olarak tutulur; eskiden bu sözlük
+# her run_entry çağrısında yeniden oluşturuluyordu.
+TEMA_CATEGORY_SUBTITLE = {
+    "hadis_sohbet": "Hadis Sohbeti",
+    "kuran_tefsir": "Kur'an Tefsiri",
+    "dua_fazilet": "Dua ve Fazilet",
+    "dua_zikir": "Dua ve Zikir",
+    "ilmihal": "İlmihal",
+    "peygamberler_tarihi": "Peygamberler Tarihi",
+    "sahabe": "Sahabe Hayatı",
+    "tefekkur": "Tefekkür",
 }
 
 
@@ -280,16 +315,42 @@ def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False
     assets = builder(entry, settings, work_dir, is_short)
 
     width, height, fps = _dims(settings, is_short)
-    if is_short and assets["total_duration"] > settings["video"]["max_short_seconds"]:
-        print(f"[pipeline] UYARI: {entry['id']} süresi short limitini aşıyor "
-              f"({assets['total_duration']:.1f}s > {settings['video']['max_short_seconds']}s)")
+
+    # --- Short süre limiti politikası -------------------------------------
+    # YouTube artık Shorts için 3 dakikaya kadar izin verse de, projedeki
+    # max_short_seconds bilinçli olarak dar tutulmuştur. Eski kod bu limiti
+    # SADECE konsola yazdırıp videoyu yine de yüklüyordu; sonuç, "#shorts"
+    # etiketiyle yayınlanan ama aslında normal uzunlukta olan videolardı.
+    # Politika artık yapılandırılabilir:
+    #   "warn" (varsayılan) -> uyarı ver, yayınlamaya devam et
+    #   "fail"              -> hatayla durur, görev 'failed' işaretlenir
+    if is_short:
+        limit = settings["video"].get("max_short_seconds")
+        if limit and assets["total_duration"] > limit:
+            action = settings["video"].get("short_over_limit_action", "warn")
+            msg = (
+                f"{entry['id']} süresi short limitini aşıyor "
+                f"({assets['total_duration']:.1f}s > {limit}s)"
+            )
+            if action == "fail":
+                raise RuntimeError(
+                    f"[pipeline] SHORT SÜRE LİMİTİ AŞILDI: {msg}. "
+                    "video.short_over_limit_action='fail' olarak ayarlı. "
+                    "Anlatım metnini kısaltın veya limiti/politikayı değiştirin."
+                )
+            print(f"[pipeline] UYARI: {msg} (politika: {action})")
 
     title_cfg = settings.get("title_overlay", {})
     title_text = ""
     title_max_chars = 20
     title_font_size = 0
     if title_cfg.get("enabled", False):
-        raw_title = entry.get("title_hint") or assets["metadata"].title
+        # Öncelik sırası thumbnail ile AYNI olmalı: önce kısa/vurucu
+        # 'thumb_title', sonra 'title_hint', en sonda üretilen başlık.
+        # (Eskiden video üstü bindirme 'thumb_title'ı yok sayıyordu; kapakta
+        # "NİYETİN GÜCÜ" yazarken video üstünde 4 satırlık uzun başlık
+        # görünüyordu — marka tutarsızlığı.)
+        raw_title = entry.get("thumb_title") or entry.get("title_hint") or assets["metadata"].title
         raw_title = raw_title.split(" | ")[0].replace("#shorts", "").strip()
         title_text = metadata.turkish_upper(raw_title)
         title_max_chars = title_cfg.get(
@@ -359,7 +420,6 @@ def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False
         )
         os.replace(logo_out, final_video_path)
 
-    is_short = entry["format"] == "short"
     thumb_path = os.path.join(output_dir, f"{entry['id']}_thumb.jpg")
     if is_short:
         # Short videolar: değişmez karar -- GERÇEK video karesi kullanılır.
@@ -379,12 +439,6 @@ def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False
         "dua": "Dua", "hikaye": "Dini Kıssa",
     }
     TYPE_ACCENT = {"sure": "#Kuran", "hadis": "#Hadis", "dua": "#Dua", "hikaye": "#Kıssa"}
-    TEMA_CATEGORY_SUBTITLE = {
-        "hadis_sohbet": "Hadis Sohbeti", "kuran_tefsir": "Kur'an Tefsiri",
-        "dua_fazilet": "Dua ve Fazilet", "ilmihal": "İlmihal",
-        "peygamberler_tarihi": "Peygamberler Tarihi", "sahabe": "Sahabe Hayatı",
-        "tefekkur": "Tefekkür",
-    }
     if entry["type"] == "tema":
         tema_category = entry.get("ref", {}).get("category", "")
         thumb_subtitle = TEMA_CATEGORY_SUBTITLE.get(tema_category, "Dini Sohbet")

@@ -33,8 +33,14 @@ def _load_all(timeout: int = 30) -> List[dict]:
     if not os.path.exists(CACHE_FILE):
         r = requests.get(RAW_URL, timeout=timeout)
         r.raise_for_status()
-        with open(CACHE_FILE, "wb") as f:
+        # ATOMIK yazma: indirme yarıda kalırsa bozuk JSON cache'te kalıcı
+        # olur ve sonraki her çalıştırmada json.load hatası verir.
+        tmp_path = f"{CACHE_FILE}.part"
+        with open(tmp_path, "wb") as f:
             f.write(r.content)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, CACHE_FILE)
     with open(CACHE_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 

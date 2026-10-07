@@ -54,7 +54,8 @@ src/scheduler.py        -> takvimi tarar, zamanı gelenleri işler
 
 | İhtiyaç | Kaynak | Not |
 |---|---|---|
-| Kur'an metni + Diyanet meali | `api.alquran.cloud` | Ücretsiz, anahtar gerekmez |
+| Kur'an metni (Arapça) | `api.alquran.cloud` | Ücretsiz, anahtar gerekmez |
+| Kur'an Türkçe meali | `api.alquran.cloud` (Gölpınarlı) | Ücretsiz, anahtar gerekmez — **bkz. uyarı** |
 | Hafız ses kaydı (Alafasy, Hüseyin, Sudais...) | `islamic.network` CDN | Ücretsiz, anahtar gerekmez |
 | Hadis metinleri (Buhari, Müslim, Ebu Davud, İbni Mace, Muvatta, Nevevi) | `fawazahmed0/hadith-api` (GitHub, CC0) | Ücretsiz, açık kaynak |
 | Dua metinleri (Hısnu'l Müslim, 273 dua) | GitHub açık veri seti | Ücretsiz, açık kaynak |
@@ -68,20 +69,78 @@ src/scheduler.py        -> takvimi tarar, zamanı gelenleri işler
 
 **Hiçbir adımda kredi kartı veya ücretli abonelik gerekmez.**
 
+> ### ⚠️ Kur'an meali kaynağı hakkında ÖNEMLİ uyarı
+>
+> **2026-10'da keşfedilen bir veri bozulması nedeniyle sistem artık varsayılan
+> olarak `tr.diyanet` (Diyanet İşleri) mealini KULLANMIYOR.**
+>
+> `api.alquran.cloud` üzerindeki `tr.diyanet` edisyonunda ciddi bir hata
+> tespit edilmiştir: **114 surenin ~97'sinde ardışık ayetlerin Türkçe meal
+> metinleri birebir aynı dönmektedir.** Örnekler:
+>
+> | Sure | Hata |
+> |---|---|
+> | Yasin (36) | 2, 3 ve 4. ayetlerin üçü de aynı uzun metni döner (Arapça metinler farklı) |
+> | Nas (114) | 6 ayetin **altısı** da birebir aynı metni döner |
+> | Bakara (2) | 45=46, 183=184, 204=205 ... gibi onlarca eşleşme |
+>
+> Aynı bozulma `quran.com` API'sindeki "Turkish Translation (Diyanet)"
+> kaynağında da görülmektedir; yani sorun iki sağlayıcının ortak kullandığı
+> kaynak veridedir.
+>
+> **Çözüm:** 114 surenin tamamı tek tek doğrulanmış TEMİZ edisyonlar
+> kullanılmaktadır:
+>
+> | Edisyon | Meal | Durum |
+> |---|---|---|
+> | `tr.golpinarli` | **Abdulbaki Gölpınarlı** (varsayılan) | ✅ 114/114 sure hatasız |
+> | `tr.ates` | Süleyman Ateş | ✅ 114/114 sure hatasız (daha akıcı, sade Türkçe) |
+> | `tr.ozturk` | Yaşar Nuri Öztürk | ✅ 114/114 sure hatasız |
+> | `tr.bulac` | Ali Bulaç | ✅ 114/114 sure hatasız |
+> | `tr.yuksel` | Edip Yüksel | ✅ 114/114 sure hatasız |
+> | `tr.diyanet` | Diyanet İşleri | ❌ **BOZUK — kullanmayın** |
+>
+> Ayrıca `src/content/quran.py` her çekimde verinin bütünlüğünü doğrular:
+> Arapça metinleri farklı olan ardışık ayetlerin meal metinleri aynı gelirse
+> `QuranDataError` fırlatır ve video **yayınlanmaz**. Dini içerikte hatalı metin
+> yayınlamak, hiç yayınlamamaktan çok daha kötü olduğu için bu hata bilinçli
+> olarak sessizce geçilmez.
+>
+> **Mealı değiştirmek isterseniz:** `config/settings.yaml` →
+> `quran.translation_edition` değerini yukarıdaki temiz edisyonlardan biriyle
+> değiştirmek yeterli (tek satır).
+
 ---
 
 ## 3) İçerik Türleri ve Doğruluk Politikası
 
 | `type` | Kaynak | Yapay zeka üretir mi? |
 |---|---|---|
-| `sure` | alquran.cloud (Arapça metin + Diyanet meali + gerçek hafız sesi) | ❌ Hayır |
+| `sure` | alquran.cloud (Arapça metin + Gölpınarlı meali + gerçek hafız sesi) | ❌ Hayır |
 | `hadis` | fawazahmed0/hadith-api (Kütüb-i Sitte) | ❌ Hayır — sadece TTS ile seslendirilir |
 | `dua` | Hısnu'l Müslim veri seti | ❌ Hayır — sadece TTS ile seslendirilir |
 | `hikaye` | **Sizin sağladığınız metin dosyası** (`content_library/hikayeler/*.txt`) | ❌ Hayır — sistem sadece seslendirir/altyazılar, metni üretmez |
+| `tema` | **Sizin sağladığınız metin dosyası** (`content_library/tema/*.txt`) | ❌ Hayır — sistem sadece seslendirir/altyazılar, metni üretmez |
 
 Başlık ve açıklamalar da serbest LLM üretimi değil, **şablon tabanlıdır**
 (`src/metadata.py`) — kaynak/hadis numarası/sure adı gibi bilgiler şablona
 otomatik yerleştirilir, hatalı/uydurma bilgi riski taşımaz.
+
+### `tema` kategorileri
+
+`tema` tipindeki videolar `ref.category` alanıyla gruplanır; her kategori kendi
+"seri adını", kapak alt yazısını ve etiketlerini alır:
+
+| `category` | Seri adı | Kapak alt yazısı |
+|---|---|---|
+| `kuran_tefsir` | Kur'an'ın Işığında | Kur'an Tefsiri |
+| `hadis_sohbet` | Hadis Sohbetleri | Hadis Sohbeti |
+| `dua_fazilet` | Dualarla Huzur | Dua ve Fazilet |
+| `dua_zikir` | Zikrin Bereketi | Dua ve Zikir |
+| `ilmihal` | Günlük Hayatta İslam | İlmihal |
+| `peygamberler_tarihi` | Peygamberler Tarihi | Peygamberler Tarihi |
+| `sahabe` | Sahabe Hayatları | Sahabe Hayatı |
+| `tefekkur` | Tefekkür Vakti | Tefekkür |
 
 ---
 
@@ -251,6 +310,17 @@ yayın anı tam istediğiniz saatte YouTube tarafından gerçekleştirilir.
   siz sağlarsınız. Bu, dini doğruluğu garanti etmenin tek güvenli yoludur.
 - **Video üretim süresi:** Uzun bir sure (ör. 20 ayet) videosu, GitHub Actions
   sunucusunda birkaç dakika sürebilir; bu süre free tier limitlerinin çok altındadır.
+- **Short süre sınırı (`video.max_short_seconds`):** Varsayılan eşik 59
+  saniyedir. Ancak YouTube, Ekim 2024'ten bu yana Shorts için **3 dakikaya
+  (180 sn) kadar** izin veriyor; 59 sn eski/katı bir eşiktir. Takvimin 62
+  short videosundan **32'sinin tahmini süresi bu eşiği aştığı** için varsayılan
+  politika `warn` olarak bırakıldı — aksi halde takvimin yarısı üretilemez olur.
+  İsterseniz `config/settings.yaml` → `video.short_over_limit_action` değerini
+  `fail` yaparak sınırı aşan short videolarda durmayı zorunlu kılabilirsiniz.
+- **Thumbnail yüklenemezse video yine de yüklenir:** YouTube, kanal telefonla
+  doğrulanmamışsa `thumbnails().set()` çağrısını reddeder. Sistem artık bu
+  durumda uyarı verip yüklemeyi başarılı sayar; aksi halde aynı video bir
+  sonraki koşuda **tekrar** yüklenir (mükerrer video).
 - Thumbnail ve video kalitesi, kullandığınız Pexels/Pixabay API anahtarlarıyla
   çekilen gerçek stok görüntülerle (placeholder değil) çok daha etkileyici olur;
   bu yüzden API anahtarlarını eklemeniz şiddetle tavsiye edilir.

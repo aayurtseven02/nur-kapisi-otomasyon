@@ -109,10 +109,24 @@ def upload_video(
 
     video_id = response["id"]
 
+    # Thumbnail ayrı bir API çağrısıdır ve BAŞARISIZ olabilir (örn. kanal
+    # telefonla doğrulanmamışsa YouTube thumbnails().set()'i reddeder).
+    # ESKİ kod burada hatayı yukarı fırlatıyordu; video zaten yüklenmiş
+    # olmasına rağmen scheduler görevi 'failed' işaretleyip bir sonraki
+    # koşuda AYNI VİDEOYU TEKRAR yüklüyordu (YouTube'da mükerrer video).
+    # Thumbnail başarısızlığı artık video kimliğini kaybetmeye yetecek kadar
+    # ciddi sayılmaz: uyarı verilir, yükleme başarılı kabul edilir.
     if thumbnail_path and os.path.exists(thumbnail_path):
-        youtube.thumbnails().set(
-            videoId=video_id,
-            media_body=MediaFileUpload(thumbnail_path, mimetype="image/jpeg"),
-        ).execute()
+        try:
+            youtube.thumbnails().set(
+                videoId=video_id,
+                media_body=MediaFileUpload(thumbnail_path, mimetype="image/jpeg"),
+            ).execute()
+        except Exception as e:
+            print(
+                f"[youtube_upload] UYARI: thumbnail yüklenemedi ({video_id}): {e}\n"
+                f"  Video başarıyla yüklenmiş durumda; kapak görselini "
+                f"YouTube Studio'dan elle ekleyebilirsiniz."
+            )
 
     return UploadResult(video_id=video_id, url=f"https://www.youtube.com/watch?v={video_id}")

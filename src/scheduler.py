@@ -42,6 +42,21 @@ def _save_schedule(data):
         yaml.safe_dump(data, f, allow_unicode=True, sort_keys=False)
 
 
+def _parse_publish_at(value: str) -> datetime.datetime:
+    """schedule.yaml'daki publish_at değerini saat dilimli (aware) datetime'a çevirir.
+
+    Yazımı saat dilimi içermiyorsa (örn. "2026-10-08T09:00:00") eski kod naive
+    bir datetime üretiyor ve bunu aware olan ``datetime.now(timezone.utc)``
+    ile karşılaştırırken ``TypeError`` ile çöküyordu. Böyle durumlarda
+    değer, projenin yerel saat diliminde (+03:00 Türkiye) yazılmış varsayılır.
+    """
+    dt = datetime.datetime.fromisoformat(value)
+    if dt.tzinfo is None:
+        local_tz = datetime.datetime.now().astimezone().tzinfo
+        dt = dt.replace(tzinfo=local_tz)
+    return dt
+
+
 def find_due_entries(schedule: dict, lead_time_hours: float = DEFAULT_LEAD_TIME_HOURS):
     now = datetime.datetime.now(datetime.timezone.utc)
     cutoff = now + datetime.timedelta(hours=lead_time_hours)
@@ -49,10 +64,10 @@ def find_due_entries(schedule: dict, lead_time_hours: float = DEFAULT_LEAD_TIME_
     for entry in schedule.get("videos", []):
         if entry.get("status") != "pending":
             continue
-        publish_at = datetime.datetime.fromisoformat(entry["publish_at"])
+        publish_at = _parse_publish_at(entry["publish_at"])
         if publish_at <= cutoff:
             due.append(entry)
-    due.sort(key=lambda e: e["publish_at"])
+    due.sort(key=lambda e: _parse_publish_at(e["publish_at"]))
     return due
 
 
@@ -82,11 +97,18 @@ def run_once(upload: bool = True, lead_time_hours: float = DEFAULT_LEAD_TIME_HOU
                 print(f"[scheduler] Yerel üretim tamam: {res['video_path']}")
             results.append((entry["id"], "done"))
         except Exception as e:
-            entry["status"] = "failed"
+            # ÖNEMLİ: Eğer hata, video YouTube'a yüklenildikten SONRA oluştuysa
+            # (ör. thumbnail set() hatası) eski kod görevi 'failed' olarak
+            # işaretliyordu. Bir sonraki koşuda aynı video TEKRAR yüklenirdi
+            # (YouTube'da mükerrer/çift video). Bu yüzden hata mesajında
+            # "youtube_video_id" geçiyorsa durum 'failed' yerine 'needs_review'
+            # yapılır — insan kontrolü ister, sessizce tekrar yüklemez.
             entry["error"] = str(e)
-            print(f"[scheduler] HATA ({entry['id']}): {e}")
+            already_uploaded = "youtube_video_id" in entry or "youtube_video_id" in str(e)
+            entry["status"] = "needs_review" if already_uploaded else "failed"
+            print(f"[scheduler] HATA ({entry['id']}) -> durum: {entry['status']}: {e}")
             traceback.print_exc()
-            results.append((entry["id"], "failed"))
+            results.append((entry["id"], entry["status"]))
 
     _save_schedule(schedule)
     return results

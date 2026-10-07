@@ -13,6 +13,26 @@ _TR_UPPER_TO_LOWER = str.maketrans({"I": "ı", "İ": "i"})
 _TR_LOWER_TO_UPPER_FIRST = {"ı": "I", "i": "İ"}
 
 
+def turkish_lower(text: str) -> str:
+    """Türkçe'ye uygun küçük harf dönüşümü.
+
+    Python'un yerleşik ``.lower()`` fonksiyonu "İ" harfini "i" + BİRLEŞEN
+    NOKTA (U+0307) olarak üretir (yani "İhlas" -> "i̇hlas", 5 karakter değil
+    6 karakter). YouTube etiketleri/açıklamalarında bu birleşen karakter
+    kirik/garip görünür ve aramada eşleşmez. Bu fonksiyon "İ" -> "i",
+    "I" -> "ı" dönüşümünü doğru yapar.
+    """
+    result = []
+    for ch in text:
+        if ch == "İ":
+            result.append("i")
+        elif ch == "I":
+            result.append("ı")
+        else:
+            result.append(ch.lower())
+    return "".join(result)
+
+
 def turkish_upper(text: str) -> str:
     """Python'un yerleşik .upper() fonksiyonu Türkçe 'i' harfini 'I' yapar (yanlış,
     doğrusu 'İ'). Bu fonksiyon video üstü başlık gibi TAMAMEN BÜYÜK HARF gereken
@@ -52,21 +72,27 @@ class VideoMetadata:
 
 def build_sure_metadata(surah_name_tr: str, ayah_start: int, ayah_end: int,
                           reciter_display: str, is_short: bool,
-                          channel_name: str, extra_tags: Optional[List[str]] = None) -> VideoMetadata:
+                          channel_name: str, extra_tags: Optional[List[str]] = None,
+                          meal_display: Optional[str] = None) -> VideoMetadata:
     ayet_araligi = f"{ayah_start}-{ayah_end}" if ayah_start != ayah_end else str(ayah_start)
     title = f"{surah_name_tr} Suresi ({ayet_araligi}. Ayetler) | Türkçe Meali ile Dinle"
     if is_short:
         title = f"{surah_name_tr} Suresi {ayet_araligi}. Ayet | Kur'an-ı Kerim #shorts"
+    meal_line = (
+        f"📖 Meal Kaynağı: {meal_display}\n\n" if meal_display
+        else "📖 Meal Kaynağı: Diyanet İşleri Başkanlığı\n\n"
+    )
     description = (
-        f"{surah_name_tr} Suresi, {ayet_araligi}. ayetlerinin kıraati ve Diyanet İşleri Başkanlığı "
-        f"Türkçe meali ile birlikte sunulmuştur.\n\n"
+        f"{surah_name_tr} Suresi, {ayet_araligi}. ayetlerinin kıraati ve Türkçe "
+        f"meali ile birlikte sunulmuştur.\n\n"
         f"🎙️ Kıraat: {reciter_display}\n"
-        f"📖 Meal Kaynağı: Diyanet İşleri Başkanlığı\n\n"
+        f"{meal_line}"
         f"Allah kabul etsin. Beğenmeyi ve abone olmayı unutmayın.\n\n"
         f"#Kuran #{surah_name_tr.replace(' ', '')}Suresi #İslam #Dua #Huzur\n\n"
         f"{channel_name}"
     )
-    tags = ["kuran", "kuran-ı kerim", surah_name_tr.lower(), "meal", "kıraat", "islam", "dini video"]
+    tags = ["kuran", "kuran-ı kerim", turkish_lower(surah_name_tr), "meal", "kıraat",
+            "islam", "dini video"]
     if extra_tags:
         tags += extra_tags
     return VideoMetadata(title=title, description=description, tags=tags[:30])
@@ -85,7 +111,8 @@ def build_hadis_metadata(collection_display: str, hadith_number: int, hint: str,
         f"#Hadis #SünnetiSeniyye #İslam #{collection_display.replace(' ', '').replace(chr(39), '')}\n\n"
         f"{channel_name}"
     )
-    tags = ["hadis", "hadis-i şerif", collection_display.lower(), "sünnet", "islam", "peygamber efendimiz"]
+    tags = ["hadis", "hadis-i şerif", turkish_lower(collection_display), "sünnet",
+            "islam", "peygamber efendimiz"]
     if extra_tags:
         tags += extra_tags
     return VideoMetadata(title=title, description=description, tags=tags[:30])
@@ -128,6 +155,10 @@ TEMA_CATEGORY_LABELS = {
     "hadis_sohbet": "Hadis Sohbetleri",
     "kuran_tefsir": "Kur'an'ın Işığında",
     "dua_fazilet": "Dualarla Huzur",
+    # "dua_zikir" (dua + zikir fazileti) için "dua_fazilet" ile ÇAKIŞMAYAN,
+    # ayrı bir seri adı verilir; aksi halde iki farklı seri aynı ekranda
+    # "DUALARLA HUZUR #1" olarak görünür ve karışıklık yaratırdı.
+    "dua_zikir": "Zikrin Bereketi",
     "ilmihal": "Günlük Hayatta İslam",
     "peygamberler_tarihi": "Peygamberler Tarihi",
     "sahabe": "Sahabe Hayatları",
@@ -138,6 +169,7 @@ TEMA_CATEGORY_HASHTAGS = {
     "hadis_sohbet": "#Hadis #SünnetiSeniyye",
     "kuran_tefsir": "#Kuran #Tefsir",
     "dua_fazilet": "#Dua #Zikir",
+    "dua_zikir": "#Zikir #Dua #Tesbih",
     "ilmihal": "#İlmihal #İslam",
     "peygamberler_tarihi": "#PeygamberlerTarihi #KurandanKıssalar",
     "sahabe": "#Sahabe #İslamTarihi",

@@ -67,6 +67,21 @@ def _ensure_cache_dir():
     os.makedirs(CACHE_DIR, exist_ok=True)
 
 
+def _atomic_write_bytes(path: str, data: bytes):
+    """Dosyayı ATOMİK yazar (geçici dosya + os.replace).
+
+    Koleksiyon JSON'u birkaç MB'dır; indirme yarıda kalırsa bozuk dosya
+    cache'te kalıcı olur ve sonraki HER çalıştırmada json.load hatası verir.
+    """
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    tmp_path = f"{path}.part"
+    with open(tmp_path, "wb") as f:
+        f.write(data)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp_path, path)
+
+
 def _load_collection(collection: str, timeout: int = 60) -> dict:
     """Koleksiyonun tam JSON'unu indirir ve yerelde cache'ler (büyük dosya, bir kez indirilir)."""
     _ensure_cache_dir()
@@ -75,8 +90,7 @@ def _load_collection(collection: str, timeout: int = 60) -> dict:
         url = f"{CDN_BASE}/{collection}.min.json"
         r = requests.get(url, timeout=timeout)
         r.raise_for_status()
-        with open(local_path, "wb") as f:
-            f.write(r.content)
+        _atomic_write_bytes(local_path, r.content)
     with open(local_path, "r", encoding="utf-8") as f:
         return json.load(f)
 

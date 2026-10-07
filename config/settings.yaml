@@ -22,7 +22,21 @@ branding:
 # Alternatifler: ar.husary, ar.abdurrahmaansudais, ar.hudhaify, ar.shaatree
 quran:
   default_reciter: "ar.alafasy"
-  translation_edition: "tr.diyanet"   # Diyanet meali
+  # Türkçe meal edisyonu.
+  #
+  # ⚠️ ÖNEMLİ (2026-10'da keşfedilen veri bozulması):
+  #   alquran.cloud üzerindeki 'tr.diyanet' edisyonunda CİDDİ bir hata vardır —
+  #   114 surenin ~97'sinde ARDIŞIK ayetlerin meal metinleri BİREBİR AYNI
+  #   döner (örn. Yasin 2=3=4, Nas'ın 6 ayeti tamamen aynı, Bakara 45=46).
+  #   quran.com API'sindeki Diyanet çevirisi de aynı bozukluğu gösterir.
+  #
+  #   Aşağıdaki edisyonlar 114 surenin TAMAMI tek tek doğrulanmıştır ve
+  #   hatasızdır: tr.golpinarli, tr.ates, tr.ozturk, tr.bulac, tr.yuksel
+  #
+  #   Varsayılan olarak Gölpınarlı mealı kullanılır. src/content/quran.py
+  #   her çekimde veriyi doğrular; bozulma görülürse sessizce yanlış dini
+  #   metin yayınlamak yerine hata verir.
+  translation_edition: "tr.golpinarli"
 
 # Hadis kaynağı (fawazahmed0/hadith-api edition adları)
 # Alternatifler: tur-muslim, tur-abudawud, tur-ibnmajah, tur-malik, tur-nawawi
@@ -84,7 +98,15 @@ video:
     width: 1080
     height: 1920
     fps: 30
+  # Short formatı için hedef üst süre sınırı.
+  # Not: YouTube, Ekim 2024'ten bu yana Shorts için 3 dakikaya (180 sn) kadar
+  # izin veriyor; 59 sn eski/katı bir eşiktir. Takvimin 62 short videosundan
+  # 32'sinin tahmini süresi bu eşiği aştığı için varsayılan politika "warn"
+  # olarak bırakıldı — aksi halde takvimin yarısı üretilemez olurdu.
   max_short_seconds: 59
+  # "warn" -> sınırı aşan short videoları uyarı vererek yine de üret/yükle
+  # "fail" -> sınırı aşan videolarda hata ver, görevi 'failed' işaretle
+  short_over_limit_action: "warn"
 
 subtitles:
   font_family: "Noto Sans"       # assets/fonts/ içindeki font ailesi adı (dosya adı değil)

@@ -16,6 +16,8 @@ from __future__ import annotations
 import os
 import random
 import subprocess
+import zlib
+
 import requests
 from dataclasses import dataclass
 from typing import List, Optional
@@ -82,7 +84,13 @@ def _download(url: str, out_path: str, timeout: int = 60):
 
 
 def _placeholder_clip(out_path: str, width: int, height: int, duration: float, seed: int):
-    """API anahtarı yokken yerel test için basit hareketli gradyan klip üretir."""
+    """API anahtarı yokken yerel test için basit hareketli gradyan klip üretir.
+
+    ``seed`` için anahtar kelimenin ``hash()`` değeri DEĞİL, kararlı bir
+    özet (zlib.crc32) kullanılır: Python'un ``hash()`` fonksiyonu süreç
+    başına rastgele tuzlanır (PYTHONHASHSEED), bu yüzden aynı anahtar kelime
+    her çalıştırmada FARKLI renkler üretip tekrarlanabilirliği bozuyordu.
+    """
     random.seed(seed)
     c1 = f"{random.randint(0,80):02x}{random.randint(40,90):02x}{random.randint(20,60):02x}"
     c2 = f"{random.randint(0,40):02x}{random.randint(20,60):02x}{random.randint(40,90):02x}"
@@ -95,6 +103,11 @@ def _placeholder_clip(out_path: str, width: int, height: int, duration: float, s
         "-t", str(duration), "-pix_fmt", "yuv420p", out_path,
     ]
     subprocess.run(cmd, check=True, capture_output=True)
+
+
+def _stable_seed(text: str) -> int:
+    """Süreçler arası kararlı, pozitif bir tohum üretir (hash() tuzlanmasından etkilenmez)."""
+    return zlib.crc32(text.encode("utf-8")) & 0x7FFFFFFF
 
 
 def fetch_clip_for_keyword(
@@ -143,7 +156,8 @@ def fetch_clip_for_keyword(
     # Fallback: placeholder (anahtarsız yerel test için)
     out_path = os.path.join(CACHE_DIR, f"placeholder_{safe_kw}_{width}x{height}.mp4")
     if not os.path.exists(out_path):
-        _placeholder_clip(out_path, width, height, max(min_duration, 6), seed=hash(keyword) % 1000)
+        _placeholder_clip(out_path, width, height, max(min_duration, 6),
+                           seed=_stable_seed(keyword) % 1000)
     return StockClip(local_path=out_path, source="placeholder", keyword=keyword)
 
 

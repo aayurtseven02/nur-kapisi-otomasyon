@@ -13,7 +13,6 @@ from __future__ import annotations
 import os
 import subprocess
 import json
-from dataclasses import dataclass
 from typing import List, Optional
 
 from .visuals import StockClip

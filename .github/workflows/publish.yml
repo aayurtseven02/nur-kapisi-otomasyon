@@ -36,7 +36,9 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # Uzun sure (ör. 20 ayet) videoları birkaç dakika sürebilir; 60 dk
+    # sınırı bazı uzun içerikler için yetersiz kalabiliyordu.
+    timeout-minutes: 90
     steps:
       - name: Repo'yu çek
         uses: actions/checkout@v4
@@ -62,12 +64,17 @@ jobs:
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          # workflow_dispatch girdileri doğrudan kabuk metnine gömülmek yerine
+          # ortam değişkeni üzerinden aktarılır (GitHub'in önerdiği güvenli
+          # yöntem — kabuk enjeksiyonunu önler).
+          INPUT_NO_UPLOAD: ${{ github.event.inputs.no_upload }}
+          INPUT_LEAD_HOURS: ${{ github.event.inputs.lead_time_hours }}
         run: |
           EXTRA_ARGS=""
-          if [ "${{ github.event.inputs.no_upload }}" = "true" ]; then
+          if [ "$INPUT_NO_UPLOAD" = "true" ]; then
             EXTRA_ARGS="--no-upload"
           fi
-          LEAD="${{ github.event.inputs.lead_time_hours }}"
+          LEAD="$INPUT_LEAD_HOURS"
           if [ -z "$LEAD" ]; then LEAD=6; fi
           python -m src.scheduler --lead-time-hours "$LEAD" --max-videos 1 $EXTRA_ARGS
 
