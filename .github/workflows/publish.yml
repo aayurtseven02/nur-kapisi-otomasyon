@@ -51,7 +51,27 @@ jobs:
           python-version: "3.11"
 
       - name: ffmpeg kur
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-noto-core
+        # NOT: Bu adımın zaman aşımı bilinçli olarak kısa (10 dk) tutuldu.
+        # GitHub runner'larında `apt-get update` bazen sonsuza kadar asılı
+        # kalabiliyor (izlenen gerçek olay: 2026-10-07'de bir koşu bu adımda
+        # 50+ dakika takıldı). `concurrency.cancel-in-progress: false` olduğu
+        # için asılı kalan bir koşu SONRAKİ TÜM koşuları kuyrukta bekletiyordu.
+        # Adım zaman aşımına uğarsa koşu hızlıca başarısız olur ve kuyruk açılır.
+        timeout-minutes: 10
+        run: |
+          if command -v ffmpeg >/dev/null 2>&1; then
+            # ubuntu-latest görüntülerinde ffmpeg çoğunlukla hazır gelir;
+            # gereksiz apt trafiği ve asılı kalma riskini tamamen eleyiz.
+            echo "ffmpeg zaten kurulu, apt atlanıyor."
+          else
+            APT_OPTS="-o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 -o Acquire::Retries=3"
+            sudo apt-get update -qq $APT_OPTS
+            sudo apt-get install -y -qq $APT_OPTS ffmpeg fonts-noto-core
+          fi
+          ffmpeg -version | head -1
+          ffmpeg -hide_banner -filters 2>/dev/null | grep -qE "\bsubtitles\b" \
+            && echo "OK: subtitles (libass) filtresi mevcut" \
+            || { echo "HATA: ffmpeg libass (subtitles) desteği olmadan kurulu!"; exit 1; }
 
       - name: Bağımlılıkları kur
         run: pip install -r requirements.txt
