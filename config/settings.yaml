@@ -100,29 +100,30 @@ video:
     width: 1080
     height: 1920
     fps: 30
-  # Short formatı için hedef üst süre sınırı (kullanıcı kararı: 60 sn).
-  # YouTube Ekim 2024'ten bu yana Shorts için 3 dakikaya (180 sn) kadar izin
-  # verse de, proje standardı olarak klasik 60 saniye sınırı korunuyor:
-  # dikey formatta dikkat süresi kısa olduğu için kısa ve öz kal mak bulunuyor.
+  # Short formatı için üst süre sınırı — YouTube'un GERÇEK limiti.
+  # YouTube, 15 Ekim 2024 ve sonrası yüklenen, kare veya dikey (9:16) formatdaki
+  # videoları 3 dakikaya (180 sn) kadar Short sayar. 180 sn üzeri bir dikey video
+  # Short sayılmaz, normal uzun video olur.
+  # (Kaynak: YouTube Help > "Understand three-minute YouTube Shorts")
   #
-  # ⚠️ ÖNEMLİ — 2026-10-07'de 60 short metninin TAMAMI gerçek edge-tts ile
-  # ölçüldü: 59'u bu sınırı aşıyor (ortalama 86.7 sn, en uzun 113.5 sn).
-  # Bu yüzden sınırı aşan videolara ne olacağını belirleyen politika kritik:
-  #   "warn" -> üret ve yükle, logda uyarı göster (hiçbir video kaybolmaz)
-  #   "fail" -> üretme, görevi 'failed' işaretle (sınırı aşan video yayınlanmaz)
-  #   "trim" -> son TAM cümle sınırında kırp, videoyu sınırın altına çek
-  #             (dini alıntılar asla yarım kesilmez; yalnızca kapanış kısmı düşer)
-  max_short_seconds: 60
-  # Politika: "trim" -> 60 sn'i aşan short'u son TAM cümlenin sonunda kırpır.
-  # Kullanıcı kararı: short'lar gerçekten 60 saniyeyi GEÇMEYECEK. Ölçümde 60
-  # metinden 59'u 60 sn'i aştığı için bu politika şart; "warn" seçilirse
-  # videolar 60-113 sn arasında yayınlanır (short standardı bozulur).
-  # Kırpma YALNIZCA noktalama ile biten cümle sonlarında yapılır; dini alıntı
-  # (ayet/hadis/dua) asla cümle ortasında kesilmez. Kırpma olayı loga yazılır.
+  # KULLANICI KARARI (2026-10-07, nihai): Mevcut yapı bozulmayacak, hiçbir video
+  # kırpılmayacak — hepsi olduğu gibi yayınlanacak. Yalnızca 3 dakikayı GEÇEN
+  # videolar iptal edilecek. Bu yüzden eşik YouTube'un gerçek sınırına (180 sn)
+  # çekildi ve politika "fail" yapıldı.
   #
-  # Eğer metinleri kendiniz kısaltırsanız (60 sn icin ~700 karakter ve daha
-  # azı yeterli) trim hiç devreye girmez — yani politika zararsızdır.
-  short_over_limit_action: "trim"
+  # Ölçüm notu: 60 short videosundan 59'u 60 sn'i aşıyor (ortalama 86.7 sn, en
+  # uzun 113.5 sn) — ama hepsi 180 sn'in rahat altında olduğu için hiçbiri
+  # iptal edilmez, hepsi eksiksiz yayınlanır.
+  max_short_seconds: 180
+  # Sınırı aşan videolara ne olacağı:
+  #   "fail" (aktif) -> üretme/upload etme, görevi 'failed' işaretle.
+  #                    180 sn'i aşan hiçbir short yayınlanmaz.
+  #   "warn"         -> üret ve yükle, logda uyarı göster.
+  #   "trim"         -> son TAM cümleye kadar kırp (mevcut metinlere göre
+  #                    kullanılmıyor; istenirse geri alınabilir).
+  # Not: "trim" seçeneği bilinçli olarak kodda duruyor — ileride metinleri
+  # kısaltıp kısa short'lar isteğe bağlı olarak üretilebilir.
+  short_over_limit_action: "fail"
 
 subtitles:
   font_family: "Noto Sans"       # assets/fonts/ içindeki font ailesi adı (dosya adı değil)

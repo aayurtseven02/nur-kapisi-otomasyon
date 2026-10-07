@@ -316,34 +316,42 @@ yayın anı tam istediğiniz saatte YouTube tarafından gerçekleştirilir.
   siz sağlarsınız. Bu, dini doğruluğu garanti etmenin tek güvenli yoludur.
 - **Video üretim süresi:** Uzun bir sure (ör. 20 ayet) videosu, GitHub Actions
   sunucusunda birkaç dakika sürebilir; bu süre free tier limitlerinin çok altındadır.
-- **Short süre sınırı (`video.max_short_seconds`):** Eşik **60 saniye** (klasik
-  Shorts standardı). YouTube Ekim 2024'ten bu yana Shorts için 3 dakikaya kadar
-  izin verse de, dikey formatta dikkat süresi kısa olduğu için proje standardı
-  olarak 60 sn korunuyor.
+- **Short süre sınırı (`video.max_short_seconds`):** Eşik **180 saniye
+  (3 dakika)** — YouTube'un gerçek Shorts limiti. YouTube, 15 Ekim 2024 ve
+  sonrası yüklenen, **kare veya dikey (9:16)** formatdaki videoları 3 dakikaya
+  kadar Short sayar; 180 sn üzeri bir dikey video Short sayılmaz, normal uzun
+  video olur. (Kaynak: YouTube Help → *"Understand three-minute YouTube Shorts"*)
 
-  > **Önemli — 2026-10-07'de yapılan gerçek ölçüm:** 60 short metninin tamamı
-  > edge-tts ile seslendirilip ölçüldü. **59'u 60 sn'i aşıyor** (ortalama
-  > **86.7 sn**, en uzun 113.5 sn; ortalama ~11.7 karakter/saniye). 60 sn'e
-  > sığması için metnin ~700 karakterin altında olması gerekiyor.
+  > **Kullanıcı kararı (nihai):** Mevcut yapı bozulmayacak, hiçbir video
+  > kırpılmayacak — **hepsi olduğu gibi yayınlanacak.** Yalnızca 3 dakikayı
+  > **geçen** videolar iptal edilecek. Bu yüzden eşik 180 sn'e çekildi ve
+  > politika `fail` yapıldı.
 
-  Bu yüzden sınırı aşan videolara ne olacağını belirleyen politika kritiktir
+  **Gerçek ölçüm (2026-10-07):** 60 short videosunun tamamı edge-tts ile
+  seslendirilip ölçüldü — **59'u 60 sn'i aşıyor** (ortalama **86.7 sn**, en
+  uzun 113.5 sn; ortalama ~11.7 karakter/saniye). Ancak **hepsi 180 sn'in rahat
+  altında** olduğu için hiçbiri iptal edilmez; tamamı eksiksiz yayınlanır.
+
+  Sınırı aşan videolara ne olacağını belirleyen politika
   (`config/settings.yaml` → `video.short_over_limit_action`):
 
-  | Politika | Davranış | Ne zaman seçilmeli |
-  |---|---|---|
-  | `trim` **(varsayılan)** | Video **son tam cümlenin sonunda** kırpılır, 60 sn'i geçmez. Hiçbir video kaybolmaz, hiç uyarı çıkmaz. | Metinleri kendiniz kısatmak istemiyorsanız |
-  | `warn` | Video olduğu gibi üretilir ve yüklenir (60–113 sn), logda uyarı görürsünüz. | Süre sınırından çok içeriğin tamamı önemliyse |
-  | `fail` | Sınırı aşan video üretilmez, görev `failed` işaretlenir. | Sınıra uymayan hiçbir şeyin yayınlanmamasını istiyorsanız |
+  | Politika | Davranış |
+  |---|---|
+  | `fail` **(aktif)** | 180 sn'i aşan video üretilmez/yüklenmez, görev `failed` işaretlenir. |
+  | `warn` | Video olduğu gibi üretilir ve yüklenir, logda uyarı görürsünüz. |
+  | `trim` | Video son **tam cümlenin** sonunda kırpılır (şu an kullanılmıyor). |
 
-  **Kırpma güvenliği:** Kırpma noktası olarak yalnızca noktalama ile gerçekten
-  biten cümle sonları seçilir. `split_long_cues` bir cümlenin virgülden bölünmüş
-  parçasını ayrı bir altyazı cue'u yaptığı için, cümle ortasındaki bir cue'da
-  asla kesilmez — dini alıntılar (ayet/hadis/dua) yarım kalmaz. Yapılan her
-  kırpma loga yazılır (`[pipeline] TRIM: ... -> yeni süre Xs (N cümle düştü)`).
+  **Kırpma güvenliği (`trim` seçilirse):** Kırpma noktası olarak yalnızca
+  noktalama ile gerçekten biten cümle sonları seçilir. `split_long_cues` bir
+  cümlenin virgülden bölünmüş parçasını ayrı bir altyazı cue'u yaptığı için,
+  cümle ortasındaki bir cue'da asla kesilmez — dini alıntılar (ayet/hadis/dua)
+  yarım kalmaz.
 
-  **En iyi sonuç:** Metinleri kısaltırsanız trim hiç devreye girmez ve videolar
-  %100 sizin yazdığınız haliyle yayınlanır. Bunun için `content_library/tema/`
-  altındaki `*_short*.txt` dosyalarını ~700 karakterin altına çekmeniz yeterli.
+  > **Not — Content ID:** 1 dakikayı aşan bir Short, üzerinde aktif bir Content
+  > ID şikâyeti varsa YouTube tarafından **küresel olarak engellenir** (oynatılamaz,
+  > önerilmez, para kazandırmaz). Bu sistemde arka plan müziği bilinçli olarak
+  > kapalıdır (`audio.background_mode: "none"`) ve short'lardaki ses yalnızca
+  > kendi metninizin TTS seslendirmesidir; bu yüzden şikâyet riski yoktur.
 - **Thumbnail yüklenemezse video yine de yüklenir:** YouTube, kanal telefonla
   doğrulanmamışsa `thumbnails().set()` çağrısını reddeder. Sistem artık bu
   durumda uyarı verip yüklemeyi başarılı sayar; aksi halde aynı video bir
