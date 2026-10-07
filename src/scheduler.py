@@ -88,14 +88,31 @@ def run_once(upload: bool = True, lead_time_hours: float = DEFAULT_LEAD_TIME_HOU
         try:
             res = run_entry(entry, settings, OUTPUT_DIR, upload=upload,
                              schedule_entries=schedule.get("videos", []))
-            entry["status"] = "done"
             if upload and "youtube" in res:
+                # Gerçek yayın akışı: video YouTube'a yüklendi ve zamanlandı.
+                entry["status"] = "done"
                 entry["youtube_video_id"] = res["youtube"].video_id
                 entry["youtube_url"] = res["youtube"].url
                 print(f"[scheduler] Yüklendi: {res['youtube'].url}")
             else:
-                print(f"[scheduler] Yerel üretim tamam: {res['video_path']}")
-            results.append((entry["id"], "done"))
+                # TEST modu (--no-upload): video yalnızca yerelde üretildi,
+                # YouTube'a HİÇ yüklenmedi. Eskiden bu dal da görevi 'done'
+                # işaretliyordu; sonuç, elle/workflow_dispatch ile yapılan bir
+                # testin takvimden bir görevi SESSİZCE çalmasıydı — o gün
+                # hiç video yayınlanmazdı. Artık görev 'pending' kalır, böylece
+                # gerçek (upload'lu) koşu onu normal şekilde işler.
+                entry["status"] = "pending"
+                entry["last_test_build"] = (
+                    datetime.datetime.now(datetime.timezone.utc)
+                    .replace(microsecond=0).isoformat()
+                )
+                print(
+                    f"[scheduler] Yerel üretim tamam (YouTube'a yüklenmedi): "
+                    f"{res['video_path']}\n"
+                    f"[scheduler] NOT: --no-upload modunda görev 'pending' "
+                    f"olarak bırakıldı; takvimden slot çalınmaz."
+                )
+            results.append((entry["id"], entry["status"]))
         except Exception as e:
             # ÖNEMLİ: Eğer hata, video YouTube'a yüklenildikten SONRA oluştuysa
             # (ör. thumbnail set() hatası) eski kod görevi 'failed' olarak
