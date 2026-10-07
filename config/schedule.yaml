@@ -24,7 +24,7 @@ videos:
   youtube_video_id: MDzCLhDcSno
   youtube_url: https://www.youtube.com/watch?v=MDzCLhDcSno
 - id: 2026-10-07-aksam-duasi
-  status: pending
+  status: done
   publish_at: '2026-10-07T18:30:00+03:00'
   format: short
   type: dua
@@ -32,6 +32,8 @@ videos:
     dua_id: 1
   title_hint: Uyanınca Okunacak Dua
   background_mode: none
+  youtube_video_id: EtiNcvbJJq4
+  youtube_url: https://www.youtube.com/watch?v=EtiNcvbJJq4
 - id: 2026-10-08-ashab-kissasi
   status: pending
   publish_at: '2026-10-08T09:00:00+03:00'
@@ -41,15 +43,6 @@ videos:
     text_file: content_library/hikayeler/ashab-i-kehf.txt
   title_hint: Ashab-ı Kehf Kıssası
   background_mode: none
-
-# ==========================================================
-# 30 GÜNLÜK İÇERİK TAKVİMİ (kullanıcı tarafından sağlanan plan)
-# Her gün: 2 yatay (normal) + 2 short video = günde 4 video.
-# type: tema -> content_library/tema/ altında ÖNCEDEN YAZILMIŞ, içindeki her
-# ayet/hadis/dua alıntısı doğrulanmış kaynaktan alınmış metinleri seslendirir.
-# ==========================================================
-
-# --- GÜN 1 ---
 - id: 2026-10-09-gun01-normal1-sabir
   status: pending
   publish_at: '2026-10-09T09:00:00+03:00'
@@ -58,11 +51,10 @@ videos:
   ref:
     text_file: content_library/tema/gun01_normal1_sabir.txt
     category: kuran_tefsir
-    sources: "Bakara 2:153,155-157; İnşirah 94:5-6 (Diyanet Meali, alquran.cloud)"
-  title_hint: "Ayetler Işığında Sabır: Zorluklarla Başa Çıkma Rehberi"
-  thumb_title: "Sabrın Sırrı"
+    sources: Bakara 2:153,155-157; İnşirah 94:5-6 (Diyanet Meali, alquran.cloud)
+  title_hint: 'Ayetler Işığında Sabır: Zorluklarla Başa Çıkma Rehberi'
+  thumb_title: Sabrın Sırrı
   background_mode: none
-
 - id: 2026-10-09-gun01-short1-niyet
   status: pending
   publish_at: '2026-10-09T12:00:00+03:00'
@@ -71,11 +63,10 @@ videos:
   ref:
     text_file: content_library/tema/gun01_short1_niyet.txt
     category: hadis_sohbet
-    sources: "Sahih-i Buhari, Hadis No: 1"
-  title_hint: "\"Ameller Niyetlere Göredir\" Hadisinin Günlük Hayattaki Anlamı"
-  thumb_title: "Niyetin Gücü"
+    sources: 'Sahih-i Buhari, Hadis No: 1'
+  title_hint: '"Ameller Niyetlere Göredir" Hadisinin Günlük Hayattaki Anlamı'
+  thumb_title: Niyetin Gücü
   background_mode: none
-
 - id: 2026-10-09-gun01-normal2-ihlas
   status: pending
   publish_at: '2026-10-09T15:00:00+03:00'
@@ -84,11 +75,10 @@ videos:
   ref:
     text_file: content_library/tema/gun01_normal2_ihlas.txt
     category: kuran_tefsir
-    sources: "İhlas Suresi (112:1-4, Diyanet Meali); Sahih-i Buhari, Hadis No: 5013"
-  title_hint: "İhlas Suresi Neden Kuran'ın Üçte Birine Denktir? (Derinlemesine Tefsir)"
-  thumb_title: "İhlas Suresi'nin Sırrı"
+    sources: 'İhlas Suresi (112:1-4, Diyanet Meali); Sahih-i Buhari, Hadis No: 5013'
+  title_hint: İhlas Suresi Neden Kuran'ın Üçte Birine Denktir? (Derinlemesine Tefsir)
+  thumb_title: İhlas Suresi'nin Sırrı
   background_mode: none
-
 - id: 2026-10-09-gun01-short2-korumaduasi
   status: pending
   publish_at: '2026-10-09T19:00:00+03:00'
@@ -97,12 +87,10 @@ videos:
   ref:
     text_file: content_library/tema/gun01_short2_korumaduasi.txt
     category: dua_fazilet
-    sources: "Ayetel Kürsi, Bakara 2:255 (Diyanet Meali); Hısnu'l Müslim"
-  title_hint: "Sabah ve Akşam Okunacak En Etkili Korunma Duası"
-  thumb_title: "En Güçlü Koruma Duası"
+    sources: Ayetel Kürsi, Bakara 2:255 (Diyanet Meali); Hısnu'l Müslim
+  title_hint: Sabah ve Akşam Okunacak En Etkili Korunma Duası
+  thumb_title: En Güçlü Koruma Duası
   background_mode: none
-
-# --- GÜN 2 ---
 - id: 2026-10-10-gun02-normal1-tovbe
   status: pending
   publish_at: '2026-10-10T09:00:00+03:00'
@@ -111,11 +99,10 @@ videos:
   ref:
     text_file: content_library/tema/gun02_normal1_tovbe.txt
     category: tefekkur
-    sources: "Taha Suresi 20:121-122 (Diyanet Meali)"
-  title_hint: "Hz. Adem'den Günümüze Tövbe Kapısı ve Bağışlanma"
-  thumb_title: "Tövbe Kapısı Hiç Kapanmaz"
+    sources: Taha Suresi 20:121-122 (Diyanet Meali)
+  title_hint: Hz. Adem'den Günümüze Tövbe Kapısı ve Bağışlanma
+  thumb_title: Tövbe Kapısı Hiç Kapanmaz
   background_mode: none
-
 - id: 2026-10-10-gun02-short1-istigfar
   status: pending
   publish_at: '2026-10-10T12:00:00+03:00'
@@ -124,11 +111,10 @@ videos:
   ref:
     text_file: content_library/tema/gun02_short1_istigfar.txt
     category: hadis_sohbet
-    sources: "Sahih-i Müslim, Hadis No: 6858"
-  title_hint: "Günde 100 Defa Estağfirullah Demenin Mucizesi"
-  thumb_title: "100 Defa İstiğfarın Sırrı"
+    sources: 'Sahih-i Müslim, Hadis No: 6858'
+  title_hint: Günde 100 Defa Estağfirullah Demenin Mucizesi
+  thumb_title: 100 Defa İstiğfarın Sırrı
   background_mode: none
-
 - id: 2026-10-10-gun02-normal2-felaknas
   status: pending
   publish_at: '2026-10-10T15:00:00+03:00'
@@ -137,11 +123,10 @@ videos:
   ref:
     text_file: content_library/tema/gun02_normal2_felaknas.txt
     category: kuran_tefsir
-    sources: "Felak Suresi (113); Nas Suresi (114) - Diyanet Meali"
-  title_hint: "Felak ve Nas Surelerinin Sırrı: Manevi Zırh Nasıl Kuşanılır?"
-  thumb_title: "Manevi Zırhınız: Felak ve Nas"
+    sources: Felak Suresi (113); Nas Suresi (114) - Diyanet Meali
+  title_hint: 'Felak ve Nas Surelerinin Sırrı: Manevi Zırh Nasıl Kuşanılır?'
+  thumb_title: 'Manevi Zırhınız: Felak ve Nas'
   background_mode: none
-
 - id: 2026-10-10-gun02-short2-encokdua
   status: pending
   publish_at: '2026-10-10T19:00:00+03:00'
@@ -150,12 +135,10 @@ videos:
   ref:
     text_file: content_library/tema/gun02_short2_encokdua.txt
     category: dua_fazilet
-    sources: "Bakara 2:201 (Diyanet Meali); Sahih-i Buhari, Hadis No: 6389"
-  title_hint: "Peygamberimizin (s.a.v.) En Çok Okuduğu Kısa Dua"
-  thumb_title: "Peygamberimizin En Çok Okuduğu Dua"
+    sources: 'Bakara 2:201 (Diyanet Meali); Sahih-i Buhari, Hadis No: 6389'
+  title_hint: Peygamberimizin (s.a.v.) En Çok Okuduğu Kısa Dua
+  thumb_title: Peygamberimizin En Çok Okuduğu Dua
   background_mode: none
-
-# --- GÜN 3 ---
 - id: 2026-10-11-gun03-normal1-esma
   status: pending
   publish_at: '2026-10-11T09:00:00+03:00'
@@ -164,11 +147,10 @@ videos:
   ref:
     text_file: content_library/tema/gun03_normal1_esma.txt
     category: tefekkur
-    sources: "Zariyat 51:58; Talak 65:2-3 (Diyanet Meali)"
-  title_hint: "Rızık ve Bereket Kapılarını Açan 5 Esmaül Hüsna Sırrı"
-  thumb_title: "Rızık Kapılarını Açan 5 Esma"
+    sources: Zariyat 51:58; Talak 65:2-3 (Diyanet Meali)
+  title_hint: Rızık ve Bereket Kapılarını Açan 5 Esmaül Hüsna Sırrı
+  thumb_title: Rızık Kapılarını Açan 5 Esma
   background_mode: none
-
 - id: 2026-10-11-gun03-short1-rizikdarlik
   status: pending
   publish_at: '2026-10-11T12:00:00+03:00'
@@ -177,11 +159,10 @@ videos:
   ref:
     text_file: content_library/tema/gun03_short1_rizikdarlik.txt
     category: dua_fazilet
-    sources: "İbn Mace, Hadis No: 925 (hasen); Hısnu'l Müslim"
-  title_hint: "Rızık Darlığı Çekenler İçin Tavsiye Edilen Dua"
-  thumb_title: "Rızık Darlığına Çare Dua"
+    sources: 'İbn Mace, Hadis No: 925 (hasen); Hısnu''l Müslim'
+  title_hint: Rızık Darlığı Çekenler İçin Tavsiye Edilen Dua
+  thumb_title: Rızık Darlığına Çare Dua
   background_mode: none
-
 - id: 2026-10-11-gun03-normal2-ayetelkursi
   status: pending
   publish_at: '2026-10-11T15:00:00+03:00'
@@ -190,11 +171,10 @@ videos:
   ref:
     text_file: content_library/tema/gun03_normal2_ayetelkursi.txt
     category: kuran_tefsir
-    sources: "Bakara 2:255 (Diyanet Meali); Sahih-i Müslim, Hadis No: 1885"
-  title_hint: "Ayetel Kürsi Neden Bu Kadar Güçlüdür? Kelime Kelime Analiz"
-  thumb_title: "Ayetel Kürsi'nin Sırrı"
+    sources: 'Bakara 2:255 (Diyanet Meali); Sahih-i Müslim, Hadis No: 1885'
+  title_hint: Ayetel Kürsi Neden Bu Kadar Güçlüdür? Kelime Kelime Analiz
+  thumb_title: Ayetel Kürsi'nin Sırrı
   background_mode: none
-
 - id: 2026-10-11-gun03-short2-komsu
   status: pending
   publish_at: '2026-10-11T19:00:00+03:00'
@@ -203,12 +183,10 @@ videos:
   ref:
     text_file: content_library/tema/gun03_short2_komsu.txt
     category: hadis_sohbet
-    sources: "Sahih-i Buhari, Hadis No: 6015, 6016"
-  title_hint: "\"Komşusu Açken Tok Yatan Bizden Değildir\" Sözünün Evrensel Mesajı"
-  thumb_title: "Komşuluk Hakkı"
+    sources: 'Sahih-i Buhari, Hadis No: 6015, 6016'
+  title_hint: '"Komşusu Açken Tok Yatan Bizden Değildir" Sözünün Evrensel Mesajı'
+  thumb_title: Komşuluk Hakkı
   background_mode: none
-
-# --- GÜN 4 ---
 - id: 2026-10-12-gun04-normal1-abdest
   status: pending
   publish_at: '2026-10-12T09:00:00+03:00'
@@ -217,11 +195,10 @@ videos:
   ref:
     text_file: content_library/tema/gun04_normal1_abdest.txt
     category: ilmihal
-    sources: "Nevevi 40 Hadis, Hadis No: 23 (Sahih-i Müslim kaynaklı)"
-  title_hint: "Abdestin Bedene ve Ruha Faydaları: \"Temizlik İmanın Yarısıdır\""
-  thumb_title: "Abdestin Gizli Faydaları"
+    sources: 'Nevevi 40 Hadis, Hadis No: 23 (Sahih-i Müslim kaynaklı)'
+  title_hint: 'Abdestin Bedene ve Ruha Faydaları: "Temizlik İmanın Yarısıdır"'
+  thumb_title: Abdestin Gizli Faydaları
   background_mode: none
-
 - id: 2026-10-12-gun04-short1-abdestduasi
   status: pending
   publish_at: '2026-10-12T12:00:00+03:00'
@@ -230,11 +207,11 @@ videos:
   ref:
     text_file: content_library/tema/gun04_short1_abdestduasi.txt
     category: dua_fazilet
-    sources: "Ebu Davud, İbn Mace, Ahmed; Sahih-i Müslim 1/209; Hısnu'l Müslim dua no: 12-13"
-  title_hint: "Abdestten Önce ve Sonra Okunan Dualar"
-  thumb_title: "Abdest Duaları"
+    sources: 'Ebu Davud, İbn Mace, Ahmed; Sahih-i Müslim 1/209; Hısnu''l Müslim dua
+      no: 12-13'
+  title_hint: Abdestten Önce ve Sonra Okunan Dualar
+  thumb_title: Abdest Duaları
   background_mode: none
-
 - id: 2026-10-12-gun04-normal2-yasinkalp
   status: pending
   publish_at: '2026-10-12T15:00:00+03:00'
@@ -243,11 +220,10 @@ videos:
   ref:
     text_file: content_library/tema/gun04_normal2_yasinkalp.txt
     category: kuran_tefsir
-    sources: "Yasin 36:55-58 (Diyanet Meali)"
-  title_hint: "Yasin Suresi'nin Kalbi: Cennetteki En Büyük Nimet Hangi Ayette?"
-  thumb_title: "Yasin'in Kalbi Ayet"
+    sources: Yasin 36:55-58 (Diyanet Meali)
+  title_hint: 'Yasin Suresi''nin Kalbi: Cennetteki En Büyük Nimet Hangi Ayette?'
+  thumb_title: Yasin'in Kalbi Ayet
   background_mode: none
-
 - id: 2026-10-12-gun04-short2-tebessum
   status: pending
   publish_at: '2026-10-12T19:00:00+03:00'
@@ -256,12 +232,10 @@ videos:
   ref:
     text_file: content_library/tema/gun04_short2_tebessum.txt
     category: hadis_sohbet
-    sources: "Tirmizi, hasen (Riyazüs Salihin'de de yer alır)"
-  title_hint: "Parasız Sadaka: Tebessüm Etmek Neden Sadaka Sayılır?"
-  thumb_title: "Tebessüm Bir Sadakadır"
+    sources: Tirmizi, hasen (Riyazüs Salihin'de de yer alır)
+  title_hint: 'Parasız Sadaka: Tebessüm Etmek Neden Sadaka Sayılır?'
+  thumb_title: Tebessüm Bir Sadakadır
   background_mode: none
-
-# --- GÜN 5 ---
 - id: 2026-10-13-gun05-normal1-asrsuresi
   status: pending
   publish_at: '2026-10-13T09:00:00+03:00'
@@ -270,11 +244,10 @@ videos:
   ref:
     text_file: content_library/tema/gun05_normal1_asrsuresi.txt
     category: kuran_tefsir
-    sources: "Asr 103:1-3 (Diyanet Meali)"
-  title_hint: "Asr Suresi: Üç Ayette Gizli Kurtuluş Reçetesi"
-  thumb_title: "Asr Suresi'nin Sırrı"
+    sources: Asr 103:1-3 (Diyanet Meali)
+  title_hint: 'Asr Suresi: Üç Ayette Gizli Kurtuluş Reçetesi'
+  thumb_title: Asr Suresi'nin Sırrı
   background_mode: none
-
 - id: 2026-10-13-gun05-short1-cumasalavat
   status: pending
   publish_at: '2026-10-13T12:00:00+03:00'
@@ -283,11 +256,10 @@ videos:
   ref:
     text_file: content_library/tema/gun05_short1_cumasalavat.txt
     category: dua_fazilet
-    sources: "İbn Mace, Hadis No: 1085 (Ebu Davud, Nesai, Ahmed'de de rivayet edilir)"
-  title_hint: "Cuma Günü Salavat Getirmenin Fazileti"
-  thumb_title: "Cuma Günü Salavat"
+    sources: 'İbn Mace, Hadis No: 1085 (Ebu Davud, Nesai, Ahmed''de de rivayet edilir)'
+  title_hint: Cuma Günü Salavat Getirmenin Fazileti
+  thumb_title: Cuma Günü Salavat
   background_mode: none
-
 - id: 2026-10-13-gun05-normal2-eyupsabri
   status: pending
   publish_at: '2026-10-13T15:00:00+03:00'
@@ -296,11 +268,10 @@ videos:
   ref:
     text_file: content_library/tema/gun05_normal2_eyupsabri.txt
     category: peygamberler_tarihi
-    sources: "Enbiya 21:83-84 (Diyanet Meali)"
-  title_hint: "Hz. Eyüp'ün Sabrı ve Allah'a Sığınma Duası"
-  thumb_title: "Hz. Eyüp'ün Sabrı"
+    sources: Enbiya 21:83-84 (Diyanet Meali)
+  title_hint: Hz. Eyüp'ün Sabrı ve Allah'a Sığınma Duası
+  thumb_title: Hz. Eyüp'ün Sabrı
   background_mode: none
-
 - id: 2026-10-13-gun05-short2-yunusduasi
   status: pending
   publish_at: '2026-10-13T19:00:00+03:00'
@@ -309,12 +280,10 @@ videos:
   ref:
     text_file: content_library/tema/gun05_short2_yunusduasi.txt
     category: peygamberler_tarihi
-    sources: "Enbiya 21:87-88 (Diyanet Meali)"
-  title_hint: "Hz. Yunus'un Karanlıkta Ettiği Dua (Zünnun Duası)"
-  thumb_title: "Hz. Yunus'un Duası"
+    sources: Enbiya 21:87-88 (Diyanet Meali)
+  title_hint: Hz. Yunus'un Karanlıkta Ettiği Dua (Zünnun Duası)
+  thumb_title: Hz. Yunus'un Duası
   background_mode: none
-
-# --- GÜN 6 ---
 - id: 2026-10-14-gun06-normal1-ebubekir
   status: pending
   publish_at: '2026-10-14T09:00:00+03:00'
@@ -323,11 +292,10 @@ videos:
   ref:
     text_file: content_library/tema/gun06_normal1_ebubekir.txt
     category: sahabe
-    sources: "Tevbe 9:40 (Diyanet Meali)"
-  title_hint: "Hz. Ebubekir'in Sadakati: Mağara Ayetinin Hikayesi"
-  thumb_title: "Hz. Ebubekir'in Sadakati"
+    sources: Tevbe 9:40 (Diyanet Meali)
+  title_hint: 'Hz. Ebubekir''in Sadakati: Mağara Ayetinin Hikayesi'
+  thumb_title: Hz. Ebubekir'in Sadakati
   background_mode: none
-
 - id: 2026-10-14-gun06-short1-ikigunesit
   status: pending
   publish_at: '2026-10-14T12:00:00+03:00'
@@ -336,11 +304,10 @@ videos:
   ref:
     text_file: content_library/tema/gun06_short1_ikigunesit.txt
     category: tefekkur
-    sources: "Sahih-i Buhari, Hadis No: 6412 (meşhur sözün temelindeki sahih hadis)"
-  title_hint: "\"İki Günü Eşit Olan Ziyandadır\" Sözünün Temeli"
-  thumb_title: "İki Günün Eşitliği"
+    sources: 'Sahih-i Buhari, Hadis No: 6412 (meşhur sözün temelindeki sahih hadis)'
+  title_hint: '"İki Günü Eşit Olan Ziyandadır" Sözünün Temeli'
+  thumb_title: İki Günün Eşitliği
   background_mode: none
-
 - id: 2026-10-14-gun06-normal2-kevser
   status: pending
   publish_at: '2026-10-14T15:00:00+03:00'
@@ -349,11 +316,10 @@ videos:
   ref:
     text_file: content_library/tema/gun06_normal2_kevser.txt
     category: kuran_tefsir
-    sources: "Kevser 108:1-3 (Diyanet Meali)"
-  title_hint: "Kevser Suresi: Kur'an'ın En Kısa Suresindeki Büyük Müjde"
-  thumb_title: "Kevser Suresi'nin Sırrı"
+    sources: Kevser 108:1-3 (Diyanet Meali)
+  title_hint: 'Kevser Suresi: Kur''an''ın En Kısa Suresindeki Büyük Müjde'
+  thumb_title: Kevser Suresi'nin Sırrı
   background_mode: none
-
 - id: 2026-10-14-gun06-short2-uykuduasi
   status: pending
   publish_at: '2026-10-14T19:00:00+03:00'
@@ -362,12 +328,11 @@ videos:
   ref:
     text_file: content_library/tema/gun06_short2_uykuduasi.txt
     category: dua_fazilet
-    sources: "Sahih-i Buhari, Sahih-i Müslim (Fethu'l-Bari 9/62, Müslim 4/1723); Hısnu'l Müslim dua no: 99"
-  title_hint: "Huzurlu Bir Uyku İçin Yatmadan Önce Yapılacaklar"
-  thumb_title: "Huzurlu Uyku Sünneti"
+    sources: 'Sahih-i Buhari, Sahih-i Müslim (Fethu''l-Bari 9/62, Müslim 4/1723);
+      Hısnu''l Müslim dua no: 99'
+  title_hint: Huzurlu Bir Uyku İçin Yatmadan Önce Yapılacaklar
+  thumb_title: Huzurlu Uyku Sünneti
   background_mode: none
-
-# --- GÜN 7 ---
 - id: 2026-10-15-gun07-normal1-kabirhayati
   status: pending
   publish_at: '2026-10-15T09:00:00+03:00'
@@ -376,11 +341,10 @@ videos:
   ref:
     text_file: content_library/tema/gun07_normal1_kabirhayati.txt
     category: ilmihal
-    sources: "Muminun 23:99-100 (Diyanet Meali)"
-  title_hint: "Kabir Hayatı (Berzah) Hakkında Kur'an Ne Diyor?"
-  thumb_title: "Berzah Hayatı Nedir?"
+    sources: Muminun 23:99-100 (Diyanet Meali)
+  title_hint: Kabir Hayatı (Berzah) Hakkında Kur'an Ne Diyor?
+  thumb_title: Berzah Hayatı Nedir?
   background_mode: none
-
 - id: 2026-10-15-gun07-short1-lahavle
   status: pending
   publish_at: '2026-10-15T12:00:00+03:00'
@@ -389,11 +353,10 @@ videos:
   ref:
     text_file: content_library/tema/gun07_short1_lahavle.txt
     category: dua_fazilet
-    sources: "Sahih-i Buhari, Hadis No: 6409"
-  title_hint: "Cennet Hazinelerinden Bir Söz: La Havle Vela Kuvvete İlla Billah"
-  thumb_title: "Cennet Hazinesi Zikir"
+    sources: 'Sahih-i Buhari, Hadis No: 6409'
+  title_hint: 'Cennet Hazinelerinden Bir Söz: La Havle Vela Kuvvete İlla Billah'
+  thumb_title: Cennet Hazinesi Zikir
   background_mode: none
-
 - id: 2026-10-15-gun07-normal2-mulksuresi
   status: pending
   publish_at: '2026-10-15T15:00:00+03:00'
@@ -402,11 +365,11 @@ videos:
   ref:
     text_file: content_library/tema/gun07_normal2_mulksuresi.txt
     category: kuran_tefsir
-    sources: "Mülk 67:1-2 (Diyanet Meali); İbn Mace Hadis No: 3786, Ebu Davud Hadis No: 1400"
-  title_hint: "Mülk Suresi: Kabir Azabından Koruyan Kalkan"
-  thumb_title: "Kabri Koruyan Sure"
+    sources: 'Mülk 67:1-2 (Diyanet Meali); İbn Mace Hadis No: 3786, Ebu Davud Hadis
+      No: 1400'
+  title_hint: 'Mülk Suresi: Kabir Azabından Koruyan Kalkan'
+  thumb_title: Kabri Koruyan Sure
   background_mode: none
-
 - id: 2026-10-15-gun07-short2-evdencikis
   status: pending
   publish_at: '2026-10-15T19:00:00+03:00'
@@ -415,12 +378,10 @@ videos:
   ref:
     text_file: content_library/tema/gun07_short2_evdencikis.txt
     category: dua_fazilet
-    sources: "Ebu Davud 4/325, Tirmizi 5/490; Hısnu'l Müslim dua no: 16"
-  title_hint: "Evden Çıkarken Okunan Koruma Duası"
-  thumb_title: "Evden Çıkış Duası"
+    sources: 'Ebu Davud 4/325, Tirmizi 5/490; Hısnu''l Müslim dua no: 16'
+  title_hint: Evden Çıkarken Okunan Koruma Duası
+  thumb_title: Evden Çıkış Duası
   background_mode: none
-
-# --- GÜN 8 ---
 - id: 2026-10-16-gun08-normal1-ibrahimputlar
   status: pending
   publish_at: '2026-10-16T09:00:00+03:00'
@@ -429,11 +390,10 @@ videos:
   ref:
     text_file: content_library/tema/gun08_normal1_ibrahimputlar.txt
     category: peygamberler_tarihi
-    sources: "Enbiya 21:57-67 (Diyanet Meali)"
-  title_hint: "Hz. İbrahim'in Putları Kırması: Tevhid Mücadelesi"
-  thumb_title: "Hz. İbrahim'in Putları Kırması"
+    sources: Enbiya 21:57-67 (Diyanet Meali)
+  title_hint: 'Hz. İbrahim''in Putları Kırması: Tevhid Mücadelesi'
+  thumb_title: Hz. İbrahim'in Putları Kırması
   background_mode: none
-
 - id: 2026-10-16-gun08-short1-yolculukduasi
   status: pending
   publish_at: '2026-10-16T12:00:00+03:00'
@@ -442,11 +402,10 @@ videos:
   ref:
     text_file: content_library/tema/gun08_short1_yolculukduasi.txt
     category: dua_fazilet
-    sources: "Sahih-i Müslim 2/998; Hısnu'l Müslim dua no: 207"
-  title_hint: "Yola Çıkmadan Önce Okunan Dua"
-  thumb_title: "Yolculuk Duası"
+    sources: 'Sahih-i Müslim 2/998; Hısnu''l Müslim dua no: 207'
+  title_hint: Yola Çıkmadan Önce Okunan Dua
+  thumb_title: Yolculuk Duası
   background_mode: none
-
 - id: 2026-10-16-gun08-normal2-yusufkiskanclik
   status: pending
   publish_at: '2026-10-16T15:00:00+03:00'
@@ -455,11 +414,10 @@ videos:
   ref:
     text_file: content_library/tema/gun08_normal2_yusufkiskanclik.txt
     category: peygamberler_tarihi
-    sources: "Yusuf 12:4-6, 12:15-18 (Diyanet Meali)"
-  title_hint: "Hz. Yusuf Kıssası: Kıskançlık, Kuyu ve Güzel Sabır"
-  thumb_title: "Hz. Yusuf'un Kıssası"
+    sources: Yusuf 12:4-6, 12:15-18 (Diyanet Meali)
+  title_hint: 'Hz. Yusuf Kıssası: Kıskançlık, Kuyu ve Güzel Sabır'
+  thumb_title: Hz. Yusuf'un Kıssası
   background_mode: none
-
 - id: 2026-10-16-gun08-short2-ibrahimates
   status: pending
   publish_at: '2026-10-16T19:00:00+03:00'
@@ -468,12 +426,10 @@ videos:
   ref:
     text_file: content_library/tema/gun08_short2_ibrahimates.txt
     category: peygamberler_tarihi
-    sources: "Enbiya 21:68-70 (Diyanet Meali)"
-  title_hint: "Hz. İbrahim'in Ateşe Atılması ve Mucizevi Kurtuluşu"
-  thumb_title: "İbrahim'in Ateşten Kurtuluşu"
+    sources: Enbiya 21:68-70 (Diyanet Meali)
+  title_hint: Hz. İbrahim'in Ateşe Atılması ve Mucizevi Kurtuluşu
+  thumb_title: İbrahim'in Ateşten Kurtuluşu
   background_mode: none
-
-# --- GÜN 9 ---
 - id: 2026-10-17-gun09-normal1-omeradalet
   status: pending
   publish_at: '2026-10-17T09:00:00+03:00'
@@ -482,11 +438,10 @@ videos:
   ref:
     text_file: content_library/tema/gun09_normal1_omeradalet.txt
     category: sahabe
-    sources: "Sahih-i Buhari, Hadis No: 3689"
-  title_hint: "Hz. Ömer'in Adaleti: \"Muhaddes\" Olarak Müjdelenen Sahabi"
-  thumb_title: "Hz. Ömer'in Adaleti"
+    sources: 'Sahih-i Buhari, Hadis No: 3689'
+  title_hint: 'Hz. Ömer''in Adaleti: "Muhaddes" Olarak Müjdelenen Sahabi'
+  thumb_title: Hz. Ömer'in Adaleti
   background_mode: none
-
 - id: 2026-10-17-gun09-short1-selamiyaymak
   status: pending
   publish_at: '2026-10-17T12:00:00+03:00'
@@ -495,11 +450,10 @@ videos:
   ref:
     text_file: content_library/tema/gun09_short1_selamiyaymak.txt
     category: hadis_sohbet
-    sources: "Sahih-i Müslim 1/74; Hısnu'l Müslim dua no: 224"
-  title_hint: "Selamı Yaymak: Cennete Girmenin Bir Anahtarı"
-  thumb_title: "Selamı Yaymak"
+    sources: 'Sahih-i Müslim 1/74; Hısnu''l Müslim dua no: 224'
+  title_hint: 'Selamı Yaymak: Cennete Girmenin Bir Anahtarı'
+  thumb_title: Selamı Yaymak
   background_mode: none
-
 - id: 2026-10-17-gun09-normal2-osmancomertlik
   status: pending
   publish_at: '2026-10-17T15:00:00+03:00'
@@ -508,11 +462,11 @@ videos:
   ref:
     text_file: content_library/tema/gun09_normal2_osmancomertlik.txt
     category: sahabe
-    sources: "Tirmizi, Hadis No: 3714 (hasen); tarihi rivayetler (Rume Kuyusu, Tebük Seferi)"
-  title_hint: "Hz. Osman'ın Cömertliği: Rume Kuyusu ve Tebük Seferi"
-  thumb_title: "Hz. Osman'ın Cömertliği"
+    sources: 'Tirmizi, Hadis No: 3714 (hasen); tarihi rivayetler (Rume Kuyusu, Tebük
+      Seferi)'
+  title_hint: 'Hz. Osman''ın Cömertliği: Rume Kuyusu ve Tebük Seferi'
+  thumb_title: Hz. Osman'ın Cömertliği
   background_mode: none
-
 - id: 2026-10-17-gun09-short2-alicesaret
   status: pending
   publish_at: '2026-10-17T19:00:00+03:00'
@@ -521,12 +475,10 @@ videos:
   ref:
     text_file: content_library/tema/gun09_short2_alicesaret.txt
     category: sahabe
-    sources: "Sahih-i Buhari, Hadis No: 4210; tarihi rivayetler (Hendek Savaşı)"
-  title_hint: "Hz. Ali'nin Cesareti: Hayber ve Hendek"
-  thumb_title: "Hz. Ali'nin Cesareti"
+    sources: 'Sahih-i Buhari, Hadis No: 4210; tarihi rivayetler (Hendek Savaşı)'
+  title_hint: 'Hz. Ali''nin Cesareti: Hayber ve Hendek'
+  thumb_title: Hz. Ali'nin Cesareti
   background_mode: none
-
-# --- GÜN 10 ---
 - id: 2026-10-18-gun10-normal1-olumgercegi
   status: pending
   publish_at: '2026-10-18T09:00:00+03:00'
@@ -535,11 +487,10 @@ videos:
   ref:
     text_file: content_library/tema/gun10_normal1_olumgercegi.txt
     category: tefekkur
-    sources: "Al-i İmran 3:185 (Diyanet Meali)"
-  title_hint: "Kaçamayacağımız Tek Gerçek: Ölüm Üzerine Tefekkür"
-  thumb_title: "Ölüm Gerçeği"
+    sources: Al-i İmran 3:185 (Diyanet Meali)
+  title_hint: 'Kaçamayacağımız Tek Gerçek: Ölüm Üzerine Tefekkür'
+  thumb_title: Ölüm Gerçeği
   background_mode: none
-
 - id: 2026-10-18-gun10-short1-sukur
   status: pending
   publish_at: '2026-10-18T12:00:00+03:00'
@@ -548,11 +499,10 @@ videos:
   ref:
     text_file: content_library/tema/gun10_short1_sukur.txt
     category: tefekkur
-    sources: "İbrahim 14:7 (Diyanet Meali)"
-  title_hint: "Nimetlerin Artmasının Sırrı: Şükür"
-  thumb_title: "Şükrün Sırrı"
+    sources: İbrahim 14:7 (Diyanet Meali)
+  title_hint: 'Nimetlerin Artmasının Sırrı: Şükür'
+  thumb_title: Şükrün Sırrı
   background_mode: none
-
 - id: 2026-10-18-gun10-normal2-imanislamihsan
   status: pending
   publish_at: '2026-10-18T15:00:00+03:00'
@@ -561,11 +511,10 @@ videos:
   ref:
     text_file: content_library/tema/gun10_normal2_imanislamihsan.txt
     category: ilmihal
-    sources: "Sahih-i Müslim, Hadis No: 97 (Cibril Hadisi)"
-  title_hint: "İman, İslam ve İhsan Nedir? Cibril Hadisi"
-  thumb_title: "İman-İslam-İhsan"
+    sources: 'Sahih-i Müslim, Hadis No: 97 (Cibril Hadisi)'
+  title_hint: İman, İslam ve İhsan Nedir? Cibril Hadisi
+  thumb_title: İman-İslam-İhsan
   background_mode: none
-
 - id: 2026-10-18-gun10-short2-dunyagecici
   status: pending
   publish_at: '2026-10-18T19:00:00+03:00'
@@ -574,12 +523,10 @@ videos:
   ref:
     text_file: content_library/tema/gun10_short2_dunyagecici.txt
     category: tefekkur
-    sources: "Hadid 57:20 (Diyanet Meali)"
-  title_hint: "Dünya Hayatının Gerçek Yüzü: Kuran'dan Bir Benzetme"
-  thumb_title: "Dünya Hayatının Gerçeği"
+    sources: Hadid 57:20 (Diyanet Meali)
+  title_hint: 'Dünya Hayatının Gerçek Yüzü: Kuran''dan Bir Benzetme'
+  thumb_title: Dünya Hayatının Gerçeği
   background_mode: none
-
-# --- GÜN 11 ---
 - id: 2026-10-19-gun11-normal1-guzelahlak
   status: pending
   publish_at: '2026-10-19T09:00:00+03:00'
@@ -588,11 +535,10 @@ videos:
   ref:
     text_file: content_library/tema/gun11_normal1_guzelahlak.txt
     category: hadis_sohbet
-    sources: "Sahih-i Buhari, Hadis No: 3559, 6035"
-  title_hint: "\"Aranızda En Sevdiklerim\": Güzel Ahlakın Fazileti"
-  thumb_title: "Güzel Ahlakın Fazileti"
+    sources: 'Sahih-i Buhari, Hadis No: 3559, 6035'
+  title_hint: '"Aranızda En Sevdiklerim": Güzel Ahlakın Fazileti'
+  thumb_title: Güzel Ahlakın Fazileti
   background_mode: none
-
 - id: 2026-10-19-gun11-short1-emanet
   status: pending
   publish_at: '2026-10-19T12:00:00+03:00'
@@ -601,11 +547,10 @@ videos:
   ref:
     text_file: content_library/tema/gun11_short1_emanet.txt
     category: hadis_sohbet
-    sources: "Nisa 4:58 (Diyanet Meali); Sahih-i Buhari, Hadis No: 6496"
-  title_hint: "Emanete Riayet Etmenin Önemi"
-  thumb_title: "Emanete Riayet"
+    sources: 'Nisa 4:58 (Diyanet Meali); Sahih-i Buhari, Hadis No: 6496'
+  title_hint: Emanete Riayet Etmenin Önemi
+  thumb_title: Emanete Riayet
   background_mode: none
-
 - id: 2026-10-19-gun11-normal2-hucuratahlak
   status: pending
   publish_at: '2026-10-19T15:00:00+03:00'
@@ -614,11 +559,10 @@ videos:
   ref:
     text_file: content_library/tema/gun11_normal2_hucuratahlak.txt
     category: kuran_tefsir
-    sources: "Hucurat 49:11-13 (Diyanet Meali)"
-  title_hint: "Alay Etmeyin, Gıybet Etmeyin: Hucurat Suresi'nin Mesajı"
-  thumb_title: "Hucurat'ın Mesajı"
+    sources: Hucurat 49:11-13 (Diyanet Meali)
+  title_hint: 'Alay Etmeyin, Gıybet Etmeyin: Hucurat Suresi''nin Mesajı'
+  thumb_title: Hucurat'ın Mesajı
   background_mode: none
-
 - id: 2026-10-19-gun11-short2-yalansoylememe
   status: pending
   publish_at: '2026-10-19T19:00:00+03:00'
@@ -627,12 +571,10 @@ videos:
   ref:
     text_file: content_library/tema/gun11_short2_yalansoylememe.txt
     category: hadis_sohbet
-    sources: "Sahih-i Buhari, Hadis No: 2749; Sahih-i Müslim, Hadis No: 213"
-  title_hint: "Münafığın Üç Alameti: Yalan, İhanet, Sözünde Durmama"
-  thumb_title: "Münafığın Alametleri"
+    sources: 'Sahih-i Buhari, Hadis No: 2749; Sahih-i Müslim, Hadis No: 213'
+  title_hint: 'Münafığın Üç Alameti: Yalan, İhanet, Sözünde Durmama'
+  thumb_title: Münafığın Alametleri
   background_mode: none
-
-# --- GÜN 12 ---
 - id: 2026-10-20-gun12-normal1-lokmanoğutleri
   status: pending
   publish_at: '2026-10-20T09:00:00+03:00'
@@ -641,11 +583,10 @@ videos:
   ref:
     text_file: content_library/tema/gun12_normal1_lokmanoğutleri.txt
     category: kuran_tefsir
-    sources: "Lokman 31:12-19 (Diyanet Meali)"
-  title_hint: "Lokman'ın Oğluna Öğütleri: Bir Babadan Miras Kalan Hikmet"
-  thumb_title: "Lokman'ın Öğütleri"
+    sources: Lokman 31:12-19 (Diyanet Meali)
+  title_hint: 'Lokman''ın Oğluna Öğütleri: Bir Babadan Miras Kalan Hikmet'
+  thumb_title: Lokman'ın Öğütleri
   background_mode: none
-
 - id: 2026-10-20-gun12-short1-zikirkorunma
   status: pending
   publish_at: '2026-10-20T12:00:00+03:00'
@@ -654,11 +595,10 @@ videos:
   ref:
     text_file: content_library/tema/gun12_short1_zikirkorunma.txt
     category: dua_fazilet
-    sources: "Ebu Davud 4/323, Tirmizi 5/465 (hasen); Hısnu'l Müslim dua no: 86"
-  title_hint: "Sabah Akşam Okunursa Hiçbir Şeyin Zarar Veremediği Zikir"
-  thumb_title: "Zararsız Kılan Zikir"
+    sources: 'Ebu Davud 4/323, Tirmizi 5/465 (hasen); Hısnu''l Müslim dua no: 86'
+  title_hint: Sabah Akşam Okunursa Hiçbir Şeyin Zarar Veremediği Zikir
+  thumb_title: Zararsız Kılan Zikir
   background_mode: none
-
 - id: 2026-10-20-gun12-normal2-nurayeti
   status: pending
   publish_at: '2026-10-20T15:00:00+03:00'
@@ -667,11 +607,10 @@ videos:
   ref:
     text_file: content_library/tema/gun12_normal2_nurayeti.txt
     category: kuran_tefsir
-    sources: "Nur 24:35 (Diyanet Meali)"
-  title_hint: "Nur Ayeti: Allah'ın Nurunu Anlatan En Derin Tasvir"
-  thumb_title: "Nur Ayeti'nin Sırrı"
+    sources: Nur 24:35 (Diyanet Meali)
+  title_hint: 'Nur Ayeti: Allah''ın Nurunu Anlatan En Derin Tasvir'
+  thumb_title: Nur Ayeti'nin Sırrı
   background_mode: none
-
 - id: 2026-10-20-gun12-short2-anababahakki
   status: pending
   publish_at: '2026-10-20T19:00:00+03:00'
@@ -680,12 +619,10 @@ videos:
   ref:
     text_file: content_library/tema/gun12_short2_anababahakki.txt
     category: kuran_tefsir
-    sources: "İsra 17:23-24 (Diyanet Meali)"
-  title_hint: "Ana Babaya \"Öf\" Bile Dememek: İsra Suresi'nin Öğüdü"
-  thumb_title: "Ana Baba Hakkı"
+    sources: İsra 17:23-24 (Diyanet Meali)
+  title_hint: 'Ana Babaya "Öf" Bile Dememek: İsra Suresi''nin Öğüdü'
+  thumb_title: Ana Baba Hakkı
   background_mode: none
-
-# --- GÜN 13 ---
 - id: 2026-10-21-gun13-normal1-hastalikduasi
   status: pending
   publish_at: '2026-10-21T09:00:00+03:00'
@@ -694,11 +631,11 @@ videos:
   ref:
     text_file: content_library/tema/gun13_normal1_hastalikduasi.txt
     category: dua_fazilet
-    sources: "Sahih-i Buhari (Fethu'l-Bari 10/118); Tirmizi, İbn Mace (hasta ziyareti fazileti); Hısnu'l Müslim dua no: 147, 149"
-  title_hint: "Hasta Ziyaretinin Fazileti ve Okunacak Dua"
-  thumb_title: "Hasta Ziyaretinin Fazileti"
+    sources: 'Sahih-i Buhari (Fethu''l-Bari 10/118); Tirmizi, İbn Mace (hasta ziyareti
+      fazileti); Hısnu''l Müslim dua no: 147, 149'
+  title_hint: Hasta Ziyaretinin Fazileti ve Okunacak Dua
+  thumb_title: Hasta Ziyaretinin Fazileti
   background_mode: none
-
 - id: 2026-10-21-gun13-short1-yemekduasi
   status: pending
   publish_at: '2026-10-21T12:00:00+03:00'
@@ -707,11 +644,10 @@ videos:
   ref:
     text_file: content_library/tema/gun13_short1_yemekduasi.txt
     category: dua_fazilet
-    sources: "Ebu Davud 3/347, Tirmizi 4/288; Hısnu'l Müslim dua no: 178, 180"
-  title_hint: "Yemekten Önce ve Sonra Okunan Dualar"
-  thumb_title: "Yemek Duaları"
+    sources: 'Ebu Davud 3/347, Tirmizi 4/288; Hısnu''l Müslim dua no: 178, 180'
+  title_hint: Yemekten Önce ve Sonra Okunan Dualar
+  thumb_title: Yemek Duaları
   background_mode: none
-
 - id: 2026-10-21-gun13-normal2-sabahaksamzikri
   status: pending
   publish_at: '2026-10-21T15:00:00+03:00'
@@ -720,11 +656,10 @@ videos:
   ref:
     text_file: content_library/tema/gun13_normal2_sabahaksamzikri.txt
     category: dua_fazilet
-    sources: "Sahih-i Müslim 4/2088; Hısnu'l Müslim dua no: 77"
-  title_hint: "Sabah Akşam Zikirlerinin Gün Boyu Koruyucu Etkisi"
-  thumb_title: "Sabah Akşam Zikirleri"
+    sources: 'Sahih-i Müslim 4/2088; Hısnu''l Müslim dua no: 77'
+  title_hint: Sabah Akşam Zikirlerinin Gün Boyu Koruyucu Etkisi
+  thumb_title: Sabah Akşam Zikirleri
   background_mode: none
-
 - id: 2026-10-21-gun13-short2-borcduasi
   status: pending
   publish_at: '2026-10-21T19:00:00+03:00'
@@ -733,12 +668,10 @@ videos:
   ref:
     text_file: content_library/tema/gun13_short2_borcduasi.txt
     category: dua_fazilet
-    sources: "Tirmizi 5/560; Hısnu'l Müslim dua no: 136"
-  title_hint: "Borç ve Maddi Sıkıntı İçin Okunan Dua"
-  thumb_title: "Borç Sıkıntısına Dua"
+    sources: 'Tirmizi 5/560; Hısnu''l Müslim dua no: 136'
+  title_hint: Borç ve Maddi Sıkıntı İçin Okunan Dua
+  thumb_title: Borç Sıkıntısına Dua
   background_mode: none
-
-# --- GÜN 14 ---
 - id: 2026-10-22-gun14-normal1-namazinonemi
   status: pending
   publish_at: '2026-10-22T09:00:00+03:00'
@@ -747,11 +680,10 @@ videos:
   ref:
     text_file: content_library/tema/gun14_normal1_namazinonemi.txt
     category: ilmihal
-    sources: "Nisa 4:103 (Diyanet Meali)"
-  title_hint: "Namazın Dindeki Yeri: Belirli Vakitlere Bağlı Bir Farz"
-  thumb_title: "Namazın Önemi"
+    sources: Nisa 4:103 (Diyanet Meali)
+  title_hint: 'Namazın Dindeki Yeri: Belirli Vakitlere Bağlı Bir Farz'
+  thumb_title: Namazın Önemi
   background_mode: none
-
 - id: 2026-10-22-gun14-short1-gusulabdesti
   status: pending
   publish_at: '2026-10-22T12:00:00+03:00'
@@ -760,11 +692,10 @@ videos:
   ref:
     text_file: content_library/tema/gun14_short1_gusulabdesti.txt
     category: ilmihal
-    sources: "Maide 5:6 (Diyanet Meali)"
-  title_hint: "Gusül Abdesti Ne Zaman Farz Olur?"
-  thumb_title: "Gusül Abdesti Nedir?"
+    sources: Maide 5:6 (Diyanet Meali)
+  title_hint: Gusül Abdesti Ne Zaman Farz Olur?
+  thumb_title: Gusül Abdesti Nedir?
   background_mode: none
-
 - id: 2026-10-22-gun14-normal2-orucunhikmeti
   status: pending
   publish_at: '2026-10-22T15:00:00+03:00'
@@ -773,11 +704,10 @@ videos:
   ref:
     text_file: content_library/tema/gun14_normal2_orucunhikmeti.txt
     category: ilmihal
-    sources: "Bakara 2:183 (Diyanet Meali)"
-  title_hint: "Orucun Hikmeti: Sadece Aç Kalmak Değil, Takva Kazanmak"
-  thumb_title: "Orucun Hikmeti"
+    sources: Bakara 2:183 (Diyanet Meali)
+  title_hint: 'Orucun Hikmeti: Sadece Aç Kalmak Değil, Takva Kazanmak'
+  thumb_title: Orucun Hikmeti
   background_mode: none
-
 - id: 2026-10-22-gun14-short2-teyemmum
   status: pending
   publish_at: '2026-10-22T19:00:00+03:00'
@@ -786,12 +716,10 @@ videos:
   ref:
     text_file: content_library/tema/gun14_short2_teyemmum.txt
     category: ilmihal
-    sources: "Maide 5:6 (Diyanet Meali)"
-  title_hint: "Su Bulunmadığında Namaz Nasıl Kılınır? Teyemmüm"
-  thumb_title: "Teyemmüm Nasıl Yapılır?"
+    sources: Maide 5:6 (Diyanet Meali)
+  title_hint: Su Bulunmadığında Namaz Nasıl Kılınır? Teyemmüm
+  thumb_title: Teyemmüm Nasıl Yapılır?
   background_mode: none
-
-# --- GÜN 15 ---
 - id: 2026-10-23-gun15-normal1-musafiravun
   status: pending
   publish_at: '2026-10-23T09:00:00+03:00'
@@ -800,11 +728,10 @@ videos:
   ref:
     text_file: content_library/tema/gun15_normal1_musafiravun.txt
     category: peygamberler_tarihi
-    sources: "Taha 20:24-29 (Diyanet Meali)"
-  title_hint: "Hz. Musa'nın Firavun'a Gitmeden Önceki Duası"
-  thumb_title: "Hz. Musa'nın Duası"
+    sources: Taha 20:24-29 (Diyanet Meali)
+  title_hint: Hz. Musa'nın Firavun'a Gitmeden Önceki Duası
+  thumb_title: Hz. Musa'nın Duası
   background_mode: none
-
 - id: 2026-10-23-gun15-short1-zekeriyaduasi
   status: pending
   publish_at: '2026-10-23T12:00:00+03:00'
@@ -813,11 +740,10 @@ videos:
   ref:
     text_file: content_library/tema/gun15_short1_zekeriyaduasi.txt
     category: peygamberler_tarihi
-    sources: "Meryem 19:2-6 (Diyanet Meali)"
-  title_hint: "Hz. Zekeriya'nın Yaşlılığında Ettiği Dua"
-  thumb_title: "Hz. Zekeriya'nın Duası"
+    sources: Meryem 19:2-6 (Diyanet Meali)
+  title_hint: Hz. Zekeriya'nın Yaşlılığında Ettiği Dua
+  thumb_title: Hz. Zekeriya'nın Duası
   background_mode: none
-
 - id: 2026-10-23-gun15-normal2-suleymankarinca
   status: pending
   publish_at: '2026-10-23T15:00:00+03:00'
@@ -826,11 +752,10 @@ videos:
   ref:
     text_file: content_library/tema/gun15_normal2_suleymankarinca.txt
     category: peygamberler_tarihi
-    sources: "Neml 27:17-19 (Diyanet Meali)"
-  title_hint: "Hz. Süleyman ve Karınca Kıssası: Gücün İçindeki Adalet"
-  thumb_title: "Hz. Süleyman ve Karınca"
+    sources: Neml 27:17-19 (Diyanet Meali)
+  title_hint: 'Hz. Süleyman ve Karınca Kıssası: Gücün İçindeki Adalet'
+  thumb_title: Hz. Süleyman ve Karınca
   background_mode: none
-
 - id: 2026-10-23-gun15-short2-davudcalut
   status: pending
   publish_at: '2026-10-23T19:00:00+03:00'
@@ -839,12 +764,10 @@ videos:
   ref:
     text_file: content_library/tema/gun15_short2_davudcalut.txt
     category: peygamberler_tarihi
-    sources: "Bakara 2:250-251 (Diyanet Meali)"
-  title_hint: "Hz. Davud'un Calut'u Yenmesi: Küçük Ordunun Büyük Zaferi"
-  thumb_title: "Davud ve Calut Kıssası"
+    sources: Bakara 2:250-251 (Diyanet Meali)
+  title_hint: 'Hz. Davud''un Calut''u Yenmesi: Küçük Ordunun Büyük Zaferi'
+  thumb_title: Davud ve Calut Kıssası
   background_mode: none
-
-# --- GÜN 16 ---
 - id: 2026-10-24-gun16-normal1-haticefedakarlik
   status: pending
   publish_at: '2026-10-24T09:00:00+03:00'
@@ -853,11 +776,10 @@ videos:
   ref:
     text_file: content_library/tema/gun16_normal1_haticefedakarlik.txt
     category: sahabe
-    sources: "Sahih-i Buhari, Hadis No: 3820"
-  title_hint: "Hz. Hatice'nin Fedakarlığı: Cennetle Müjdelenen Sahabi"
-  thumb_title: "Hz. Hatice'nin Fedakarlığı"
+    sources: 'Sahih-i Buhari, Hadis No: 3820'
+  title_hint: 'Hz. Hatice''nin Fedakarlığı: Cennetle Müjdelenen Sahabi'
+  thumb_title: Hz. Hatice'nin Fedakarlığı
   background_mode: none
-
 - id: 2026-10-24-gun16-short1-selmanhikmet
   status: pending
   publish_at: '2026-10-24T12:00:00+03:00'
@@ -866,11 +788,10 @@ videos:
   ref:
     text_file: content_library/tema/gun16_short1_selmanhikmet.txt
     category: sahabe
-    sources: "Siyer kaynakları (ihtilafsız tarihi rivayetler)"
-  title_hint: "Selman-ı Farisi'nin Hakikat Arayışı"
-  thumb_title: "Selman-ı Farisi'nin Yolculuğu"
+    sources: Siyer kaynakları (ihtilafsız tarihi rivayetler)
+  title_hint: Selman-ı Farisi'nin Hakikat Arayışı
+  thumb_title: Selman-ı Farisi'nin Yolculuğu
   background_mode: none
-
 - id: 2026-10-24-gun16-normal2-bilalsabri
   status: pending
   publish_at: '2026-10-24T15:00:00+03:00'
@@ -879,11 +800,10 @@ videos:
   ref:
     text_file: content_library/tema/gun16_normal2_bilalsabri.txt
     category: sahabe
-    sources: "Sahih-i Buhari, Hadis No: 1149"
-  title_hint: "Bilal-i Habeşi'nin Sabrı: \"Ehad, Ehad\""
-  thumb_title: "Bilal-i Habeşi'nin Sabrı"
+    sources: 'Sahih-i Buhari, Hadis No: 1149'
+  title_hint: 'Bilal-i Habeşi''nin Sabrı: "Ehad, Ehad"'
+  thumb_title: Bilal-i Habeşi'nin Sabrı
   background_mode: none
-
 - id: 2026-10-24-gun16-short2-musabfedakarlik
   status: pending
   publish_at: '2026-10-24T19:00:00+03:00'
@@ -892,12 +812,10 @@ videos:
   ref:
     text_file: content_library/tema/gun16_short2_musabfedakarlik.txt
     category: sahabe
-    sources: "Ahzab 33:23 (Diyanet Meali); siyer kaynakları"
-  title_hint: "Mus'ab bin Umeyr'in Fedakarlığı: Zenginlikten Şehadete"
-  thumb_title: "Mus'ab bin Umeyr'in Fedakarlığı"
+    sources: Ahzab 33:23 (Diyanet Meali); siyer kaynakları
+  title_hint: 'Mus''ab bin Umeyr''in Fedakarlığı: Zenginlikten Şehadete'
+  thumb_title: Mus'ab bin Umeyr'in Fedakarlığı
   background_mode: none
-
-# --- GÜN 17 ---
 - id: 2026-10-25-gun17-normal1-tevbekapisi
   status: pending
   publish_at: '2026-10-25T09:00:00+03:00'
@@ -906,11 +824,10 @@ videos:
   ref:
     text_file: content_library/tema/gun17_normal1_tevbekapisi.txt
     category: tefekkur
-    sources: "Zümer 39:53 (Diyanet Meali)"
-  title_hint: "Umudunuzu Kesmeyin: Tevbe Kapısı Her Zaman Açık"
-  thumb_title: "Tevbe Kapısı Açık"
+    sources: Zümer 39:53 (Diyanet Meali)
+  title_hint: 'Umudunuzu Kesmeyin: Tevbe Kapısı Her Zaman Açık'
+  thumb_title: Tevbe Kapısı Açık
   background_mode: none
-
 - id: 2026-10-25-gun17-short1-kalphuzuru
   status: pending
   publish_at: '2026-10-25T12:00:00+03:00'
@@ -919,11 +836,10 @@ videos:
   ref:
     text_file: content_library/tema/gun17_short1_kalphuzuru.txt
     category: tefekkur
-    sources: "Rad 13:28 (Diyanet Meali)"
-  title_hint: "Gerçek Huzurun Kaynağı: Kalpler Ancak Onunla Huzur Bulur"
-  thumb_title: "Kalp Huzurunun Sırrı"
+    sources: Rad 13:28 (Diyanet Meali)
+  title_hint: 'Gerçek Huzurun Kaynağı: Kalpler Ancak Onunla Huzur Bulur'
+  thumb_title: Kalp Huzurunun Sırrı
   background_mode: none
-
 - id: 2026-10-25-gun17-normal2-cennettasviri
   status: pending
   publish_at: '2026-10-25T15:00:00+03:00'
@@ -932,11 +848,10 @@ videos:
   ref:
     text_file: content_library/tema/gun17_normal2_cennettasviri.txt
     category: tefekkur
-    sources: "Muhammed 47:15 (Diyanet Meali)"
-  title_hint: "Cennet Nasıl Bir Yer? Kuran'dan Çarpıcı Bir Tasvir"
-  thumb_title: "Cennetin Tasviri"
+    sources: Muhammed 47:15 (Diyanet Meali)
+  title_hint: Cennet Nasıl Bir Yer? Kuran'dan Çarpıcı Bir Tasvir
+  thumb_title: Cennetin Tasviri
   background_mode: none
-
 - id: 2026-10-25-gun17-short2-rizikendisesi
   status: pending
   publish_at: '2026-10-25T19:00:00+03:00'
@@ -945,12 +860,10 @@ videos:
   ref:
     text_file: content_library/tema/gun17_short2_rizikendisesi.txt
     category: tefekkur
-    sources: "Hud 11:6 (Diyanet Meali)"
-  title_hint: "Rızık Endişesine Kuran'dan Güçlü Bir Cevap"
-  thumb_title: "Rızık Endişesine Çare"
+    sources: Hud 11:6 (Diyanet Meali)
+  title_hint: Rızık Endişesine Kuran'dan Güçlü Bir Cevap
+  thumb_title: Rızık Endişesine Çare
   background_mode: none
-
-# --- GÜN 18 ---
 - id: 2026-10-26-gun18-normal1-kulhakki
   status: pending
   publish_at: '2026-10-26T09:00:00+03:00'
@@ -959,11 +872,10 @@ videos:
   ref:
     text_file: content_library/tema/gun18_normal1_kulhakki.txt
     category: hadis_sohbet
-    sources: "Sahih-i Müslim, Hadis No: 6579 (Müflis Hadisi)"
-  title_hint: "Gerçek Müflis Kimdir? İbadeti Çok Ama Kul Hakkı Yiyen"
-  thumb_title: "Gerçek Müflis Kimdir?"
+    sources: 'Sahih-i Müslim, Hadis No: 6579 (Müflis Hadisi)'
+  title_hint: Gerçek Müflis Kimdir? İbadeti Çok Ama Kul Hakkı Yiyen
+  thumb_title: Gerçek Müflis Kimdir?
   background_mode: none
-
 - id: 2026-10-26-gun18-short1-ilimfazileti
   status: pending
   publish_at: '2026-10-26T12:00:00+03:00'
@@ -972,11 +884,10 @@ videos:
   ref:
     text_file: content_library/tema/gun18_short1_ilimfazileti.txt
     category: hadis_sohbet
-    sources: "İbn Mace, Hadis No: 223"
-  title_hint: "İlim Öğrenmenin Fazileti: Peygamberlerin Mirası"
-  thumb_title: "İlmin Fazileti"
+    sources: 'İbn Mace, Hadis No: 223'
+  title_hint: 'İlim Öğrenmenin Fazileti: Peygamberlerin Mirası'
+  thumb_title: İlmin Fazileti
   background_mode: none
-
 - id: 2026-10-26-gun18-normal2-silairahim
   status: pending
   publish_at: '2026-10-26T15:00:00+03:00'
@@ -985,11 +896,10 @@ videos:
   ref:
     text_file: content_library/tema/gun18_normal2_silairahim.txt
     category: hadis_sohbet
-    sources: "Sahih-i Buhari, Hadis No: 5986"
-  title_hint: "Rızkın Bollaşmasının Sırrı: Sıla-i Rahim"
-  thumb_title: "Sıla-i Rahimin Bereketi"
+    sources: 'Sahih-i Buhari, Hadis No: 5986'
+  title_hint: 'Rızkın Bollaşmasının Sırrı: Sıla-i Rahim'
+  thumb_title: Sıla-i Rahimin Bereketi
   background_mode: none
-
 - id: 2026-10-26-gun18-short2-affetmek
   status: pending
   publish_at: '2026-10-26T19:00:00+03:00'
@@ -998,12 +908,10 @@ videos:
   ref:
     text_file: content_library/tema/gun18_short2_affetmek.txt
     category: hadis_sohbet
-    sources: "Sahih-i Müslim, Hadis No: 6592"
-  title_hint: "Affetmek Zayıflık Değil, Şereftir"
-  thumb_title: "Affetmenin Fazileti"
+    sources: 'Sahih-i Müslim, Hadis No: 6592'
+  title_hint: Affetmek Zayıflık Değil, Şereftir
+  thumb_title: Affetmenin Fazileti
   background_mode: none
-
-# --- GÜN 19 ---
 - id: 2026-10-27-gun19-normal1-rahmansuresi
   status: pending
   publish_at: '2026-10-27T09:00:00+03:00'
@@ -1012,11 +920,10 @@ videos:
   ref:
     text_file: content_library/tema/gun19_normal1_rahmansuresi.txt
     category: kuran_tefsir
-    sources: "Rahman 55:1-13 (Diyanet Meali)"
-  title_hint: "Rahman Suresi: \"Hangi Nimetlerimi Yalanlarsınız?\""
-  thumb_title: "Rahman Suresi'nin Mesajı"
+    sources: Rahman 55:1-13 (Diyanet Meali)
+  title_hint: 'Rahman Suresi: "Hangi Nimetlerimi Yalanlarsınız?"'
+  thumb_title: Rahman Suresi'nin Mesajı
   background_mode: none
-
 - id: 2026-10-27-gun19-short1-adaletayeti
   status: pending
   publish_at: '2026-10-27T12:00:00+03:00'
@@ -1025,11 +932,10 @@ videos:
   ref:
     text_file: content_library/tema/gun19_short1_adaletayeti.txt
     category: kuran_tefsir
-    sources: "Nahl 16:90 (Diyanet Meali)"
-  title_hint: "Kuran'ın En Kapsamlı Ayetlerinden Biri: Adalet Ayeti"
-  thumb_title: "Adalet Ayeti"
+    sources: Nahl 16:90 (Diyanet Meali)
+  title_hint: 'Kuran''ın En Kapsamlı Ayetlerinden Biri: Adalet Ayeti'
+  thumb_title: Adalet Ayeti
   background_mode: none
-
 - id: 2026-10-27-gun19-normal2-amenerrasulu
   status: pending
   publish_at: '2026-10-27T15:00:00+03:00'
@@ -1038,11 +944,10 @@ videos:
   ref:
     text_file: content_library/tema/gun19_normal2_amenerrasulu.txt
     category: kuran_tefsir
-    sources: "Bakara 2:285-286 (Diyanet Meali)"
-  title_hint: "Amenerrasulu: Bakara Suresi'nin Son İki Ayeti"
-  thumb_title: "Amenerrasulu'nun Fazileti"
+    sources: Bakara 2:285-286 (Diyanet Meali)
+  title_hint: 'Amenerrasulu: Bakara Suresi''nin Son İki Ayeti'
+  thumb_title: Amenerrasulu'nun Fazileti
   background_mode: none
-
 - id: 2026-10-27-gun19-short2-meryemiffeti
   status: pending
   publish_at: '2026-10-27T19:00:00+03:00'
@@ -1051,12 +956,10 @@ videos:
   ref:
     text_file: content_library/tema/gun19_short2_meryemiffeti.txt
     category: kuran_tefsir
-    sources: "Ali İmran 3:42-44 (Diyanet Meali)"
-  title_hint: "Hz. Meryem'in İffeti: \"Dünyaların Kadınlarından Üstün\""
-  thumb_title: "Hz. Meryem'in İffeti"
+    sources: Ali İmran 3:42-44 (Diyanet Meali)
+  title_hint: 'Hz. Meryem''in İffeti: "Dünyaların Kadınlarından Üstün"'
+  thumb_title: Hz. Meryem'in İffeti
   background_mode: none
-
-# --- GÜN 20 ---
 - id: 2026-10-28-gun20-normal1-istigfarinetkileri
   status: pending
   publish_at: '2026-10-28T09:00:00+03:00'
@@ -1065,11 +968,10 @@ videos:
   ref:
     text_file: content_library/tema/gun20_normal1_istigfarinetkileri.txt
     category: dua_zikir
-    sources: "Nuh 71:10-12 (Diyanet Meali)"
-  title_hint: "İstiğfarın Hayatınıza Getireceği Bereket"
-  thumb_title: "İstiğfarın Gücü"
+    sources: Nuh 71:10-12 (Diyanet Meali)
+  title_hint: İstiğfarın Hayatınıza Getireceği Bereket
+  thumb_title: İstiğfarın Gücü
   background_mode: none
-
 - id: 2026-10-28-gun20-short1-namazsonrasitesbih
   status: pending
   publish_at: '2026-10-28T12:00:00+03:00'
@@ -1078,11 +980,10 @@ videos:
   ref:
     text_file: content_library/tema/gun20_short1_namazsonrasitesbih.txt
     category: dua_zikir
-    sources: "Sahih-i Müslim (1/418)"
-  title_hint: "Namaz Sonrası Bu Tesbihi Yapan Affedilir"
-  thumb_title: "Namaz Sonrası Tesbih"
+    sources: Sahih-i Müslim (1/418)
+  title_hint: Namaz Sonrası Bu Tesbihi Yapan Affedilir
+  thumb_title: Namaz Sonrası Tesbih
   background_mode: none
-
 - id: 2026-10-28-gun20-normal2-zikrullah
   status: pending
   publish_at: '2026-10-28T15:00:00+03:00'
@@ -1091,11 +992,10 @@ videos:
   ref:
     text_file: content_library/tema/gun20_normal2_zikrullah.txt
     category: dua_zikir
-    sources: "Ahzab 33:41-42 (Diyanet Meali)"
-  title_hint: "Allah'ı Çok Anın: Zikrin Kalbe Kattığı Huzur"
-  thumb_title: "Zikrin Gücü"
+    sources: Ahzab 33:41-42 (Diyanet Meali)
+  title_hint: 'Allah''ı Çok Anın: Zikrin Kalbe Kattığı Huzur'
+  thumb_title: Zikrin Gücü
   background_mode: none
-
 - id: 2026-10-28-gun20-short2-sabahduasi
   status: pending
   publish_at: '2026-10-28T19:00:00+03:00'
@@ -1104,12 +1004,10 @@ videos:
   ref:
     text_file: content_library/tema/gun20_short2_sabahduasi.txt
     category: dua_zikir
-    sources: "İbn Mace, Sahih-i İbn-i Mace (1/152)"
-  title_hint: "Sabah Namazından Sonra Okunan Üç Kelimelik Dua"
-  thumb_title: "Sabah Duası"
+    sources: İbn Mace, Sahih-i İbn-i Mace (1/152)
+  title_hint: Sabah Namazından Sonra Okunan Üç Kelimelik Dua
+  thumb_title: Sabah Duası
   background_mode: none
-
-# --- GÜN 21 ---
 - id: 2026-10-29-gun21-normal1-zekatinhikmeti
   status: pending
   publish_at: '2026-10-29T09:00:00+03:00'
@@ -1118,11 +1016,10 @@ videos:
   ref:
     text_file: content_library/tema/gun21_normal1_zekatinhikmeti.txt
     category: ilmihal
-    sources: "Tevbe 9:103 (Diyanet Meali)"
-  title_hint: "Zekatın Hikmeti: Malı ve Kalbi Arındıran İbadet"
-  thumb_title: "Zekatın Hikmeti"
+    sources: Tevbe 9:103 (Diyanet Meali)
+  title_hint: 'Zekatın Hikmeti: Malı ve Kalbi Arındıran İbadet'
+  thumb_title: Zekatın Hikmeti
   background_mode: none
-
 - id: 2026-10-29-gun21-short1-cumanamazi
   status: pending
   publish_at: '2026-10-29T12:00:00+03:00'
@@ -1131,11 +1028,10 @@ videos:
   ref:
     text_file: content_library/tema/gun21_short1_cumanamazi.txt
     category: ilmihal
-    sources: "Cuma 62:9-10 (Diyanet Meali)"
-  title_hint: "Cuma Namazının Önemi: Koşarak Gidilmesi Emredilen İbadet"
-  thumb_title: "Cuma Namazının Önemi"
+    sources: Cuma 62:9-10 (Diyanet Meali)
+  title_hint: 'Cuma Namazının Önemi: Koşarak Gidilmesi Emredilen İbadet'
+  thumb_title: Cuma Namazının Önemi
   background_mode: none
-
 - id: 2026-10-29-gun21-normal2-hacibadeti
   status: pending
   publish_at: '2026-10-29T15:00:00+03:00'
@@ -1144,11 +1040,10 @@ videos:
   ref:
     text_file: content_library/tema/gun21_normal2_hacibadeti.txt
     category: ilmihal
-    sources: "Al-i İmran 3:97 (Diyanet Meali)"
-  title_hint: "Hac İbadeti Özeti: Gücü Yetene Farz Olan Yolculuk"
-  thumb_title: "Hac İbadetinin Özeti"
+    sources: Al-i İmran 3:97 (Diyanet Meali)
+  title_hint: 'Hac İbadeti Özeti: Gücü Yetene Farz Olan Yolculuk'
+  thumb_title: Hac İbadetinin Özeti
   background_mode: none
-
 - id: 2026-10-29-gun21-short2-kurbanibadeti
   status: pending
   publish_at: '2026-10-29T19:00:00+03:00'
@@ -1157,12 +1052,10 @@ videos:
   ref:
     text_file: content_library/tema/gun21_short2_kurbanibadeti.txt
     category: ilmihal
-    sources: "Hac 22:37; Kevser 108:1-3 (Diyanet Meali)"
-  title_hint: "Kurban İbadetinde Asıl Önemli Olan Nedir?"
-  thumb_title: "Kurban İbadetinin Özü"
+    sources: Hac 22:37; Kevser 108:1-3 (Diyanet Meali)
+  title_hint: Kurban İbadetinde Asıl Önemli Olan Nedir?
+  thumb_title: Kurban İbadetinin Özü
   background_mode: none
-
-# --- GÜN 22 ---
 - id: 2026-10-30-gun22-normal1-nuhtufani
   status: pending
   publish_at: '2026-10-30T09:00:00+03:00'
@@ -1171,11 +1064,10 @@ videos:
   ref:
     text_file: content_library/tema/gun22_normal1_nuhtufani.txt
     category: peygamberler_tarihi
-    sources: "Hud 11:40-44 (Diyanet Meali)"
-  title_hint: "Hz. Nuh ve Tufan: Kurtuluş İmanla Gerçekleşir"
-  thumb_title: "Hz. Nuh ve Tufan"
+    sources: Hud 11:40-44 (Diyanet Meali)
+  title_hint: 'Hz. Nuh ve Tufan: Kurtuluş İmanla Gerçekleşir'
+  thumb_title: Hz. Nuh ve Tufan
   background_mode: none
-
 - id: 2026-10-30-gun22-short1-ismailinkurbani
   status: pending
   publish_at: '2026-10-30T12:00:00+03:00'
@@ -1184,11 +1076,10 @@ videos:
   ref:
     text_file: content_library/tema/gun22_short1_ismailinkurbani.txt
     category: peygamberler_tarihi
-    sources: "Saffat 37:102-107 (Diyanet Meali)"
-  title_hint: "Hz. İsmail'in Kurban Kıssası: \"Beni Sabredenlerden Bulacaksın\""
-  thumb_title: "Hz. İsmail'in Teslimiyeti"
+    sources: Saffat 37:102-107 (Diyanet Meali)
+  title_hint: 'Hz. İsmail''in Kurban Kıssası: "Beni Sabredenlerden Bulacaksın"'
+  thumb_title: Hz. İsmail'in Teslimiyeti
   background_mode: none
-
 - id: 2026-10-30-gun22-normal2-hiramagarasi
   status: pending
   publish_at: '2026-10-30T15:00:00+03:00'
@@ -1197,11 +1088,10 @@ videos:
   ref:
     text_file: content_library/tema/gun22_normal2_hiramagarasi.txt
     category: peygamberler_tarihi
-    sources: "Alak 96:1-5 (Diyanet Meali)"
-  title_hint: "Hira Mağarası'nda İlk Vahiy: \"Oku!\""
-  thumb_title: "Hira Mağarası'nda İlk Vahiy"
+    sources: Alak 96:1-5 (Diyanet Meali)
+  title_hint: 'Hira Mağarası''nda İlk Vahiy: "Oku!"'
+  thumb_title: Hira Mağarası'nda İlk Vahiy
   background_mode: none
-
 - id: 2026-10-30-gun22-short2-hicretyolculugu
   status: pending
   publish_at: '2026-10-30T19:00:00+03:00'
@@ -1210,12 +1100,10 @@ videos:
   ref:
     text_file: content_library/tema/gun22_short2_hicretyolculugu.txt
     category: peygamberler_tarihi
-    sources: "Mainstream siyer narrative (Sevr Mağarası, Süraka, Kuba)"
-  title_hint: "Hicret Yolculuğu: Sabrın ve Tevekkülün Hikayesi"
-  thumb_title: "Hicret Yolculuğu"
+    sources: Mainstream siyer narrative (Sevr Mağarası, Süraka, Kuba)
+  title_hint: 'Hicret Yolculuğu: Sabrın ve Tevekkülün Hikayesi'
+  thumb_title: Hicret Yolculuğu
   background_mode: none
-
-# --- GÜN 23 ---
 - id: 2026-10-31-gun23-normal1-aisyeninilmi
   status: pending
   publish_at: '2026-10-31T09:00:00+03:00'
@@ -1224,11 +1112,10 @@ videos:
   ref:
     text_file: content_library/tema/gun23_normal1_aisyeninilmi.txt
     category: sahabe
-    sources: "Sahih-i Buhari, Hadis No: 3411"
-  title_hint: "Hz. Aişe'nin İlmi: Tiridin Yemeklere Üstünlüğü Gibi"
-  thumb_title: "Hz. Aişe'nin İlmi"
+    sources: 'Sahih-i Buhari, Hadis No: 3411'
+  title_hint: 'Hz. Aişe''nin İlmi: Tiridin Yemeklere Üstünlüğü Gibi'
+  thumb_title: Hz. Aişe'nin İlmi
   background_mode: none
-
 - id: 2026-10-31-gun23-short1-ebuhureyre
   status: pending
   publish_at: '2026-10-31T12:00:00+03:00'
@@ -1237,11 +1124,10 @@ videos:
   ref:
     text_file: content_library/tema/gun23_short1_ebuhureyre.txt
     category: sahabe
-    sources: "Mainstream siyer narrative (Ebu Hureyre'nin hadis rivayeti)"
-  title_hint: "Ebu Hureyre'nin Hadis İlmindeki Eşsiz Yeri"
-  thumb_title: "Ebu Hureyre'nin Hadis İlmi"
+    sources: Mainstream siyer narrative (Ebu Hureyre'nin hadis rivayeti)
+  title_hint: Ebu Hureyre'nin Hadis İlmindeki Eşsiz Yeri
+  thumb_title: Ebu Hureyre'nin Hadis İlmi
   background_mode: none
-
 - id: 2026-10-31-gun23-normal2-halidbinvelid
   status: pending
   publish_at: '2026-10-31T15:00:00+03:00'
@@ -1250,11 +1136,10 @@ videos:
   ref:
     text_file: content_library/tema/gun23_normal2_halidbinvelid.txt
     category: sahabe
-    sources: "Sahih-i Buhari, Hadis No: 5391 (Seyfullah)"
-  title_hint: "Halid bin Velid: Allah'ın Kılıcı Unvanının Hikayesi"
-  thumb_title: "Halid bin Velid: Seyfullah"
+    sources: 'Sahih-i Buhari, Hadis No: 5391 (Seyfullah)'
+  title_hint: 'Halid bin Velid: Allah''ın Kılıcı Unvanının Hikayesi'
+  thumb_title: 'Halid bin Velid: Seyfullah'
   background_mode: none
-
 - id: 2026-10-31-gun23-short2-fatimaninornekligi
   status: pending
   publish_at: '2026-10-31T19:00:00+03:00'
@@ -1263,12 +1148,10 @@ videos:
   ref:
     text_file: content_library/tema/gun23_short2_fatimaninornekligi.txt
     category: sahabe
-    sources: "Sahih-i Buhari, Hadis No: 6285"
-  title_hint: "Hz. Fatıma'ya Verilen Özel Müjde"
-  thumb_title: "Hz. Fatıma'nın Örnekliği"
+    sources: 'Sahih-i Buhari, Hadis No: 6285'
+  title_hint: Hz. Fatıma'ya Verilen Özel Müjde
+  thumb_title: Hz. Fatıma'nın Örnekliği
   background_mode: none
-
-# --- GÜN 24 ---
 - id: 2026-11-01-gun24-normal1-kiyametalametleri
   status: pending
   publish_at: '2026-11-01T09:00:00+03:00'
@@ -1277,11 +1160,10 @@ videos:
   ref:
     text_file: content_library/tema/gun24_normal1_kiyametalametleri.txt
     category: tefekkur
-    sources: "Sahih-i Buhari, Hadis No: 6808"
-  title_hint: "Peygamberimizin Haber Verdiği Kıyamet Alametleri"
-  thumb_title: "Kıyamet Alametleri"
+    sources: 'Sahih-i Buhari, Hadis No: 6808'
+  title_hint: Peygamberimizin Haber Verdiği Kıyamet Alametleri
+  thumb_title: Kıyamet Alametleri
   background_mode: none
-
 - id: 2026-11-01-gun24-short1-sabrinmukafati
   status: pending
   publish_at: '2026-11-01T12:00:00+03:00'
@@ -1290,11 +1172,10 @@ videos:
   ref:
     text_file: content_library/tema/gun24_short1_sabrinmukafati.txt
     category: tefekkur
-    sources: "Zümer 39:10 (Diyanet Meali)"
-  title_hint: "Sabrın Mükâfatı: Hesapsız Bir Şekilde Ödenecek"
-  thumb_title: "Sabrın Mükâfatı"
+    sources: Zümer 39:10 (Diyanet Meali)
+  title_hint: 'Sabrın Mükâfatı: Hesapsız Bir Şekilde Ödenecek'
+  thumb_title: Sabrın Mükâfatı
   background_mode: none
-
 - id: 2026-11-01-gun24-normal2-ihlasinonemi
   status: pending
   publish_at: '2026-11-01T15:00:00+03:00'
@@ -1303,11 +1184,10 @@ videos:
   ref:
     text_file: content_library/tema/gun24_normal2_ihlasinonemi.txt
     category: tefekkur
-    sources: "Beyyine 98:5 (Diyanet Meali)"
-  title_hint: "İbadetin Kabulünün Tek Şartı: İhlas"
-  thumb_title: "İhlasın Önemi"
+    sources: Beyyine 98:5 (Diyanet Meali)
+  title_hint: 'İbadetin Kabulünün Tek Şartı: İhlas'
+  thumb_title: İhlasın Önemi
   background_mode: none
-
 - id: 2026-11-01-gun24-short2-sukur
   status: pending
   publish_at: '2026-11-01T19:00:00+03:00'
@@ -1316,12 +1196,10 @@ videos:
   ref:
     text_file: content_library/tema/gun24_short2_sukur.txt
     category: tefekkur
-    sources: "Nahl 16:18 (Diyanet Meali)"
-  title_hint: "Allah'ın Nimetlerini Saymaya Kalksanız Bitiremezsiniz"
-  thumb_title: "Şükrün Önemi"
+    sources: Nahl 16:18 (Diyanet Meali)
+  title_hint: Allah'ın Nimetlerini Saymaya Kalksanız Bitiremezsiniz
+  thumb_title: Şükrün Önemi
   background_mode: none
-
-# --- GÜN 25 ---
 - id: 2026-11-02-gun25-normal1-misafirperverlik
   status: pending
   publish_at: '2026-11-02T09:00:00+03:00'
@@ -1330,11 +1208,10 @@ videos:
   ref:
     text_file: content_library/tema/gun25_normal1_misafirperverlik.txt
     category: hadis_sohbet
-    sources: "Sahih-i Müslim, Hadis No: 176"
-  title_hint: "İmanın Göstergesi: Misafire İkram, Komşuya İhsan"
-  thumb_title: "Misafirperverliğin Fazileti"
+    sources: 'Sahih-i Müslim, Hadis No: 176'
+  title_hint: 'İmanın Göstergesi: Misafire İkram, Komşuya İhsan'
+  thumb_title: Misafirperverliğin Fazileti
   background_mode: none
-
 - id: 2026-11-02-gun25-short1-duakabulusartlari
   status: pending
   publish_at: '2026-11-02T12:00:00+03:00'
@@ -1343,11 +1220,10 @@ videos:
   ref:
     text_file: content_library/tema/gun25_short1_duakabulusartlari.txt
     category: hadis_sohbet
-    sources: "İbn Mace, Hadis No: 3862"
-  title_hint: "Kabul Olunduğundan Şüphe Olmayan Üç Dua"
-  thumb_title: "Kabul Olan Üç Dua"
+    sources: 'İbn Mace, Hadis No: 3862'
+  title_hint: Kabul Olunduğundan Şüphe Olmayan Üç Dua
+  thumb_title: Kabul Olan Üç Dua
   background_mode: none
-
 - id: 2026-11-02-gun25-normal2-buyuklereyaygi
   status: pending
   publish_at: '2026-11-02T15:00:00+03:00'
@@ -1356,11 +1232,10 @@ videos:
   ref:
     text_file: content_library/tema/gun25_normal2_buyuklereyaygi.txt
     category: hadis_sohbet
-    sources: "Tirmizi, Hadis No: 1919"
-  title_hint: "\"Büyüklerimize Saygı Göstermeyen Bizden Değildir\""
-  thumb_title: "Büyüklere Saygının Önemi"
+    sources: 'Tirmizi, Hadis No: 1919'
+  title_hint: '"Büyüklerimize Saygı Göstermeyen Bizden Değildir"'
+  thumb_title: Büyüklere Saygının Önemi
   background_mode: none
-
 - id: 2026-11-02-gun25-short2-kuslugusurdurmemek
   status: pending
   publish_at: '2026-11-02T19:00:00+03:00'
@@ -1369,12 +1244,10 @@ videos:
   ref:
     text_file: content_library/tema/gun25_short2_kuslugusurdurmemek.txt
     category: hadis_sohbet
-    sources: "Sahih-i Buhari, Hadis No: 6065"
-  title_hint: "Küslüğün Üç Günden Fazla Süremeyeceği Hadisi"
-  thumb_title: "Küslüğü Sürdürmemek"
+    sources: 'Sahih-i Buhari, Hadis No: 6065'
+  title_hint: Küslüğün Üç Günden Fazla Süremeyeceği Hadisi
+  thumb_title: Küslüğü Sürdürmemek
   background_mode: none
-
-# --- GÜN 26 ---
 - id: 2026-11-03-gun26-normal1-yusufkardesplanlari
   status: pending
   publish_at: '2026-11-03T09:00:00+03:00'
@@ -1383,11 +1256,10 @@ videos:
   ref:
     text_file: content_library/tema/gun26_normal1_yusufkardesplanlari.txt
     category: kuran_tefsir
-    sources: "Yusuf 12:8-14 (Diyanet Meali)"
-  title_hint: "Yusuf Kıssası: Kardeşlerin Kurduğu Plan"
-  thumb_title: "Yusuf Kıssası: Kardeşlerin Planı"
+    sources: Yusuf 12:8-14 (Diyanet Meali)
+  title_hint: 'Yusuf Kıssası: Kardeşlerin Kurduğu Plan'
+  thumb_title: 'Yusuf Kıssası: Kardeşlerin Planı'
   background_mode: none
-
 - id: 2026-11-03-gun26-short1-filsuresi
   status: pending
   publish_at: '2026-11-03T12:00:00+03:00'
@@ -1396,11 +1268,10 @@ videos:
   ref:
     text_file: content_library/tema/gun26_short1_filsuresi.txt
     category: kuran_tefsir
-    sources: "Fil Suresi 105:1-5 (Diyanet Meali)"
-  title_hint: "Fil Suresi: Kabe'yi Yıkmaya Gelen Orduya Ne Oldu?"
-  thumb_title: "Fil Suresi'nin Kıssası"
+    sources: Fil Suresi 105:1-5 (Diyanet Meali)
+  title_hint: 'Fil Suresi: Kabe''yi Yıkmaya Gelen Orduya Ne Oldu?'
+  thumb_title: Fil Suresi'nin Kıssası
   background_mode: none
-
 - id: 2026-11-03-gun26-normal2-fetihsuresi
   status: pending
   publish_at: '2026-11-03T15:00:00+03:00'
@@ -1409,11 +1280,10 @@ videos:
   ref:
     text_file: content_library/tema/gun26_normal2_fetihsuresi.txt
     category: kuran_tefsir
-    sources: "Fetih 48:1-4 (Diyanet Meali)"
-  title_hint: "Fetih Suresi: Görünmeyen Bir Zaferin Hikayesi"
-  thumb_title: "Fetih Suresi'nin Mesajı"
+    sources: Fetih 48:1-4 (Diyanet Meali)
+  title_hint: 'Fetih Suresi: Görünmeyen Bir Zaferin Hikayesi'
+  thumb_title: Fetih Suresi'nin Mesajı
   background_mode: none
-
 - id: 2026-11-03-gun26-short2-kureyssuresi
   status: pending
   publish_at: '2026-11-03T19:00:00+03:00'
@@ -1422,12 +1292,10 @@ videos:
   ref:
     text_file: content_library/tema/gun26_short2_kureyssuresi.txt
     category: kuran_tefsir
-    sources: "Kureyş Suresi 106:1-4 (Diyanet Meali)"
-  title_hint: "Kureyş Suresi: Ticaret Güvenliğinin Arkasındaki Nimet"
-  thumb_title: "Kureyş Suresi'nin Mesajı"
+    sources: Kureyş Suresi 106:1-4 (Diyanet Meali)
+  title_hint: 'Kureyş Suresi: Ticaret Güvenliğinin Arkasındaki Nimet'
+  thumb_title: Kureyş Suresi'nin Mesajı
   background_mode: none
-
-# --- GÜN 27 ---
 - id: 2026-11-04-gun27-normal1-evlilikduasi
   status: pending
   publish_at: '2026-11-04T09:00:00+03:00'
@@ -1436,11 +1304,10 @@ videos:
   ref:
     text_file: content_library/tema/gun27_normal1_evlilikduasi.txt
     category: dua_zikir
-    sources: "Hısnu'l Müslim, Dua No: 190-191"
-  title_hint: "Peygamberimizin Evlenenlere Öğrettiği Dua"
-  thumb_title: "Evlilik Duası"
+    sources: 'Hısnu''l Müslim, Dua No: 190-191'
+  title_hint: Peygamberimizin Evlenenlere Öğrettiği Dua
+  thumb_title: Evlilik Duası
   background_mode: none
-
 - id: 2026-11-04-gun27-short1-rabbenaheblena
   status: pending
   publish_at: '2026-11-04T12:00:00+03:00'
@@ -1449,11 +1316,10 @@ videos:
   ref:
     text_file: content_library/tema/gun27_short1_rabbenaheblena.txt
     category: dua_zikir
-    sources: "Furkan 25:74 (Diyanet Meali)"
-  title_hint: "Gözümüzün Aydınlığı Olacak Bir Aile İçin Dua"
-  thumb_title: "Rabbena Heb Lena Duası"
+    sources: Furkan 25:74 (Diyanet Meali)
+  title_hint: Gözümüzün Aydınlığı Olacak Bir Aile İçin Dua
+  thumb_title: Rabbena Heb Lena Duası
   background_mode: none
-
 - id: 2026-11-04-gun27-normal2-ayetelkursifazileti
   status: pending
   publish_at: '2026-11-04T15:00:00+03:00'
@@ -1462,11 +1328,10 @@ videos:
   ref:
     text_file: content_library/tema/gun27_normal2_ayetelkursifazileti.txt
     category: dua_zikir
-    sources: "Nesai, Amelu'l-Yevmi ve'l-Leyle (h.100)"
-  title_hint: "Namazdan Sonra Ayetel Kürsi Okuyana Verilen Müjde"
-  thumb_title: "Ayetel Kürsi'nin Fazileti"
+    sources: Nesai, Amelu'l-Yevmi ve'l-Leyle (h.100)
+  title_hint: Namazdan Sonra Ayetel Kürsi Okuyana Verilen Müjde
+  thumb_title: Ayetel Kürsi'nin Fazileti
   background_mode: none
-
 - id: 2026-11-04-gun27-short2-yagmurduasi
   status: pending
   publish_at: '2026-11-04T19:00:00+03:00'
@@ -1475,12 +1340,10 @@ videos:
   ref:
     text_file: content_library/tema/gun27_short2_yagmurduasi.txt
     category: dua_zikir
-    sources: "Hısnu'l Müslim, Dua No: 169-174 (İstiska Duaları)"
-  title_hint: "Peygamberimizin Yağmur İçin Öğrettiği Dualar"
-  thumb_title: "Yağmur Duası"
+    sources: 'Hısnu''l Müslim, Dua No: 169-174 (İstiska Duaları)'
+  title_hint: Peygamberimizin Yağmur İçin Öğrettiği Dualar
+  thumb_title: Yağmur Duası
   background_mode: none
-
-# --- GÜN 28 ---
 - id: 2026-11-05-gun28-normal1-itikaf
   status: pending
   publish_at: '2026-11-05T09:00:00+03:00'
@@ -1489,11 +1352,10 @@ videos:
   ref:
     text_file: content_library/tema/gun28_normal1_itikaf.txt
     category: ilmihal
-    sources: "Bakara 2:187 (Diyanet Meali)"
-  title_hint: "İtikaf: Mescidde Allah'a Kapanmanın İbadeti"
-  thumb_title: "İtikaf İbadeti"
+    sources: Bakara 2:187 (Diyanet Meali)
+  title_hint: 'İtikaf: Mescidde Allah''a Kapanmanın İbadeti'
+  thumb_title: İtikaf İbadeti
   background_mode: none
-
 - id: 2026-11-05-gun28-short1-namazvakitlerininhikmeti
   status: pending
   publish_at: '2026-11-05T12:00:00+03:00'
@@ -1502,11 +1364,10 @@ videos:
   ref:
     text_file: content_library/tema/gun28_short1_namazvakitlerininhikmeti.txt
     category: ilmihal
-    sources: "İsra 17:78 (Diyanet Meali)"
-  title_hint: "Namaz Vakitlerinin Hikmeti: Sabah Namazına Melekler Şahit"
-  thumb_title: "Namaz Vakitlerinin Hikmeti"
+    sources: İsra 17:78 (Diyanet Meali)
+  title_hint: 'Namaz Vakitlerinin Hikmeti: Sabah Namazına Melekler Şahit'
+  thumb_title: Namaz Vakitlerinin Hikmeti
   background_mode: none
-
 - id: 2026-11-05-gun28-normal2-zekatsadakafarki
   status: pending
   publish_at: '2026-11-05T15:00:00+03:00'
@@ -1515,11 +1376,10 @@ videos:
   ref:
     text_file: content_library/tema/gun28_normal2_zekatsadakafarki.txt
     category: ilmihal
-    sources: "Bakara 2:271 (Diyanet Meali)"
-  title_hint: "Zekat ile Sadaka Arasındaki Fark Nedir?"
-  thumb_title: "Zekat-Sadaka Farkı"
+    sources: Bakara 2:271 (Diyanet Meali)
+  title_hint: Zekat ile Sadaka Arasındaki Fark Nedir?
+  thumb_title: Zekat-Sadaka Farkı
   background_mode: none
-
 - id: 2026-11-05-gun28-short2-abdestibozanseyler
   status: pending
   publish_at: '2026-11-05T19:00:00+03:00'
@@ -1528,12 +1388,10 @@ videos:
   ref:
     text_file: content_library/tema/gun28_short2_abdestibozanseyler.txt
     category: ilmihal
-    sources: "Sahih-i Müslim, Hadis No: 805"
-  title_hint: "Abdest Konusunda Vesveseye Düşmeyin: Peygamberimizin Tavsiyesi"
-  thumb_title: "Abdesti Bozan Şeyler"
+    sources: 'Sahih-i Müslim, Hadis No: 805'
+  title_hint: 'Abdest Konusunda Vesveseye Düşmeyin: Peygamberimizin Tavsiyesi'
+  thumb_title: Abdesti Bozan Şeyler
   background_mode: none
-
-# --- GÜN 29 ---
 - id: 2026-11-06-gun29-normal1-muhammedindogumu
   status: pending
   publish_at: '2026-11-06T09:00:00+03:00'
@@ -1542,11 +1400,10 @@ videos:
   ref:
     text_file: content_library/tema/gun29_normal1_muhammedindogumu.txt
     category: peygamberler_tarihi
-    sources: "Duha 93:6-8 (Diyanet Meali)"
-  title_hint: "Peygamberimizin Doğumu ve Zorlu Çocukluğu"
-  thumb_title: "Peygamberimizin Çocukluğu"
+    sources: Duha 93:6-8 (Diyanet Meali)
+  title_hint: Peygamberimizin Doğumu ve Zorlu Çocukluğu
+  thumb_title: Peygamberimizin Çocukluğu
   background_mode: none
-
 - id: 2026-11-06-gun29-short1-miracgecesi
   status: pending
   publish_at: '2026-11-06T12:00:00+03:00'
@@ -1555,11 +1412,10 @@ videos:
   ref:
     text_file: content_library/tema/gun29_short1_miracgecesi.txt
     category: peygamberler_tarihi
-    sources: "İsra 17:1 (Diyanet Meali)"
-  title_hint: "Miraç Gecesi: Namazın Göklerde Farz Kılındığı Gece"
-  thumb_title: "Miraç Gecesi'nin Mesajı"
+    sources: İsra 17:1 (Diyanet Meali)
+  title_hint: 'Miraç Gecesi: Namazın Göklerde Farz Kılındığı Gece'
+  thumb_title: Miraç Gecesi'nin Mesajı
   background_mode: none
-
 - id: 2026-11-06-gun29-normal2-vedahutbesi
   status: pending
   publish_at: '2026-11-06T15:00:00+03:00'
@@ -1568,11 +1424,10 @@ videos:
   ref:
     text_file: content_library/tema/gun29_normal2_vedahutbesi.txt
     category: peygamberler_tarihi
-    sources: "Tirmizi, Hadis No: 2158"
-  title_hint: "Veda Hutbesi: Kanınız, Malınız ve Namusunuz Haramdır"
-  thumb_title: "Veda Hutbesi'nin Mesajı"
+    sources: 'Tirmizi, Hadis No: 2158'
+  title_hint: 'Veda Hutbesi: Kanınız, Malınız ve Namusunuz Haramdır'
+  thumb_title: Veda Hutbesi'nin Mesajı
   background_mode: none
-
 - id: 2026-11-06-gun29-short2-isaninogumu
   status: pending
   publish_at: '2026-11-06T19:00:00+03:00'
@@ -1581,12 +1436,10 @@ videos:
   ref:
     text_file: content_library/tema/gun29_short2_isaninogumu.txt
     category: peygamberler_tarihi
-    sources: "Meryem 19:22-26 (Diyanet Meali)"
-  title_hint: "Hz. İsa'nın Doğumu: Hurma Ağacının Dibindeki Teselli"
-  thumb_title: "Hz. İsa'nın Doğumu"
+    sources: Meryem 19:22-26 (Diyanet Meali)
+  title_hint: 'Hz. İsa''nın Doğumu: Hurma Ağacının Dibindeki Teselli'
+  thumb_title: Hz. İsa'nın Doğumu
   background_mode: none
-
-# --- GÜN 30 ---
 - id: 2026-11-07-gun30-normal1-ebueyyupevsahipligi
   status: pending
   publish_at: '2026-11-07T09:00:00+03:00'
@@ -1595,11 +1448,10 @@ videos:
   ref:
     text_file: content_library/tema/gun30_normal1_ebueyyupevsahipligi.txt
     category: sahabe
-    sources: "Mainstream siyer narrative (Peygamberimizin ilk ev sahibi)"
-  title_hint: "Ebu Eyyüb el-Ensari: Peygamberimizin İlk Ev Sahibi"
-  thumb_title: "Ebu Eyyüb el-Ensari'nin Ev Sahipliği"
+    sources: Mainstream siyer narrative (Peygamberimizin ilk ev sahibi)
+  title_hint: 'Ebu Eyyüb el-Ensari: Peygamberimizin İlk Ev Sahibi'
+  thumb_title: Ebu Eyyüb el-Ensari'nin Ev Sahipliği
   background_mode: none
-
 - id: 2026-11-07-gun30-short1-meclisduasi
   status: pending
   publish_at: '2026-11-07T12:00:00+03:00'
@@ -1608,11 +1460,10 @@ videos:
   ref:
     text_file: content_library/tema/gun30_short1_meclisduasi.txt
     category: dua_zikir
-    sources: "Hısnu'l Müslim, Dua No: 196 (Keffaretü'l Meclis)"
-  title_hint: "Her Meclisin Sonunda Okunan Kefaret Duası"
-  thumb_title: "Meclis Duası"
+    sources: 'Hısnu''l Müslim, Dua No: 196 (Keffaretü''l Meclis)'
+  title_hint: Her Meclisin Sonunda Okunan Kefaret Duası
+  thumb_title: Meclis Duası
   background_mode: none
-
 - id: 2026-11-07-gun30-normal2-otugunozeti
   status: pending
   publish_at: '2026-11-07T15:00:00+03:00'
@@ -1621,11 +1472,10 @@ videos:
   ref:
     text_file: content_library/tema/gun30_normal2_otugunozeti.txt
     category: tefekkur
-    sources: "Nahl 16:97 (Diyanet Meali)"
-  title_hint: "30 Günün Özeti: Bu Yolculuktan Ne Öğrendik?"
-  thumb_title: "30 Günün Kapanışı"
+    sources: Nahl 16:97 (Diyanet Meali)
+  title_hint: '30 Günün Özeti: Bu Yolculuktan Ne Öğrendik?'
+  thumb_title: 30 Günün Kapanışı
   background_mode: none
-
 - id: 2026-11-07-gun30-short2-hayirlihayatduasi
   status: pending
   publish_at: '2026-11-07T19:00:00+03:00'
@@ -1634,7 +1484,7 @@ videos:
   ref:
     text_file: content_library/tema/gun30_short2_hayirlihayatduasi.txt
     category: dua_zikir
-    sources: "Sahih-i Buhari, Fethu'l-Bari (6/35)"
-  title_hint: "Hayırlı Bir Hayat ve Güzel Bir Son İçin Dua"
-  thumb_title: "Hayırlı Hayat Duası"
+    sources: Sahih-i Buhari, Fethu'l-Bari (6/35)
+  title_hint: Hayırlı Bir Hayat ve Güzel Bir Son İçin Dua
+  thumb_title: Hayırlı Hayat Duası
   background_mode: none
