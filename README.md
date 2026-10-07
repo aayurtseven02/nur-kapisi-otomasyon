@@ -316,13 +316,34 @@ yayın anı tam istediğiniz saatte YouTube tarafından gerçekleştirilir.
   siz sağlarsınız. Bu, dini doğruluğu garanti etmenin tek güvenli yoludur.
 - **Video üretim süresi:** Uzun bir sure (ör. 20 ayet) videosu, GitHub Actions
   sunucusunda birkaç dakika sürebilir; bu süre free tier limitlerinin çok altındadır.
-- **Short süre sınırı (`video.max_short_seconds`):** Eşik, YouTube'un gerçek
-  Shorts limiti olan **180 saniyeye** (3 dakika) çekildi — YouTube Ekim 2024'ten
-  bu yana bu süreye kadar izin veriyor. Eski 59 sn değeri, takvimin 62 short
-  videosundan 32'sini gereksizce işaretliyordu. Politika güvenlik ağı olarak
-  durmaya devam ediyor: 180 sn'i aşan bir içerik üretilirse uyarı verilir;
-  isterseniz `config/settings.yaml` → `video.short_over_limit_action` değerini
-  `fail` yaparak sınırı aşan short videolarda durmayı zorunlu kılabilirsiniz.
+- **Short süre sınırı (`video.max_short_seconds`):** Eşik **60 saniye** (klasik
+  Shorts standardı). YouTube Ekim 2024'ten bu yana Shorts için 3 dakikaya kadar
+  izin verse de, dikey formatta dikkat süresi kısa olduğu için proje standardı
+  olarak 60 sn korunuyor.
+
+  > **Önemli — 2026-10-07'de yapılan gerçek ölçüm:** 60 short metninin tamamı
+  > edge-tts ile seslendirilip ölçüldü. **59'u 60 sn'i aşıyor** (ortalama
+  > **86.7 sn**, en uzun 113.5 sn; ortalama ~11.7 karakter/saniye). 60 sn'e
+  > sığması için metnin ~700 karakterin altında olması gerekiyor.
+
+  Bu yüzden sınırı aşan videolara ne olacağını belirleyen politika kritiktir
+  (`config/settings.yaml` → `video.short_over_limit_action`):
+
+  | Politika | Davranış | Ne zaman seçilmeli |
+  |---|---|---|
+  | `trim` **(varsayılan)** | Video **son tam cümlenin sonunda** kırpılır, 60 sn'i geçmez. Hiçbir video kaybolmaz, hiç uyarı çıkmaz. | Metinleri kendiniz kısatmak istemiyorsanız |
+  | `warn` | Video olduğu gibi üretilir ve yüklenir (60–113 sn), logda uyarı görürsünüz. | Süre sınırından çok içeriğin tamamı önemliyse |
+  | `fail` | Sınırı aşan video üretilmez, görev `failed` işaretlenir. | Sınıra uymayan hiçbir şeyin yayınlanmamasını istiyorsanız |
+
+  **Kırpma güvenliği:** Kırpma noktası olarak yalnızca noktalama ile gerçekten
+  biten cümle sonları seçilir. `split_long_cues` bir cümlenin virgülden bölünmüş
+  parçasını ayrı bir altyazı cue'u yaptığı için, cümle ortasındaki bir cue'da
+  asla kesilmez — dini alıntılar (ayet/hadis/dua) yarım kalmaz. Yapılan her
+  kırpma loga yazılır (`[pipeline] TRIM: ... -> yeni süre Xs (N cümle düştü)`).
+
+  **En iyi sonuç:** Metinleri kısaltırsanız trim hiç devreye girmez ve videolar
+  %100 sizin yazdığınız haliyle yayınlanır. Bunun için `content_library/tema/`
+  altındaki `*_short*.txt` dosyalarını ~700 karakterin altına çekmeniz yeterli.
 - **Thumbnail yüklenemezse video yine de yüklenir:** YouTube, kanal telefonla
   doğrulanmamışsa `thumbnails().set()` çağrısını reddeder. Sistem artık bu
   durumda uyarı verip yüklemeyi başarılı sayar; aksi halde aynı video bir

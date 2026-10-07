@@ -302,6 +302,80 @@ def _series_label(entry: dict, schedule_entries: list | None) -> str:
     return f"{label} #{rank}"
 
 
+def _is_sentence_end(text: str) -> bool:
+    """Bir altyazı cue'unun TAM bir cümlenin SONU olup olmadığını söyler.
+
+    ``tts.split_long_cues`` uzun cümleleri virgül/noktalı virgülden bölerek
+    alt-cue'lara ayırır. Yani bir cue, cümlenin yalnızca bir PARÇASI olabilir
+    (ör. "Beşinci ayette ise bu cezanın sonucu çarpıcı bir benzetmeyle").
+    Kırpma noktası olarak YALNIZCA noktalama ile gerçekten biten cue'lar
+    kabul edilir; böylece dini metin asla cümle ortasında kesilmez.
+    """
+    t = text.strip()
+    # Kapanış tırnağı/parantezinden hemen sonra cümle sonu noktalaması
+    while t and t[-1] in "\"'\u201d\u2019)]":
+        t = t[:-1].strip()
+    return bool(t) and t[-1] in ".!?\u2026"
+
+
+def _trim_narration_to_limit(narration_path: str, cues: list, limit: float,
+                             safety: float = 1.0):
+    """Anlatım sesini ve altyazı cue'larını ``limit`` saniyenin ALTINDAKİ son
+    TAM CÜMLE sınırına kadar kırpar (politika: ``short_over_limit_action:
+    "trim"``).
+
+    Neden cümle sınırında: dini metinlerde (ayet, hadis, dua) bir cümlenin
+    yarısının ekranda kalması ve sesin ortasında kesilmesi kabul edilemez.
+    Bu yüzden kırpma noktası olarak ``limit``ın altında kalan, noktalama ile
+    GERÇEKTEN biten SON cue seçilir; o cümleye kadar olan her şey tamamen
+    korunur, sonraki cümleler (genellikle kapanış/çağrı bölümü) düşer.
+
+    Ses, mp3 paket sınırından dolayı birkaç on milisaniye kayabilir; bu yüzden
+    kırpmadan SONRA gerçek süre ölçülür ve gerekirse ikinci, daha erken bir
+    kırpma yapılır. Kırpma başarısız olursa (hiçbir tam cümle sığmıyorsa veya
+    ffmpeg hata verirse) cue'lar OLDUĞU GİBİ döner — yani sessizce bozuk bir
+    video üretilmez, üst katmandaki politika devreye girer.
+    """
+    import subprocess
+
+    if not cues:
+        return cues
+
+    target = limit - safety
+    # YALNIZCA tam cümle sonu olan cue'lar kırpma adayıdır.
+    candidates = [c for c in cues if c.end <= target and _is_sentence_end(c.text)]
+    if not candidates:
+        # Tek bir tam cümle bile sığmıyor: kırpma işe yaramaz, üst kata bırak.
+        return cues
+    cut = candidates[-1].end
+    keep = [c for c in cues if c.end <= cut + 1e-6]
+
+    def _ffmpeg_cut(at: float) -> float | None:
+        tmp = narration_path + ".trim.tmp.mp3"
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        r = subprocess.run(
+            ["ffmpeg", "-y", "-i", narration_path, "-t", f"{at:.3f}",
+             "-c", "copy", tmp],
+            capture_output=True, text=True,
+        )
+        if r.returncode != 0 or not os.path.exists(tmp):
+            return None
+        return audio_tools._ffprobe_duration(tmp)
+
+    actual = _ffmpeg_cut(cut)
+    if actual is None:
+        return cues
+    # Paket sınırı kayması: hâlâ limitın üzerindeyse daha erken kes.
+    if actual > limit:
+        actual = _ffmpeg_cut(max(0.0, cut - (actual - limit) - 0.15))
+        if actual is None or actual > limit:
+            return cues
+
+    os.replace(narration_path + ".trim.tmp.mp3", narration_path)
+    return keep
+
+
 def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False,
               schedule_entries: list | None = None):
     """Tek bir schedule.yaml girdisini uçtan uca işler. upload=False ise sadece
@@ -324,6 +398,7 @@ def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False
     # Politika artık yapılandırılabilir:
     #   "warn" (varsayılan) -> uyarı ver, yayınlamaya devam et
     #   "fail"              -> hatayla durur, görev 'failed' işaretlenir
+    #   "trim"              -> son TAM cümleye kadar kırp, sınırın altına çek
     if is_short:
         limit = settings["video"].get("max_short_seconds")
         if limit and assets["total_duration"] > limit:
@@ -338,7 +413,26 @@ def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False
                     "video.short_over_limit_action='fail' olarak ayarlı. "
                     "Anlatım metnini kısaltın veya limiti/politikayı değiştirin."
                 )
-            print(f"[pipeline] UYARI: {msg} (politika: {action})")
+            if action == "trim":
+                trimmed = _trim_narration_to_limit(
+                    assets["narration_path"], assets["cues"], float(limit)
+                )
+                if trimmed and trimmed != assets["cues"]:
+                    new_dur = trimmed[-1].end
+                    print(
+                        f"[pipeline] TRIM: {msg} -> son tam cümlede kırpıldı, "
+                        f"yeni süre {new_dur:.1f}s "
+                        f"({len(assets['cues']) - len(trimmed)} cümle düştü)."
+                    )
+                    assets["cues"] = trimmed
+                    assets["total_duration"] = new_dur
+                else:
+                    print(
+                        f"[pipeline] UYARI: {msg} (trim uygulanamadı — "
+                        "hiçbir tam cümle sığmıyor; politika: warn)"
+                    )
+            else:
+                print(f"[pipeline] UYARI: {msg} (politika: {action})")
 
     title_cfg = settings.get("title_overlay", {})
     title_text = ""
