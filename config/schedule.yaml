@@ -35,7 +35,7 @@ videos:
   youtube_video_id: EtiNcvbJJq4
   youtube_url: https://www.youtube.com/watch?v=EtiNcvbJJq4
 - id: 2026-10-08-ashab-kissasi
-  status: pending
+  status: done
   publish_at: '2026-10-08T09:00:00+03:00'
   format: long
   type: hikaye
@@ -43,6 +43,8 @@ videos:
     text_file: content_library/hikayeler/ashab-i-kehf.txt
   title_hint: Ashab-ı Kehf Kıssası
   background_mode: none
+  youtube_video_id: yQSdFBVvPC8
+  youtube_url: https://www.youtube.com/watch?v=yQSdFBVvPC8
 - id: 2026-10-09-gun01-normal1-sabir
   status: pending
   publish_at: '2026-10-09T09:00:00+03:00'
