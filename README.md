@@ -41,6 +41,10 @@ src/scheduler.py        -> takvimi tarar, zamanı gelenleri işler
 4. Gerekliyse Türkçe seslendirme (edge-tts) yapılır; cümle bazlı zaman damgalarıyla **birebir senkron** altyazı üretilir.
 5. Pexels/Pixabay'dan insan figürü içermeyen (doğa, cami, kaligrafi vb.) stok görüntüler indirilir ve videoya işlenir.
 6. ffmpeg ile klipler birleştirilir, ses (+ opsiyonel kısık doğa ambiyansı) mixlenir, altyazı yakılır.
+6a. **Kapanış kartı** videonun sonuna eklenir (abone ol / beğeni / yorum çağrısı). Kart 16:9 hazırdır;
+   yatay videoda tüm kareyi kaplar, dikey (Short) videoda oran korunarak ortalanıp arka plan kartın
+   bulanık kopyasıyla doldurulur — kartın hiçbir yeri kesilmez. Süre: `branding.closing_card.duration_seconds`
+   (varsayılan 5 sn). Kapatmak için `enabled: false` yapın.
 7. Video karesinden otomatik bir **thumbnail** tasarlanır.
 8. Başlık/açıklama/etiketler şablonlardan üretilir.
 9. Video YouTube'a **"private" + zamanlanmış (`publishAt`)** olarak yüklenir. Yayın anını YouTube'un kendi

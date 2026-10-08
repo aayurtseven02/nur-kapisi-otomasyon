@@ -514,6 +514,35 @@ def run_entry(entry: dict, settings: dict, output_dir: str, upload: bool = False
         )
         os.replace(logo_out, final_video_path)
 
+    # --- Kapanış kartı (video sonu) --------------------------------------
+    # Logo filigranından SONRA çalışır, böylece kartta logo da görünür.
+    # Kart eklenince video süresi `duration_seconds` kadar uzar; kısa video
+    # süre limiti kontrolü anlatım süresine göre (karttan önce) yapıldığı
+    # için bu uzama 180 sn politikasını tetiklemez.
+    card_cfg = branding.get("closing_card") or {}
+    if card_cfg.get("enabled", False):
+        card_dur = float(card_cfg.get("duration_seconds", 5))
+        card_path = (
+            os.path.join(ROOT, card_cfg["path"]) if card_cfg.get("path") else ""
+        )
+        if card_path and os.path.exists(card_path):
+            card_out = os.path.join(work_dir, "with_card.mp4")
+            video_builder.append_end_card(
+                final_video_path, card_path, card_out,
+                width=width, height=height, fps=fps,
+                duration=card_dur,
+            )
+            os.replace(card_out, final_video_path)
+            print(
+                f"[pipeline] Kapanış kartı eklendi: {entry['id']} "
+                f"(+{card_dur:.1f}s)"
+            )
+        else:
+            print(
+                f"[pipeline] UYARI: kapanış kartı bulunamadı "
+                f"({card_path or 'yapılandırılmamış'}) — kart atlanıyor."
+            )
+
     thumb_path = os.path.join(output_dir, f"{entry['id']}_thumb.jpg")
     if is_short:
         # Short videolar: değişmez karar -- GERÇEK video karesi kullanılır.

@@ -16,6 +16,16 @@ branding:
   video_margin_ratio: 0.035
   thumb_size_ratio: 0.17    # logonun, thumbnail yüksekliğine oranı
   thumb_margin_ratio: 0.03
+  # Videonun SONUNA eklenen kapanış kartı (abone ol / beğeni / yorum çağrısı).
+  # Kart 16:9 hazırdır ve her iki formata da uydurulur:
+  #   yatay (long)  -> kart tüm kareyi kaplar
+  #   dikey (short) -> kart genişliğe sığdırılıp ortalanır, arka plan kartın
+  #                    bulanık kopyasıyla doldurulur (hiçbir yer kesilmez)
+  # Kullanıcı talebi (2026-10-08): her video sonuna eklenecek.
+  closing_card:
+    path: "assets/branding/closing_card.jpg"
+    duration_seconds: 5      # kartın ekranda kaldığı süre (saniye)
+    enabled: true
 
 
 # Kur'an kıraati için varsayılan hafız (islamic.network edition kodu)

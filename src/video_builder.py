@@ -182,6 +182,63 @@ def overlay_logo(
     return out_path
 
 
+def append_end_card(
+    video_path: str,
+    card_path: str,
+    out_path: str,
+    width: int,
+    height: int,
+    fps: int,
+    duration: float = 5.0,
+    fade_in: float = 0.4,
+):
+    """Videonun SONUNA kapanış kartını ekler (kullanıcı talebi).
+
+    Kart 16:9 (yatay) hazırlandığı için her iki formata da uydurulur:
+      * Yatay (long) videoda kart tüm kareyi kaplar.
+      * Dikey (short) videoda kart genişliğe sığdırılıp ortalanır; arka plan
+        aynı kartın bulanık, kırpılmış kopyasıyla doldurulur (klasik
+        "blurred pillarbox" tekniği) — kartın hiçbir yeri kesilmez.
+
+    Ses: ana anlatımın sonuna `duration` kadar sessizlik eklenir, böylece
+    kart bölümünde video donmaz ve akış bozulmaz.
+    """
+    if not os.path.exists(card_path):
+        raise FileNotFoundError(f"Kapanış kartı bulunamadı: {card_path}")
+    if duration <= 0:
+        # Süre 0/negatifse kart eklenmez; girdi aynen kopyalanır.
+        import shutil
+        shutil.copyfile(video_path, out_path)
+        return out_path
+
+    filter_complex = (
+        # Kartın bulanık, kareyi dolduran kopyası (arka plan)
+        f"[1:v]scale={width}:{height}:force_original_aspect_ratio=increase,"
+        f"crop={width}:{height},gblur=sigma=28[bg];"
+        # Kartın tamamı (önde, oran korunarak)
+        f"[1:v]scale={width}:{height}:force_original_aspect_ratio=decrease[fg];"
+        f"[bg][fg]overlay=(W-w)/2:(H-h)/2,"
+        f"fps={fps},setsar=1,format=yuv420p,"
+        f"fade=t=in:st=0:d={fade_in}:color=black[card];"
+        # Ana videoyu da concat için aynı parametrelere getir
+        f"[0:v]fps={fps},setsar=1,format=yuv420p[v0];"
+        f"[v0][card]concat=n=2:v=1:a=0[vcat];"
+        # Ana sesin sonuna sessizlik
+        f"[0:a]apad=pad_dur={duration}[aout]"
+    )
+    _run([
+        "ffmpeg", "-y",
+        "-i", video_path,
+        "-loop", "1", "-t", str(duration), "-i", card_path,
+        "-filter_complex", filter_complex,
+        "-map", "[vcat]", "-map", "[aout]",
+        "-c:v", "libx264", "-preset", "medium", "-crf", "19",
+        "-c:a", "aac", "-b:a", "128k",
+        out_path,
+    ])
+    return out_path
+
+
 def finalize_video(
     clips: List[StockClip],
     narration_audio_path: str,
