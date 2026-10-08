@@ -169,7 +169,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: output-${{ github.run_id }}
-          path: output/**
+          # SADECE son ürünler (final video + kapak). Ara dosyalar
+          # (output/<id>/ norm_*.mp4, muxed.mp4, narration.mp3 ...) yüklenmez:
+          # tek koşu ~580 MB üretiyordu, 124 video için kota dolup koşular
+          # başarısız olacaktı. Final mp4 + thumb ~50 MB.
+          path: |
+            output/*.mp4
+            output/*_thumb.jpg
           retention-days: 7
           if-no-files-found: ignore
 
