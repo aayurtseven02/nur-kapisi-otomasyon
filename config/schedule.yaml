@@ -60,7 +60,7 @@ videos:
   youtube_video_id: vIxjF2suKZM
   youtube_url: https://www.youtube.com/watch?v=vIxjF2suKZM
 - id: 2026-10-09-gun01-short1-niyet
-  status: pending
+  status: done
   publish_at: '2026-10-09T12:00:00+03:00'
   format: short
   type: tema
@@ -71,6 +71,8 @@ videos:
   title_hint: '"Ameller Niyetlere Göredir" Hadisinin Günlük Hayattaki Anlamı'
   thumb_title: Niyetin Gücü
   background_mode: none
+  youtube_video_id: 7ny6hmWq8GE
+  youtube_url: https://www.youtube.com/watch?v=7ny6hmWq8GE
 - id: 2026-10-09-gun01-normal2-ihlas
   status: pending
   publish_at: '2026-10-09T15:00:00+03:00'
