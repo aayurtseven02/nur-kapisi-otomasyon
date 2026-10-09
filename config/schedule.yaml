@@ -46,7 +46,7 @@ videos:
   youtube_video_id: yQSdFBVvPC8
   youtube_url: https://www.youtube.com/watch?v=yQSdFBVvPC8
 - id: 2026-10-09-gun01-normal1-sabir
-  status: pending
+  status: done
   publish_at: '2026-10-09T09:00:00+03:00'
   format: long
   type: tema
@@ -57,6 +57,8 @@ videos:
   title_hint: 'Ayetler Işığında Sabır: Zorluklarla Başa Çıkma Rehberi'
   thumb_title: Sabrın Sırrı
   background_mode: none
+  youtube_video_id: vIxjF2suKZM
+  youtube_url: https://www.youtube.com/watch?v=vIxjF2suKZM
 - id: 2026-10-09-gun01-short1-niyet
   status: pending
   publish_at: '2026-10-09T12:00:00+03:00'
