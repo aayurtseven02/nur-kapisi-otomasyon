@@ -74,7 +74,7 @@ videos:
   youtube_video_id: 7ny6hmWq8GE
   youtube_url: https://www.youtube.com/watch?v=7ny6hmWq8GE
 - id: 2026-10-09-gun01-normal2-ihlas
-  status: pending
+  status: done
   publish_at: '2026-10-09T15:00:00+03:00'
   format: long
   type: tema
@@ -85,6 +85,8 @@ videos:
   title_hint: İhlas Suresi Neden Kuran'ın Üçte Birine Denktir? (Derinlemesine Tefsir)
   thumb_title: İhlas Suresi'nin Sırrı
   background_mode: none
+  youtube_video_id: apq3-hflSFc
+  youtube_url: https://www.youtube.com/watch?v=apq3-hflSFc
 - id: 2026-10-09-gun01-short2-korumaduasi
   status: pending
   publish_at: '2026-10-09T19:00:00+03:00'
