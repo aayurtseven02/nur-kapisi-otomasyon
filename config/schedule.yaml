@@ -88,7 +88,7 @@ videos:
   youtube_video_id: apq3-hflSFc
   youtube_url: https://www.youtube.com/watch?v=apq3-hflSFc
 - id: 2026-10-09-gun01-short2-korumaduasi
-  status: pending
+  status: done
   publish_at: '2026-10-09T19:00:00+03:00'
   format: short
   type: tema
@@ -99,6 +99,8 @@ videos:
   title_hint: Sabah ve Akşam Okunacak En Etkili Korunma Duası
   thumb_title: En Güçlü Koruma Duası
   background_mode: none
+  youtube_video_id: PbJeYIf8oc8
+  youtube_url: https://www.youtube.com/watch?v=PbJeYIf8oc8
 - id: 2026-10-10-gun02-normal1-tovbe
   status: pending
   publish_at: '2026-10-10T09:00:00+03:00'
