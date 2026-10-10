@@ -116,7 +116,7 @@ videos:
   youtube_video_id: Bl7AfvIRhwU
   youtube_url: https://www.youtube.com/watch?v=Bl7AfvIRhwU
 - id: 2026-10-10-gun02-short1-istigfar
-  status: pending
+  status: done
   publish_at: '2026-10-10T12:00:00+03:00'
   format: short
   type: tema
@@ -127,6 +127,8 @@ videos:
   title_hint: Günde 100 Defa Estağfirullah Demenin Mucizesi
   thumb_title: 100 Defa İstiğfarın Sırrı
   background_mode: none
+  youtube_video_id: XU_x8lENob4
+  youtube_url: https://www.youtube.com/watch?v=XU_x8lENob4
 - id: 2026-10-10-gun02-normal2-felaknas
   status: pending
   publish_at: '2026-10-10T15:00:00+03:00'
