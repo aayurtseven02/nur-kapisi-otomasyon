@@ -102,7 +102,7 @@ videos:
   youtube_video_id: PbJeYIf8oc8
   youtube_url: https://www.youtube.com/watch?v=PbJeYIf8oc8
 - id: 2026-10-10-gun02-normal1-tovbe
-  status: pending
+  status: done
   publish_at: '2026-10-10T09:00:00+03:00'
   format: long
   type: tema
@@ -113,6 +113,8 @@ videos:
   title_hint: Hz. Adem'den Günümüze Tövbe Kapısı ve Bağışlanma
   thumb_title: Tövbe Kapısı Hiç Kapanmaz
   background_mode: none
+  youtube_video_id: Bl7AfvIRhwU
+  youtube_url: https://www.youtube.com/watch?v=Bl7AfvIRhwU
 - id: 2026-10-10-gun02-short1-istigfar
   status: pending
   publish_at: '2026-10-10T12:00:00+03:00'
