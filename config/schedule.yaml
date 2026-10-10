@@ -144,7 +144,7 @@ videos:
   youtube_video_id: yhFO1Qm8zW4
   youtube_url: https://www.youtube.com/watch?v=yhFO1Qm8zW4
 - id: 2026-10-10-gun02-short2-encokdua
-  status: pending
+  status: done
   publish_at: '2026-10-10T19:00:00+03:00'
   format: short
   type: tema
@@ -155,6 +155,8 @@ videos:
   title_hint: Peygamberimizin (s.a.v.) En Çok Okuduğu Kısa Dua
   thumb_title: Peygamberimizin En Çok Okuduğu Dua
   background_mode: none
+  youtube_video_id: W7wzfOExeOA
+  youtube_url: https://www.youtube.com/watch?v=W7wzfOExeOA
 - id: 2026-10-11-gun03-normal1-esma
   status: pending
   publish_at: '2026-10-11T09:00:00+03:00'
