@@ -130,7 +130,7 @@ videos:
   youtube_video_id: XU_x8lENob4
   youtube_url: https://www.youtube.com/watch?v=XU_x8lENob4
 - id: 2026-10-10-gun02-normal2-felaknas
-  status: pending
+  status: done
   publish_at: '2026-10-10T15:00:00+03:00'
   format: long
   type: tema
@@ -141,6 +141,8 @@ videos:
   title_hint: 'Felak ve Nas Surelerinin Sırrı: Manevi Zırh Nasıl Kuşanılır?'
   thumb_title: 'Manevi Zırhınız: Felak ve Nas'
   background_mode: none
+  youtube_video_id: yhFO1Qm8zW4
+  youtube_url: https://www.youtube.com/watch?v=yhFO1Qm8zW4
 - id: 2026-10-10-gun02-short2-encokdua
   status: pending
   publish_at: '2026-10-10T19:00:00+03:00'
