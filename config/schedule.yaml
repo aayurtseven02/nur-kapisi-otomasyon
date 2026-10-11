@@ -200,7 +200,7 @@ videos:
   youtube_video_id: kXJkzhVOIgc
   youtube_url: https://www.youtube.com/watch?v=kXJkzhVOIgc
 - id: 2026-10-11-gun03-short2-komsu
-  status: pending
+  status: done
   publish_at: '2026-10-11T19:00:00+03:00'
   format: short
   type: tema
@@ -211,6 +211,8 @@ videos:
   title_hint: '"Komşusu Açken Tok Yatan Bizden Değildir" Sözünün Evrensel Mesajı'
   thumb_title: Komşuluk Hakkı
   background_mode: none
+  youtube_video_id: J_uJ0j3DUUo
+  youtube_url: https://www.youtube.com/watch?v=J_uJ0j3DUUo
 - id: 2026-10-12-gun04-normal1-abdest
   status: pending
   publish_at: '2026-10-12T09:00:00+03:00'
