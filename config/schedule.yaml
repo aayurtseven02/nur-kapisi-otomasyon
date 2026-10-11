@@ -158,7 +158,7 @@ videos:
   youtube_video_id: W7wzfOExeOA
   youtube_url: https://www.youtube.com/watch?v=W7wzfOExeOA
 - id: 2026-10-11-gun03-normal1-esma
-  status: pending
+  status: done
   publish_at: '2026-10-11T09:00:00+03:00'
   format: long
   type: tema
@@ -169,6 +169,8 @@ videos:
   title_hint: Rızık ve Bereket Kapılarını Açan 5 Esmaül Hüsna Sırrı
   thumb_title: Rızık Kapılarını Açan 5 Esma
   background_mode: none
+  youtube_video_id: wtlfWGEBBS4
+  youtube_url: https://www.youtube.com/watch?v=wtlfWGEBBS4
 - id: 2026-10-11-gun03-short1-rizikdarlik
   status: pending
   publish_at: '2026-10-11T12:00:00+03:00'
