@@ -186,7 +186,7 @@ videos:
   youtube_video_id: l3p1yI-pom0
   youtube_url: https://www.youtube.com/watch?v=l3p1yI-pom0
 - id: 2026-10-11-gun03-normal2-ayetelkursi
-  status: pending
+  status: done
   publish_at: '2026-10-11T15:00:00+03:00'
   format: long
   type: tema
@@ -197,6 +197,8 @@ videos:
   title_hint: Ayetel Kürsi Neden Bu Kadar Güçlüdür? Kelime Kelime Analiz
   thumb_title: Ayetel Kürsi'nin Sırrı
   background_mode: none
+  youtube_video_id: kXJkzhVOIgc
+  youtube_url: https://www.youtube.com/watch?v=kXJkzhVOIgc
 - id: 2026-10-11-gun03-short2-komsu
   status: pending
   publish_at: '2026-10-11T19:00:00+03:00'
