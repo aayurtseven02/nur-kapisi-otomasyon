@@ -172,7 +172,7 @@ videos:
   youtube_video_id: wtlfWGEBBS4
   youtube_url: https://www.youtube.com/watch?v=wtlfWGEBBS4
 - id: 2026-10-11-gun03-short1-rizikdarlik
-  status: pending
+  status: done
   publish_at: '2026-10-11T12:00:00+03:00'
   format: short
   type: tema
@@ -183,6 +183,8 @@ videos:
   title_hint: Rızık Darlığı Çekenler İçin Tavsiye Edilen Dua
   thumb_title: Rızık Darlığına Çare Dua
   background_mode: none
+  youtube_video_id: l3p1yI-pom0
+  youtube_url: https://www.youtube.com/watch?v=l3p1yI-pom0
 - id: 2026-10-11-gun03-normal2-ayetelkursi
   status: pending
   publish_at: '2026-10-11T15:00:00+03:00'
