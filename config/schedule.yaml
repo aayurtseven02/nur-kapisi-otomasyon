@@ -257,7 +257,7 @@ videos:
   youtube_video_id: qY4KS46JyZU
   youtube_url: https://www.youtube.com/watch?v=qY4KS46JyZU
 - id: 2026-10-12-gun04-short2-tebessum
-  status: pending
+  status: done
   publish_at: '2026-10-12T19:00:00+03:00'
   format: short
   type: tema
@@ -268,6 +268,8 @@ videos:
   title_hint: 'Parasız Sadaka: Tebessüm Etmek Neden Sadaka Sayılır?'
   thumb_title: Tebessüm Bir Sadakadır
   background_mode: none
+  youtube_video_id: fhhrLW17uxQ
+  youtube_url: https://www.youtube.com/watch?v=fhhrLW17uxQ
 - id: 2026-10-13-gun05-normal1-asrsuresi
   status: pending
   publish_at: '2026-10-13T09:00:00+03:00'
