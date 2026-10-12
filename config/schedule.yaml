@@ -214,7 +214,7 @@ videos:
   youtube_video_id: J_uJ0j3DUUo
   youtube_url: https://www.youtube.com/watch?v=J_uJ0j3DUUo
 - id: 2026-10-12-gun04-normal1-abdest
-  status: pending
+  status: done
   publish_at: '2026-10-12T09:00:00+03:00'
   format: long
   type: tema
@@ -225,6 +225,8 @@ videos:
   title_hint: 'Abdestin Bedene ve Ruha Faydaları: "Temizlik İmanın Yarısıdır"'
   thumb_title: Abdestin Gizli Faydaları
   background_mode: none
+  youtube_video_id: N77_T5hmLDw
+  youtube_url: https://www.youtube.com/watch?v=N77_T5hmLDw
 - id: 2026-10-12-gun04-short1-abdestduasi
   status: pending
   publish_at: '2026-10-12T12:00:00+03:00'
