@@ -243,7 +243,7 @@ videos:
   youtube_video_id: olqvKu7uDFQ
   youtube_url: https://www.youtube.com/watch?v=olqvKu7uDFQ
 - id: 2026-10-12-gun04-normal2-yasinkalp
-  status: pending
+  status: done
   publish_at: '2026-10-12T15:00:00+03:00'
   format: long
   type: tema
@@ -254,6 +254,8 @@ videos:
   title_hint: 'Yasin Suresi''nin Kalbi: Cennetteki En Büyük Nimet Hangi Ayette?'
   thumb_title: Yasin'in Kalbi Ayet
   background_mode: none
+  youtube_video_id: qY4KS46JyZU
+  youtube_url: https://www.youtube.com/watch?v=qY4KS46JyZU
 - id: 2026-10-12-gun04-short2-tebessum
   status: pending
   publish_at: '2026-10-12T19:00:00+03:00'
