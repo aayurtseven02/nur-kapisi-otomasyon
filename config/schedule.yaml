@@ -228,7 +228,7 @@ videos:
   youtube_video_id: N77_T5hmLDw
   youtube_url: https://www.youtube.com/watch?v=N77_T5hmLDw
 - id: 2026-10-12-gun04-short1-abdestduasi
-  status: pending
+  status: done
   publish_at: '2026-10-12T12:00:00+03:00'
   format: short
   type: tema
@@ -240,6 +240,8 @@ videos:
   title_hint: Abdestten Önce ve Sonra Okunan Dualar
   thumb_title: Abdest Duaları
   background_mode: none
+  youtube_video_id: olqvKu7uDFQ
+  youtube_url: https://www.youtube.com/watch?v=olqvKu7uDFQ
 - id: 2026-10-12-gun04-normal2-yasinkalp
   status: pending
   publish_at: '2026-10-12T15:00:00+03:00'
