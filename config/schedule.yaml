@@ -313,7 +313,7 @@ videos:
   youtube_video_id: 8HQBrlxDwTE
   youtube_url: https://www.youtube.com/watch?v=8HQBrlxDwTE
 - id: 2026-10-13-gun05-short2-yunusduasi
-  status: pending
+  status: done
   publish_at: '2026-10-13T19:00:00+03:00'
   format: short
   type: tema
@@ -324,6 +324,8 @@ videos:
   title_hint: Hz. Yunus'un Karanlıkta Ettiği Dua (Zünnun Duası)
   thumb_title: Hz. Yunus'un Duası
   background_mode: none
+  youtube_video_id: 7TO15w5gc2Y
+  youtube_url: https://www.youtube.com/watch?v=7TO15w5gc2Y
 - id: 2026-10-14-gun06-normal1-ebubekir
   status: pending
   publish_at: '2026-10-14T09:00:00+03:00'
