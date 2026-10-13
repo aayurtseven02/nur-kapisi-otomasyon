@@ -285,7 +285,7 @@ videos:
   youtube_video_id: MM4PmFrcouw
   youtube_url: https://www.youtube.com/watch?v=MM4PmFrcouw
 - id: 2026-10-13-gun05-short1-cumasalavat
-  status: pending
+  status: done
   publish_at: '2026-10-13T12:00:00+03:00'
   format: short
   type: tema
@@ -296,6 +296,8 @@ videos:
   title_hint: Cuma Günü Salavat Getirmenin Fazileti
   thumb_title: Cuma Günü Salavat
   background_mode: none
+  youtube_video_id: 44nzrYhwsig
+  youtube_url: https://www.youtube.com/watch?v=44nzrYhwsig
 - id: 2026-10-13-gun05-normal2-eyupsabri
   status: pending
   publish_at: '2026-10-13T15:00:00+03:00'
