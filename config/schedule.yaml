@@ -271,7 +271,7 @@ videos:
   youtube_video_id: fhhrLW17uxQ
   youtube_url: https://www.youtube.com/watch?v=fhhrLW17uxQ
 - id: 2026-10-13-gun05-normal1-asrsuresi
-  status: pending
+  status: done
   publish_at: '2026-10-13T09:00:00+03:00'
   format: long
   type: tema
@@ -282,6 +282,8 @@ videos:
   title_hint: 'Asr Suresi: Üç Ayette Gizli Kurtuluş Reçetesi'
   thumb_title: Asr Suresi'nin Sırrı
   background_mode: none
+  youtube_video_id: MM4PmFrcouw
+  youtube_url: https://www.youtube.com/watch?v=MM4PmFrcouw
 - id: 2026-10-13-gun05-short1-cumasalavat
   status: pending
   publish_at: '2026-10-13T12:00:00+03:00'
