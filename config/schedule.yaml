@@ -299,7 +299,7 @@ videos:
   youtube_video_id: 44nzrYhwsig
   youtube_url: https://www.youtube.com/watch?v=44nzrYhwsig
 - id: 2026-10-13-gun05-normal2-eyupsabri
-  status: pending
+  status: done
   publish_at: '2026-10-13T15:00:00+03:00'
   format: long
   type: tema
@@ -310,6 +310,8 @@ videos:
   title_hint: Hz. Eyüp'ün Sabrı ve Allah'a Sığınma Duası
   thumb_title: Hz. Eyüp'ün Sabrı
   background_mode: none
+  youtube_video_id: 8HQBrlxDwTE
+  youtube_url: https://www.youtube.com/watch?v=8HQBrlxDwTE
 - id: 2026-10-13-gun05-short2-yunusduasi
   status: pending
   publish_at: '2026-10-13T19:00:00+03:00'
