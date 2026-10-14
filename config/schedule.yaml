@@ -369,7 +369,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-14-gun06-short2-uykuduasi
-  status: pending
+  status: failed
   publish_at: '2026-10-14T19:00:00+03:00'
   format: short
   type: tema
@@ -381,6 +381,8 @@ videos:
   title_hint: Huzurlu Bir Uyku İçin Yatmadan Önce Yapılacaklar
   thumb_title: Huzurlu Uyku Sünneti
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-15-gun07-normal1-kabirhayati
   status: pending
   publish_at: '2026-10-15T09:00:00+03:00'
