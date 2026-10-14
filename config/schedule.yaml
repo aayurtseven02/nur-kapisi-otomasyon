@@ -327,7 +327,7 @@ videos:
   youtube_video_id: 7TO15w5gc2Y
   youtube_url: https://www.youtube.com/watch?v=7TO15w5gc2Y
 - id: 2026-10-14-gun06-normal1-ebubekir
-  status: pending
+  status: failed
   publish_at: '2026-10-14T09:00:00+03:00'
   format: long
   type: tema
@@ -338,6 +338,8 @@ videos:
   title_hint: 'Hz. Ebubekir''in Sadakati: Mağara Ayetinin Hikayesi'
   thumb_title: Hz. Ebubekir'in Sadakati
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-14-gun06-short1-ikigunesit
   status: pending
   publish_at: '2026-10-14T12:00:00+03:00'
