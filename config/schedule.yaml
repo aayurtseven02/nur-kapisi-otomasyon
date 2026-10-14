@@ -355,7 +355,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-14-gun06-normal2-kevser
-  status: pending
+  status: failed
   publish_at: '2026-10-14T15:00:00+03:00'
   format: long
   type: tema
@@ -366,6 +366,8 @@ videos:
   title_hint: 'Kevser Suresi: Kur''an''ın En Kısa Suresindeki Büyük Müjde'
   thumb_title: Kevser Suresi'nin Sırrı
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-14-gun06-short2-uykuduasi
   status: pending
   publish_at: '2026-10-14T19:00:00+03:00'
