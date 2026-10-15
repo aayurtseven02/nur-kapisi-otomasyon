@@ -427,7 +427,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-15-gun07-short2-evdencikis
-  status: pending
+  status: failed
   publish_at: '2026-10-15T19:00:00+03:00'
   format: short
   type: tema
@@ -438,6 +438,8 @@ videos:
   title_hint: Evden Çıkarken Okunan Koruma Duası
   thumb_title: Evden Çıkış Duası
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-16-gun08-normal1-ibrahimputlar
   status: pending
   publish_at: '2026-10-16T09:00:00+03:00'
