@@ -384,7 +384,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-15-gun07-normal1-kabirhayati
-  status: pending
+  status: failed
   publish_at: '2026-10-15T09:00:00+03:00'
   format: long
   type: tema
@@ -395,6 +395,8 @@ videos:
   title_hint: Kabir Hayatı (Berzah) Hakkında Kur'an Ne Diyor?
   thumb_title: Berzah Hayatı Nedir?
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-15-gun07-short1-lahavle
   status: pending
   publish_at: '2026-10-15T12:00:00+03:00'
