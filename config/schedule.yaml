@@ -412,7 +412,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-15-gun07-normal2-mulksuresi
-  status: pending
+  status: failed
   publish_at: '2026-10-15T15:00:00+03:00'
   format: long
   type: tema
@@ -424,6 +424,8 @@ videos:
   title_hint: 'Mülk Suresi: Kabir Azabından Koruyan Kalkan'
   thumb_title: Kabri Koruyan Sure
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-15-gun07-short2-evdencikis
   status: pending
   publish_at: '2026-10-15T19:00:00+03:00'
