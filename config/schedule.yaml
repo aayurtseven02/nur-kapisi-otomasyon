@@ -398,7 +398,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-15-gun07-short1-lahavle
-  status: pending
+  status: failed
   publish_at: '2026-10-15T12:00:00+03:00'
   format: short
   type: tema
@@ -409,6 +409,8 @@ videos:
   title_hint: 'Cennet Hazinelerinden Bir Söz: La Havle Vela Kuvvete İlla Billah'
   thumb_title: Cennet Hazinesi Zikir
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-15-gun07-normal2-mulksuresi
   status: pending
   publish_at: '2026-10-15T15:00:00+03:00'
