@@ -441,7 +441,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-16-gun08-normal1-ibrahimputlar
-  status: pending
+  status: failed
   publish_at: '2026-10-16T09:00:00+03:00'
   format: long
   type: tema
@@ -452,6 +452,8 @@ videos:
   title_hint: 'Hz. İbrahim''in Putları Kırması: Tevhid Mücadelesi'
   thumb_title: Hz. İbrahim'in Putları Kırması
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-16-gun08-short1-yolculukduasi
   status: pending
   publish_at: '2026-10-16T12:00:00+03:00'
