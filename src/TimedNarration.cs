@@ -112,7 +112,7 @@ public static class TimedNarration
 
                 async Task Segment(string text, int scene, int index) {
 
-                    string key = TextHash("natural-block-v1" + text + NarrationFlow.Fingerprint(script, voice)), part = Path.Combine(cache, key + ".wav");
+                    string key = TextHash("natural-block-v2" + text + NarrationFlow.Fingerprint(new VideoScript{Scenes=[new Scene{Narration=text}]}, voice));var blockCache=Path.Combine(Path.GetDirectoryName(cache)!,"blocks");Directory.CreateDirectory(blockCache);string part = Path.Combine(blockCache, key + ".wav");
 
                     if (!File.Exists(part) || !File.Exists(part + ".sha") || Reliability.FileHash(part) != File.ReadAllText(part + ".sha")) {
 
@@ -122,6 +122,7 @@ public static class TimedNarration
 
                         else if (voice.VoiceProvider.StartsWith("Google")) await new GoogleTts(store, services.Http).Speak(spoken, raw, voice, ct);
 
+                        else if(voice.VoiceProvider.StartsWith("ElevenLabs")){var speech=await services.Speech(spoken,ct,voice);await File.WriteAllBytesAsync(raw,speech.Audio,ct);}
                         else await LocalVoice.SpeakWithFallback(spoken, raw, voice, ct);
 
                         await Media.Exec(store.Ffmpeg, ["-y", "-i", raw, "-ar", "44100", "-ac", "1", "-c:a", "pcm_s16le", part], folder, ct);
@@ -144,6 +145,7 @@ public static class TimedNarration
 
                     ct.ThrowIfCancellationRequested(); var texts = Engine.SplitText(script.Scenes[scene].Narration, 48);
 
+                    if(episode.Creation!=null){int block=0;foreach(var text in NaturalBlocks(script.Scenes[scene].Narration))await Segment(text,scene,block++);continue;}
                     if (voice.VoiceProvider.StartsWith("ElevenLabs") && testSpeech == null) {
 
                         var speech = await services.Speech(NarrationFlow.SpokenText(script.Scenes[scene].Narration,voice), ct, voice);

@@ -86,7 +86,7 @@ public static class StartupUpdates
         using var mutex=new Mutex(false,"Local\\AnkaUpdate-"+Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(baseDir.ToUpperInvariant())))[..16]);
         if(!mutex.WaitOne(0))return false;
         try{
-            using var dialog=new Form{Text="Anka Studio • Açılış kontrolü",Width=570,Height=220,StartPosition=FormStartPosition.CenterScreen,FormBorderStyle=FormBorderStyle.FixedDialog,MaximizeBox=false,MinimizeBox=false,BackColor=Color.FromArgb(17,19,22)};
+            using var dialog=new Form{Text="TubeFlow • Açılış kontrolü",Width=570,Height=220,StartPosition=FormStartPosition.CenterScreen,FormBorderStyle=FormBorderStyle.FixedDialog,MaximizeBox=false,MinimizeBox=false,BackColor=Color.FromArgb(17,19,22)};
             var label=new Label{Text="Güncellemeler kontrol ediliyor…",ForeColor=Color.White,Font=new Font("Segoe UI",12),Location=new Point(24,24),Size=new Size(510,56)};
             var bar=new ProgressBar{Location=new Point(24,90),Size=new Size(510,22),Style=ProgressBarStyle.Marquee};
             var skip=new Button{Text="Mevcut sürümü aç",Location=new Point(330,125),Size=new Size(204,34)};dialog.Controls.AddRange([label,bar,skip]);

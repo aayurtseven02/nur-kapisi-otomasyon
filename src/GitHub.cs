@@ -54,7 +54,7 @@ public sealed partial class GitHub(Store store, HttpClient? client = null)
 
         if (!Regex.IsMatch(name, @"^[A-Za-z0-9_.-]{1,70}$")) throw new InvalidOperationException("Depo adında harf, rakam, nokta veya tire kullan.");
 
-        using var d = JsonDocument.Parse(await Call(HttpMethod.Post, "user/repos", new { name, description = "Anka Studio • Türkçe normal video ve Shorts üretimi", @private = true, auto_init = true }, ct));
+        using var d = JsonDocument.Parse(await Call(HttpMethod.Post, "user/repos", new { name, description = "TubeFlow • Türkçe normal video ve Shorts üretimi", @private = true, auto_init = true }, ct));
 
         store.Settings.Repo = d.RootElement.GetProperty("full_name").GetString()!; store.Settings.GitHubRef = d.RootElement.GetProperty("default_branch").GetString()!; store.Save(); return store.Settings.Repo;
 
@@ -92,7 +92,7 @@ public sealed partial class GitHub(Store store, HttpClient? client = null)
 
         var source = Path.Combine(AppContext.BaseDirectory, "repository");
 
-        if (!Directory.Exists(source)) throw new InvalidOperationException("Kaynak paketi bulunamadı. Anka Studio tam dağıtım paketini kullan.");
+        if (!Directory.Exists(source)) throw new InvalidOperationException("Kaynak paketi bulunamadı. TubeFlow tam dağıtım paketini kullan.");
 
         ValidateSourceBundle(source);
 
@@ -120,7 +120,7 @@ public sealed partial class GitHub(Store store, HttpClient? client = null)
 
         using var newTree = JsonDocument.Parse(await Call(HttpMethod.Post, "repos/" + Repo + "/git/trees", new { base_tree = baseTree, tree }, ct));
 
-        using var newCommit = JsonDocument.Parse(await Call(HttpMethod.Post, "repos/" + Repo + "/git/commits", new { message = "Anka Studio uygulama ve üretim iş akışları", tree = newTree.RootElement.GetProperty("sha").GetString(), parents = new[] { parent } }, ct));
+        using var newCommit = JsonDocument.Parse(await Call(HttpMethod.Post, "repos/" + Repo + "/git/commits", new { message = "TubeFlow uygulama ve üretim iş akışları", tree = newTree.RootElement.GetProperty("sha").GetString(), parents = new[] { parent } }, ct));
 
         await Call(HttpMethod.Patch, "repos/" + Repo + "/git/refs/heads/" + Uri.EscapeDataString(store.Settings.GitHubRef), new { sha = newCommit.RootElement.GetProperty("sha").GetString(), force = false }, ct);
 
@@ -154,7 +154,7 @@ public sealed partial class GitHub(Store store, HttpClient? client = null)
 
     }
 
-    public static bool AllowedSource(string relative) => !relative.Split('/').Any(p => p is "bin" or "obj" or "data" or "projects" or ".git") && (relative.EndsWith(".cs") || relative.EndsWith(".csproj") || relative.EndsWith(".yml") || relative.EndsWith(".md") || relative.EndsWith(".Config") || relative=="tools/audio-alignment/align.py" || relative=="tools/Publish-Update.ps1" || relative=="tools/Update-Install.ps1" || relative=="tools/workflows/anka-flux2.json" || relative=="tools/workflows/anka-sdxl.json" || relative=="src/Assets/pairing-firebase.json" || relative == ".gitignore" || relative == "LICENSE" || relative == "src/Assets/anka-studio-3d.png" || relative == "src/Assets/anka-studio.ico" || relative == "src/Assets/nur-kapisi-background.png" || relative == "src/Assets/nur-kapisi-kanal-logo.png" || (relative.StartsWith("src/Assets/nur-kapisi-destek-", StringComparison.Ordinal) && relative.EndsWith(".png", StringComparison.Ordinal) && relative.Split('/').Length == 3)) && !relative.Contains("secret", StringComparison.OrdinalIgnoreCase);
+    public static bool AllowedSource(string relative) => !relative.Split('/').Any(p => p is "bin" or "obj" or "data" or "projects" or ".git") && (relative.EndsWith(".cs") || relative.EndsWith(".csproj") || relative.EndsWith(".yml") || relative.EndsWith(".md") || relative.EndsWith(".Config") || relative=="tools/audio-alignment/align.py" || relative=="tools/Publish-Update.ps1" || relative=="tools/Update-Install.ps1" || relative=="tools/workflows/anka-flux2.json" || relative=="tools/workflows/anka-sdxl.json" || relative=="src/Assets/pairing-firebase.json" || relative == ".gitignore" || relative == "LICENSE" || relative == "src/Assets/anka-studio-3d.png" || relative == "src/Assets/tubeflow-horizontal.png" || relative == "src/Assets/tubeflow-dark.png" || relative == "src/Assets/anka-studio.ico" || relative == "src/Assets/nur-kapisi-background.png" || relative == "src/Assets/nur-kapisi-kanal-logo.png" || (relative.StartsWith("src/Assets/nur-kapisi-destek-", StringComparison.Ordinal) && relative.EndsWith(".png", StringComparison.Ordinal) && relative.Split('/').Length == 3)) && !relative.Contains("secret", StringComparison.OrdinalIgnoreCase);
 
     public static void CheckRemoteVoice(Settings settings, Episode episode)
 

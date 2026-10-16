@@ -69,7 +69,7 @@ public static class Shapes
 
         try {
 
-            int dark=1;DwmSetWindowAttribute(handle,20,ref dark,4);
+            int dark=0;DwmSetWindowAttribute(handle,20,ref dark,4);
 
             int caption=ColorTranslator.ToWin32(Theme.Bg),text=ColorTranslator.ToWin32(Theme.Teal),border=ColorTranslator.ToWin32(Theme.Border);
 
@@ -104,7 +104,7 @@ public sealed class StudioButton : Button
 
     public Rectangle HelpBounds => new(Math.Max(0,Width-24),3,18,18);
 
-    bool pressed;
+    bool pressed; bool hovered;
 
     public StudioButton() { DoubleBuffered = true; SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true); TextAlign = ContentAlignment.MiddleCenter; }
 
@@ -133,9 +133,9 @@ public sealed class StudioButton : Button
 
     public void ShowHelp() { if (!pressSoundPlayed) UiSound.Click(); Theme.Alert(FindForm(),HelpText,Text+" • bilgi"); }
 
-    protected override void OnMouseEnter(EventArgs e) { base.OnMouseEnter(e); }
+    protected override void OnMouseEnter(EventArgs e) { hovered=true;Invalidate();base.OnMouseEnter(e); }
 
-    protected override void OnMouseLeave(EventArgs e) { base.OnMouseLeave(e); }
+    protected override void OnMouseLeave(EventArgs e) { hovered=false;Invalidate();base.OnMouseLeave(e); }
 
     protected override void OnMouseDown(MouseEventArgs e) { pressSoundPlayed = Enabled && e.Button == MouseButtons.Left; if (pressSoundPlayed) UiSound.Click(); helpPressed=HasHelp && e.Button==MouseButtons.Left && HelpBounds.Contains(e.Location); pressed = !helpPressed; Invalidate(); base.OnMouseDown(e); }
 
@@ -164,7 +164,7 @@ public sealed class StudioButton : Button
         int offset = 0;
         var face = new Rectangle(0, 0, Width - 1, Height - 1);
 
-        var color = Completed ? Theme.SuccessSurface : !Enabled ? Theme.Panel : BackColor;
+        var color = Completed ? Theme.SuccessSurface : !Enabled ? Theme.Panel : hovered && BackColor!=Theme.Teal ? Color.FromArgb(224,226,229) : BackColor;
         using var fill = new SolidBrush(color); g.FillRectangle(fill, ClientRectangle);
         using var border = new Pen(CurrentStep ? Theme.Teal : Completed ? Theme.Success : Theme.Border, CurrentStep ? 3 : 1); g.DrawRectangle(border, face);
 
@@ -244,7 +244,7 @@ public sealed class StudioGradientPanel : Panel
     protected override void OnPaintBackground(PaintEventArgs e)
     {
         if (ClientSize.Width < 1 || ClientSize.Height < 1) return;
-        using var gradient = new LinearGradientBrush(ClientRectangle, Theme.Bg, Color.FromArgb(48, 53, 59), 35f);
+        using var gradient = new LinearGradientBrush(ClientRectangle, Theme.Bg, Theme.Bg, 35f);
         e.Graphics.FillRectangle(gradient, ClientRectangle);
     }
 }

@@ -89,7 +89,7 @@ internal static class Program
 
         using var mutex = new Mutex(true, "Local\\AnkaStudio-" + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(root).TrimEnd(Path.DirectorySeparatorChar).ToUpperInvariant())))[..16], out var first);
 
-        if (!first) { Theme.Alert("Anka Studio zaten açık. Görev çubuğundan uygulamaya geçebilirsin."); return; }
+        if (!first) { Theme.Alert("TubeFlow zaten açık. Görev çubuğundan uygulamaya geçebilirsin."); return; }
 
         try
 
@@ -193,7 +193,7 @@ internal static class Program
 
                 if (args.Contains("--screenshot") || args.Contains("--ui-test")) { form.Close(); Environment.ExitCode = 1; }
 
-                else Theme.Alert(e.Exception.Message, "Anka Studio");
+                else Theme.Alert(e.Exception.Message, "TubeFlow");
 
             };
 
@@ -201,7 +201,7 @@ internal static class Program
 
         }
 
-        catch (Exception e) { File.WriteAllText(Path.Combine(root, "startup-error.txt"), e.ToString()); if (!args.Any(x => x is "--worker" or "--ui-test" or "--media-test" or "--design-test")) Theme.Alert(e.Message, "Anka Studio başlatılamadı"); Environment.ExitCode = 1; }
+        catch (Exception e) { File.WriteAllText(Path.Combine(root, "startup-error.txt"), e.ToString()); if (!args.Any(x => x is "--worker" or "--ui-test" or "--media-test" or "--design-test")) Theme.Alert(e.Message, "TubeFlow başlatılamadı"); Environment.ExitCode = 1; }
 
     }
 
@@ -211,7 +211,7 @@ internal static class Program
 
     {
 
-        using var form = StudioForm.Dialog("Anka Studio • Güvenli anahtar kasası", 670, 360);
+        using var form = StudioForm.Dialog("TubeFlow • Güvenli anahtar kasası", 670, 360);
 
         var heading = Theme.Label(firstUse ? "Windows kasası yerine parola kasası" : "Anahtar kasasının kilidini aç", 17, true, Theme.Teal, 600, 48); heading.Location = new(24, 24);
 

@@ -391,7 +391,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
             await MediaFormat.Manual(store,e,ct);
 
-            foreach(var (_,vertical,script) in Rules.Scripts(e)) foreach(var scene in script.Scenes.Where(s=>s.UserLocal)) await MediaFormat.Video(store,scene.StockFile,vertical,ct);
+            foreach(var (_,vertical,script) in Rules.Scripts(e)) foreach(var scene in script.Scenes.Where(s=>s.UserLocal && !WorkflowMedia.ImageFile(s.StockFile))) await MediaFormat.Video(store,scene.StockFile,vertical,ct);
 
             await services.EnsureScriptLength(e, ct);
 
@@ -404,6 +404,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
             if (ScriptLength.Problem(e, e.Plan!) is string durationIssue) throw new InvalidOperationException("Senaryo süre kontrolü tamamlanmadı: " + durationIssue);
 
             var scripts = Rules.Scripts(e).ToList(); var used = new HashSet<long>();
+            if(e.Creation!=null)await WorkflowMedia.PrepareVisuals(store,e,services,ct,Notify);
             if(e.AiStoryImages) {
                 if(!e.AiStoryAutonomous && ReviewStoryImage==null)throw new InvalidOperationException("Hikâye görsellerinin onayı için uygulama penceresini aç veya proje ayarlarından durmadan üret seçeneğini aç.");
                 await StoryImages.Plan(store,e,services,ct,s=>Log(e,s));
@@ -451,6 +452,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
                 var result = await Render(e, script, key, vertical, staging, used, services, ct, fraction => { e.Progress = 28 + (int)(65 * (complete + fraction) / scripts.Count); Notify(); });
 
+                WorkflowMedia.FreezeAudio(e,script,result,VideoSettings.For(store.Settings,e,script));
                 result.PlanHash = Reliability.MediaPlanHash(e, key);
 
                 result.PublishAt = Rules.VideoDate(e, vertical, shortIndex); if (vertical) shortIndex++;
@@ -511,10 +513,14 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
         var fontSize = vertical ? renderSettings.ShortFontSize : renderSettings.LongFontSize;
 
+        var requestedDurations=e.Creation?.BeforeRender.Count>0?script.Scenes.Select(s=>s.Duration).ToArray():null;
         if (musicClip) await MusicClips.PrepareAudio(store, e, script, folder, ct,renderSettings,services);
 
+        else if(!e.Demo && WorkflowMedia.CanReuseAudio(e,script,VideoSettings.For(store.Settings,e,script)))await WorkflowMedia.PrepareFrozen(store,e,script,folder,ct);
+        else if(!e.Demo && e.Creation?.Voice=="file")await WorkflowMedia.PrepareImportedAudio(store,e,script,folder,ct);
         else if (!e.Demo) { await NarrationFlow.Reuse(store, e, script, renderSettings, folder, key, ct); Log(e, "Ses ve altyazı gerçek konuşma zamanlarıyla hazırlanıyor; metin uzunluğuna göre tahmini bölme kullanılmıyor."); await NarrationFlow.Prepare(store, e, script, renderSettings, folder, services, ct); }
 
+        if(!e.Demo&&requestedDurations!=null)await WorkflowMedia.Recut(store,script,folder,requestedDurations,ct);
         report?.Invoke(.25);
 
         int n = 0;
@@ -649,7 +655,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
             if (e.Demo) { source = Path.Combine(folder, $"scene-{n}.png"); Media.Poster(source, scene.OnScreen == "" ? script.ThumbnailText : scene.OnScreen, vertical, renderSettings.ChannelName, true); }
 
-            else if(e.PhotosOnly || e.AiStoryImages) {
+            else if(e.PhotosOnly || e.AiStoryImages || WorkflowMedia.ImageFile(source)) {
                 if(e.AiStoryImages) {
                     await StoryImages.Prepare(store,e,script,scene,vertical,renderSettings,ct,s=>Log(e,s),review:e.AiStoryAutonomous?null:ReviewStoryImage);source=scene.StockFile;Notify();
                 }
@@ -658,9 +664,9 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
                 }
                 using(var input=File.OpenRead(source))using(var image=System.Drawing.Image.FromStream(input))if((long)image.Width*image.Height>40_000_000)throw new InvalidOperationException("Sahne fotoğrafı çok büyük.");
                 var photoClip=Path.Combine(folder,$"photo-scene-{n}.mp4");
-                if(e.AiStoryImages && e.AiStoryMotion && e.AiStoryCinematic)
+                if((e.AiStoryImages || e.Creation is {CoverChoice:not "legacy",PhotoMotion:true}&&scene.AiImageHash!="") && e.AiStoryMotion && e.AiStoryCinematic)
                     photoClip=await StoryCinema.Render(store,source,scene,w,h,duration,renderSettings,folder,ct,s=>Log(e,s),segmentCaptions);
-                else await Media.Exec(store.Ffmpeg,["-y","-loop","1","-i",source,"-t",Media.Num(duration),"-vf",StoryImages.PhotoFilter(w,h,renderSettings.FramesPerSecond,e.AiStoryImages && e.AiStoryMotion),"-an","-c:v","libx264","-preset",renderSettings.EncodingPreset,"-crf",renderSettings.Crf.ToString(),"-pix_fmt","yuv420p",photoClip],folder,ct);
+                else await Media.Exec(store.Ffmpeg,["-y","-loop","1","-i",source,"-t",Media.Num(duration),"-vf",e.Creation is {CoverChoice:not "legacy"} layout ? WorkflowMedia.PhotoFilter(w,h,renderSettings.FramesPerSecond,layout) : StoryImages.PhotoFilter(w,h,renderSettings.FramesPerSecond,e.AiStoryImages && e.AiStoryMotion),"-an","-c:v","libx264","-preset",renderSettings.EncodingPreset,"-crf",renderSettings.Crf.ToString(),"-pix_fmt","yuv420p",photoClip],folder,ct);
                 source=photoClip;
             }
             else if (ManualVideos.Active(e)) {
@@ -685,7 +691,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
             var clip = Path.Combine(folder, $"clip-{n}.mp4");
 
-            var filter = $"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},setsar=1,fps={renderSettings.FramesPerSecond}";
+            var filter = e.Creation is {CoverChoice:not "legacy"} workflow ? WorkflowMedia.FitFilter(w,h,renderSettings.FramesPerSecond,workflow.Fit) : $"scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},setsar=1,fps={renderSettings.FramesPerSecond}";
 
             if (!musicClip && !e.Demo && script.TextLayout == null && scene.OnScreen != "")
 
@@ -825,7 +831,8 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
         var priorCover = e.TextDesignPending && !e.ArtworkPending ? e.Videos.FirstOrDefault(v => v.Key == key)?.Thumbnail : null;
 
-        if (priorCover != null && File.Exists(priorCover) && Path.GetFullPath(priorCover) != Path.GetFullPath(thumb)) File.Copy(priorCover, thumb, true);
+        if(e.Creation?.CoverChoice=="none")await Media.Exec(store.Ffmpeg,["-y","-i",output,"-frames:v","1",thumb],folder,ct);
+        else if (priorCover != null && File.Exists(priorCover) && Path.GetFullPath(priorCover) != Path.GetFullPath(thumb)) File.Copy(priorCover, thumb, true);
 
         else await new CoverFallback(store, message => e.Log(message)).Create(thumb, coverSettings, e.Topic, script.ThumbnailText == "" ? script.Title : script.ThumbnailText, vertical, ct);
 
@@ -853,7 +860,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
         var validStreams = streams.Any(s => s.GetProperty("codec_type").GetString() == "audio") && streams.Any(s => s.GetProperty("codec_type").GetString() == "video" && s.GetProperty("width").GetInt32() == w && s.GetProperty("height").GetInt32() == h);
 
-        asset.QualityPassed = validStreams && durationOk && !e.Demo && (musicClip || captions.Count > 0) && script.Scenes.All(s => File.Exists(s.StockFile) && (s.LicenseUrl != "" || e.AiStoryImages && s.AiImageHash!="" && File.Exists(s.StockFile+".json") && File.Exists(s.StockFile+".sha") && Reliability.FileHash(s.StockFile)==File.ReadAllText(s.StockFile+".sha")));
+        asset.QualityPassed = validStreams && durationOk && !e.Demo && (musicClip || script.TextLayout?.SubtitleEnabled==false || captions.Count > 0) && script.Scenes.All(s => File.Exists(s.StockFile) && (s.LicenseUrl != "" || e.Creation!=null && s.UserLocal || e.AiStoryImages && s.AiImageHash!="" && File.Exists(s.StockFile+".json") && File.Exists(s.StockFile+".sha") && Reliability.FileHash(s.StockFile)==File.ReadAllText(s.StockFile+".sha")));
 
         await using (var hashStream = File.OpenRead(output)) asset.FileHash = Convert.ToHexString(await SHA256.HashDataAsync(hashStream, ct));
 
@@ -1007,7 +1014,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
     {
 
-        VideoScript Make(string title, bool shortVideo) => new() { Title = title, ThumbnailText = shortVideo ? "BİR KONU.\nİKİ FORMAT." : "FİKRİNDEN\nYAYIN TAKVİMİNE", Description = "Anka Studio arayüz ve video motoru örneği. Gerçek içerik değildir.", Scenes = [new() { Narration = "Bu bir Anka Studio örnek projesidir. Normal video ve Shorts aynı konu paketinde yönetilir.", VisualQuery = "creative studio", OnScreen = "Bir fikir.\nBir içerik evreni." }, new() { Narration = "Senaryo, ses, görüntü ve altyazı ayrı aşamalardır. Her aşamayı kontrol panelinden düzenleyebilirsin.", VisualQuery = "video editing", OnScreen = "Otonom üretim.\nKontrol sende." }] };
+        VideoScript Make(string title, bool shortVideo) => new() { Title = title, ThumbnailText = shortVideo ? "BİR KONU.\nİKİ FORMAT." : "FİKRİNDEN\nYAYIN TAKVİMİNE", Description = "TubeFlow arayüz ve video motoru örneği. Gerçek içerik değildir.", Scenes = [new() { Narration = "Bu bir TubeFlow örnek projesidir. Normal video ve Shorts aynı konu paketinde yönetilir.", VisualQuery = "creative studio", OnScreen = "Bir fikir.\nBir içerik evreni." }, new() { Narration = "Senaryo, ses, görüntü ve altyazı ayrı aşamalardır. Her aşamayı kontrol panelinden düzenleyebilirsin.", VisualQuery = "video editing", OnScreen = "Otonom üretim.\nKontrol sende." }] };
 
         return new() { Research = "Yerel örnek. İnternetten araştırma yapılmadı. Grafikler uygulama tarafından oluşturuldu. Ses yerine sessiz akış kullanıldı.", Long = e.IncludeLong ? Make(e.Topic, false) : null, Shorts = Enumerable.Range(0, e.ShortCount).Select(i => Make("Shorts " + (i + 1) + " • " + e.Topic, true)).ToList() };
 

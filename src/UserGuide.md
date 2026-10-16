@@ -1,4 +1,24 @@
-# Anka Studio 0.3.21 — Kısa Kullanım
+# TubeFlow — Yeni üretim akışı
+
+Ana menü: Stüdyo • Üret, Projelerim ve Merkez. Sol üst düğmeyle yan menüyü açıp kapatabilirsin.
+
+**1. Kaynak ve Metin:** Konuyu yaz, yatay veya dikey videoyu seç. Kendi içeriğini ekle veya AI talimatını yazıp metni hazırlat. Metni okuyup onayla.
+
+**2. Tasarım:** Görsel kaynaklarını birlikte seçebilirsin. AI sesi veya konuşma dosyanı belirle. Altyazı açık/kapalı kararını mutlaka seç; açıksa hazır kalıbı belirle. Kapak, açılış ve kapanış isteğe göre arşivden alınabilir. Normal videoya ek Shorts istersen metinlerini de inceleyip onayla.
+
+**3. Üretim:** Otomatik veya manuel çalışmayı seç. AI bölümleme isteyip istemediğini belirt. Bölümler arasında süre sınırlarını sürükleyebilir; istemediğin bölümü kaldırabilir ve geri alabilirsin.
+
+**4. İzle ve düzelt:** Videoyu izle. Konuşma ile ekrandaki altyazıyı ayrı düzenle. Gereken sahneyi değiştir, videoyu güncelle ve sonucu onayla.
+
+**5. Yayın:** Bilgisayara kaydet, özel yükle veya tarih seç. Şimdi yayınlama işlemi ayrıca onay ister.
+
+Bir videoda önceden gömülü altyazı varsa ikinci katman istemediğinde Altyazı kapalı seç. Hazır MP3/WAV yeniden seslendirilmez. Eski yayınlanmış projede değişiklik için kopya oluştur.
+
+---
+
+## Ayrıntılı araç başvurusu
+
+# TubeFlow 0.3.21 — Kısa Kullanım
 
 - **Stüdyo • Üret:** Konu/metin → tasarım → üretim → izle ve kontrol et → yayınla. Yeşil adımlar tamamlanmıştır. Ses ve kapak tercihlerini tasarım adımında, düzeltmeleri kontrol adımında aç.
 - **Videolarım ve Takvim:** YouTube ve projeleri güncelle düğmesi bağlı kanalın tüm erişilebilir videolarını sayfa sayfa getirir. YouTube’daki videolar ile yerel hazırlanan/bekleyen projeler ayrı başlıklarda görünür. İnternet sorunu son başarılı listeyi silmez.
@@ -7,11 +27,11 @@
 
 ## Önceki ayrıntılı rehber
 
-# Anka Studio kullanım rehberi
+# TubeFlow kullanım rehberi
 
 ## 1. Başlangıç ve bilgi simgeleri
 
-Anka Studio, normal video ve Shorts içeriklerini hazırlamak, bilgisayarında üretmek, incelemek ve bağlı YouTube kanalına yüklemek için kullanılır. Bir içerik paketi aynı konuya ait normal video ile bir veya daha fazla Shorts içerebilir. Yayın sırasına eklenen her satır ise ayarlarını ayrı belirlediğin bir videodur.
+TubeFlow, normal video ve Shorts içeriklerini hazırlamak, bilgisayarında üretmek, incelemek ve bağlı YouTube kanalına yüklemek için kullanılır. Bir içerik paketi aynı konuya ait normal video ile bir veya daha fazla Shorts içerebilir. Yayın sırasına eklenen her satır ise ayarlarını ayrı belirlediğin bir videodur.
 
 Üretim, yayın, model ve kullanım hakkı gibi açıklama gerektiren tuşlardaki (i) işareti açıklama açar; asıl işlemi başlatmaz. Tuşun yazı kısmına basmak işlemi çalıştırır. Bilgi simgesi bulunan tuşun üzerinde bekleyerek kısa açıklamayı görebilirsin; tuşa odaklanıp F1'e basmak da açıklama açar. Tamam, Kapat, Vazgeç, Evet/Hayır, Kopyala/Yapıştır ve basit gezinme tuşlarında ek bilgi simgesi yoktur. Önceden ayrı (i) tuşuyla açıklanan yayın işlemlerinde ikinci bir simge eklenmez.
 

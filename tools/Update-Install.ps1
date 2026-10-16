@@ -31,7 +31,7 @@ try{
     foreach($taskOld in @('install-error.txt','install-result.txt')){Remove-Item -LiteralPath (Join-Path $Source $taskOld) -ErrorAction SilentlyContinue}
     Add-Type -AssemblyName System.Windows.Forms
     $taskWindow=New-Object Windows.Forms.Form
-    $taskWindow.Text='Anka Studio - Guncelleme';$taskWindow.Width=540;$taskWindow.Height=170;$taskWindow.StartPosition='CenterScreen';$taskWindow.ControlBox=$false
+    $taskWindow.Text='TubeFlow - Guncelleme';$taskWindow.Width=540;$taskWindow.Height=170;$taskWindow.StartPosition='CenterScreen';$taskWindow.ControlBox=$false
     $taskLabel=New-Object Windows.Forms.Label;$taskLabel.Text='Guncelleme yukleniyor. Lutfen bekleyin...';$taskLabel.SetBounds(20,20,480,36)
     $taskBar=New-Object Windows.Forms.ProgressBar;$taskBar.SetBounds(20,65,480,25)
     $taskWindow.Controls.AddRange(@($taskLabel,$taskBar));$taskWindow.Show();[Windows.Forms.Application]::DoEvents()

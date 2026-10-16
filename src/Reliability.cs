@@ -39,6 +39,7 @@ public static class Reliability
 
         if (UserNarration.Active(episode) || ManualVideos.Active(episode)) raw += JsonSerializer.Serialize(episode.UserNarration, Json.Options);
 
+        if(episode.Creation is {CoverChoice:not "legacy"} workflow)raw+=JsonSerializer.Serialize(new{workflow.Voice,workflow.AudioHash,SourceAudioHash=FileHash(workflow.AudioFile),workflow.Fit,workflow.PhotoMotion},Json.Options);
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(raw)));
 
     }
@@ -79,7 +80,7 @@ public static class Reliability
 
             media = script.Scenes.Select(s => FileHash(s.StockFile)).ToArray() };
 
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(pipelineVersion + JsonSerializer.Serialize(design, Json.Options))));
+        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(pipelineVersion + JsonSerializer.Serialize(design, Json.Options)+(episode.Creation is {CoverChoice:not "legacy"} flow?JsonSerializer.Serialize(new{flow.Voice,AudioHash=FileHash(flow.AudioFile),flow.Fit}):""))));
 
     }
 

@@ -9,7 +9,14 @@ os.environ['HF_HUB_OFFLINE']='1'
 os.environ['HF_HUB_DISABLE_TELEMETRY']='1'
 from faster_whisper import WhisperModel
 request=json.loads(safe_path(sys.argv[1]).read_text(encoding='utf-8-sig'))
-model=WhisperModel(os.environ.get('ANKA_ALIGNMENT_MODEL',str(Path(__file__).parent/'model')),device='cpu',compute_type='int8',cpu_threads=4,local_files_only=True)
+model=WhisperModel(request.get('Model') or os.environ.get('ANKA_ALIGNMENT_MODEL',str(Path(__file__).parent/'model')),device='cpu',compute_type='int8',cpu_threads=4,local_files_only=True)
+if request.get('Transcribe'):
+    segments,info=model.transcribe(request['Audio'],language='tr',word_timestamps=True,beam_size=5,condition_on_previous_text=False)
+    words=[{'Word':w.word.strip(),'Start':w.start,'End':w.end} for segment in segments for w in segment.words or []]
+    if not words:raise RuntimeError('Konuşma algılanamadı.')
+    safe_path(sys.argv[2]).write_text(json.dumps({'Words':words},ensure_ascii=False),encoding='utf-8')
+    sys.exit(0)
+
 def attempt(use_prompt,chunked=False):
     words=[]
     def read(stream,offset=0):

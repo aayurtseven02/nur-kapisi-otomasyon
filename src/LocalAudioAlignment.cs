@@ -11,14 +11,15 @@ public static class LocalAudioAlignment
 {
 
     public static string Folder => Path.Combine(AppContext.BaseDirectory,"tools","audio-alignment");
+    public static string RuntimeFolder=>new[]{Folder,Path.Combine(AppLock.DefaultDataRoot(),"audio-alignment"),Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),"AnkaStudio","tools","audio-alignment")}.FirstOrDefault(p=>File.Exists(Path.Combine(p,"runtime","python.exe"))&&File.Exists(Path.Combine(p,"model","model.bin")))??Folder;
 
     public static async Task<List<Caption>> Align(string audio, IReadOnlyList<string> texts, double duration, Action<string> log, CancellationToken ct)
 
     {
 
-        string python=Path.Combine(Folder,"runtime","python.exe"), script=Path.Combine(Folder,"align.py");
+        string python=Path.Combine(RuntimeFolder,"runtime","python.exe"), script=Path.Combine(Folder,"align.py");
 
-        if (!File.Exists(python) || !File.Exists(script) || !File.Exists(Path.Combine(Folder,"model","model.bin"))) throw new TimedNarration.TimingUnavailableException("Yerel ses eşleme motoru eksik. Güncel ZIP'in tools klasörüyle birlikte çıkarılması gerekiyor.");
+        if (!File.Exists(python) || !File.Exists(script) || !File.Exists(Path.Combine(RuntimeFolder,"model","model.bin"))) throw new TimedNarration.TimingUnavailableException("Yerel ses eşleme motoru eksik. Güncel ZIP'in tools klasörüyle birlikte çıkarılması gerekiyor.");
 
         string cache=Path.Combine(Path.GetDirectoryName(audio)!,"align-"+TimedNarration.TextHash(Reliability.FileHash(audio)+string.Join('\n',texts))+".json");
 
@@ -37,6 +38,7 @@ public static class LocalAudioAlignment
         start.Environment["PYTHONIOENCODING"]="utf-8";start.Environment["PYTHONUTF8"]="1";
 
         start.Environment["HF_HUB_OFFLINE"]="1";start.Environment["HF_HUB_DISABLE_TELEMETRY"]="1";
+        start.Environment["ANKA_ALIGNMENT_MODEL"]=Path.Combine(RuntimeFolder,"model");
 
         using var process=Process.Start(start) ?? throw new InvalidOperationException("Ses eşleme başlatılamadı.");
 

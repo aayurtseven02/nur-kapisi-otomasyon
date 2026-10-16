@@ -1,4 +1,4 @@
-name: Anka Windows Update Release
+name: TubeFlow Windows Update Release
 on:
   push:
     tags: ['v*']
@@ -29,5 +29,5 @@ jobs:
           gh release download --repo $env:UPDATE_REPO --pattern anka-update.json --dir $out 2>$null
           & (Join-Path $tools 'Publish-Update.ps1') -Repository $env:UPDATE_REPO -PreviousManifest (Join-Path $out 'anka-update.json') -OutputDirectory $out
           if ($LASTEXITCODE -ne 0) { throw 'Paket hazirlanamadi.' }
-          gh release create $env:UPDATE_TAG (Join-Path $out "AnkaStudio-$version-win-x64.zip") (Join-Path $out 'anka-update.json') --repo $env:UPDATE_REPO --verify-tag --title "Anka Studio $version" --notes 'Otomatik guncelleme ve Windows paketi.'
+          gh release create $env:UPDATE_TAG (Join-Path $out "AnkaStudio-$version-win-x64.zip") (Join-Path $out 'anka-update.json') --repo $env:UPDATE_REPO --verify-tag --title "TubeFlow $version" --notes 'Otomatik guncelleme ve Windows paketi.'
           if ($LASTEXITCODE -ne 0) { throw 'GitHub yayini olusturulamadi.' }

@@ -353,8 +353,8 @@ public class Settings
 
 
 public class Episode
-
 {
+    [System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)] public CreationFlow? Creation {get;set;}
 
     public Settings? ProductionSettings { get; set; }
 
@@ -994,7 +994,7 @@ public sealed class Vault
 
             Blob output;
 
-            var ok = encrypt ? CryptProtectData(ref input, "Anka Studio", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, 1, out output) : CryptUnprotectData(ref input, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, 1, out output);
+            var ok = encrypt ? CryptProtectData(ref input, "TubeFlow", IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, 1, out output) : CryptUnprotectData(ref input, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, 1, out output);
 
             if (!ok) throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error(), "Windows anahtar kasası açılamadı. Windows kullanıcı kimliği erişilemiyor veya dosya farklı bir hesaba ait.");
 
@@ -1061,7 +1061,7 @@ public static class Rules
 
             if (s.Scenes.Any(x => !double.IsFinite(x.TitleStart) || x.TitleStart is < 0 or > 1800 || !double.IsFinite(x.TitleDuration) || x.TitleDuration is < 0 or > 1800)) throw new InvalidOperationException("Başlık zamanları geçersiz.");
 
-            if (string.IsNullOrWhiteSpace(s.Title) || s.Title.Length > 100 || s.Scenes.Count == 0 || s.Scenes.Count > 120 || s.Scenes.Any(x => string.IsNullOrWhiteSpace(x.Narration) || x.Narration.Length > 3500 || string.IsNullOrWhiteSpace(x.VisualQuery)))
+            if (string.IsNullOrWhiteSpace(s.Title) || s.Title.Length > 100 || s.Scenes.Count == 0 || s.Scenes.Count > 120 || s.Scenes.Any(x => string.IsNullOrWhiteSpace(x.Narration) || x.Narration.Length > (e.Creation!=null?30000:3500) || string.IsNullOrWhiteSpace(x.VisualQuery)))
 
                 throw new InvalidOperationException("Senaryo yapısı geçersiz: başlık, anlatım ve sahne sorgularını kontrol et.");
 

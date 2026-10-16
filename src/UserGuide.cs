@@ -8,7 +8,7 @@ public static class UserGuide
     public static IReadOnlyList<(string Title,string Body)> Sections {get;}=FullText.Split("\n## ").Skip(1).Select(x=>{int end=x.IndexOf('\n');return(end<0?x:x[..end],end<0?"":x[(end+1)..].Trim());}).ToArray();
     public static Form Create()
     {
-        var form=new Form {Text="Anka Studio • Kullanım rehberi",Width=1160,Height=850,MinimumSize=new(850,600),BackColor=Theme.Bg,ForeColor=Theme.Text,Font=Theme.Font(),StartPosition=FormStartPosition.CenterParent,Padding=new Padding(16)};
+        var form=new Form {Text="TubeFlow • Kullanım rehberi",Width=1160,Height=850,MinimumSize=new(850,600),BackColor=Theme.Bg,ForeColor=Theme.Text,Font=Theme.Font(),StartPosition=FormStartPosition.CenterParent,Padding=new Padding(16)};
         var header=new TableLayoutPanel{Dock=DockStyle.Top,Height=78,ColumnCount=1,RowCount=2};header.Controls.Add(Theme.Label("Program kullanım rehberi • konu seç veya ara",15,true,Theme.Teal,1000,36));
         var search=Theme.Input(width:1000);search.Dock=DockStyle.Fill;search.PlaceholderText="Rehberde ara: müzik, Shorts, yayın saati, altyazı…";search.AccessibleName="Rehberde ara";header.Controls.Add(search);
         var list=new ListBox{Dock=DockStyle.Fill,BackColor=Theme.Panel,ForeColor=Theme.Text,BorderStyle=BorderStyle.None,Font=Theme.Font(10),IntegralHeight=false,HorizontalScrollbar=true,AccessibleName="Rehber konuları"};

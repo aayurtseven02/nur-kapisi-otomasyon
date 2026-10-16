@@ -16,11 +16,11 @@ public static class Theme
 
 {
 
-    public static readonly Color Warning = Color.FromArgb(255, 48, 78);
+    public static readonly Color Warning = Color.FromArgb(30, 30, 30);
 
-    public static DialogResult Alert(string message, string title = "Anka Studio", MessageBoxButtons buttons = MessageBoxButtons.OK) => Alert(null, message, title, buttons);
+    public static DialogResult Alert(string message, string title = "TubeFlow", MessageBoxButtons buttons = MessageBoxButtons.OK) => Alert(null, message, title, buttons);
 
-    public static DialogResult Alert(IWin32Window? owner, string message, string title = "Anka Studio", MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Warning)
+    public static DialogResult Alert(IWin32Window? owner, string message, string title = "TubeFlow", MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Warning)
 
     {
 
@@ -52,16 +52,16 @@ public static class Theme
 
     }
 
-    public static Color Bg = Color.FromArgb(16, 17, 19), Panel = Color.FromArgb(23, 24, 27), Elevated = Color.FromArgb(32, 33, 37), Text = Color.FromArgb(255, 255, 255), Muted = Color.FromArgb(158, 157, 153), Teal = Color.FromArgb(255, 255, 255), Orange = Color.FromArgb(204, 179, 125), Border = Color.FromArgb(49, 49, 53);
-    public static readonly Color Success = Color.FromArgb(57, 255, 20), SuccessSurface = Success;
+    public static Color Bg = Color.White, Panel = Color.FromArgb(248,248,248), Elevated = Color.FromArgb(241,242,243), Text = Color.FromArgb(25,25,27), Muted = Color.FromArgb(98,100,105), Teal = Color.Black, Orange = Color.FromArgb(120,100,64), Border = Color.FromArgb(214,215,218);
+    public static readonly Color Success = Color.FromArgb(20, 125, 55), SuccessSurface = Color.FromArgb(218, 244, 224);
 
     static readonly HashSet<string> InstalledFonts = FontFamily.Families.Select(f => f.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
     static string PickFont(params string[] names) => names.FirstOrDefault(InstalledFonts.Contains) ?? "Segoe UI";
-    public static readonly string BodyFont = PickFont("Consolas", "Cascadia Mono", "Courier New");
+    public static readonly string BodyFont = PickFont("Segoe UI", "Arial");
     public static readonly string HeadingFont = BodyFont;
     public static Font Font(float size = 10, bool bold = false) => new(BodyFont, size, bold ? FontStyle.Bold : FontStyle.Regular);
 
-    public static Label Label(string text, float size = 10, bool bold = false, Color? color = null, int width = 900, int height = 32) => new StudioLabel() { Text = size >= 14 || bold && size >= 12 ? text.ToUpper(CultureInfo.GetCultureInfo("tr-TR")) : text, Font = Font(size, bold), ForeColor = color ?? Text, AutoSize = false, Width = width, Height = height, TextAlign = ContentAlignment.MiddleLeft, BackColor = Color.Transparent, Margin = Padding.Empty };
+    public static Label Label(string text, float size = 10, bool bold = false, Color? color = null, int width = 900, int height = 32) => new StudioLabel() { Text = text, Font = Font(size, bold), ForeColor = color ?? Text, AutoSize = false, Width = width, Height = height, TextAlign = ContentAlignment.MiddleLeft, BackColor = Color.Transparent, Margin = Padding.Empty };
 
     public static Button Button(string text, Action click, bool primary = false, int width = 150)
 

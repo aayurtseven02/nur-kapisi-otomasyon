@@ -148,12 +148,9 @@ public static class AppLock
 
         var channel = SavedChannelTitle(root);
 
-        using var form = new Form { Text = Enabled(root) ? "Anka Studio • giriş" : "Anka Studio • açılış şifresi oluştur", Width = 580, Height = 590, StartPosition = FormStartPosition.CenterScreen, BackColor = Theme.Bg, ForeColor = Theme.Text, FormBorderStyle = FormBorderStyle.FixedDialog, MaximizeBox = false };
+        using var form = new Form { Text = Enabled(root) ? "TubeFlow • giriş" : "TubeFlow • açılış şifresi oluştur", Width = 580, Height = 590, StartPosition = FormStartPosition.CenterScreen, BackColor = Theme.Bg, ForeColor = Theme.Text, FormBorderStyle = FormBorderStyle.FixedDialog, MaximizeBox = false };
 
-        using var logoStream = typeof(AppLock).Assembly.GetManifestResourceStream("AnkaStudio.Assets.anka-studio-3d.png");
-        using var logoSource = Image.FromStream(logoStream ?? throw new InvalidOperationException("Logo kaynağı bulunamadı."));
-        var logo = new PictureBox { Image = new Bitmap(logoSource), SizeMode = PictureBoxSizeMode.Zoom, BackColor = Theme.Bg, Size = new Size(150, 125), Location = new Point((form.ClientSize.Width - 150) / 2, 8), AccessibleName = "Anka Studio logosu" };
-        form.FormClosed += (_, _) => logo.Image?.Dispose();
+        using var logoStream=typeof(AppLock).Assembly.GetManifestResourceStream("AnkaStudio.Assets.anka-studio-3d.png");using var logoSource=Image.FromStream(logoStream!);var logo=new PictureBox{Image=new Bitmap(logoSource),SizeMode=PictureBoxSizeMode.Zoom,BackColor=Theme.Bg,Size=new Size(190,125),Location=new Point((form.ClientSize.Width-190)/2,8),AccessibleName="TubeFlow logosu"};form.FormClosed+=(_,_)=>logo.Image?.Dispose();
 
         if (channel != "") form.Text = channel + " • " + form.Text;
 
@@ -170,7 +167,7 @@ public static class AppLock
 
                 var liveTitle = await ConnectedChannelTitle(root, channelCancellation.Token);
 
-                if (!form.IsDisposed && liveTitle != "") { heading.Text = ChannelHeading(liveTitle); form.Text = liveTitle + " • Anka Studio • giriş"; }
+                if (!form.IsDisposed && liveTitle != "") { heading.Text = ChannelHeading(liveTitle); form.Text = liveTitle + " • TubeFlow • giriş"; }
 
             } catch (Exception) { /* Offline login remains available with the last verified identity. */ }
 

@@ -78,19 +78,15 @@ public sealed partial class StudioForm : Form
 
         page.AutoSize = false;
 
-        Text = "Anka Studio " + ReleaseVersion + " • YouTube Üretim ve Yönetim Merkezi"; Width = Math.Min(1440, Screen.PrimaryScreen!.WorkingArea.Width - 32); Height = Math.Min(950, Screen.PrimaryScreen!.WorkingArea.Height - 32); MinimumSize = new(900, 600); StartPosition = FormStartPosition.CenterScreen; BackColor = Theme.Bg; Font = Theme.Font(); ForeColor = Theme.Text; AutoScaleMode = AutoScaleMode.Dpi;
+        Text = "TubeFlow " + ReleaseVersion + " • YouTube Üretim ve Yönetim Merkezi"; Width = Math.Min(1440, Screen.PrimaryScreen!.WorkingArea.Width - 32); Height = Math.Min(950, Screen.PrimaryScreen!.WorkingArea.Height - 32); MinimumSize = new(900, 600); StartPosition = FormStartPosition.CenterScreen; BackColor = Theme.Bg; Font = Theme.Font(); ForeColor = Theme.Text; AutoScaleMode = AutoScaleMode.Dpi;
 
         using var iconStream = typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.anka-studio.ico");
 
         if (iconStream != null) { using var appIcon = new Icon(iconStream); Icon = (Icon)appIcon.Clone(); }
 
-        var side = new Panel { Dock = DockStyle.Left, Width = 228, BackColor = Color.FromArgb(7, 8, 10), Padding = new Padding(20, 20, 20, 8) };
+        var side = new Panel { Dock = DockStyle.Left, Width = 246, BackColor = Color.FromArgb(243,243,244), Padding = new Padding(20, 20, 20, 8) };
 
-        using var logoStream = typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.anka-studio-3d.png");
-
-        using var logoSource = Image.FromStream(logoStream ?? throw new InvalidOperationException("Logo kaynağı bulunamadı."));
-
-        var brand = new PictureBox { Image = new Bitmap(logoSource), SizeMode = PictureBoxSizeMode.Zoom, BackColor = side.BackColor, Location = new(20, 10), Size = new(188, 128), AccessibleName = "Anka Studio logosu" }; side.Controls.Add(brand); FormClosed += (_, _) => brand.Image?.Dispose();
+        using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-horizontal.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=new Bitmap(logoSource),Location=new(22,8),Size=new(208,112),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);FormClosed+=(_,_)=>brand.Image?.Dispose();
 
         channelHeading.Location = new(20, 6); channelHeading.AutoEllipsis = true; channelHeading.Visible = false;
 
@@ -98,24 +94,25 @@ public sealed partial class StudioForm : Form
         subtitle.TextAlign = ContentAlignment.MiddleCenter;
         subtitle.Dock = DockStyle.Bottom;
 
-        var navigation = new StudioScrollPanel { Location = new(12, 188), Size = new(204, ClientSize.Height - 336), Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
+        var navigation = new StudioScrollPanel { Location = new(8, 126), Size = new(230, ClientSize.Height - 240), Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
 
-        var items = new[] { (Route: "Video hazırla", Label: "Stüdyo • Üret"), (Route: "Videolarım", Label: "Videolarım ve Takvim"), (Route: "Ayarlar", Label: "Merkez") };
+        var items = new[] { (Route: "Video hazırla", Label: "Stüdyo • Üret"), (Route: "Videolarım", Label: "Projelerim"), (Route: "Ayarlar", Label: "Merkez") };
 
         int y=0;
 
         foreach(var item in items) {
 
-            var button=Theme.Button(SectionHeading(item.Label),()=>Navigate(item.Route),false,184);button.Height=48;button.TextAlign=ContentAlignment.MiddleLeft;button.Padding=new Padding(12,0,0,0);button.Location=new(4,y);button.AccessibleName="Ana bölüm: "+item.Label;navigation.Controls.Add(button);nav[item.Route]=button;y+=58;
+            var button=new SidebarButton{Text=item.Label,Width=226,Glyph=item.Route=="Video hazırla"?"＋":item.Route=="Videolarım"?"◷":"⚙",Location=new Point(0,y),AccessibleName="Ana bölüm: "+item.Label};button.Click+=(_,_)=>Navigate(item.Route);navigation.Controls.Add(button);nav[item.Route]=button;y+=42;
 
         }
 
-        var guide=Theme.Button("Rehber",()=>UserGuide.Show(this),false,184);guide.Location=new(4,y+12);navigation.Controls.Add(guide);
+        var guide=new SidebarButton{Text="Rehber",Glyph="?",Width=226};guide.Click+=(_,_)=>UserGuide.Show(this);guide.Location=new(0,y+12);navigation.Controls.Add(guide);
 
-        var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 126, BackColor = side.BackColor };
-        footer.Dock = DockStyle.Top; sideFooter.Controls.Add(footer); sideFooter.Controls.Add(subtitle); side.Controls.Add(sideFooter);
+        var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 44, BackColor = side.BackColor };
+        footer.Dock = DockStyle.Top;footer.Visible=false; sideFooter.Controls.Add(footer); sideFooter.Controls.Add(subtitle); side.Controls.Add(sideFooter);
 
         var scroll = new StudioScrollPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.Transparent }; page.Location = Point.Empty; scroll.Controls.Add(page); body.Controls.Add(scroll);
+        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);side.Controls.Add(collapse);collapse.BringToFront();bool compact=false;collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?64:246;brand.Visible=!compact;sideFooter.Visible=!compact;navigation.Width=compact?56:230;foreach(var (route,b) in nav){b.Width=compact?46:226;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
         var sidebarDivider = new Panel { Dock = DockStyle.Left, Width = 2, BackColor = Theme.Warning, AccessibleName = "Sol menü ayırıcı çizgisi" };
         var topDivider = new Panel { Dock = DockStyle.Top, Height = 2, BackColor = Theme.Warning, AccessibleName = "Üst kenar çizgisi" };
         Controls.Add(body); Controls.Add(appHeader); Controls.Add(sidebarDivider); Controls.Add(side); Controls.Add(topDivider);
@@ -134,7 +131,7 @@ public sealed partial class StudioForm : Form
 
             if (queueRunning) { foreach (var item in VideoQueue.Items(store)) item.QueueAuthorized = false; queueCancellation?.Cancel(); }
 
-            if (engine.Busy) { e.Cancel = true; if (Theme.Alert("Çalışan işi durdurup çıkılsın mı? Tamamlanan aşamalar saklanır.", "Anka Studio", MessageBoxButtons.YesNo) != DialogResult.Yes) return; ticker.Stop(); await engine.StopAndWait(); closing = true; Close(); }
+            if (engine.Busy) { e.Cancel = true; if (Theme.Alert("Çalışan işi durdurup çıkılsın mı? Tamamlanan aşamalar saklanır.", "TubeFlow", MessageBoxButtons.YesNo) != DialogResult.Yes) return; ticker.Stop(); await engine.StopAndWait(); closing = true; Close(); }
 
             else { ticker.Stop(); store.Save(); }
 
@@ -170,7 +167,7 @@ public sealed partial class StudioForm : Form
 
         page.SuspendLayout();
 
-        page.Width = Math.Max(800, body.ClientSize.Width - 90 - (assistantHost?.Visible==true && ClientSize.Width>=1720 ? assistantWidth : 0));
+        page.Width = Math.Max(620, body.ClientSize.Width - 90 - (assistantHost?.Visible==true && ClientSize.Width>=1720 ? assistantWidth : 0));
 
         foreach (var item in responsive)
 
@@ -241,7 +238,7 @@ public sealed partial class StudioForm : Form
 
         appHeader.Channel = ChannelHeading(store.Settings); channelHeading.Text = appHeader.Channel;
 
-        hints.SetToolTip(channelHeading, appHeader.Channel); Text = appHeader.Channel + " • Anka Studio " + ReleaseVersion; appHeader.Invalidate();
+        hints.SetToolTip(channelHeading, appHeader.Channel); Text = appHeader.Channel + " • TubeFlow " + ReleaseVersion; appHeader.Invalidate();
 
     }
 
@@ -263,7 +260,7 @@ public sealed partial class StudioForm : Form
 
             hints.SetToolTip(channelHeading, store.Settings.YouTubeChannelTitle == "" ? "Kanal adı alınamadı. Bağlantı Merkezi'nden YouTube kanalını doğrula." : "Son doğrulanmış YouTube kanal adı. Bu açılışta bağlantı yenilenemedi.");
 
-            if (store.Settings.YouTubeChannelTitle == "") { channelHeading.Text = appHeader.Channel = "Kanal adı alınamadı"; Text = "Anka Studio " + ReleaseVersion; appHeader.Invalidate(); }
+            if (store.Settings.YouTubeChannelTitle == "") { channelHeading.Text = appHeader.Channel = "Kanal adı alınamadı"; Text = "TubeFlow " + ReleaseVersion; appHeader.Invalidate(); }
 
         }
 
@@ -283,9 +280,9 @@ public sealed partial class StudioForm : Form
 
         packageUpdates.Clear();
 
-        current = name; appHeader.PageName = SectionHeading(PageCaption(name)); UpdateChannelHeading(); appHeader.Busy = engine.Busy; appHeader.Invalidate(); SuspendLayout(); foreach (var old in page.Controls.Cast<Control>().ToArray()) old.Dispose(); page.Controls.Clear(); page.Width = Math.Max(800, body.ClientSize.Width - 90 - (assistantHost?.Visible==true && ClientSize.Width>=1720 ? assistantWidth : 0));
+        current = name; appHeader.PageName = SectionHeading(PageCaption(name)); UpdateChannelHeading(); appHeader.Busy = engine.Busy; appHeader.Invalidate(); SuspendLayout(); foreach (var old in page.Controls.Cast<Control>().ToArray()) old.Dispose(); page.Controls.Clear(); page.Width = Math.Max(620, body.ClientSize.Width - 90 - (assistantHost?.Visible==true && ClientSize.Width>=1720 ? assistantWidth : 0));
 
-        foreach (var (key, button) in nav) { button.BackColor = key == NavigationRoot(name) ? Theme.Teal : Theme.Panel; button.ForeColor = key == NavigationRoot(name) ? Theme.Bg : Theme.Text; }
+        foreach (var (key, button) in nav) { if(button is SidebarButton entry)entry.Active=key==NavigationRoot(name);button.Invalidate(); }
 
         UpdateFooter();
 
@@ -538,13 +535,13 @@ public sealed partial class StudioForm : Form
 
     {
 
-        page.Controls.Add(Theme.Label(SectionHeading(title), 24, true, width: page.Width, height: 52)); page.Controls.Add(Theme.Label(description, 10, color: Theme.Muted, width: page.Width, height: 45));
+        page.Controls.Add(Theme.Label(title, 24, true, width: page.Width, height: 52)); page.Controls.Add(Theme.Label(description, 10, color: Theme.Muted, width: page.Width, height: 45));
 
     }
 
     FlowLayoutPanel Actions(params Button[] buttons) { var f = new FlowLayoutPanel { Width = page.Width, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, BackColor = Color.Transparent, WrapContents = true, Margin = new Padding(0, 0, 0, 14), Tag = "wide" }; f.Controls.AddRange(buttons); return f; }
 
-    void Message(string message) => Theme.Alert(this, message, "Anka Studio", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    void Message(string message) => Theme.Alert(this, message, "TubeFlow", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
     async Task Safe(Func<Task> task) { try { await task(); } catch (Exception e) { Message(e.Message); } }
 
@@ -963,19 +960,10 @@ public sealed partial class StudioForm : Form
     }
 
     void EditPackage(Episode e)
-
     {
-
-        if (engine.Busy || e.Videos.Any(v => v.YouTubeId != "")) { Message("Çalışan veya yüklenmiş paketi değiştirmek için yeni sürüm oluştur."); return; }
-
-        using var dialog = new PackageDialog(e,store); if (dialog.ShowDialog(this) != DialogResult.OK) return;
-
-        if (engine.Busy) { Message("Başka işlem başladı; düzenleme kaydedilmedi. Yeniden açıp dene."); return; }
-
-        var changed = dialog.Episode; var index = store.Episodes.IndexOf(e); changed.Revision++; changed.Plan = null; changed.ScenesReviewed = false; changed.Videos = []; changed.Approved = false; changed.ApprovalHash = ""; changed.Status = "Taslak"; changed.Progress = 0; changed.Error = ""; store.Episodes[index] = changed; store.Save(); Navigate(current);
-
+        if(engine.Busy){Message("Çalışan işlem bitince projeyi düzenleyebilirsin.");return;}
+        wizardDraft=null;selectedWorkspaceId=e.Id;e.WizardStep=0;Navigate("Video hazırla");
     }
-
     void Edit(Episode e)
 
     {

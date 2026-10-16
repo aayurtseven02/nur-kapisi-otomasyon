@@ -18,7 +18,7 @@ public static class SelfTests
 
     {
 
-        var episode = new Episode { Topic = "Anka Studio • Üretim motoru testi", Demo = true, IncludeLong = true, ShortCount = 1, LongMinutes = 1, ShortSeconds = 15 };
+        var episode = new Episode { Topic = "TubeFlow • Üretim motoru testi", Demo = true, IncludeLong = true, ShortCount = 1, LongMinutes = 1, ShortSeconds = 15 };
 
         episode.Plan = Engine.DemoPlan(episode);
 
