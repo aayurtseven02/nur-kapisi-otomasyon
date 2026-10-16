@@ -483,7 +483,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-16-gun08-short2-ibrahimates
-  status: pending
+  status: failed
   publish_at: '2026-10-16T19:00:00+03:00'
   format: short
   type: tema
@@ -494,6 +494,8 @@ videos:
   title_hint: Hz. İbrahim'in Ateşe Atılması ve Mucizevi Kurtuluşu
   thumb_title: İbrahim'in Ateşten Kurtuluşu
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-17-gun09-normal1-omeradalet
   status: pending
   publish_at: '2026-10-17T09:00:00+03:00'
