@@ -207,6 +207,8 @@ public sealed partial class StudioForm : Form
 
         }
 
+        var compactHeaderTab=responsive.Select(x=>x.Control).OfType<Button>().FirstOrDefault(b=>!b.IsDisposed&&b.AccessibleName=="Bölüm: Hesaplar ve AI");
+        if(compactHeaderTab!=null)foreach(var section in responsive.Select(x=>x.Control).OfType<StudioDisclosure>().Where(x=>!x.IsDisposed))section.LimitHeadingWidth(compactHeaderTab.Width);
         page.ResumeLayout(true);
 
         page.Height = page.Controls.Cast<Control>().Sum(c => c.Height + c.Margin.Vertical) + 24;
@@ -654,7 +656,7 @@ public sealed partial class StudioForm : Form
 
             var open = compactLibrary&&libraryFilter!="Tümü"||openArchiveGroups.Contains(group);
 
-            page.Controls.Add(Theme.Button((open ? "▼ " : "▶ ") + (compactLibrary&&group=="Tamamlanmış projeler"?"Tamamlanan Yerel Projeler":group) + " (" + items.Count + ")", () => { if (!openArchiveGroups.Add(group)) openArchiveGroups.Remove(group); Navigate(current); }, false, page.Width));
+            var groupButton=Theme.Button((compactLibrary&&group=="Tamamlanmış projeler"?"Tamamlanan Yerel Projeler":group).ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR")) + " (" + items.Count + ")", () => { if (!openArchiveGroups.Add(group)) openArchiveGroups.Remove(group); Navigate(current); }, false, page.Width);groupButton.TextAlign=ContentAlignment.MiddleLeft;groupButton.Font=Theme.Font(10,true);((StudioButton)groupButton).LeadingChevron=open?"⌄":"›";groupButton.AccessibleName="Proje grubu: "+group;page.Controls.Add(groupButton);
 
             if (!open) continue;
 
@@ -1296,13 +1298,13 @@ public sealed partial class StudioForm : Form
         var cloudSaves=new List<Action>();CloudAiOptions(cloudGroup,store.Settings,cloudSaves);
         var order=Theme.Input(store.Settings.ProviderOrder,width:650);Field(cloudGroup,"Model alternatif sırası",order);
         cloudGroup.Controls.Add(Theme.Button("Bulut kullanım tercihlerini kaydet",()=>{if(engine.Busy){Message("Üretimin bitmesini bekle.");return;}foreach(var apply in cloudSaves)apply();store.Settings.ProviderOrder=order.Text.Trim();foreach(var provider in store.Settings.EnabledCloudProviders.Split(',',StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries))if(!store.Settings.ProviderOrder.Split(',',StringSplitOptions.TrimEntries).Contains(provider))store.Settings.ProviderOrder+=","+provider;store.Save();store.ProviderBlocked.Clear();store.PreferredProvider="";Message("Bulut tercihleri kaydedildi.");},true,360));
-        var cloudCards = new FlowLayoutPanel { Width = page.Width - 50, AutoSize = true, WrapContents = true }; cloudGroup.Controls.Add(cloudCards);
+        var cloudCards = new FlowLayoutPanel { Width = page.Width - 50, MaximumSize=new Size(page.Width-50,0), AutoSize = true, AutoSizeMode=AutoSizeMode.GrowAndShrink, WrapContents = true }; cloudGroup.Controls.Add(cloudCards);
 
-        var stockCards = new FlowLayoutPanel { Width = page.Width - 50, AutoSize = true, WrapContents = true }; stockGroup.Controls.Add(stockCards);
+        var stockCards = new FlowLayoutPanel { Width = page.Width - 50, MaximumSize=new Size(page.Width-50,0), AutoSize = true, AutoSizeMode=AutoSizeMode.GrowAndShrink, WrapContents = true }; stockGroup.Controls.Add(stockCards);
 
-        var soundCards = new FlowLayoutPanel { Width = page.Width - 50, AutoSize = true, WrapContents = true }; soundGroup.Controls.Add(soundCards);
+        var soundCards = new FlowLayoutPanel { Width = page.Width - 50, MaximumSize=new Size(page.Width-50,0), AutoSize = true, AutoSizeMode=AutoSizeMode.GrowAndShrink, WrapContents = true }; soundGroup.Controls.Add(soundCards);
 
-        var accountCards = new FlowLayoutPanel { Width = page.Width - 50, AutoSize = true, WrapContents = true }; accountGroup.Controls.Add(accountCards);
+        var accountCards = new FlowLayoutPanel { Width = page.Width - 50, MaximumSize=new Size(page.Width-50,0), AutoSize = true, AutoSizeMode=AutoSizeMode.GrowAndShrink, WrapContents = true }; accountGroup.Controls.Add(accountCards);
 
         foreach (var (name, key, description, url) in services)
 
@@ -1386,6 +1388,8 @@ public sealed partial class StudioForm : Form
         foreach(var section in new[]{("YouTube ve hesaplar",accountGroup),("Yerel motorlar",localGroup),("Bulut yapay zekâ",cloudGroup),("Ses servisleri",soundGroup),("Görüntü ve araştırma kaynakları",stockGroup)}){
             var group=new StudioDisclosure(section.Item1,page.Width,connectionSections.Count==0);group.Content.Controls.Add(section.Item2);group.Controls.OfType<Button>().First().Click+=(_,_)=>{if(group.Expanded)foreach(var other in connectionSections)if(other!=group)other.SetExpanded(false);};connectionSections.Add(group);page.Controls.Add(group);
         }
+        int headerWidth=CardChildren(page).OfType<Button>().First(b=>b.AccessibleName=="Bölüm: Hesaplar ve AI").Width;
+        foreach(var section in CardChildren(page).OfType<StudioDisclosure>())section.LimitHeadingWidth(headerWidth);
 
     }
 

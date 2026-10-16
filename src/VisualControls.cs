@@ -107,23 +107,14 @@ public class StudioButton : Button
 
     bool pressed; bool hovered;
 
-    public StudioButton() { DoubleBuffered = true; SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true); TextAlign = ContentAlignment.MiddleCenter; }
+    public StudioButton() { DoubleBuffered = true; SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true); TextAlign = ContentAlignment.MiddleLeft;FlatStyle=FlatStyle.Flat;FlatAppearance.BorderSize=0; }
 
-    protected override void OnPaintBackground(PaintEventArgs e)
-    {
-        if (Parent == null) { base.OnPaintBackground(e); return; }
-        var state = e.Graphics.Save();
-        e.Graphics.TranslateTransform(-Left, -Top);
-        InvokePaintBackground(Parent, new PaintEventArgs(e.Graphics, Parent.ClientRectangle));
-        e.Graphics.Restore(state);
-    }
-
+    Color SurfaceColor {get{for(Control? parent=Parent;parent!=null;parent=parent.Parent)if(parent.BackColor.A==255)return parent.BackColor;return Theme.Bg;}}
+    protected override void OnPaintBackground(PaintEventArgs e)=>e.Graphics.Clear(SurfaceColor);
     protected override void OnSizeChanged(EventArgs e)
     {
-        base.OnSizeChanged(e);
-        // Native window regions clip antialiased corners to whole pixels.
-        // Paint the rounded face over the parent background instead.
-        var previous = Region; Region = null; previous?.Dispose();
+        base.OnSizeChanged(e);if(Width<8||Height<8)return;
+        using var outline=Shapes.Round(new Rectangle(0,0,Width,Height),Math.Min(12,Math.Min(Width,Height)/2));var previous=Region;Region=new Region(outline);previous?.Dispose();
     }
 
     protected override void OnTextChanged(EventArgs e) {base.OnTextChanged(e);helpTip.SetToolTip(this,ButtonHelp.NeedsInfo(Text)?HelpText:null);}
@@ -160,7 +151,7 @@ public class StudioButton : Button
 
         if(Width<8||Height<8)return;
 
-        var g = e.Graphics; g.SmoothingMode = SmoothingMode.AntiAlias;
+        var g = e.Graphics;g.Clear(SurfaceColor);g.SmoothingMode = SmoothingMode.AntiAlias;
         int offset = 0;
         var face = new Rectangle(1, 1, Width - 3, Height - 3);
         using var shape=Shapes.Round(face,Math.Min(11,Math.Min(face.Width,face.Height)/2));
@@ -189,6 +180,7 @@ public class StudioButton : Button
         if(Text is "i" or "ⓘ")rect=new Rectangle(0,offset,Width,Height-offset);
 
         var alignment=TextAlign is ContentAlignment.TopLeft or ContentAlignment.MiddleLeft or ContentAlignment.BottomLeft ? TextFormatFlags.Left : TextAlign is ContentAlignment.TopRight or ContentAlignment.MiddleRight or ContentAlignment.BottomRight ? TextFormatFlags.Right : TextFormatFlags.HorizontalCenter;
+        if(Text is "i" or "ⓘ")alignment=TextFormatFlags.HorizontalCenter;
         var flags = alignment | TextFormatFlags.VerticalCenter | (WrapCaption ? TextFormatFlags.WordBreak : TextFormatFlags.SingleLine) | TextFormatFlags.EndEllipsis;
 
         // Fit text inside the existing button; painting never changes its bounds.
@@ -265,11 +257,7 @@ public sealed class StudioCard : Panel
 
     protected override void OnPaintBackground(PaintEventArgs e)
     {
-        if (Parent == null) { base.OnPaintBackground(e); return; }
-        var state = e.Graphics.Save();
-        e.Graphics.TranslateTransform(-Left, -Top);
-        InvokePaintBackground(Parent, new PaintEventArgs(e.Graphics, Parent.ClientRectangle));
-        e.Graphics.Restore(state);
+        var color=Theme.Bg;for(Control? parent=Parent;parent!=null;parent=parent.Parent)if(parent.BackColor.A==255){color=parent.BackColor;break;}e.Graphics.Clear(color);
     }
 
     protected override void OnPaint(PaintEventArgs e)
