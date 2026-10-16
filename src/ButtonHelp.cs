@@ -54,7 +54,7 @@ public static class ButtonHelp
         Add("+ Yeni video|+ Yeni paket|Paket ayarları|Proje ayarları • konu / metin / süre","Konu, içerik talimatı, hazır metin, video türü ve süre gibi proje bilgilerini girmeni veya düzenlemeni sağlar.");
         Add("Yeni sürüm / kopya","Mevcut projeden yeni bir sürüm veya kopya hazırlar; farklı düzenlemeleri ayrı çıktı olarak çalışabilirsin.");
         Add("Örnek paket|Örnek paketi oluştur","Arayüzü ve üretim akışını denemek için örnek proje oluşturur. Örnek içerik gerçek yayın içeriği değildir.");
-        Add("Sil|⚠ Projeyi tamamen sil","Seçilen yerel projeyi ve dosyalarını onaydan sonra siler. YouTube'da yüklenmiş videoyu silmez.");
+        Add("Sil|⚠ Projeyi tamamen sil|Projeyi kalıcı sil","Seçilen yerel projeyi ve dosyalarını onaydan sonra siler. YouTube'da yüklenmiş videoyu silmez.");
         Add("Düzenle|Ayrıntıları düzenle|Paketi incele","Seçilen projenin ayrıntılarını düzenlemek veya hazırlık adımlarını incelemek için açar.");
         Add("Proje durumlarını kontrol et / güncelle|Video yükleme durum kontrol","Yerel projelerin ve bağlı YouTube yüklemelerinin durumunu kontrol eder; sonucu uygun proje grubuna taşır. İnternet bağlantısı gerekebilir.");
         Add("+ Bir video ayarla ve ekle|+ Video ekle","Tek bir videonun konusu, yayın zamanı, sesi, müziği, kapağı ve diğer ayrıntılarını seçip sıraya ekleme formunu açar.");

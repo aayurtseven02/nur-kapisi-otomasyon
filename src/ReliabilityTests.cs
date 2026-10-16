@@ -48,6 +48,16 @@ public static class ReliabilityTests
 
         void Test(string id, string name, Action action) { if(Program.Arg(args,"--only-test") is string only && id!=only)return; try { action(); rows.Add(new { Id = id, Name = name, Outcome = "PASS" }); } catch (Exception ex) { failed++; rows.Add(new { Id = id, Name = name, Outcome = "FAIL", Error = ex.ToString() }); } Json.Write(Path.Combine(root, "reliability-test-report.json"), new { Passed = rows.Count - failed, Failed = failed, Tests = rows }); }
 
+        Test("WIZARD-DELETE-ACTION", "Kalıcı silme her üretim adımında görünür, çalışan iş ve kayıtsız taslakta kapalıdır",()=>{
+            var st=New("wizard-delete-action");var episode=new Episode{Topic="Silme düğmesi testi",Demo=true};episode.Plan=Engine.DemoPlan(episode);st.Episodes.Add(episode);st.Save();using var form=new StudioForm(st);form.Show();Application.DoEvents();
+            IEnumerable<Control> Children(Control c)=>c.Controls.Cast<Control>().SelectMany(x=>new[]{x}.Concat(Children(x)));
+            void Open()=>typeof(StudioForm).GetMethod("Navigate",BindingFlags.Instance|BindingFlags.NonPublic)!.Invoke(form,["Video hazırla"]);
+            Button Delete()=>Children(form).OfType<Button>().Single(b=>b.AccessibleName=="Seçili projeyi kalıcı sil");
+            foreach(int width in new[]{1120,1440})foreach(int step in Enumerable.Range(0,5)){form.Width=width;episode.WizardStep=step;Open();Application.DoEvents();var button=Delete();Check(button.Visible&&button.Enabled,"Silme düğmesi üretim adımında yok veya kapalı.");var visible=button.RectangleToScreen(button.ClientRectangle);for(Control? parent=button.Parent;parent!=null;parent=parent.Parent)Check(parent.RectangleToScreen(parent.ClientRectangle).Contains(visible),"Silme düğmesi görünür alan dışına taşıyor.");}
+            typeof(StudioForm).GetField("autoRunning",BindingFlags.Instance|BindingFlags.NonPublic)!.SetValue(form,true);Open();Check(!Delete().Enabled,"Çalışan sırada silme açık.");typeof(StudioForm).GetField("autoRunning",BindingFlags.Instance|BindingFlags.NonPublic)!.SetValue(form,false);
+            typeof(StudioForm).GetMethod("StartWizardProject",BindingFlags.Instance|BindingFlags.NonPublic)!.Invoke(form,null);Check(!Delete().Enabled&&st.Episodes.Count==1,"Kayıtsız taslak silinebilir veya gezinme projeyi değiştirdi.");
+        });
+
         Test("COMBO-POPUP-BOUNDS", "Açılır listeler pencere daraltıldıktan sonra alanı aşmaz",()=>{
             using var form=new Form{ClientSize=new Size(850,550),StartPosition=FormStartPosition.Manual,Location=new Point(50,50)};
             var combo=Theme.Combo(["3D Telkari Altın","3D Metalik Altın",new string('M',240)],"3D Telkari Altın",1500);combo.Location=new Point(25,30);form.Controls.Add(combo);form.Show();Application.DoEvents();
