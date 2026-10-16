@@ -1,3 +1,7 @@
+# TubeFlow 0.4.7 — Sabit karakterler yardım düğmesi
+
+Sabit karakterler başlığının yanındaki i düğmesi alanın amacını, kullanımını ve örnek karakter tarifini açıklar.
+
 # TubeFlow 0.4.6 — Belirgin onay rengi
 
 Tamamlanmış üretim adımları canlı, neona yakın yeşille gösterilir. Siyah yazı ve onay işareti korunur. Kaynak adımındaki büyük durum kutusu kaldırılmıştır.
