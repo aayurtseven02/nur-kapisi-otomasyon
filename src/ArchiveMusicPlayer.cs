@@ -8,16 +8,22 @@ internal sealed class ArchiveMusicPlayer : FlowLayoutPanel
     readonly System.Windows.Forms.Timer timer=new(){Interval=300};
     dynamic? player;
     bool loaded;
-    public ArchiveMusicPlayer()
+    internal bool IsLoaded=>loaded;
+    internal int PlaybackState=>player==null?0:(int)player.playState;
+    public ArchiveMusicPlayer(bool compact=false)
     {
-        Dock=DockStyle.Bottom;Height=94;Padding=new Padding(8);
+        Dock=compact?DockStyle.None:DockStyle.Bottom;Height=compact?130:94;Padding=new Padding(8);
+        if(compact){Width=680;title.Text="Ses örneği burada oynatılacak.";title.AccessibleName="Ses önizleme durumu";seek.Width=160;clock.Font=Theme.Font(9);title.Font=Theme.Font(10);clock.ForeColor=title.ForeColor=Theme.Text;BackColor=Theme.Panel;}
         Controls.Add(title);SetFlowBreak(title,true);
-        Controls.Add(Theme.Button("Oynat / Duraklat",()=>Safe(()=>{if(!loaded)return;if((int)player!.playState==3)player.controls.pause();else player.controls.play();}),false,180));
-        Controls.Add(Theme.Button("Durdur",()=>Safe(()=>{if(!loaded)return;player!.controls.stop();UpdatePosition();}),false,110));
+        Controls.Add(Theme.Button("Oynat / Duraklat",()=>Safe(()=>{if(!loaded)return;if((int)player!.playState==3)player.controls.pause();else player.controls.play();}),false,compact?145:180));
+        Controls.Add(Theme.Button("Durdur",()=>Safe(()=>{if(!loaded)return;player!.controls.stop();UpdatePosition();}),false,compact?90:110));
         Controls.Add(seek);Controls.Add(clock);
         seek.Scroll+=(_,_)=>Safe(()=>{if(loaded)player!.controls.currentPosition=seek.Value/1000d;});
         timer.Tick+=(_,_)=>Safe(UpdatePosition);
     }
+    protected override void OnSizeChanged(EventArgs e){base.OnSizeChanged(e);if(title!=null)title.Width=Math.Max(100,Width-Padding.Horizontal-12);}
+    public void Preparing(){Safe(()=>{if(loaded)player!.controls.stop();title.Text="Ses örneği hazırlanıyor…";});}
+    public void LoadAndPlay(string file){if(!File.Exists(file))throw new InvalidOperationException("Önce bir ses dosyası seç.");Load(new AudioItem{File=file,Name="Ses önizlemesi • "+Path.GetFileName(file)});Safe(()=>{if(loaded)player!.controls.play();});}
     void Safe(Action action){try{action();}catch(Exception ex){timer.Stop();title.Text="Ses oynatılamadı: "+ex.Message;}}
     static string Time(int ms)=>TimeSpan.FromMilliseconds(ms).ToString(@"mm\:ss");
     void UpdatePosition()

@@ -1,3 +1,7 @@
+# TubeFlow 0.4.8 — Yerleşik ses önizlemesi
+
+Seçili sesi kısa dinle düğmesi dış program yerine ses bölümündeki küçük oynatıcıyı kullanır. Oynat/duraklat, durdur, zaman ve kaydırma kontrolleri bulunur.
+
 # TubeFlow 0.4.7 — Sabit karakterler yardım düğmesi
 
 Sabit karakterler başlığının yanındaki i düğmesi alanın amacını, kullanımını ve örnek karakter tarifini açıklar.
