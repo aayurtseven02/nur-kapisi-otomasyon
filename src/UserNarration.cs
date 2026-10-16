@@ -173,7 +173,7 @@ public sealed class UserNarrationEditor : Form
 
         var visualPanel = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, AutoScroll = true, Padding = new Padding(12) };
 
-        var manual = new CheckBox { Text = "Yalnızca eklediğim videoları kullan • otomatik stok araması kapalı", Checked = Value.ManualVisuals, Width = 790, Height = 36, ForeColor = Theme.Text };
+        var manual = new StudioCheck { Text = "Yalnızca eklediğim videoları kullan • otomatik stok araması kapalı", Checked = Value.ManualVisuals, Width = 790, Height = 36, ForeColor = Theme.Text };
 
         var hint = Theme.Label("Normal video: 16:9 yatay • Shorts: 9:16 dikey. Her video için aşağıdaki sekmeden görüntü seç. Yanlış formatlı dosyalar kabul edilmez. Liste bitince baştan döner; kısa görüntüler sahne boyunca tekrarlanır. Başka kaynaktan video aranmaz.", 10, width: 790, height: 75);
 
@@ -187,7 +187,7 @@ public sealed class UserNarrationEditor : Form
 
             var panel = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, AutoScroll = true, Padding = new Padding(8) };
 
-            var separate = new CheckBox { Text = "Bu Shorts için ayrı videolar seç • 9:16 dikey zorunlu", Checked = selection?.UseSeparate == true, Width = 740, Height = 32, ForeColor = Theme.Text };
+            var separate = new StudioCheck { Text = "Bu Shorts için ayrı videolar seç • 9:16 dikey zorunlu", Checked = selection?.UseSeparate == true, Width = 740, Height = 32, ForeColor = Theme.Text };
 
             if (selection != null) panel.Controls.Add(separate);
 
@@ -225,7 +225,7 @@ public sealed class UserNarrationEditor : Form
 
         for (int i = 0; i < shortCount; i++) { var selection = Value.ShortVideos.ElementAtOrDefault(i) ?? new ManualVideoSelection(); AddVideoList("Shorts " + (i + 1) + " • 9:16", selection.Files, selection); }
 
-        var rights = new CheckBox { Text = "Eklediğim videoları kullanma hakkımı doğruladım", Checked = Value.LocalVideoRightsConfirmed, Width = 790, Height = 36, ForeColor = Theme.Text };
+        var rights = new StudioCheck { Text = "Eklediğim videoları kullanma hakkımı doğruladım", Checked = Value.LocalVideoRightsConfirmed, Width = 790, Height = 36, ForeColor = Theme.Text };
 
         var theme = Theme.Input(Value.VisualTheme, true, 790); theme.Height = 100;
 

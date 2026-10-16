@@ -296,7 +296,7 @@ public static class AppLock
 
 
 
-public sealed class PasswordEye : Button
+public sealed class PasswordEye : StudioButton
 
 {
 
@@ -310,7 +310,7 @@ public sealed class PasswordEye : Button
 
         FlatStyle = FlatStyle.Flat; FlatAppearance.BorderColor = Theme.Border; Cursor = Cursors.Hand;
 
-        Click += (_, _) => { field.UseSystemPasswordChar = !field.UseSystemPasswordChar; AccessibleName = field.UseSystemPasswordChar ? "Şifreyi göster" : "Şifreyi gizle"; UiSound.Click(); Invalidate(); };
+        Click += (_, _) => { field.UseSystemPasswordChar = !field.UseSystemPasswordChar; AccessibleName = field.UseSystemPasswordChar ? "Şifreyi göster" : "Şifreyi gizle"; Invalidate(); };
 
     }
 

@@ -59,9 +59,9 @@ public static class Theme
     static string PickFont(params string[] names) => names.FirstOrDefault(InstalledFonts.Contains) ?? "Segoe UI";
     public static readonly string BodyFont = PickFont("Segoe UI", "Arial");
     public static readonly string HeadingFont = BodyFont;
-    public static Font Font(float size = 10, bool bold = false) => new(BodyFont, size, bold ? FontStyle.Bold : FontStyle.Regular);
+    public static Font Font(float size = 10, bool bold = false) => new(BodyFont, size, bold ? FontStyle.Bold | FontStyle.Italic : FontStyle.Regular);
 
-    public static Label Label(string text, float size = 10, bool bold = false, Color? color = null, int width = 900, int height = 32) => new StudioLabel() { Text = text, Font = Font(size, bold), ForeColor = color ?? Text, AutoSize = false, Width = width, Height = height, TextAlign = ContentAlignment.MiddleLeft, BackColor = Color.Transparent, Margin = Padding.Empty };
+    public static Label Label(string text, float size = 10, bool bold = false, Color? color = null, int width = 900, int height = 32) => new StudioLabel() { Text = bold ? text.ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR")) : text, Font = Font(size, bold), ForeColor = color ?? Text, AutoSize = false, Width = width, Height = height, TextAlign = ContentAlignment.MiddleLeft, BackColor = Color.Transparent, Margin = Padding.Empty };
 
     public static Button Button(string text, Action click, bool primary = false, int width = 150)
 
@@ -79,7 +79,7 @@ public static class Theme
 
     }
 
-    public static TextBox Input(string value = "", bool multi = false, int width = 450) => new() { Text = value, Width = width, Height = multi ? 90 : 36, Multiline = multi, BackColor = Elevated, ForeColor = Text, BorderStyle = BorderStyle.FixedSingle, Font = Font(11), ScrollBars = multi ? ScrollBars.Vertical : ScrollBars.None };
+    public static TextBox Input(string value = "", bool multi = false, int width = 450) => new StudioTextBox() { Text = value, Width = width, Height = multi ? 90 : 36, Multiline = multi, BackColor = Elevated, ForeColor = Text, BorderStyle = BorderStyle.None, Font = Font(11), ScrollBars = multi ? ScrollBars.Vertical : ScrollBars.None };
 
     public static ComboBox Combo(string[] items, string current, int width = 450)
 

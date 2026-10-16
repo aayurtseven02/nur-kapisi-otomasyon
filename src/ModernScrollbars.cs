@@ -37,6 +37,7 @@ internal static class ModernScrollbars
     {
 
         if(control.IsDisposed)return;
+        SoftSurfaces.Apply(control);
 
         if(control is ScrollableControl or TextBoxBase or ScrollBar or ListBox or ComboBox)
 
@@ -126,11 +127,19 @@ internal static class ModernScrollbars
 
         int y=info.Bounds.Top-window.Top+(info.ThumbTop+info.ThumbBottom)/2;
 
-        return x>=0 && y>=0 && x<image.Width && y<image.Height && image.GetPixel(x,y).ToArgb()==Theme.Text.ToArgb();
+        return x>=0 && y>=0 && x<image.Width && y<image.Height && image.GetPixel(x,y).ToArgb()==Color.FromArgb(208,215,224).ToArgb();
 
     }
 
 
+
+    internal static bool CornerUsesLightTheme(Control control)
+    {
+        var v=new BarInfo{Size=Marshal.SizeOf<BarInfo>(),State=new int[6]};var h=new BarInfo{Size=Marshal.SizeOf<BarInfo>(),State=new int[6]};
+        if(!GetScrollBarInfo(control.Handle,-5,ref v)||!GetScrollBarInfo(control.Handle,-6,ref h)||(v.State[0]&0x18000)!=0||(h.State[0]&0x18000)!=0||!GetWindowRect(control.Handle,out var window))return false;
+        using var image=new Bitmap(control.Width,control.Height);control.DrawToBitmap(image,new Rectangle(Point.Empty,control.Size));int x=(v.Bounds.Left+v.Bounds.Right)/2-window.Left,y=(h.Bounds.Top+h.Bounds.Bottom)/2-window.Top;
+        return x>=0&&y>=0&&x<image.Width&&y<image.Height&&image.GetPixel(x,y).GetBrightness()>.8f;
+    }
 
     sealed class Skin : NativeWindow
 
@@ -178,13 +187,13 @@ internal static class ModernScrollbars
 
             if(control is Form)Shapes.DarkTitle(handle);
 
-            // Give the native scrollbar a dark base too. Scroll tracking and
+            // Keep the native fallback light too. Scroll tracking and
 
             // range changes can draw inside Windows before another paint message.
 
             // Do not change combo/form themes: they manage their own handles.
 
-            if(control is Panel or TextBoxBase or ScrollBar or ListBox)SetWindowTheme(handle,"DarkMode_Explorer",null);
+            if(control is Panel or TextBoxBase or ScrollBar or ListBox)SetWindowTheme(handle,"Explorer",null);
 
             Paint();
 
@@ -264,12 +273,20 @@ internal static class ModernScrollbars
 
                 if(control is ScrollBar bar)Draw(graphics,-4,bar is VScrollBar);
 
-                else {Draw(graphics,-5,true);Draw(graphics,-6,false);}
+                else {Draw(graphics,-5,true);Draw(graphics,-6,false);DrawCorner(graphics);}
 
                 PaintCalls++;
 
             } finally { if(dc!=IntPtr.Zero && printDc==IntPtr.Zero)ReleaseDC(Handle,dc);painting=false; }
 
+        }
+
+        void DrawCorner(Graphics graphics)
+        {
+            var v=new BarInfo{Size=Marshal.SizeOf<BarInfo>(),State=new int[6]};var h=new BarInfo{Size=Marshal.SizeOf<BarInfo>(),State=new int[6]};
+            if(!GetScrollBarInfo(Handle,-5,ref v)||!GetScrollBarInfo(Handle,-6,ref h)||(v.State[0]&0x18000)!=0||(h.State[0]&0x18000)!=0||!GetWindowRect(Handle,out var window))return;
+            var corner=new Rectangle(v.Bounds.Left-window.Left,h.Bounds.Top-window.Top,v.Bounds.Right-v.Bounds.Left,h.Bounds.Bottom-h.Bounds.Top);
+            if(corner.Width<1||corner.Height<1)return;using var fill=new SolidBrush(Theme.Panel);graphics.FillRectangle(fill,corner);
         }
 
         void Draw(Graphics target,int id,bool vertical)
@@ -291,6 +308,7 @@ internal static class ModernScrollbars
             graphics.TranslateTransform(-bounds.X,-bounds.Y);
 
             using var background=new SolidBrush(Theme.Panel);graphics.FillRectangle(background,bounds);
+            using(var track=Shapes.Round(new Rectangle(bounds.X+1,bounds.Y+1,bounds.Width-3,bounds.Height-3),Math.Min(7,Math.Min(bounds.Width-3,bounds.Height-3)/2))){using var fill=new LinearGradientBrush(bounds,Color.White,Color.FromArgb(237,240,243),vertical?0f:90f);using var outline=new Pen(Color.Black,1);graphics.FillPath(fill,track);graphics.DrawPath(outline,track);}
 
             int inset=Math.Max(3,(vertical?bounds.Width:bounds.Height)/4);
 
@@ -300,13 +318,13 @@ internal static class ModernScrollbars
 
                 int radius=Math.Min(4,Math.Min(thumb.Width,thumb.Height)/2);
 
-                using var shape=Shapes.Round(thumb,radius);using var brush=new SolidBrush(Theme.Text);graphics.FillPath(brush,shape);
+                using var shape=Shapes.Round(thumb,radius);using var brush=new SolidBrush(Color.FromArgb(208,215,224));using var edge=new Pen(Color.Black,1);graphics.FillPath(brush,shape);graphics.DrawPath(edge,shape);
 
             }
 
             // Retain visible arrow targets at both ends, using understated chevrons.
 
-            using var pen=new Pen(Theme.Muted,1.4f);
+            using var pen=new Pen(Color.Black,1.2f);
 
             int line=Math.Max(4,info.Arrow);
 

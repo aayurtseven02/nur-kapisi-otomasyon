@@ -685,8 +685,9 @@ public static class ReliabilityTests
             ModernScrollbars.Apply(form);using var image=new System.Drawing.Bitmap(form.Width,form.Height);form.DrawToBitmap(image,new Rectangle(Point.Empty,form.Size));
 
             Check(before.X<0 && before.Y<0 && before==panel.AutoScrollPosition,"Kaydırma konumu değişti");
+            Check(ModernScrollbars.CornerUsesLightTheme(panel),"Yatay/dikey kaydırma köşesinde siyah blok kaldı.");
 
-            Check(ModernScrollbars.HoverLeaveRetainsTheme(panel),"Fare ayrılınca veya animasyon beklenince çubuk turkuaz kalmadı");
+            Check(ModernScrollbars.HoverLeaveRetainsTheme(panel),"Fare ayrılınca veya animasyon beklenince gri çubuk görünümü korunmadı");
 
             var box=Theme.Input(string.Join("\r\n",Enumerable.Repeat("Özgün içerik",80)),true,300);box.Height=100;content.Controls.Add(box);box.Select(3,5);var text=box.Text;ModernScrollbars.Apply(box);box.DrawToBitmap(image,new Rectangle(0,0,box.Width,box.Height));Check(box.Text==text && box.SelectionStart==3 && box.SelectionLength==5,"Metin veya seçim değişti");form.Close();
 

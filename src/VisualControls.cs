@@ -70,6 +70,7 @@ public static class Shapes
         try {
 
             int dark=0;DwmSetWindowAttribute(handle,20,ref dark,4);
+            int rounded=2;DwmSetWindowAttribute(handle,33,ref rounded,4);
 
             int caption=ColorTranslator.ToWin32(Theme.Bg),text=ColorTranslator.ToWin32(Theme.Teal),border=ColorTranslator.ToWin32(Theme.Border);
 
@@ -81,7 +82,7 @@ public static class Shapes
 
 }
 
-public sealed class StudioButton : Button
+public class StudioButton : Button
 
 {
 
@@ -159,18 +160,21 @@ public sealed class StudioButton : Button
 
         if(Width<8||Height<8)return;
 
-        var g = e.Graphics; g.SmoothingMode = SmoothingMode.None;
-
+        var g = e.Graphics; g.SmoothingMode = SmoothingMode.AntiAlias;
         int offset = 0;
-        var face = new Rectangle(0, 0, Width - 1, Height - 1);
-
-        var color = Completed ? Theme.SuccessSurface : !Enabled ? Theme.Panel : hovered && BackColor!=Theme.Teal ? Color.FromArgb(224,226,229) : BackColor;
-        using var fill = new SolidBrush(color); g.FillRectangle(fill, ClientRectangle);
-        using var border = new Pen(CurrentStep ? Theme.Teal : Completed ? Theme.Success : Theme.Border, CurrentStep ? 3 : 1); g.DrawRectangle(border, face);
+        var face = new Rectangle(1, 1, Width - 3, Height - 3);
+        using var shape=Shapes.Round(face,Math.Min(11,Math.Min(face.Width,face.Height)/2));
+        Color top=Completed?Color.FromArgb(240,252,242):Color.FromArgb(253,254,255);
+        Color bottom=Completed?Theme.SuccessSurface:pressed?Color.FromArgb(218,224,230):hovered?Color.FromArgb(230,235,240):Color.FromArgb(238,241,244);
+        if(!Enabled){top=Color.FromArgb(249,250,251);bottom=Color.FromArgb(242,243,245);}
+        using(var fill=new LinearGradientBrush(face,top,bottom,90f))g.FillPath(fill,shape);
+        using(var border=new Pen(Completed?Color.FromArgb(137,185,150):CurrentStep||Focused?Color.FromArgb(146,158,172):Color.FromArgb(201,208,216),CurrentStep||Focused?1.5f:1f))g.DrawPath(border,shape);
+        var shine=g.Save();g.SetClip(shape);using(var sheen=new SolidBrush(Color.FromArgb(80,Color.White)))g.FillRectangle(sheen,face.X+1,face.Y+1,face.Width-2,Math.Max(1,face.Height/2));g.Restore(shine);
+        Color ink=Enabled?Theme.Text:Theme.Muted;
 
         if (Completed && !Equals(Tag,"wizard-step")) {
 
-            using var tick = new Pen(Theme.Bg, 2.5f) { StartCap = LineCap.Round, EndCap = LineCap.Round, LineJoin = LineJoin.Round };
+            using var tick = new Pen(Theme.Success, 2.5f) { StartCap = LineCap.Round, EndCap = LineCap.Round, LineJoin = LineJoin.Round };
 
             int center = offset + (Height - 7) / 2;
 
@@ -179,12 +183,13 @@ public sealed class StudioButton : Button
         }
 
         // Reserve equal space on both sides so icons never shift the text off center.
-        int inset = Equals(Tag,"wizard-step") ? 8 : Math.Max(Completed ? 44 : LeadingIcon != null ? 32 : LeadingChevron != null ? 25 : 10, HasHelp ? 27 : 10);
+        int inset = Equals(Tag,"wizard-step") ? 8 : Math.Max(Completed ? 44 : LeadingChevron != null ? 25 : LeadingIcon != null ? 32 : 10, HasHelp ? 27 : 10);
         var rect = new Rectangle(inset, offset, Math.Max(1, Width - inset * 2), Height - offset);
 
         if(Text is "i" or "ⓘ")rect=new Rectangle(0,offset,Width,Height-offset);
 
-        var flags = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | (WrapCaption ? TextFormatFlags.WordBreak : TextFormatFlags.SingleLine) | TextFormatFlags.EndEllipsis;
+        var alignment=TextAlign is ContentAlignment.TopLeft or ContentAlignment.MiddleLeft or ContentAlignment.BottomLeft ? TextFormatFlags.Left : TextAlign is ContentAlignment.TopRight or ContentAlignment.MiddleRight or ContentAlignment.BottomRight ? TextFormatFlags.Right : TextFormatFlags.HorizontalCenter;
+        var flags = alignment | TextFormatFlags.VerticalCenter | (WrapCaption ? TextFormatFlags.WordBreak : TextFormatFlags.SingleLine) | TextFormatFlags.EndEllipsis;
 
         // Fit text inside the existing button; painting never changes its bounds.
         var displayText=Text.Replace('\r',' ').Replace('\n',' ');
@@ -197,15 +202,15 @@ public sealed class StudioButton : Button
             }
             var paintFont = fitted ?? Font;
             if(!ButtonHelp.NeedsInfo(Text) && TextRenderer.MeasureText(displayText,paintFont,Size.Empty,flags & ~TextFormatFlags.EndEllipsis).Width>rect.Width)helpTip.SetToolTip(this,Text);
-            TextRenderer.DrawText(g, displayText, paintFont, rect, Text is "i" or "ⓘ" ? Theme.Warning : Completed ? Color.Black : Enabled ? ForeColor : Theme.Muted, flags);
+            TextRenderer.DrawText(g, displayText, paintFont, rect, Text is "i" or "ⓘ" ? Theme.Warning : ink, flags);
         } finally { fitted?.Dispose(); }
 
         if(HasHelp){var infoColor=Theme.Warning;using var infoPen=new Pen(infoColor,1.2f);g.DrawEllipse(infoPen,HelpBounds);using var infoFont=Theme.Font(8,true);TextRenderer.DrawText(g,"i",infoFont,HelpBounds,infoColor,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter);}
 
-        if (LeadingChevron != null) TextRenderer.DrawText(g, LeadingChevron, Font, new Rectangle(7, offset, 15, Height-offset), ForeColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
-        if (LeadingIcon != null && !Completed) {
+        if (LeadingChevron != null) TextRenderer.DrawText(g, LeadingChevron, Font, new Rectangle(7, offset, 15, Height-offset), ink, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
+        if (LeadingIcon != null && LeadingChevron == null && !Completed) {
             float x = 11, y = (Height - 16) / 2f + offset;
-            using var iconPen = new Pen(Enabled ? ForeColor : Theme.Muted, 1.5f) { LineJoin = LineJoin.Round, StartCap = LineCap.Round, EndCap = LineCap.Round };
+            using var iconPen = new Pen(ink, 1.5f) { LineJoin = LineJoin.Round, StartCap = LineCap.Round, EndCap = LineCap.Round };
             if (LeadingIcon == "music") {
                 g.DrawLine(iconPen, x + 6, y + 12, x + 6, y + 2); g.DrawLine(iconPen, x + 6, y + 2, x + 15, y);
                 g.DrawLine(iconPen, x + 15, y, x + 15, y + 10);
@@ -312,7 +317,7 @@ public sealed class StudioHeader : Control
 
         using var channelFont = Theme.Font(14, true);
 
-        TextRenderer.DrawText(g, string.IsNullOrWhiteSpace(Channel) || Channel == "YouTube kanalı bağlı değil" ? "YouTube kanalı bağlı değil" : "BAĞLI OLAN YOUTUBE KANALI: " + Channel, channelFont, new Rectangle(28, 3, Math.Max(100, Width - 240), 30), Theme.Text, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+        TextRenderer.DrawText(g, string.IsNullOrWhiteSpace(Channel) || Channel == "YouTube kanalı bağlı değil" ? "YOUTUBE KANALI BAĞLI DEĞİL" : "BAĞLI OLAN YOUTUBE KANALI: " + Channel.ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR")), channelFont, new Rectangle(28, 3, Math.Max(100, Width - 240), 30), Theme.Text, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
 
         using var stateFont = Theme.Font(Busy ? 10 : 14, true);
         TextRenderer.DrawText(g, Busy ? "ÜRETİM ÇALIŞIYOR" : "HAZIR", stateFont, new Rectangle(Width - 220, 0, 190, Height), Busy ? Theme.Text : Theme.Success, TextFormatFlags.Right | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);

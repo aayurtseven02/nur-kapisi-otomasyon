@@ -1,3 +1,9 @@
+# TubeFlow 0.4.1 — Yumuşak, camsı görünüm
+
+Düğmeler beyaz–açık gri geçişli ve yuvarlak köşelidir. Ana işlem düğmelerinin siyah dolgusu kaldırıldı. Metin/şifre kutuları, göz düğmesi, listeler ve kartlarda yuvarlak kenarlar; desteklenen Windows pencerelerinde yuvarlak dış köşeler kullanılır. Sol menü daha koyu açık fümedir; seçili satır açık gri/beyaz dolgu ve çerçeveyle belirtilir. Kaydırma kanalı ve gri tutamaç ince siyah konturludur; yatay/dikey birleşimdeki siyah blok giderildi. Seçim kutuları füme dolgulu, siyah konturlu ve belirgin çentiklidir. Bölüm ve tablo başlıkları büyük harf, kalın ve italiktir; açılır bölüm başlıkları sola hizalıdır.
+
+---
+
 # TubeFlow 0.4.0 — Beş adımda içerik üretimi
 
 TubeFlow, önceki Anka Studio kurulumlarının güncelleme ve veri uyumluluğunu koruyarak yeni beyaz arayüze geçer. Uygulama dosyasının adı bu geçişte AnkaStudio.exe olarak korunur.

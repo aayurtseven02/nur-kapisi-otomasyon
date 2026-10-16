@@ -10,7 +10,7 @@ public sealed class StudioDisclosure : FlowLayoutPanel
     {
         title = name; Width = width; FlowDirection = FlowDirection.TopDown; WrapContents = false;
         AutoSize = true; AutoSizeMode = AutoSizeMode.GrowAndShrink; Margin = new Padding(0, 0, 0, 8); BackColor = Color.Transparent;
-        heading = Theme.Button(name, () => SetExpanded(!Expanded), false, width); heading.TextAlign = ContentAlignment.MiddleCenter; heading.BackColor = Theme.Bg; heading.Height = 42; heading.Margin = Padding.Empty;
+        heading = Theme.Button(name, () => SetExpanded(!Expanded), false, width); heading.Font=Theme.Font(10,true);heading.TextAlign = ContentAlignment.MiddleLeft; heading.BackColor = Theme.Bg; heading.Height = 42; heading.Margin = Padding.Empty;
         heading.AccessibleName = name + " bölümünü aç veya kapat";
         Content = new FlowLayoutPanel { Width = width, FlowDirection = FlowDirection.TopDown, WrapContents = false, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Padding = new Padding(8, 0, 0, 0), Margin = Padding.Empty, BackColor = Color.Transparent };
         Controls.Add(heading); Controls.Add(Content); SetExpanded(expanded);

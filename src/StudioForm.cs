@@ -84,7 +84,7 @@ public sealed partial class StudioForm : Form
 
         if (iconStream != null) { using var appIcon = new Icon(iconStream); Icon = (Icon)appIcon.Clone(); }
 
-        var side = new Panel { Dock = DockStyle.Left, Width = 246, BackColor = Color.FromArgb(243,243,244), Padding = new Padding(20, 20, 20, 8) };
+        var side = new Panel { Dock = DockStyle.Left, Width = 246, BackColor = Color.FromArgb(228,230,234), Padding = new Padding(20, 20, 20, 8) };
 
         using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-horizontal.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=new Bitmap(logoSource),Location=new(22,8),Size=new(208,112),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);FormClosed+=(_,_)=>brand.Image?.Dispose();
 

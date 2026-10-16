@@ -12,7 +12,7 @@ public sealed class SidebarButton : Button
     protected override void OnPaint(PaintEventArgs e)
     {
         e.Graphics.Clear(Parent?.BackColor??Theme.Panel);e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
-        if(hover||Active){using var shape=Shapes.Round(new Rectangle(1,1,Math.Max(1,Width-3),Math.Max(1,Height-3)),8);using var fill=new SolidBrush(Color.FromArgb(252,252,252));using var line=new Pen(Theme.Border);e.Graphics.FillPath(fill,shape);e.Graphics.DrawPath(line,shape);}
+        if(hover||Active){using var shape=Shapes.Round(new Rectangle(1,1,Math.Max(1,Width-3),Math.Max(1,Height-3)),8);using var fill=new LinearGradientBrush(new Rectangle(1,1,Width-3,Height-3),Active?Color.FromArgb(247,248,250):Color.White,Active?Color.FromArgb(235,238,242):Color.FromArgb(244,246,248),90f);using var line=new Pen(Active?Color.FromArgb(179,188,200):Theme.Border);e.Graphics.FillPath(fill,shape);e.Graphics.DrawPath(line,shape);}
         using var icon=new Font("Segoe UI Symbol",11);TextRenderer.DrawText(e.Graphics,Glyph,icon,new Rectangle(9,0,23,Height),Theme.Text,TextFormatFlags.VerticalCenter|TextFormatFlags.HorizontalCenter);
         if(Width>70)TextRenderer.DrawText(e.Graphics,Text,Font,new Rectangle(38,0,Math.Max(1,Width-44),Height),Theme.Text,TextFormatFlags.VerticalCenter|TextFormatFlags.Left|TextFormatFlags.EndEllipsis);
     }
