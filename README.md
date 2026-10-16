@@ -1,3 +1,7 @@
+# TubeFlow 0.4.5 — Kaynak ve Metin sadeleştirmesi
+
+Kaynak ve Metin adımındaki gereksiz büyük durum kutusu kaldırıldı. AI yükleme göstergesi ve metin onay düğmesi korunur.
+
 # TubeFlow 0.4.4 — AI metin yükleme göstergesi
 
 AI metni hazırlanırken dönen simge ve görünür durum satırı gösterilir. İşlem düğmesi Metin hazırlanıyor olarak değişir ve tekrar tıklanamaz. Başarı veya hata sonrasında yükleme durumu temizlenir.
