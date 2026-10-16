@@ -469,7 +469,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-16-gun08-normal2-yusufkiskanclik
-  status: pending
+  status: failed
   publish_at: '2026-10-16T15:00:00+03:00'
   format: long
   type: tema
@@ -480,6 +480,8 @@ videos:
   title_hint: 'Hz. Yusuf Kıssası: Kıskançlık, Kuyu ve Güzel Sabır'
   thumb_title: Hz. Yusuf'un Kıssası
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-16-gun08-short2-ibrahimates
   status: pending
   publish_at: '2026-10-16T19:00:00+03:00'
