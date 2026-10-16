@@ -1,3 +1,7 @@
+# TubeFlow 0.4.3 — Süre kutuları
+
+Süre girişlerinin kesilmiş çerçeveleri düzeltildi. Yerel sayı düzenleme ve artırma/azaltma davranışı korunarak tek yuvarlak çerçeve çizilir; ok alanı dış çizgiyi örtmez.
+
 # TubeFlow 0.4.2 — Hizalama ve çizim düzeltmeleri
 
 İşlem düğmeleri sola hizalandı. Yuvarlak köşelerdeki siyah artıklar giderildi. Merkez bölüm başlıkları aynı genişlikte kısaltıldı; iç başlıklar aynı çizgiye alındı. Servis kartlarının altındaki kesilme düzeltildi. Gerçek pencere görüntüsüyle görsel kontroller yapıldı.
