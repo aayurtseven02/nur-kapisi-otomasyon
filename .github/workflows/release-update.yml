@@ -1,0 +1,33 @@
+name: Anka Windows Update Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Prepare update chain and Windows package
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPDATE_REPO: ${{ github.repository }}
+          UPDATE_TAG: ${{ github.ref_name }}
+        run: |
+          $project = Get-ChildItem -Recurse -Filter AnkaStudio.csproj | Where-Object { $_.FullName -notmatch '[\/](obj|bin|work|release)[\/]' } | Select-Object -First 1
+          if (!$project) { throw 'AnkaStudio.csproj bulunamadi.' }
+          $version = ([xml](Get-Content $project.FullName -Raw)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+          if ($env:UPDATE_TAG -ne "v$version") { throw 'GitHub etiketi proje surumuyle eslesmiyor.' }
+          $tools = Join-Path $project.Directory.Parent.FullName 'tools'
+          $out = Join-Path $env:RUNNER_TEMP 'anka-release'
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          gh release download --repo $env:UPDATE_REPO --pattern anka-update.json --dir $out 2>$null
+          & (Join-Path $tools 'Publish-Update.ps1') -Repository $env:UPDATE_REPO -PreviousManifest (Join-Path $out 'anka-update.json') -OutputDirectory $out
+          if ($LASTEXITCODE -ne 0) { throw 'Paket hazirlanamadi.' }
+          gh release create $env:UPDATE_TAG (Join-Path $out "AnkaStudio-$version-win-x64.zip") (Join-Path $out 'anka-update.json') --repo $env:UPDATE_REPO --verify-tag --title "Anka Studio $version" --notes 'Otomatik guncelleme ve Windows paketi.'
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub yayini olusturulamadi.' }

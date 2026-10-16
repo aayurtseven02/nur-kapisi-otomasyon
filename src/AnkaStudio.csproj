@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>AnkaStudio</AssemblyName>
+    <ApplicationIcon>Assets\anka-studio.ico</ApplicationIcon>
+    <Version>0.3.22</Version>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(CleanDistribution)' == 'true'">
+    <DefineConstants>$(DefineConstants);CLEAN_DISTRIBUTION</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup><PackageReference Include="Sodium.Core" Version="1.4.1" /></ItemGroup>
+  <ItemGroup><Content Include="..\tools\Update-Install.ps1" Link="Update-Install.ps1" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Assets\anka-studio-3d.png" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Assets\anka-studio.ico" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="UserGuide.md" /></ItemGroup>
+  <ItemGroup><Content Include="Assets\nur-kapisi-background.png" Link="ChannelPackages\NurKapisi\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Content Include="Assets\nur-kapisi-destek-*.png" Link="ChannelPackages\NurKapisi\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Content Include="Assets\nur-kapisi-kanal-logo.png" Link="ChannelPackages\NurKapisi\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Assets\pairing-firebase.json" /></ItemGroup>
+  <ItemGroup><Content Include="..\tools\audio-alignment\align.py" Link="tools\audio-alignment\align.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Content Include="..\tools\workflows\*.json" Link="tools\workflows\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+</Project>
+
