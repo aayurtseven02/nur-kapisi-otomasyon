@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>AnkaStudio</AssemblyName>
     <ApplicationIcon>Assets\anka-studio.ico</ApplicationIcon>
-    <Version>0.4.5</Version>
+    <Version>0.4.6</Version>
     <Product>TubeFlow</Product>
     <Title>TubeFlow</Title>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
