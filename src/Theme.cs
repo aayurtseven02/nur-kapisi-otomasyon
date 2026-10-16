@@ -139,6 +139,13 @@ public sealed class Hero : Control
 public sealed class DarkComboBox : ComboBox
 
 {
+    protected override void OnDropDown(EventArgs e)
+    {
+        // The native popup keeps its earlier width after layout/DPI changes.
+        // Refresh it when opening instead of keeping the construction-time width.
+        DropDownWidth = Math.Max(1, Width);
+        base.OnDropDown(e);
+    }
 
     void PaintFace(Graphics g)
 

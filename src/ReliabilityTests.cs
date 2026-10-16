@@ -15,6 +15,12 @@ namespace AnkaStudio;
 public static class ReliabilityTests
 
 {
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    struct ComboInfo { public int Size; public NativeRect Item, Button; public int State; public IntPtr Combo, Edit, List; }
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    struct NativeRect { public int Left, Top, Right, Bottom; }
+    [System.Runtime.InteropServices.DllImport("user32.dll")] static extern bool GetComboBoxInfo(IntPtr combo,ref ComboInfo info);
+    [System.Runtime.InteropServices.DllImport("user32.dll")] static extern bool GetWindowRect(IntPtr window,out NativeRect rect);
 
     [System.Runtime.InteropServices.DllImport("user32.dll",EntryPoint="SendMessageW")] static extern IntPtr SendHelpMessage(IntPtr hwnd,int msg,IntPtr wparam,IntPtr lparam);
 
@@ -41,6 +47,16 @@ public static class ReliabilityTests
         void Reject(Action action) { bool rejected = false; try { action(); } catch (InvalidOperationException) { rejected = true; } Check(rejected, "İşlem reddedilmedi."); }
 
         void Test(string id, string name, Action action) { if(Program.Arg(args,"--only-test") is string only && id!=only)return; try { action(); rows.Add(new { Id = id, Name = name, Outcome = "PASS" }); } catch (Exception ex) { failed++; rows.Add(new { Id = id, Name = name, Outcome = "FAIL", Error = ex.ToString() }); } Json.Write(Path.Combine(root, "reliability-test-report.json"), new { Passed = rows.Count - failed, Failed = failed, Tests = rows }); }
+
+        Test("COMBO-POPUP-BOUNDS", "Açılır listeler pencere daraltıldıktan sonra alanı aşmaz",()=>{
+            using var form=new Form{ClientSize=new Size(850,550),StartPosition=FormStartPosition.Manual,Location=new Point(50,50)};
+            var combo=Theme.Combo(["3D Telkari Altın","3D Metalik Altın",new string('M',240)],"3D Telkari Altın",1500);combo.Location=new Point(25,30);form.Controls.Add(combo);form.Show();Application.DoEvents();
+            foreach(int width in new[]{650,300,520}){
+                combo.DropDownWidth=1600;combo.Width=width;combo.DroppedDown=true;Application.DoEvents();
+                var info=new ComboInfo{Size=System.Runtime.InteropServices.Marshal.SizeOf<ComboInfo>()};Check(GetComboBoxInfo(combo.Handle,ref info)&&GetWindowRect(info.List,out var unused),"Açılır liste penceresi okunamadı.");GetWindowRect(info.List,out var popup);GetWindowRect(combo.Handle,out var face);
+                var bounds=form.RectangleToScreen(form.ClientRectangle);Check(popup.Right-popup.Left<=face.Right-face.Left+4&&popup.Left>=bounds.Left&&popup.Right<=bounds.Right,"Açılır liste kontrol veya pencere sınırlarını aşıyor.");Check(combo.Items.Count==3&&combo.SelectedIndex==0,"Liste seçenekleri veya seçim değişti.");combo.DroppedDown=false;
+            }
+        });
 
         Test("COMPACT-0322-FIXES", "Hızlı önizleme, model/kalite aktarımı, kolay kurulum ve güvenli temizlik",()=>{
             var st=New("compact-0322-fixes");var settings=st.Settings;settings.CoverLocalModel="FLUX.2";settings.CoverLocalQuality="Hızlı";settings.CoverTitleStyle="3D Telkari Altın";

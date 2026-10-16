@@ -14,7 +14,7 @@ internal static class CoverArchive
     {
         var files=archiveFiles??Files(store,true);if(files.Length==0){Theme.Alert(owner,"Arşivde görsel yok. Önce görsel ekle veya yapay zekâ ile tasarla.");return null;}
         using var dialog=StudioForm.Dialog(title,900,670);
-        var list=new ComboBox {Dock=DockStyle.Top,DropDownStyle=ComboBoxStyle.DropDownList,Font=Theme.Font(11)};
+        var list=Theme.Combo([], "");list.Dock=DockStyle.Top;
         list.Items.AddRange(files.Select(f=>Path.GetFileName(f)+" • "+Path.GetFileName(Path.GetDirectoryName(f))).ToArray());
         var picture=new PictureBox {Dock=DockStyle.Fill,SizeMode=PictureBoxSizeMode.Zoom,BackColor=Theme.Bg};
         var select=Theme.Button("Bu görseli seç",()=>{dialog.DialogResult=DialogResult.OK;dialog.Close();},true,240);select.Dock=DockStyle.Bottom;
