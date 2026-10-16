@@ -1,3 +1,7 @@
+# TubeFlow 0.4.9 — Ses ve müzik önizlemesi
+
+Seçili müzik uygulama içinde dinlenebilir. Müzik arşivi seçiminde her parça için ayrı Ön dinle ve Seç düğmeleri bulunur. Ses örneği de dış oynatıcı açmadan uygulama içinde çalınır.
+
 # TubeFlow 0.4.8 — Yerleşik ses önizlemesi
 
 Seçili sesi kısa dinle düğmesi dış program yerine ses bölümündeki küçük oynatıcıyı kullanır. Oynat/duraklat, durdur, zaman ve kaydırma kontrolleri bulunur.
