@@ -281,7 +281,7 @@ Hazır metin editöründe önceki metin ve ilk 300 karakter için kısa ses dene
 
 Yayın sırası üretim uzadığında kendiliğinden tarihi değiştirmez. Tarih / saat ekranında erteleme kutusunu önceden seçersen süresi geçen yayın 30 dakika ileri alınabilir. Aksi halde hazır çıktılar korunarak yeni tarih istenir.
 
-Sohbet sağda açılır. Küçük pencerede çalışma alanının üzerinde yan panel olur; Sohbet tuşuyla kapat. Seçili Anka AI sağlayıcısı kullanılır. Proje paylaşımı kutusu seçilmeden proje metni gönderilmez. Sohbet API anahtarıyla veya yerel yapay zekâyla çalışır; ChatGPT hesabı bağlama özelliği yoktur. Yanıtları doğrudan uygulamaz veya yayın yapmaz. Sohbet geçmişi bu Windows hesabındaki çalışma klasöründe tutulur; Temizle geçmişi temizler.
+Sohbet sağda açılır. Küçük pencerede çalışma alanının üzerinde yan panel olur; Sohbet tuşuyla kapat. Seçili TubeFlow AI sağlayıcısı kullanılır. Proje paylaşımı kutusu seçilmeden proje metni gönderilmez. Sohbet API anahtarıyla veya yerel yapay zekâyla çalışır; ChatGPT hesabı bağlama özelliği yoktur. Yanıtları doğrudan uygulamaz veya yayın yapmaz. Sohbet geçmişi bu Windows hesabındaki çalışma klasöründe tutulur; Temizle geçmişi temizler.
 
 Uygulama parolası video ve metin dosyalarını şifrelemez. API anahtarları ve hesap oturumları yedeğe taşınmaz. Destek kaydı bilinen gizli bilgileri temizler; yine de paylaşmadan önce gözden geçir.
 

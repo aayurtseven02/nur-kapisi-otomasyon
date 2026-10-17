@@ -4,6 +4,7 @@ namespace AnkaStudio;
 
 internal sealed class AiDesignDialog : Form
 {
+    internal static string SelectedWorkflow(string model,string current)=>File.Exists(current)&&LocalCoverEngine.ModelOf(current)==model?current:LocalCoverEngine.ResolveWorkflow(model,current);
     internal static string EngineQuality(string label)=>label switch{"Minimum"=>"Hızlı","Maksimum"=>"Ultra sinematik",_=>"Dengeli"};
     internal static string QualityLabel(string? quality)=>quality switch{"Hızlı"=>"Minimum","Ultra sinematik"=>"Maksimum",_=>"Orta"};
     public string SavedPath {get;private set;}="";
@@ -25,7 +26,7 @@ internal sealed class AiDesignDialog : Form
         left.Controls.Add(Theme.Label("Kalite",10,true,width:350,height:28));var quality=Theme.Combo(["Minimum","Orta","Maksimum"],QualityLabel(preferences.CoverLocalQuality),350);quality.AccessibleName="Kapak üretim kalitesi";left.Controls.Add(quality);var qualityInfo=Theme.Label("",9,width:350,height:60);left.Controls.Add(qualityInfo);
         var workflow=Theme.Input(File.Exists(store.Settings.CoverLocalWorkflow)?store.Settings.CoverLocalWorkflow:LocalCoverEngine.FindInstalledWorkflow(),width:320);
         var details=new StudioDisclosure("Gelişmiş • motor dosyası",350);details.Content.Controls.Add(workflow);details.Content.Controls.Add(Theme.Button("Motor dosyasını seç",()=>{using var picker=new OpenFileDialog {Filter="ComfyUI iş akışı|*.json"};if(picker.ShowDialog(this)==DialogResult.OK)workflow.Text=picker.FileName;},false,320));left.Controls.Add(details);
-        void RefreshEngine(){workflow.Text=LocalCoverEngine.ResolveWorkflow(model.Text,workflow.Text.Trim());qualityInfo.Text=LocalCoverEngine.Describe(EngineQuality(quality.Text),model.Text);if(logo)qualityInfo.Text="Kare logo • 768×768 • kalite işlem adımlarını değiştirir.";else if(vertical)qualityInfo.Text="Dikey kapak • 576×1024 • kalite işlem adımlarını değiştirir.";}model.SelectedIndexChanged+=(_,_)=>RefreshEngine();quality.SelectedIndexChanged+=(_,_)=>RefreshEngine();RefreshEngine();
+        void RefreshEngine(){workflow.Text=SelectedWorkflow(model.Text,workflow.Text.Trim());qualityInfo.Text=LocalCoverEngine.Describe(EngineQuality(quality.Text),model.Text);if(logo)qualityInfo.Text="Kare logo • 768×768 • kalite işlem adımlarını değiştirir.";else if(vertical)qualityInfo.Text="Dikey kapak • 576×1024 • kalite işlem adımlarını değiştirir.";}model.SelectedIndexChanged+=(_,_)=>RefreshEngine();quality.SelectedIndexChanged+=(_,_)=>RefreshEngine();RefreshEngine();
         var status=Theme.Label("Hazır • yerel motor kullanılır.",10,color:Theme.Success,width:350,height:90);left.Controls.Add(status);
         var bar=new TurquoisePackageBar {Width=350,Height=32,Text="Tasarım bekleniyor"};left.Controls.Add(bar);
         var cancellation=new CancellationTokenSource();FormClosed+=(_,_)=>{cancellation.Cancel();cancellation.Dispose();picture.Image?.Dispose();};
@@ -41,7 +42,7 @@ internal sealed class AiDesignDialog : Form
             running=true;generate!.Enabled=false;approve.Enabled=false;topic.Enabled=instruction.Enabled=details.Enabled=model.Enabled=quality.Enabled=false;bar.Busy=true;bar.Value=0;
             try{
                 void Report(string message){if(!IsDisposed)status.Text=message;}
-                string selectedWorkflow=LocalCoverEngine.ResolveWorkflow(model.Text,workflow.Text.Trim()),selectedQuality=EngineQuality(quality.Text);workflow.Text=selectedWorkflow;LocalCoverEngine.Prepare(selectedWorkflow,"test",vertical,square:logo,quality:selectedQuality);
+                string selectedWorkflow=SelectedWorkflow(model.Text,workflow.Text.Trim()),selectedQuality=EngineQuality(quality.Text);workflow.Text=selectedWorkflow;LocalCoverEngine.Prepare(selectedWorkflow,"test",vertical,square:logo,quality:selectedQuality);
                 store.Settings.CoverLocalModel=model.Text;store.Settings.CoverLocalQuality=selectedQuality;store.Settings.CoverLocalWorkflow=selectedWorkflow;if(coverSettings!=null){coverSettings.CoverLocalModel=model.Text;coverSettings.CoverLocalQuality=selectedQuality;coverSettings.CoverLocalWorkflow=selectedWorkflow;}store.Save();
                 await LocalCoverEngine.Start(selectedWorkflow,Report,cancellation.Token);await LocalCoverEngine.Check(selectedWorkflow,cancellation.Token);
                 string subject=topic.Text.Trim(),direction=instruction.Text.Trim();

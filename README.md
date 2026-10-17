@@ -1,3 +1,7 @@
+# TubeFlow 0.4.11 — Adlandırma ve seçim son kontrolleri
+
+Rehberdeki son eski ad güncellendi. Hazır motor seçiminin yanında gelişmiş özel motor dosyası korunur. Arşivde eksik müzik dosyası seçimi anlaşılır uyarıyla ele alınır. 0.4.10 müzik, kapak motoru/kalite, EXE adı ve simge değişiklikleri dahildir.
+
 # TubeFlow 0.4.10 — Proje müziği, kapak motoru ve adlandırma
 
 Proje müziği üretim kontrolünde korunur ve seçilen parça adı görünür. Kapak tasarımında FLUX.2 / Stable Diffusion XL ve Minimum / Orta / Maksimum kalite seçilir. Ana program TubeFlow.exe, masaüstü simgesi büyük TubeFlow amblemidir. Görünen eski adlar güncellenmiştir. Eski kurulumların ilk güncellemeyi alabilmesi için uyumluluk dosyaları korunur.
