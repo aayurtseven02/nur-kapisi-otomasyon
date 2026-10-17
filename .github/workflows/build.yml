@@ -18,6 +18,11 @@ jobs:
       - name: Windows paketini hazırla
         shell: pwsh
         run: dotnet publish src/AnkaStudio.csproj -c Release -r win-x64 --self-contained true -o dist/AnkaStudio
+      - name: Kaynakta gizli bilgi kontrolü
+        shell: pwsh
+        run: |
+          dotnet dist/AnkaStudio/TubeFlow.dll --source-safety-test --source "$PWD"
+          if ($LASTEXITCODE -ne 0) { throw 'Kaynak güvenlik kontrolü başarısız' }
       - name: Testlerden önce video motorunu hazırla
         shell: pwsh
         run: |
@@ -34,6 +39,17 @@ jobs:
           $p = Start-Process -FilePath dist/AnkaStudio/TubeFlow.exe -ArgumentList $testArgs -WindowStyle Hidden -Wait -PassThru
           Get-Content test-report.txt
           if ($p.ExitCode -ne 0) { throw 'Çekirdek testi başarısız' }
+      - name: Derin inceleme hata tekrar kontrolleri
+        shell: pwsh
+        run: |
+          $checks = @('AUDIT-ASSISTANT-UPLOAD-UNDO','AUDIT-STORYBOARD-CANCEL-ATOMIC','AUDIT-SOURCE-SECRET-GATE','AUDIT-ASSISTANT-PRODUCTION-INTENT','AUDIT-VISUAL-CACHE-QUALITY','AUDIT-MANUAL-VISUAL-AFTER-AI','AUDIT-VOICE-FALLBACK-CACHE')
+          foreach ($check in $checks) {
+            $data = "$env:RUNNER_TEMP/tubeflow-audit-$check"
+            $auditArgs = @('--reliability-test','--only-test',$check,'--data',$data,'--ffmpeg',"$PWD/dist/AnkaStudio/tools/ffmpeg.exe")
+            $p = Start-Process -FilePath dist/AnkaStudio/TubeFlow.exe -ArgumentList $auditArgs -WindowStyle Hidden -Wait -PassThru
+            Get-Content "$data/reliability-test-report.json"
+            if ($p.ExitCode -ne 0) { throw "Derin inceleme kontrolü başarısız: $check" }
+          }
       - name: Kaynak ve video motorunu ekle
         shell: pwsh
         run: |

@@ -72,9 +72,9 @@ public static class TimedNarration
 
         string audio = Path.Combine(folder, "narration-full.wav"), cached = Path.Combine(cache, "narration-full.wav"), timing = Path.Combine(cache, "timing.json");
 
-        List<Cue>? cues = null;
+        List<Cue>? cues = null;bool localFallback=false;
 
-        if (!File.Exists(cached) && File.Exists(audio) && File.Exists(audio + ".hash") && File.ReadAllText(audio + ".hash") == hash && File.Exists(Path.Combine(folder, "narration-timing.json"))) { cached = audio; timing = Path.Combine(folder, "narration-timing.json"); }
+        if (!File.Exists(cached) && File.Exists(audio) && NarrationFlow.UsesRequestedVoice(audio,settings) && File.Exists(audio + ".hash") && File.ReadAllText(audio + ".hash") == hash && File.Exists(Path.Combine(folder, "narration-timing.json"))) { cached = audio; timing = Path.Combine(folder, "narration-timing.json"); }
 
         if (File.Exists(cached) && File.Exists(cached + ".sha") && File.Exists(timing) && Reliability.FileHash(cached) == File.ReadAllText(cached + ".sha")) {
 
@@ -234,7 +234,6 @@ public static class TimedNarration
 
             }
 
-            bool localFallback = false;
 
             try { cues = await Create(settings); }
 
@@ -252,6 +251,7 @@ public static class TimedNarration
 
         }
 
+        if(!localFallback&&File.Exists(audio+".actual-provider"))File.Delete(audio+".actual-provider");
         File.WriteAllText(audio + ".hash", hash); File.WriteAllText(audio + ".sha", Reliability.FileHash(audio)); Json.Write(Path.Combine(folder, "narration-timing.json"), cues); File.WriteAllText(Path.Combine(folder, "narration-timing.json.sha"), Reliability.FileHash(Path.Combine(folder, "narration-timing.json")));
 
         double fullDuration = await Media.Duration(store, audio, ct), sceneStart = 0;

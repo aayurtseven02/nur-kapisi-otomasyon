@@ -20,7 +20,7 @@ public static class SceneVideoChoice
 
     {
 
-        scene.StockFile = file; scene.UserLocal = true; scene.StockSelectionVersion = StockSearch.SelectionVersion;
+        scene.StockFile = file; scene.UserLocal = true; scene.StockSelectionVersion = StockSearch.SelectionVersion;scene.AiImageHash="";scene.AiImageQuality="";
 
         scene.RightsConfirmed = item?.RightsConfirmed ?? false; scene.StockUrl = item?.Source ?? "Kullanıcının yerel arşivi";
 

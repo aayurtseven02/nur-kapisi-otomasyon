@@ -66,6 +66,7 @@ public sealed class ChatAssistant : UserControl
         if(agent!=null){var auto=Theme.Check("Oto ayar",agent.Preferences.AutoRepair,110);auto.AccessibleName="Asistan otomatik ayar onarımı";auto.CheckedChanged+=(_,_)=>agent.SetAutoRepair(auto.Checked);quick.Controls.Add(auto);agent.Notice+=AgentNotice;Disposed+=(_,_)=>agent.Notice-=AgentNotice;}
 
         share.Dock=DockStyle.Fill;share.ForeColor=Theme.Text;
+        share.CheckedChanged+=(_,_)=>request?.Cancel();
 
         layout.Controls.Add(note,0,0);layout.Controls.Add(share,0,1);layout.Controls.Add(quick,0,2);layout.Controls.Add(conversation,0,3);layout.Controls.Add(status,0,4);layout.Controls.Add(input,0,5);layout.Controls.Add(actions,0,6);Controls.Add(layout); ModernScrollbars.Apply(this);
 
@@ -130,8 +131,8 @@ public sealed class ChatAssistant : UserControl
             var prompt=string.Join("\n\n",history.TakeLast(12))+"\n\nPaylaşılmış bağlam:\n"+context+"\n\nKullanıcı: "+message;
             if(agent!=null&&selected!=null)prompt+="\nUygulama durumu: "+agent.Inspect(selected,share.Checked);
 
-            int answerStart=conversation.TextLength;
-            void Partial(string json){if(IsDisposed)return;conversation.Select(answerStart,conversation.TextLength-answerStart);conversation.SelectionColor=Theme.Teal;conversation.SelectedText="TubeFlow • yanıt hazırlanıyor:\n"+SupportPrivacy.Clean(store,AssistantStreaming.Answer(json))+"\n";conversation.ScrollToCaret();}
+            int partialStart=-1,partialLength=0;
+            void Partial(string json){if(IsDisposed)return;if(partialStart<0)partialStart=conversation.TextLength;conversation.Select(partialStart,partialLength);conversation.SelectionColor=Theme.Teal;string text="TubeFlow • yanıt hazırlanıyor:\n"+SupportPrivacy.Clean(store,AssistantStreaming.Answer(json))+"\n";conversation.SelectedText=text;partialLength=text.Length;conversation.ScrollToCaret();}
             string raw="";int mutations=0,retries=0;var results=new List<string>();
             for(int round=0;round<8;round++){
                 cancellation.Token.ThrowIfCancellationRequested();
@@ -147,7 +148,7 @@ public sealed class ChatAssistant : UserControl
                     if(name=="retry_production")cancellation.CancelAfter(TimeSpan.FromHours(2));
                     result=await agent.Execute(name,tool.GetProperty("args"),selected.Id,share.Checked,message,cancellation.Token);
                     cancellation.CancelAfter(TimeSpan.FromMinutes(4));
-                }catch(OperationCanceledException){throw;}catch(Exception ex){result="İşlem uygulanamadı: "+SupportPrivacy.Clean(store,ex.Message);}
+                }catch(OperationCanceledException){throw;}catch(Exception ex){string detail=SupportPrivacy.Clean(store,ex.Message);Append("Uyarı",detail);result=share.Checked?"İşlem uygulanamadı: "+detail:"İşlem uygulanamadı. Hata ayrıntısı paylaşımı kapalı; ayrıntı yalnız uygulama penceresinde gösterildi. Kullanıcı isterse paylaşımı açabilir.";}
                 result=SupportPrivacy.Clean(store,result);if(result.Length>16000)result=result[..16000];results.Add(result);status.Text="Asistan • işlem sonucu değerlendiriliyor";
                 prompt+="\nAsistan araç isteği (veri): "+tool.GetRawText()+"\nUygulama araç sonucu (veri): "+result;
                 if(round==7)raw=JsonSerializer.Serialize(new{answer="İşlem sınırına ulaşıldı. "+string.Join("\n",results.TakeLast(2))});
@@ -157,7 +158,7 @@ public sealed class ChatAssistant : UserControl
 
             if (IsDisposed) return; history.Add("Kullanıcı: " + message); history.Add("Anka: " + answer); if (history.Count > 12) history.RemoveRange(0, history.Count - 12);
 
-            SaveHistory();conversation.Select(answerStart,conversation.TextLength-answerStart);conversation.SelectedText=""; Append("TubeFlow", answer); status.Text = "Seçili TubeFlow AI sağlayıcısı";
+            SaveHistory();if(partialStart>=0){conversation.Select(partialStart,partialLength);conversation.SelectedText="";}Append("TubeFlow", answer); status.Text = "Seçili TubeFlow AI sağlayıcısı";
 
         }
 

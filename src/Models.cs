@@ -561,6 +561,7 @@ public class Scene
 
     public string SourceLinks {get;set;}="";
     public string AiImageHash {get;set;} = "";
+    public string AiImageQuality {get;set;} = "";
     public string AiImagePrompt {get;set;} = "";
     [System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
     public string? AiPromptSourceHash {get;set;}

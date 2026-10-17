@@ -1,3 +1,7 @@
+# TubeFlow 0.4.19 — Derin tarama düzeltmeleri
+
+İptalde önceki sahne planı korunur. Asistan geri alma işlemi yüklenmiş/sonradan değişmiş çıktılara uygulanmaz; paylaşım kapalıyken araç hatası metni modele gönderilmez. Ses/müzik ayar grubu açılışı düzeltildi. Genel görsel kalite ve AI önbellek bütünlüğü denetlenir; kullanıcı görseli eski AI işaretinden ayrılır. Yedek anlatıcı sesi seçili sağlayıcının önbelleği gibi kullanılmaz; kurulu olmayan seçili Windows sesi sessizce değiştirilmez. Kaynak aktarımı ve güncelleme paketi öncesinde gizli bilgi içeriği denetlenir; kritik hata tekrar kontrolleri GitHub Windows iş akışına eklendi.
+
 # TubeFlow 0.4.18 — İşlem yapabilen uygulama asistanı
 
 Sohbet ses, sahne, altyazı ve müzik ayarlarını doğrudan uygulayabilir; yaptığı değişiklikleri bildirir ve son ayarı geri alabilir. Hata durumunda bilinen ayar sorunları otomatik denetlenir. İstek üzerine yerel motor kontrolü ve tek üretim yeniden denemesi yapılabilir. Kod, shell/komut, API anahtarı düzenleme, silme ve video yayınlama araçları yoktur. Ücret izinleri, kotalar, metin ve kullanım hakları onayları korunur. Proje metni/hatası paylaşımı ayrı kutuya bağlıdır.

@@ -5,10 +5,11 @@ namespace AnkaStudio;
 public static class StoryImages
 {
     public static string Identity(Episode e)=>TimedNarration.TextHash(JsonSerializer.Serialize(new {Version="ipadapter-story-v1",e.Topic,e.AiStoryStyle,e.AiStoryCharacters}));
-    public static Settings LocalSettings(Episode e,Settings settings)
+    public static Settings LocalSettings(Episode e,Settings settings,Settings? defaults=null)
     {
         var copy=JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(settings,Json.Options),Json.Options)!;
         if(e.Creation is {} flow&&LocalCoverEngine.Qualities.Contains(flow.SceneImageQuality))copy.CoverLocalQuality=flow.SceneImageQuality;
+        else if(e.Creation?.AiVisuals==true&&defaults!=null)copy.CoverLocalQuality=defaults.CoverLocalQuality??"Dengeli";
         if(e.AiStoryLocal){copy.CoverLocalEnabled=true;if(!File.Exists(copy.CoverLocalWorkflow))copy.CoverLocalWorkflow=LocalCoverEngine.FindInstalledWorkflow();}
         else copy.CoverLocalEnabled=false;
         return copy;
@@ -89,7 +90,7 @@ public static class StoryImages
         ct.ThrowIfCancellationRequested();
         Validate(e);
         // One cast reference is shared by all normal/Shorts scenes in this story.
-        settings=LocalSettings(e,settings);RequireReady(store,settings);
+        settings=LocalSettings(e,settings,store.Settings);RequireReady(store,settings);
         if(settings.CoverLocalEnabled && client==null){await LocalCoverEngine.Start(settings.CoverLocalWorkflow,log,ct,Path.Combine(store.Root,"logs","local-engine"));await LocalCoverEngine.CheckStorySupport(ct,settings.CoverLocalWorkflow);}
         var folder=Path.Combine(store.Folder(e),"story-images",Identity(e));Directory.CreateDirectory(folder);
         var reference=Path.Combine(folder,"characters.png");
@@ -140,7 +141,7 @@ public static class StoryImages
             File.Move(temp,output,true);File.WriteAllText(output+".sha",Reliability.FileHash(output));
         });
         bool keepRights=scene.StockFile==output && scene.AiImageHash==hash && scene.RightsConfirmed;
-        scene.StockFile=output;scene.AiImageHash=hash;scene.StockMetadata="AI hikâye illüstrasyonu • karakter referanslı";
+        scene.StockFile=output;scene.AiImageHash=hash;scene.AiImageQuality=e.AiStoryLocal?settings.CoverLocalQuality??"Dengeli":"";scene.StockMetadata="AI hikâye illüstrasyonu • karakter referanslı";
         scene.StockUrl="";scene.Creator="AI ile oluşturuldu";scene.LicenseUrl="";scene.Attribution="";
         // Publishing still requires the user's review and rights confirmation.
         scene.RightsConfirmed=keepRights;scene.UserLocal=false;

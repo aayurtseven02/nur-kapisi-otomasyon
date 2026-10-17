@@ -8,6 +8,8 @@ $taskOut=[IO.Path]::GetFullPath($OutputDirectory);$taskBuildId=[Guid]::NewGuid()
 New-Item -ItemType Directory -Force -Path $taskOut | Out-Null
 dotnet publish $taskProject -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:DebugType=None -p:DebugSymbols=false -o $taskBuild
 if($LASTEXITCODE -ne 0){throw 'Program paketi derlenemedi.'}
+& dotnet (Join-Path $taskBuild 'TubeFlow.dll') --source-safety-test --source ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..')))
+if($LASTEXITCODE -ne 0){throw 'Kaynak güvenlik kontrolü başarısız; güncelleme ZIP dosyası oluşturulmadı.'}
 Copy-Item -LiteralPath (Join-Path $taskBuild 'TubeFlow.exe') -Destination (Join-Path $taskBuild 'AnkaStudio.exe')
 Copy-Item -LiteralPath (Join-Path $taskBuild 'TubeFlow.dll') -Destination (Join-Path $taskBuild 'AnkaStudio.dll')
 New-Item -ItemType Directory -Force -Path $taskPayload | Out-Null

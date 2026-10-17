@@ -111,6 +111,11 @@ public static class Media
 public static class LocalVoice
 
 {
+    public static string SelectVoiceId(string requested,IReadOnlyList<(string Id,string Name)> voices)
+    {
+        if(voices.Count==0)throw new InvalidOperationException("Windows'ta Türkçe ses bulunamadı.");if(string.IsNullOrWhiteSpace(requested))return voices[0].Id;
+        return voices.Any(v=>v.Id==requested)?requested:throw new InvalidOperationException("Seçtiğin Windows sesi bu bilgisayarda kurulu değil. Ses listesinden yeniden seç; başka bir anlatıcı otomatik seçilmedi.");
+    }
 
     public static async Task SpeakWithFallback(string text, string path, Settings settings, CancellationToken ct)
 
@@ -125,13 +130,14 @@ public static class LocalVoice
             } finally { if (File.Exists(raw)) File.Delete(raw); }
             return;
         }
+        if(!settings.VoiceProvider.StartsWith("Piper")&&!string.IsNullOrWhiteSpace(settings.WindowsVoice))_=SelectVoiceId(settings.WindowsVoice,List());
         if (!settings.VoiceProvider.StartsWith("Piper") && List().Count > 0)
 
         {
 
             try { await Task.Run(() => Speak(text, path, settings, ct), ct); return; }
 
-            catch (Exception ex) when (ex is not OperationCanceledException) { if (!File.Exists(settings.PiperPath) || !File.Exists(settings.PiperModel)) throw; }
+            catch (Exception ex) when (ex is not OperationCanceledException) { if (!string.IsNullOrWhiteSpace(settings.WindowsVoice)||!File.Exists(settings.PiperPath) || !File.Exists(settings.PiperModel)) throw; }
 
         }
 
@@ -191,7 +197,7 @@ public static class LocalVoice
 
             var voices = List(); if (voices.Count == 0) throw new InvalidOperationException("Windows'ta Türkçe ses bulunamadı. Windows Ayarları > Saat ve dil > Dil seçenekleri üzerinden Türkçe konuşma bileşenini yükle veya ses sağlayıcısını değiştir.");
 
-            var voiceId = voices.Any(v => v.Id == settings.WindowsVoice) ? settings.WindowsVoice : voices[0].Id;
+            var voiceId = SelectVoiceId(settings.WindowsVoice,voices);
 
             dynamic speaker = speakerObj = Activator.CreateInstance(Type.GetTypeFromProgID("SAPI.SpVoice")!)!;
 

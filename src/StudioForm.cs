@@ -1708,7 +1708,7 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
             };
         }
 
-        void TextSetting(FlowLayoutPanel f, string title, string value, Action<string> set, bool multi = false) { var input = Theme.Input(value, multi, 650); Field(f, title, input); saves.Add(() => set(input.Text.Trim())); }
+        TextBox TextSetting(FlowLayoutPanel f, string title, string value, Action<string> set, bool multi = false) { var input = Theme.Input(value, multi, 650); Field(f, title, input); saves.Add(() => set(input.Text.Trim())); return input; }
 
         void Numeric(FlowLayoutPanel f, string title, decimal value, decimal min, decimal max, Action<decimal> set, int decimals = 0) { var n = Theme.Number(value, min, max, 450, decimals); Field(f, title, n); saves.Add(() => set(n.Value)); }
 
@@ -1890,7 +1890,7 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
 
         Numeric(voice, "Shorts müzik seviyesi", (decimal)s.ShortMusicVolume, 0, .5m, v => s.ShortMusicVolume = (double)v, 2);
 
-        TextSetting(voice, "ElevenLabs ses kimliği", s.VoiceId, v => s.VoiceId = v); TextSetting(voice, "ElevenLabs ses modeli", s.VoiceModel, v => s.VoiceModel = v); Numeric(voice, "Konuşma hızı", (decimal)s.VoiceSpeed, .7m, 1.2m, v => s.VoiceSpeed = (double)v, 2);
+        var elevenVoice = TextSetting(voice, "ElevenLabs ses kimliği", s.VoiceId, v => s.VoiceId = v); TextSetting(voice, "ElevenLabs ses modeli", s.VoiceModel, v => s.VoiceModel = v); Numeric(voice, "Konuşma hızı", (decimal)s.VoiceSpeed, .7m, 1.2m, v => s.VoiceSpeed = (double)v, 2);
 
         voice.Controls.Add(Theme.Button("ElevenLabs seslerini listele", () => _ = Safe(async () => { var list = await new Services(store, _ => { }).Voices(CancellationToken.None); using var d = Dialog("Ses çeşitleri", 800, 650); var text = Theme.Input(string.Join("\r\n", list.Select(v => v.Name + "  →  " + v.Id)), true, 720); text.Dock = DockStyle.Fill; text.ReadOnly = true; d.Controls.Add(text); d.ShowDialog(this); }), false, 270));
 
@@ -1904,7 +1904,7 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
         var piperLast=voice.Controls.OfType<Label>().First(l=>l.Text.StartsWith("Piper modeli ayrı indirilir",StringComparison.Ordinal));
         CompactUi.Group(voice,"Piper kurulumu",CompactUi.LabelFor(voice,piperExe),piperLast,s.VoiceProvider.Contains("Piper"));
         var shortStart=voice.Controls.OfType<Button>().First(b=>b.Text=="Shorts için normal video sesini kullan");
-        var elevenStart=voice.Controls.OfType<Label>().First(l=>l.Text=="ElevenLabs ses kimliği");
+        var elevenStart=CompactUi.LabelFor(voice,elevenVoice);
         var shortEnd=voice.Controls[voice.Controls.IndexOf(elevenStart)-1];
         CompactUi.Group(voice,"Shorts ses ayarları",shortStart,shortEnd,s.ShortVoiceOverride);
 

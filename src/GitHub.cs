@@ -94,7 +94,7 @@ public sealed partial class GitHub(Store store, HttpClient? client = null)
 
         if (!Directory.Exists(source)) throw new InvalidOperationException("Kaynak paketi bulunamadı. TubeFlow tam dağıtım paketini kullan.");
 
-        ValidateSourceBundle(source);
+        ValidateSourceBundle(source,SupportPrivacy.SecretNames.Select(store.Key));
 
         using var reference = JsonDocument.Parse(await Call(HttpMethod.Get, "repos/" + Repo + "/git/ref/heads/" + Uri.EscapeDataString(store.Settings.GitHubRef), null, ct));
 
@@ -126,7 +126,7 @@ public sealed partial class GitHub(Store store, HttpClient? client = null)
 
     }
 
-    public static void ValidateSourceBundle(string source)
+    public static void ValidateSourceBundle(string source,IEnumerable<string>? knownSecrets=null)
 
     {
 
@@ -134,6 +134,7 @@ public sealed partial class GitHub(Store store, HttpClient? client = null)
 
         if (!File.Exists(project)) throw new InvalidOperationException("Kaynak projesi eksik.");
 
+        SourceSafety.ValidateFiles(source,knownSecrets);
         var document = System.Xml.Linq.XDocument.Load(project);
 
         var includes = document.Descendants().Where(x => x.Name.LocalName is "Content" or "EmbeddedResource").Select(x => (string?)x.Attribute("Include")).Where(x => x != null).Cast<string>().ToList();

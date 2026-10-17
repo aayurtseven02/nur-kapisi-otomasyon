@@ -247,7 +247,7 @@ public sealed class SceneEditor : Form
 
             scene.Narration = row.Cells[0].Value?.ToString()?.Trim() ?? ""; scene.VisualQuery = query; scene.OnScreen = row.Cells[2].Value?.ToString()?.Trim() ?? "";
 
-            var local = row.Cells[3].Value?.ToString()?.Trim() ?? ""; if (local != "" && local != scene.StockFile) { scene.StockFile = local; scene.UserLocal = true; scene.RightsConfirmed = false; scene.StockUrl = "Kullanıcının yerel arşivi"; scene.Creator = "Kullanıcı arşivi"; scene.LicenseUrl = "Kullanıcı tarafından doğrulanacak"; scene.Attribution = ""; }
+            var local = row.Cells[3].Value?.ToString()?.Trim() ?? ""; if (local != "" && local != scene.StockFile) { SceneVideoChoice.Apply(scene, local, null); scene.StockUrl = "Kullanıcının yerel arşivi"; scene.Creator = "Kullanıcı arşivi"; scene.LicenseUrl = "Kullanıcı tarafından doğrulanacak"; scene.Attribution = ""; }
 
             scenes.Add(scene);
 

@@ -19,6 +19,9 @@ internal static class Program
     {
 
         ApplicationConfiguration.Initialize();
+        if(args.Contains("--source-safety-test")){
+            try{GitHub.ValidateSourceBundle(Arg(args,"--source")??throw new InvalidOperationException("Kaynak klasörü gerekli."));Console.WriteLine("PASS kaynak gizli bilgi ve paket bütünlüğü kontrolü");}catch(Exception ex){Console.Error.WriteLine(ex.Message);Environment.ExitCode=1;}return;
+        }
 
         if(args.Contains("--cleanup-program-files")){
             try{var backup=Path.Combine(AppLock.DefaultDataRoot(),"cleanup-backups",DateTime.Now.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N"));int count=InstallCleanup.Clean(AppContext.BaseDirectory,backup);Theme.Alert(count+" eski program dosyası yedeklendi.\n"+backup);}

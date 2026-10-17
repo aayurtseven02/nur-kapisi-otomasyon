@@ -13,6 +13,11 @@ namespace AnkaStudio;
 public static class NarrationFlow
 
 {
+    public static bool UsesRequestedVoice(string audio,Settings settings)
+    {
+        string marker=audio+".actual-provider";if(!File.Exists(marker))return true;
+        try{return new FileInfo(marker).Length<=512&&File.ReadAllText(marker).Trim()==settings.VoiceProvider;}catch(IOException){return false;}
+    }
 
     public static string SpokenText(string text)=>SpokenText(text,null);
 
@@ -60,7 +65,7 @@ public static class NarrationFlow
 
         var oldFolder = Path.GetDirectoryName(previous)!; var audio = previousAsset?.NarrationFile is string saved && saved!="" ? saved : Path.Combine(oldFolder, "narration-full.wav"); var marker = audio + ".hash";
 
-        if (!File.Exists(audio) || !File.Exists(marker) || await File.ReadAllTextAsync(marker, ct) != Fingerprint(script, settings)) return;
+        if (!File.Exists(audio) || !UsesRequestedVoice(audio,settings) || !File.Exists(marker) || await File.ReadAllTextAsync(marker, ct) != Fingerprint(script, settings)) return;
 
         try { _ = await Media.Duration(store, audio, ct); if (File.Exists(audio + ".sha") && Reliability.FileHash(audio) != File.ReadAllText(audio + ".sha")) return; }
 
