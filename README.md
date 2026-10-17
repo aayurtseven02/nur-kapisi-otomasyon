@@ -1,3 +1,7 @@
+# TubeFlow 0.4.12 — Müzik bölümünü sadeleştirme
+
+Seçili müziği ön dinle düğmesi ve ikinci oynatıcı kaldırıldı. Arşiv listesindeki önizleme, seçili parçanın adı ve konuşma sesi önizlemesi korunur.
+
 # TubeFlow 0.4.11 — Adlandırma ve seçim son kontrolleri
 
 Rehberdeki son eski ad güncellendi. Hazır motor seçiminin yanında gelişmiş özel motor dosyası korunur. Arşivde eksik müzik dosyası seçimi anlaşılır uyarıyla ele alınır. 0.4.10 müzik, kapak motoru/kalite, EXE adı ve simge değişiklikleri dahildir.
