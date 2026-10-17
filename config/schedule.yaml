@@ -540,7 +540,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-17-gun09-short2-alicesaret
-  status: pending
+  status: failed
   publish_at: '2026-10-17T19:00:00+03:00'
   format: short
   type: tema
@@ -551,6 +551,8 @@ videos:
   title_hint: 'Hz. Ali''nin Cesareti: Hayber ve Hendek'
   thumb_title: Hz. Ali'nin Cesareti
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-18-gun10-normal1-olumgercegi
   status: pending
   publish_at: '2026-10-18T09:00:00+03:00'
