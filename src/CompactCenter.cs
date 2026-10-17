@@ -35,7 +35,7 @@ public sealed partial class StudioForm
             }
         }
         Check(before==System.Text.Json.JsonSerializer.Serialize(new{store.Settings,store.Episodes},Json.Options),"Gezinme proje veya ayarları değiştirdi.");
-        using var button=new StudioButton{Completed=true,Enabled=false,Size=new(180,46),Text="Tamamlandı"};using var shot=new Bitmap(180,46);button.DrawToBitmap(shot,new Rectangle(Point.Empty,shot.Size));Check(shot.GetPixel(5,5).ToArgb()==Theme.SuccessSurface.ToArgb(),"Devre dışı tamamlanmış adımın yeşili kayboldu.");
+        using var button=new StudioButton{Completed=true,Enabled=false,Size=new(180,46),Text="Tamamlandı"};using var shot=new Bitmap(180,46);button.DrawToBitmap(shot,new Rectangle(Point.Empty,shot.Size));var fill=shot.GetPixel(160,36);Check(fill.G>220&&fill.R<190&&fill.B<135,"Devre dışı tamamlanmış adımın yeşili kayboldu.");
     }
     static void FitFormFields(Control parent,int width)
     {

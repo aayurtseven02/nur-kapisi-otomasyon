@@ -508,6 +508,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
         Log(e, musicClip ? "Müzik klibi: seçilen parça ana ses; seslendirme "+(e.MusicClip!.NarrationEnabled?"açık":"kapalı")+", altyazı "+(e.MusicClip.SubtitlesEnabled?"açık":"kapalı")+"." : $"{(vertical ? "Shorts" : "Normal video")} ses sağlayıcısı: {renderSettings.VoiceProvider}.");
 
+        if(e.Creation is {Voice:"ai"})e.Log("Seçili anlatıcı: "+(renderSettings.VoiceProvider.StartsWith("Google")?renderSettings.GoogleTtsVoice:renderSettings.VoiceProvider.StartsWith("ElevenLabs")?renderSettings.VoiceId:renderSettings.VoiceProvider.StartsWith("Piper")?Path.GetFileName(renderSettings.PiperModel):renderSettings.WindowsVoice));
         var w = vertical ? 1080 : 1920; var h = vertical ? 1920 : 1080;
 
         var clips = new List<string>(); var captions = new List<Caption>(); double offset = 0;

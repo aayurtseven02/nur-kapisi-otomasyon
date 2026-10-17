@@ -5,7 +5,8 @@ public sealed class CreationFlow
 {
     public int Reached {get;set;}
     public string PlannedTextHash {get;set;}="";
-    public string Signature=>TimedNarration.TextHash(Text+Normal+Split+ExtraShortCount+string.Join("|",ExtraShortTexts));
+    public bool AutomaticStoryboard=>AiVisuals&&Mode=="auto"&&CoverChoice!="legacy";
+    public string Signature=>TimedNarration.TextHash(Text+Normal+Split+ExtraShortCount+string.Join("|",ExtraShortTexts)+(AutomaticStoryboard?"storyboard-5-10-v1":""));
     public int ExtraShortCount {get;set;}
     public List<string> ExtraShortTexts {get;set;}=[];
     public string ExtraApprovalHash {get;set;}="";
@@ -28,6 +29,7 @@ public sealed class CreationFlow
     public bool OwnVisuals {get;set;}
     public List<string> Files {get;set;}=[];
     public string Voice {get;set;}="ai";
+    public bool UseProjectVoice {get;set;}
     public string AudioFile {get;set;}="";
     public string AudioHash {get;set;}="";
     public string FrozenAudio {get;set;}="";

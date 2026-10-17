@@ -8,7 +8,7 @@
     <AssemblyName>TubeFlow</AssemblyName>
     <RootNamespace>AnkaStudio</RootNamespace>
     <ApplicationIcon>Assets\anka-studio.ico</ApplicationIcon>
-    <Version>0.4.14</Version>
+    <Version>0.4.16</Version>
     <Product>TubeFlow</Product>
     <Company>TubeFlow</Company>
     <Title>TubeFlow</Title>

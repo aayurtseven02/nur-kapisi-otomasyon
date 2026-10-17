@@ -5,10 +5,24 @@ namespace AnkaStudio;
 public static class VideoSettings
 {
     public static Settings For(Settings defaults, Episode episode, VideoScript? script = null)
-        => PackageArtwork.Effective(VideoQueue.Effective(defaults, episode.QueueSettings ?? episode.ProductionSettings), episode, script);
+    {
+        var resolved=PackageArtwork.Effective(VideoQueue.Effective(defaults, episode.QueueSettings ?? episode.ProductionSettings), episode, script);
+        if(episode.Creation is {UseProjectVoice:false})CopyVoice(defaults,resolved);
+        return resolved;
+    }
+    public static void CopyVoice(Settings source,Settings target)
+    {
+        foreach(var name in "VoiceProvider,GoogleTtsVoice,GoogleTtsFallback,WindowsVoice,PiperPath,PiperModel,XttsUrl,XttsSpeaker,VoiceId,VoiceModel,VoiceSpeed,PronunciationDictionary,ShortVoiceOverride,ShortVoiceProvider,ShortVoiceId,ShortVoiceSpeed".Split(',')){
+            var property=typeof(Settings).GetProperty(name)!;property.SetValue(target,property.GetValue(source));
+        }
+    }
     public static void Freeze(Settings defaults, Episode episode)
     {
         episode.ProductionSettings ??= JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(For(defaults,episode),Json.Options),Json.Options)!;
+        if(episode.Creation is {UseProjectVoice:false}){
+            CopyVoice(defaults,episode.ProductionSettings);
+            if(episode.QueueSettings!=null)CopyVoice(defaults,episode.QueueSettings);
+        }
     }
 }
 

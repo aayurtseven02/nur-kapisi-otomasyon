@@ -155,14 +155,14 @@ public class StudioButton : Button
         int offset = 0;
         var face = new Rectangle(1, 1, Width - 3, Height - 3);
         using var shape=Shapes.Round(face,Math.Min(11,Math.Min(face.Width,face.Height)/2));
-        bool neonStep=Completed&&Equals(Tag,"wizard-step");
-        Color top=neonStep?Color.FromArgb(176,255,125):Completed?Color.FromArgb(240,252,242):Color.FromArgb(253,254,255);
-        Color bottom=neonStep?Color.FromArgb(104,246,43):Completed?Theme.SuccessSurface:pressed?Color.FromArgb(218,224,230):hovered?Color.FromArgb(230,235,240):Color.FromArgb(238,241,244);
-        if(!Enabled){top=Color.FromArgb(249,250,251);bottom=Color.FromArgb(242,243,245);}
+        bool neonStep=Completed;
+        Color top=neonStep?Color.FromArgb(129,255,62):Color.FromArgb(253,254,255);
+        Color bottom=neonStep?Color.FromArgb(79,240,16):pressed?Color.FromArgb(218,224,230):hovered?Color.FromArgb(230,235,240):Color.FromArgb(238,241,244);
+        if(!Enabled&&!Completed){top=Color.FromArgb(249,250,251);bottom=Color.FromArgb(242,243,245);}
         using(var fill=new LinearGradientBrush(face,top,bottom,90f))g.FillPath(fill,shape);
         using(var border=new Pen(neonStep?Color.FromArgb(71,163,28):Completed?Color.FromArgb(137,185,150):CurrentStep||Focused?Color.FromArgb(146,158,172):Color.FromArgb(201,208,216),CurrentStep||Focused?1.5f:1f))g.DrawPath(border,shape);
         var shine=g.Save();g.SetClip(shape);using(var sheen=new SolidBrush(Color.FromArgb(80,Color.White)))g.FillRectangle(sheen,face.X+1,face.Y+1,face.Width-2,Math.Max(1,face.Height/2));g.Restore(shine);
-        Color ink=Enabled?Theme.Text:Theme.Muted;
+        Color ink=Enabled||Completed?Theme.Text:Theme.Muted;
 
         if (Completed && !Equals(Tag,"wizard-step")) {
 

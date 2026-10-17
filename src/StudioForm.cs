@@ -94,7 +94,7 @@ public sealed partial class StudioForm : Form
         subtitle.TextAlign = ContentAlignment.MiddleCenter;
         subtitle.Dock = DockStyle.Bottom;
 
-        var navigation = new StudioScrollPanel { Location = new(8, 126), Size = new(230, ClientSize.Height - 240), Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
+        var navigation = new StudioScrollPanel { Location = new(8, 126), Size = new(230, 220), Anchor = AnchorStyles.Top | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
 
         var items = new[] { (Route: "Video hazırla", Label: "Stüdyo • Üret"), (Route: "Videolarım", Label: "Projelerim"), (Route: "Ayarlar", Label: "Merkez") };
 
@@ -109,10 +109,9 @@ public sealed partial class StudioForm : Form
         var guide=new SidebarButton{Text="Rehber",Glyph="?",Width=226};guide.Click+=(_,_)=>UserGuide.Show(this);guide.Location=new(0,y+12);navigation.Controls.Add(guide);
 
         var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 100, BackColor = side.BackColor, Padding=new Padding(8,4,8,4) };
-        footer.Dock = DockStyle.Top;footer.Visible=false; sideFooter.Controls.Add(footer); sideFooter.Controls.Add(subtitle); side.Controls.Add(sideFooter);
+        footer.Visible=false; sideFooter.Controls.Add(subtitle); side.Controls.Add(sideFooter);
 
-bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=226,Height=42,Dock=DockStyle.Top,AccessibleName="TubeFlow sohbet yardımcısını aç"};chat.Click+=(_,_)=>ToggleAssistant();sideFooter.Controls.Add(chat);hints.SetToolTip(chat,"Sohbeti aç / kapat");
-        void PlaceChat(){chat.Width=compact?46:226;chat.Text=compact?"":"Sohbet";chat.Location=new Point(8,Math.Max(0,side.ClientSize.Height-(compact?60:104)));chat.BringToFront();}side.SizeChanged+=(_,_)=>PlaceChat();PlaceChat();
+bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=226,Height=42,Dock=DockStyle.Top,AccessibleName="TubeFlow sohbet yardımcısını aç"};chat.Click+=(_,_)=>ToggleAssistant();sideFooter.Controls.Add(chat);sideFooter.BringToFront();hints.SetToolTip(chat,"Sohbeti aç / kapat");
         var scroll = new StudioScrollPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.Transparent }; page.Location = Point.Empty; scroll.Controls.Add(page); body.Controls.Add(scroll);
         var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);side.Controls.Add(collapse);collapse.BringToFront();collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?64:246;brand.Visible=!compact;sideFooter.Height=compact?60:100;subtitle.Visible=!compact;chat.Text=compact?"":"Sohbet";navigation.Width=compact?56:230;foreach(var (route,b) in nav){b.Width=compact?46:226;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
         var sidebarDivider = new Panel { Dock = DockStyle.Left, Width = 2, BackColor = Theme.Warning, AccessibleName = "Sol menü ayırıcı çizgisi" };

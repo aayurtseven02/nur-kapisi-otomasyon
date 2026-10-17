@@ -1,3 +1,11 @@
+# TubeFlow 0.4.16 — Sahne sahne anlatım ve seçili ses
+
+Otomatik AI görselleri onaylı metni 5–10 görsel sahneye ayırır; eski tek bölüm tercihi bu modda tek görsele zorlamaz. Bölümleme servisi hata verirse metin korunarak cümle geçişlerinden yerel sahne planı çıkarılır. Her sahne için kendi anlatımına uygun ayrı görsel oluşturulur. Genel ayarlardaki son ses seçimi kullanılır; projeye özel açık ses seçimi korunur. Eski tek sahneli çıktılar için İzle ve düzelt adımında yeniden hazırlama düğmesi vardır. 0.4.15 sohbet ve neon dolgu düzeltmeleri dahildir.
+
+# TubeFlow 0.4.15 — Sohbet görünürlüğü
+
+Sol menünün altındaki sohbet düğmesini panel dışına taşıyan eski konumlandırma kaldırıldı. Düğme pencere boyutu değiştiğinde ve menü daraltılıp açıldığında görünür kalır.
+
 # TubeFlow 0.4.14 — Otomatik görsel motoru kurtarma
 
 Uyumlu NVIDIA motoruna öncelik verilir, açılmayan motor yerine diğer kurulumlar denenir ve motor açılış kayıtları tutulur. Görsel denemesinden sonra AI karakter/sahne planı korunur. Yerel seçenekler başarısızsa yalnız mevcut ücret izni, aylık sınır ve anahtarlar çerçevesinde Gemini/OpenAI yedeği kullanılabilir. Ayrı GitHub derleme kontrolünde FFmpeg testlerden önce hazırlanır.
