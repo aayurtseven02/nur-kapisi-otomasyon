@@ -32,7 +32,7 @@ internal static class Program
 
         if(args.Contains("--local-engine-check")){
             WindowsFormsSynchronizationContext.AutoInstall=false;
-            try {var workflow=Arg(args,"--workflow")??throw new InvalidOperationException("İş akışı gerekli.");using var stop=new CancellationTokenSource(TimeSpan.FromMinutes(3));Task.Run(async()=>{await LocalCoverEngine.Start(workflow,Console.WriteLine,stop.Token);Console.WriteLine(await LocalCoverEngine.Check(workflow,stop.Token));}).GetAwaiter().GetResult();}
+            try {var workflow=Arg(args,"--workflow")??throw new InvalidOperationException("İş akışı gerekli.");using var stop=new CancellationTokenSource(TimeSpan.FromMinutes(3));Task.Run(async()=>{await LocalCoverEngine.Start(workflow,Console.WriteLine,stop.Token,Arg(args,"--data") is string engineData?Path.Combine(Path.GetFullPath(engineData),"local-engine-logs"):null);Console.WriteLine(await LocalCoverEngine.Check(workflow,stop.Token));}).GetAwaiter().GetResult();}
             catch(Exception ex){Console.Error.WriteLine(ex.Message);Environment.ExitCode=1;}return;
         }
         if(!args.Any(x=>x.StartsWith("--"))){if(AppBranding.ForwardLegacy(args))return;AppBranding.RefreshUserShortcuts();}

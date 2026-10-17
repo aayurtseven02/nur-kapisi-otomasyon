@@ -1,3 +1,7 @@
+# TubeFlow 0.4.14 — Otomatik görsel motoru kurtarma
+
+Uyumlu NVIDIA motoruna öncelik verilir, açılmayan motor yerine diğer kurulumlar denenir ve motor açılış kayıtları tutulur. Görsel denemesinden sonra AI karakter/sahne planı korunur. Yerel seçenekler başarısızsa yalnız mevcut ücret izni, aylık sınır ve anahtarlar çerçevesinde Gemini/OpenAI yedeği kullanılabilir. Ayrı GitHub derleme kontrolünde FFmpeg testlerden önce hazırlanır.
+
 # TubeFlow 0.4.13 — Sol menüde sohbet
 
 Sohbet düğmesi sol menünün altına taşındı. Menü daraltılınca simge olarak görünür. Arşiv dışındaki gereksiz ikinci müzik önizleme düğmesi kaldırılmıştır.

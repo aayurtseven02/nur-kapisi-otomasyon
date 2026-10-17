@@ -18,27 +18,38 @@ jobs:
       - name: Windows paketini hazırla
         shell: pwsh
         run: dotnet publish src/AnkaStudio.csproj -c Release -r win-x64 --self-contained true -o dist/AnkaStudio
+      - name: Testlerden önce video motorunu hazırla
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist/AnkaStudio/tools | Out-Null
+          Invoke-WebRequest 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip' -OutFile ffmpeg.zip
+          Expand-Archive ffmpeg.zip ffmpeg
+          $engineRoot = Get-ChildItem ffmpeg -Directory | Select-Object -First 1
+          Copy-Item "$($engineRoot.FullName)/bin/ffmpeg.exe","$($engineRoot.FullName)/bin/ffprobe.exe" dist/AnkaStudio/tools
+          Copy-Item "$($engineRoot.FullName)/LICENSE" dist/AnkaStudio/tools/FFmpeg-LICENSE.txt
       - name: Çekirdek testlerini çalıştır
         shell: pwsh
         run: |
-          $p = Start-Process -FilePath dist/AnkaStudio/TubeFlow.exe -ArgumentList '--self-test','--report',"$PWD/test-report.txt" -Wait -PassThru
+          $testArgs = @('--self-test','--data',"$env:RUNNER_TEMP/tubeflow-tests",'--ffmpeg',"$PWD/dist/AnkaStudio/tools/ffmpeg.exe",'--report',"$PWD/test-report.txt")
+          $p = Start-Process -FilePath dist/AnkaStudio/TubeFlow.exe -ArgumentList $testArgs -WindowStyle Hidden -Wait -PassThru
           Get-Content test-report.txt
           if ($p.ExitCode -ne 0) { throw 'Çekirdek testi başarısız' }
       - name: Kaynak ve video motorunu ekle
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force dist/AnkaStudio/repository/src,dist/AnkaStudio/repository/.github/workflows,dist/AnkaStudio/tools | Out-Null
-          Copy-Item src/*.cs,src/*.csproj dist/AnkaStudio/repository/src
+          New-Item -ItemType Directory -Force dist/AnkaStudio/repository/src,dist/AnkaStudio/repository/.github/workflows,dist/AnkaStudio/repository/tools,dist/AnkaStudio/tools | Out-Null
+          foreach ($source in Get-ChildItem src -Recurse -File | Where-Object { $_.FullName -notmatch '[\\/](bin|obj)[\\/]' }) {
+            $relative = [IO.Path]::GetRelativePath("$PWD/src",$source.FullName)
+            $destination = Join-Path "$PWD/dist/AnkaStudio/repository/src" $relative
+            New-Item -ItemType Directory -Force (Split-Path $destination) | Out-Null
+            Copy-Item -LiteralPath $source.FullName -Destination $destination
+          }
           Copy-Item .github/workflows/*.yml dist/AnkaStudio/repository/.github/workflows
-          Copy-Item NuGet.Config,README.md,ROADMAP.md,.gitignore dist/AnkaStudio/repository
-          Invoke-WebRequest 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip' -OutFile ffmpeg.zip
-          Expand-Archive ffmpeg.zip ffmpeg
-          $root = Get-ChildItem ffmpeg -Directory | Select-Object -First 1
-          Copy-Item "$($root.FullName)/bin/ffmpeg.exe","$($root.FullName)/bin/ffprobe.exe" dist/AnkaStudio/tools
-          Copy-Item "$($root.FullName)/LICENSE" dist/AnkaStudio/tools/FFmpeg-LICENSE.txt
-          Copy-Item README.md,ROADMAP.md dist/AnkaStudio
+          Copy-Item tools/* dist/AnkaStudio/repository/tools -Recurse
+          foreach ($document in @('NuGet.Config','README.md','ROADMAP.md','.gitignore')) { if (Test-Path -LiteralPath $document) { Copy-Item -LiteralPath $document dist/AnkaStudio/repository } }
+          Copy-Item README.md dist/AnkaStudio
       - uses: actions/upload-artifact@v4
         with:
-          name: AnkaStudio-Windows-x64
+          name: TubeFlow-Windows-x64
           path: dist/AnkaStudio/
           retention-days: 14

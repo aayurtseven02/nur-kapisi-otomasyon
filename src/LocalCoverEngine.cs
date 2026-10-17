@@ -16,13 +16,14 @@ public static class LocalCoverEngine
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"Belgeler","AnkaStudio","local-cover-engine"),
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),"ComfyUI_windows_portable"),
         @"C:\ComfyUI_windows_portable"];
-    public static string? FindEngine(string root)
+    public static string[] FindEngines(string root)
     {
-        var candidates=new List<string>{root};
-        try {var binding=Path.Combine(root,"engine-folder.txt");if(File.Exists(binding)){var linked=File.ReadAllText(binding).Trim();if(Path.IsPathFullyQualified(linked))candidates.Add(linked);}}catch(IOException){}
-        candidates.AddRange(new[]{Path.Combine(root,"ComfyUI_windows_portable"),Path.Combine(root,"Intel","ComfyUI_windows_portable"),Path.Combine(root,"NVIDIA","ComfyUI_windows_portable"),Path.Combine(root,"NVIDIA-Eski","ComfyUI_windows_portable"),Path.Combine(root,"AMD","ComfyUI_windows_portable")});
-        return candidates.FirstOrDefault(p=>File.Exists(Path.Combine(p,"python_embeded","python.exe"))&&File.Exists(Path.Combine(p,"ComfyUI","main.py")));
+        var candidates=new List<string>();
+        try{var binding=Path.Combine(root,"engine-folder.txt");if(File.Exists(binding)){var linked=File.ReadAllText(binding).Trim();if(Path.IsPathFullyQualified(linked))candidates.Add(linked);}}catch(IOException){}
+        candidates.AddRange([Path.Combine(root,"NVIDIA","ComfyUI_windows_portable"),Path.Combine(root,"NVIDIA-Eski","ComfyUI_windows_portable"),Path.Combine(root,"AMD","ComfyUI_windows_portable"),Path.Combine(root,"Intel","ComfyUI_windows_portable"),Path.Combine(root,"ComfyUI_windows_portable"),root]);
+        return candidates.Distinct(StringComparer.OrdinalIgnoreCase).Where(p=>File.Exists(Path.Combine(p,"python_embeded","python.exe"))&&File.Exists(Path.Combine(p,"ComfyUI","main.py"))).ToArray();
     }
+    public static string? FindEngine(string root)=>FindEngines(root).FirstOrDefault();
     public static string FindInstalledWorkflow(IEnumerable<string>? codexRoots=null,IEnumerable<string>? engineRoots=null)
     {
         var roots = new List<string>();
@@ -57,29 +58,31 @@ public static class LocalCoverEngine
         }
         return "Bağlantı ve iş akışı uygun • gerekli model adları motorda bulundu. Görsel üretimi henüz yapılmadı.";
     }
-    public static async Task Start(string workflow, Action<string> report, CancellationToken ct)
+    public static async Task Start(string workflow,Action<string> report,CancellationToken ct,string? logDirectory=null)
     {
-        async Task<bool> Ready() {
-            try { using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct); timeout.CancelAfter(TimeSpan.FromSeconds(2)); using var response = await Http.GetAsync("system_stats", timeout.Token); return response.IsSuccessStatusCode; }
-            catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException && !ct.IsCancellationRequested) { return false; }
+        async Task<bool> Ready(){try{using var timeout=CancellationTokenSource.CreateLinkedTokenSource(ct);timeout.CancelAfter(TimeSpan.FromSeconds(2));using var response=await Http.GetAsync("system_stats",timeout.Token);return response.IsSuccessStatusCode;}catch(Exception ex)when(ex is HttpRequestException||ex is OperationCanceledException&&!ct.IsCancellationRequested){return false;}}
+        if(await Ready()){report("Yerel motor zaten açık • hazır.");return;}
+        if(!File.Exists(workflow))throw new InvalidOperationException("Yerel görsel iş akışı bulunamadı.");
+        var discovered=FindInstalledWorkflow();var roots=new[]{Path.GetDirectoryName(Path.GetFullPath(workflow))!}.Concat(StandardRoots()).Concat(discovered!=""?[Path.GetDirectoryName(discovered)!]:Array.Empty<string>());
+        var engines=roots.SelectMany(FindEngines).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+        if(engines.Length==0)throw new InvalidOperationException("Kullanılabilir yerel motor kurulumu bulunamadı.");
+        logDirectory??=Path.Combine(AppLock.DefaultDataRoot(),"logs","local-engine");Directory.CreateDirectory(logDirectory);var failures=new List<string>();
+        foreach(var engine in engines){
+            ct.ThrowIfCancellationRequested();string backend=engine.Contains("NVIDIA",StringComparison.OrdinalIgnoreCase)?"NVIDIA":File.Exists(Path.Combine(engine,"run_intel_gpu.bat"))||engine.Contains("Intel",StringComparison.OrdinalIgnoreCase)?"Intel":"Yerel";
+            string log=Path.Combine(logDirectory,DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N")[..6]+".log");
+            var info=new System.Diagnostics.ProcessStartInfo(Path.Combine(engine,"python_embeded","python.exe")){WorkingDirectory=engine,UseShellExecute=false,CreateNoWindow=true,WindowStyle=System.Diagnostics.ProcessWindowStyle.Hidden};
+            foreach(var arg in new[]{"-s","-u","-c","import sys,runpy; log=open(sys.argv.pop(1),'a',buffering=1,encoding='utf-8'); sys.stdout=log; sys.stderr=log; sys.argv[0]='ComfyUI/main.py'; runpy.run_path(sys.argv[0],run_name='__main__')",log,"--windows-standalone-build","--listen","127.0.0.1","--port","8188","--lowvram","--preview-method","none"})info.ArgumentList.Add(arg);
+            report(backend+" görsel motoru başlatılıyor • bağlantı otomatik kontrol ediliyor…");
+            System.Diagnostics.Process? process=null;bool ready=false;
+            try{
+                process=System.Diagnostics.Process.Start(info)??throw new InvalidOperationException("Motor işlemi başlatılamadı.");
+                for(int i=0;i<45;i++){ct.ThrowIfCancellationRequested();if(await Ready()){ready=true;report(backend+" görsel motoru hazır.");return;}if(process.HasExited)throw new InvalidOperationException("Motor kapandı (kod "+process.ExitCode+"). "+(File.Exists(log)?string.Join(" ",File.ReadLines(log).Where(x=>!string.IsNullOrWhiteSpace(x)).TakeLast(3)):""));await Task.Delay(2000,ct);}
+                throw new InvalidOperationException("Motor hazır olma süresini aştı.");
+            }catch(OperationCanceledException)when(ct.IsCancellationRequested){throw;}
+            catch(Exception ex){string reason=backend+": "+ex.Message;failures.Add(reason);report(backend+" motoru kullanılamadı; başka kurulu AI motoru deneniyor. "+ex.Message);}
+            finally{if(process!=null){if(!ready&&!process.HasExited)try{process.Kill(true);}catch{}process.Dispose();}}
         }
-        if (await Ready()) { report("Yerel motor zaten açık • hazır."); return; }
-        if (!File.Exists(workflow)) throw new InvalidOperationException("Önce yerel iş akışı dosyasını seç.");
-        var root = Path.GetDirectoryName(Path.GetFullPath(workflow))!;
-        var discovered=FindInstalledWorkflow();
-        var engine = FindEngine(root) ?? StandardRoots().Select(FindEngine).FirstOrDefault(p=>p!=null) ?? (discovered!=""?FindEngine(Path.GetDirectoryName(discovered)!):null)
-            ?? throw new InvalidOperationException("Motor klasörünü Merkez → Hesaplar ve AI motorları bölümünden bağla.");
-        var info = new System.Diagnostics.ProcessStartInfo(Path.Combine(engine,"python_embeded","python.exe")) { WorkingDirectory=engine, UseShellExecute=false, CreateNoWindow=true, WindowStyle=System.Diagnostics.ProcessWindowStyle.Hidden };
-        foreach (var arg in new[] { "-s", "ComfyUI/main.py", "--windows-standalone-build", "--listen", "127.0.0.1", "--port", "8188", "--lowvram", "--preview-method", "none" }) info.ArgumentList.Add(arg);
-        using var process = System.Diagnostics.Process.Start(info) ?? throw new InvalidOperationException("Yerel motor başlatılamadı.");
-        report("Yerel motor başlatılıyor • ilk açılış biraz sürebilir…");
-        for (int i=0; i<90; i++) {
-            ct.ThrowIfCancellationRequested();
-            if (await Ready()) { report("Yerel motor hazır • tasarım üretilebilir."); return; }
-            if (process.HasExited) throw new InvalidOperationException("Yerel motor açılırken kapandı. Motor kurulumu ve ekran kartı sürücüsünü kontrol et.");
-            await Task.Delay(2000, ct);
-        }
-        throw new InvalidOperationException("Motor henüz hazır olmadı. Biraz sonra başlat tuşuyla bağlantıyı tekrar kontrol et.");
+        throw new InvalidOperationException("Kurulu AI motorlarının tamamı denendi. "+string.Join(" | ",failures)+" Kayıtlar: "+logDirectory);
     }
     // Kolay menü: kullanıcı JSON düzenlemez; kalite ve model seçimi burada iş akışına uygulanır.
     public static readonly string[] Qualities = ["Hızlı", "Dengeli", "Ultra sinematik"];

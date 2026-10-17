@@ -83,13 +83,13 @@ public static class StoryImages
         string fit=$"scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height},setsar=1";
         return motion ? fit+$",zoompan=z='min(1.08,1+on*0.00015)':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s={width}x{height}:fps={fps}" : fit+$",fps={fps}";
     }
-    public static async Task Prepare(Store store,Episode e,VideoScript script,Scene scene,bool vertical,Settings settings,CancellationToken ct,Action<string> log,HttpClient? client=null,Func<string,string,CancellationToken,Task<bool>>? review=null)
+    public static async Task Prepare(Store store,Episode e,VideoScript script,Scene scene,bool vertical,Settings settings,CancellationToken ct,Action<string> log,HttpClient? client=null,Func<string,string,CancellationToken,Task<bool>>? review=null,bool automaticCloudAlternative=false)
     {
         ct.ThrowIfCancellationRequested();
         Validate(e);
         // One cast reference is shared by all normal/Shorts scenes in this story.
         settings=LocalSettings(e,settings);RequireReady(store,settings);
-        if(settings.CoverLocalEnabled && client==null){await LocalCoverEngine.Start(settings.CoverLocalWorkflow,log,ct);await LocalCoverEngine.CheckStorySupport(ct,settings.CoverLocalWorkflow);}
+        if(settings.CoverLocalEnabled && client==null){await LocalCoverEngine.Start(settings.CoverLocalWorkflow,log,ct,Path.Combine(store.Root,"logs","local-engine"));await LocalCoverEngine.CheckStorySupport(ct,settings.CoverLocalWorkflow);}
         var folder=Path.Combine(store.Folder(e),"story-images",Identity(e));Directory.CreateDirectory(folder);
         var reference=Path.Combine(folder,"characters.png");
         bool Valid(string path) {
@@ -106,7 +106,7 @@ public static class StoryImages
                 ct.ThrowIfCancellationRequested();log("Görsel yeniden üretiliyor…");await regenerate(attempt);
             }
         }
-        var generator=new CoverFallback(store,message=>log(message.Replace("kapak tasarlıyor","hikâye görseli üretiyor").Replace("başlık ekleniyor","sahne kaydediliyor")),client);
+        var generator=new CoverFallback(store,message=>log(message.Replace("kapak tasarlıyor","hikâye görseli üretiyor").Replace("başlık ekleniyor","sahne kaydediliyor")),client,automaticCloudAlternative?new HashSet<string>{"Gemini","OpenAI"}:null);
         if(!Valid(reference) && e.AiStoryReferenceIdentityHash==Identity(e) && File.Exists(e.AiStoryReferenceFile) && e.AiStoryReferenceHash!="" && Reliability.FileHash(e.AiStoryReferenceFile)==e.AiStoryReferenceHash && Path.GetFullPath(e.AiStoryReferenceFile)!=Path.GetFullPath(reference)) {
             File.Copy(e.AiStoryReferenceFile,reference,true);File.WriteAllText(reference+".sha",e.AiStoryReferenceHash);log("Taşınan proje karakter referansı korunarak kullanıldı.");
         }

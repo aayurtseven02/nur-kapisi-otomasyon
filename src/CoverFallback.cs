@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace AnkaStudio;
 
-public sealed class CoverFallback(Store store, Action<string> log, HttpClient? client = null)
+public sealed class CoverFallback(Store store, Action<string> log, HttpClient? client = null,IReadOnlySet<string>? permittedProviders=null)
 {
     public sealed class Usage { public string Month { get; set; } = ""; public int Requests { get; set; } }
     static readonly HttpClient Http = new() { Timeout = TimeSpan.FromMinutes(2) };
@@ -44,7 +44,7 @@ public sealed class CoverFallback(Store store, Action<string> log, HttpClient? c
             {
                 try {
                     if(!File.Exists(settings.CoverLocalWorkflow))settings.CoverLocalWorkflow=LocalCoverEngine.FindInstalledWorkflow();
-                    if(client==null)await LocalCoverEngine.Start(settings.CoverLocalWorkflow,log,ct);
+                    if(client==null)await LocalCoverEngine.Start(settings.CoverLocalWorkflow,log,ct,Path.Combine(store.Root,"logs","local-engine"));
                     if(client==null && styleReference)await LocalCoverEngine.CheckStorySupport(ct,settings.CoverLocalWorkflow);
                     var prompt = "Subject: " + topic[..Math.Min(topic.Length, 1800)] + ". User visual direction: " + copy.CoverDesignInstructions[..Math.Min(copy.CoverDesignInstructions.Length, 2500)] + ". Cinematic illustration, rich colors, warm light. Subject on right, title space on left. No text or logos, no fabricated scripture.";
                     if (scenePrompt != null) prompt = scenePrompt;
@@ -65,7 +65,7 @@ public sealed class CoverFallback(Store store, Action<string> log, HttpClient? c
             if(scenePrompt != null && settings.CoverLocalEnabled && copy.CoverBackground != "") {
                 File.Copy(copy.CoverBackground,path,true);log("Yerel hikâye sahnesi hazır.");return;
             }
-            foreach (var attempt in settings.CoverProviderOrder.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Concat(new[] { "NVIDIA", "Gemini", "OpenAI" }).Distinct().SelectMany(p => ModelsFor(p, settings).Select(m => (Provider: p, Model: m))).Where(_ => copy.CoverBackground == ""))
+            foreach (var attempt in settings.CoverProviderOrder.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Concat(new[] { "NVIDIA", "Gemini", "OpenAI" }).Distinct().SelectMany(p => ModelsFor(p, settings).Select(m => (Provider: p, Model: m))).Where(attempt => copy.CoverBackground == "" && (permittedProviders==null||permittedProviders.Contains(attempt.Provider))))
             {
                 var provider = attempt.Provider; var model = attempt.Model;
                 if (referenceImage!=null && provider == "NVIDIA") { log("NVIDIA atlandı: mevcut bağlantı referans görsel kabul etmiyor. Referans destekleyen bulut modeli veya yerel motor kullanılacak."); continue; }
