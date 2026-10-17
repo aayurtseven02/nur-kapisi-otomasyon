@@ -289,7 +289,7 @@ public sealed partial class GitHub(Store store, HttpClient? client = null)
 
         var item = d.RootElement.GetProperty("artifacts").EnumerateArray().FirstOrDefault(x => x.GetProperty("name").GetString()!.StartsWith("anka-package-") && !x.GetProperty("expired").GetBoolean());
 
-        if (item.ValueKind != JsonValueKind.Object) throw new InvalidOperationException("Bu çalışmada indirilebilir Anka paketi henüz yok.");
+        if (item.ValueKind != JsonValueKind.Object) throw new InvalidOperationException("Bu çalışmada indirilebilir TubeFlow paketi henüz yok.");
 
         var folder = Path.Combine(store.Root, "imports", runId, Guid.NewGuid().ToString("N")); Directory.CreateDirectory(folder); var zipPath = Path.Combine(folder, "package.zip");
 

@@ -1,0 +1,80 @@
+name: Hazır videoyu YouTube'a yükle
+run-name: 'Anka YouTube ${{ inputs.job_id }}'
+on:
+  workflow_dispatch:
+    inputs:
+      job_id:
+        required: true
+        type: string
+      episode_id:
+        required: true
+        type: string
+      asset_id:
+        required: true
+        type: string
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: 'anka-youtube-${{ inputs.episode_id }}'
+  cancel-in-progress: false
+jobs:
+  upload:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+      ANKA_UPLOAD_JOB: ${{ inputs.job_id }}
+      ANKA_EPISODE_ID: ${{ inputs.episode_id }}
+      ANKA_ASSET_ID: ${{ inputs.asset_id }}
+      ANKA_BRANCH: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Yükleme motorunu derle
+        run: dotnet publish src/AnkaStudio.csproj -c Release -r win-x64 --self-contained true -o worker
+      - name: Hazır video paketini indir
+        shell: pwsh
+        run: |
+          if ($env:ANKA_UPLOAD_JOB -notmatch '^[a-f0-9]{32}$' -or $env:ANKA_EPISODE_ID -notmatch '^[a-f0-9]{32}$' -or $env:ANKA_ASSET_ID -notmatch '^\d+$') { throw 'Geçersiz iş kimliği.' }
+          $headers = @{ Authorization = "Bearer $env:GITHUB_TOKEN"; Accept = 'application/octet-stream'; 'User-Agent' = 'AnkaStudio' }
+          Invoke-WebRequest "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases/assets/$env:ANKA_ASSET_ID" -Headers $headers -OutFile upload.zip
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $target = [IO.Path]::GetFullPath("$PWD/input") + [IO.Path]::DirectorySeparatorChar
+          [IO.Directory]::CreateDirectory($target) | Out-Null
+          $zip = [IO.Compression.ZipFile]::OpenRead("$PWD/upload.zip")
+          try {
+            [long]$total = 0
+            foreach ($entry in $zip.Entries) {
+              $total += $entry.Length
+              if ($total -gt 2147483648 -or $entry.FullName.Contains(':')) { throw 'Aktarım paketi sınır dışı.' }
+              $path = [IO.Path]::GetFullPath([IO.Path]::Combine($target,$entry.FullName))
+              if (-not $path.StartsWith($target,[StringComparison]::OrdinalIgnoreCase)) { throw 'Paket dışı dosya yolu.' }
+              if ($entry.Name -eq '') { continue }
+              [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($path)) | Out-Null
+              [IO.Compression.ZipFileExtensions]::ExtractToFile($entry,$path,$false)
+            }
+          } finally { $zip.Dispose() }
+          Invoke-WebRequest 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip' -OutFile ffmpeg.zip
+          Expand-Archive ffmpeg.zip ffmpeg
+          $root = Get-ChildItem ffmpeg -Directory | Select-Object -First 1
+          New-Item -ItemType Directory -Force worker/tools | Out-Null
+          Copy-Item "$($root.FullName)/bin/ffmpeg.exe","$($root.FullName)/bin/ffprobe.exe" worker/tools
+      - name: YouTube'a yükle ve sonucu kaydet
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath worker/TubeFlow.exe -ArgumentList '--worker','--youtube-upload','--upload-bundle',"$PWD/input/upload.json",'--data',"$PWD/data" -Wait -PassThru -WindowStyle Hidden
+          if ($p.ExitCode -ne 0) { throw 'YouTube yüklemesi tamamlanamadı. Programdan durumu kontrol et; kayıtlı oturum ile yeniden denenebilir.' }
+      - name: Yükleme sonuç belgesini sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'anka-upload-result-${{ inputs.job_id }}'
+          path: data/upload-result.json
+          retention-days: 7
+          if-no-files-found: warn

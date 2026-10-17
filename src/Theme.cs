@@ -117,7 +117,7 @@ public sealed class Hero : Control
         using var small = Theme.Font(9); using var copy = Theme.Font(11);
         using var title = Theme.Font(Width < 900 ? 25 : 31, true);
         using var accent = new SolidBrush(Theme.Teal); using var text = new SolidBrush(Theme.Text); using var muted = new SolidBrush(Theme.Muted);
-        g.DrawString("ANKA STUDIO  /  İÇERİK ÜRETİMİ", small, text, 0, 18);
+        g.DrawString("TUBEFLOW  /  İÇERİK ÜRETİMİ", small, text, 0, 18);
         g.DrawString("FİKRİNİ BİR VİDEOYA\nDÖNÜŞTÜR.", title, text, new RectangleF(0, 50, Math.Max(320, Width - 310), 105));
         g.DrawString("Konunu ekle. İçeriğini hazırla. İncele ve paylaş.", copy, muted, new RectangleF(0, 165, Width - 10, 36));
         if (Width > 740) {

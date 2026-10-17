@@ -35,6 +35,7 @@ internal static class Program
             try {var workflow=Arg(args,"--workflow")??throw new InvalidOperationException("İş akışı gerekli.");using var stop=new CancellationTokenSource(TimeSpan.FromMinutes(3));Task.Run(async()=>{await LocalCoverEngine.Start(workflow,Console.WriteLine,stop.Token);Console.WriteLine(await LocalCoverEngine.Check(workflow,stop.Token));}).GetAwaiter().GetResult();}
             catch(Exception ex){Console.Error.WriteLine(ex.Message);Environment.ExitCode=1;}return;
         }
+        if(!args.Any(x=>x.StartsWith("--"))){if(AppBranding.ForwardLegacy(args))return;AppBranding.RefreshUserShortcuts();}
         if(StartupUpdates.Run(args))return;
 
         ModernScrollbars.Install();

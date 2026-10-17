@@ -8,14 +8,16 @@ $taskOut=[IO.Path]::GetFullPath($OutputDirectory);$taskBuildId=[Guid]::NewGuid()
 New-Item -ItemType Directory -Force -Path $taskOut | Out-Null
 dotnet publish $taskProject -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:DebugType=None -p:DebugSymbols=false -o $taskBuild
 if($LASTEXITCODE -ne 0){throw 'Program paketi derlenemedi.'}
+Copy-Item -LiteralPath (Join-Path $taskBuild 'TubeFlow.exe') -Destination (Join-Path $taskBuild 'AnkaStudio.exe')
+Copy-Item -LiteralPath (Join-Path $taskBuild 'TubeFlow.dll') -Destination (Join-Path $taskBuild 'AnkaStudio.dll')
 New-Item -ItemType Directory -Force -Path $taskPayload | Out-Null
 foreach($taskFile in Get-ChildItem -LiteralPath $taskBuild -Recurse -File){
     $taskRelative=$taskFile.FullName.Substring($taskBuild.Length+1).Replace('\','/')
-    $taskAllowed=$taskRelative -match '^[^/]+\.dll$|^AnkaStudio\.exe$|^AnkaStudio\.(deps|runtimeconfig)\.json$|^Update-Install\.ps1$|^[a-zA-Z-]+/[^/]+\.resources\.dll$|^runtimes/.+\.dll$|^tools/workflows/anka-(sdxl|flux2)\.json$|^tools/audio-alignment/align\.py$|^ChannelPackages/NurKapisi/nur-kapisi-[^/]+\.png$'
+    $taskAllowed=$taskRelative -match '^[^/]+\.dll$|^(TubeFlow|AnkaStudio)\.exe$|^TubeFlow\.(deps|runtimeconfig)\.json$|^Update-Install\.ps1$|^[a-zA-Z-]+/[^/]+\.resources\.dll$|^runtimes/.+\.dll$|^tools/workflows/anka-(sdxl|flux2)\.json$|^tools/audio-alignment/align\.py$|^ChannelPackages/NurKapisi/nur-kapisi-[^/]+\.png$'
     if($taskAllowed){$taskDestination=Join-Path $taskPayload $taskRelative;New-Item -ItemType Directory -Force -Path (Split-Path $taskDestination) | Out-Null;Copy-Item -LiteralPath $taskFile.FullName -Destination $taskDestination}
 }
 @{FeedUrl="https://api.github.com/repos/$Repository/releases/latest"} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskPayload 'anka-update-source.json') -Encoding utf8
-$taskName="AnkaStudio-$taskVersion-win-x64.zip";$taskZip=Join-Path $taskOut $taskName
+$taskName="TubeFlow-$taskVersion-win-x64.zip";$taskZip=Join-Path $taskOut $taskName
 Compress-Archive -Path (Join-Path $taskPayload '*') -DestinationPath $taskZip -Force
 $taskUpdates=@()
 if($PreviousManifest -and (Test-Path -LiteralPath $PreviousManifest)){

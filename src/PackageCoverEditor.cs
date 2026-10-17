@@ -226,7 +226,7 @@ public sealed class PackageCoverEditor : Form
                     approveCover.Enabled=redesignCover.Enabled=true;
                 } catch(Exception ex) { Theme.Alert(this,ex.Message); }
             },false,600));
-            flow.Controls.Add(Theme.Label("Flow video çıktısını Sahne editöründeki kendi video dosyanı seçme alanından kullanabilirsin. Bu bağlantı Flow’u tarayıcıda kullanır; Anka otomatik kredi harcaması veya API üretimi yapmaz.",10,width:FieldWidth,height:60));
+            flow.Controls.Add(Theme.Label("Flow video çıktısını Sahne editöründeki kendi video dosyanı seçme alanından kullanabilirsin. Bu bağlantı Flow’u tarayıcıda kullanır; TubeFlow otomatik kredi harcaması veya API üretimi yapmaz.",10,width:FieldWidth,height:60));
             flow.Controls.Add(Theme.Label("Seçili model önce denenir, başarısız olursa diğer görsel modellerine geçilir. Anahtarı olmayan servisler atlanır; aylık istek sınırı korunur. Tasarım sağda onayına sunulur.",10,width:FieldWidth,height:65));
 
             flow.Controls.Add(Theme.Button("Kapağı önizle",()=> { try { read(); var copy=PackageArtwork.Snapshot(settings); copy.ChannelName=settings.ChannelName; if(copy.CoverAutoStyle) copy.CoverStyle=CoverDesigner.Suggest(episode.Topic); using var image=CoverDesigner.Draw(copy,title.Text.Trim(),vertical); using var dialog=StudioForm.Dialog("Kapak önizlemesi",1000,730); dialog.Controls.Add(new PictureBox{Dock=DockStyle.Fill,Image=image,SizeMode=PictureBoxSizeMode.Zoom}); dialog.ShowDialog(this); } catch(Exception ex) { Theme.Alert(this,ex.Message); } },true,250));

@@ -6,11 +6,11 @@ public static class GlobalMusic
 
 {
 
-    public static MusicTrack Resolve(Store store, bool vertical)
+    public static MusicTrack Resolve(Store store, bool vertical, Settings? selected = null)
 
     {
 
-        var settings = store.Settings;
+        var settings = selected ?? store.Settings;
 
         var saved = settings.LibraryMusic;
 

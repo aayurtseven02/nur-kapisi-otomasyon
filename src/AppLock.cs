@@ -189,7 +189,7 @@ public static class AppLock
 
         remember.CheckedChanged += (_, _) => { if (!remember.Checked) Remember(root, "", false); };
 
-        var recovery = Theme.Button("Şifremi unuttum", () => { if (setup) { Theme.Alert(form, "Bu veri klasöründe kayıtlı bir hesap bulunamadı. Eski şifrenin üzerine yazılmadı. Önceden kullandığın Anka kurulumunu ve veri klasörünü kontrol et. Kayıtlı hesap bulunduğunda bu düğmeyle, aynı Windows hesabından yeni şifre belirleyebilirsin."); return; } if (RecoveryDialog(root, form)) { password.Clear(); remember.Checked = false; status.Text = "Şifre sıfırlandı. Yeni şifrenle giriş yap."; } }, false, 230); recovery.Location = new(270, 320); recovery.Visible = true;
+        var recovery = Theme.Button("Şifremi unuttum", () => { if (setup) { Theme.Alert(form, "Bu veri klasöründe kayıtlı bir hesap bulunamadı. Eski şifrenin üzerine yazılmadı. Önceden kullandığın TubeFlow kurulumunu ve veri klasörünü kontrol et. Kayıtlı hesap bulunduğunda bu düğmeyle, aynı Windows hesabından yeni şifre belirleyebilirsin."); return; } if (RecoveryDialog(root, form)) { password.Clear(); remember.Checked = false; status.Text = "Şifre sıfırlandı. Yeni şifrenle giriş yap."; } }, false, 230); recovery.Location = new(270, 320); recovery.Visible = true;
 
         var attempts = 0; var button = Theme.Button(setup ? "Şifre oluştur ve aç" : "Giriş yap", () => {
 

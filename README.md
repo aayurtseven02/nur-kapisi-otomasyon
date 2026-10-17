@@ -1,3 +1,7 @@
+# TubeFlow 0.4.10 — Proje müziği, kapak motoru ve adlandırma
+
+Proje müziği üretim kontrolünde korunur ve seçilen parça adı görünür. Kapak tasarımında FLUX.2 / Stable Diffusion XL ve Minimum / Orta / Maksimum kalite seçilir. Ana program TubeFlow.exe, masaüstü simgesi büyük TubeFlow amblemidir. Görünen eski adlar güncellenmiştir. Eski kurulumların ilk güncellemeyi alabilmesi için uyumluluk dosyaları korunur.
+
 # TubeFlow 0.4.9 — Ses ve müzik önizlemesi
 
 Seçili müzik uygulama içinde dinlenebilir. Müzik arşivi seçiminde her parça için ayrı Ön dinle ve Seç düğmeleri bulunur. Ses örneği de dış oynatıcı açmadan uygulama içinde çalınır.

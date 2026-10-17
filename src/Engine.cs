@@ -92,7 +92,7 @@ public static class Media
 
         var top = vertical ? 500 : 290;
 
-        g.DrawString(demo ? "ANKA STUDIO / ÖRNEK" : channel.ToUpper(new CultureInfo("tr-TR")), small, teal, new RectangleF(90, top - 100, w - 180, 80));
+        g.DrawString(demo ? "TUBEFLOW / ÖRNEK" : channel.ToUpper(new CultureInfo("tr-TR")), small, teal, new RectangleF(90, top - 100, w - 180, 80));
 
         g.DrawString(title, heading, white, new RectangleF(85, top, w - 170, vertical ? 760 : 460));
 
@@ -351,7 +351,8 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
         foreach (var (_, vertical, script) in Rules.Scripts(e)) {
 
-            if (script.MusicTrack == null && e.Music) script.MusicTrack = GlobalMusic.Resolve(store, vertical);
+            var musicSettings=VideoSettings.For(store.Settings,e,script);
+            if (script.MusicTrack == null && e.Music) script.MusicTrack = GlobalMusic.Resolve(store, vertical,musicSettings);
 
             script.MusicTrack?.Validate();
 
@@ -359,7 +360,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
             if (script.MusicTrack?.Enabled == true && script.MusicTrack.Volume == 0) throw new InvalidOperationException("Müzik açık fakat ses seviyesi sıfır. Sahne editöründen ses seviyesini yükselt.");
 
-            var path = script.MusicTrack == null ? (e.Music ? store.Settings.MusicPath : "") : (script.MusicTrack.Enabled ? script.MusicTrack.File : "");
+            var path = script.MusicTrack == null ? (e.Music ? musicSettings.MusicPath : "") : (script.MusicTrack.Enabled ? script.MusicTrack.File : "");
 
             if (path != "" && !File.Exists(path) || script.MusicTrack == null && e.Music && path == "") throw new InvalidOperationException("Müzik seçili ama dosya yok. Editörden müzik seç veya müziği kapat.");
 

@@ -73,8 +73,9 @@ public static class StartupUpdates
             string dest=Path.GetFullPath(Path.Combine(payload,relative));if(!dest.StartsWith(payload+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException("Paket yolu geçersiz.");
             Directory.CreateDirectory(Path.GetDirectoryName(dest)!);entry.ExtractToFile(dest);hashes[relative]=Reliability.FileHash(dest);
         }
-        if(!File.Exists(Path.Combine(payload,"AnkaStudio.exe"))||!File.Exists(Path.Combine(payload,"AnkaStudio.dll"))||!File.Exists(Path.Combine(payload,"coreclr.dll")))throw new InvalidOperationException("Güncelleme paketi çalışma ortamını içermiyor.");
-        if(!System.Version.TryParse(FileVersionInfo.GetVersionInfo(Path.Combine(payload,"AnkaStudio.dll")).FileVersion,out var actual)||Normal(actual)!=Normal(next))throw new InvalidOperationException("Paket sürümü güncelleme listesiyle eşleşmiyor.");
+        string appName=File.Exists(Path.Combine(payload,"TubeFlow.exe"))?"TubeFlow":"AnkaStudio";
+        if(!File.Exists(Path.Combine(payload,appName+".exe"))||!File.Exists(Path.Combine(payload,appName+".dll"))||!File.Exists(Path.Combine(payload,"coreclr.dll")))throw new InvalidOperationException("Güncelleme paketi çalışma ortamını içermiyor.");
+        if(!System.Version.TryParse(FileVersionInfo.GetVersionInfo(Path.Combine(payload,appName+".dll")).FileVersion,out var actual)||Normal(actual)!=Normal(next))throw new InvalidOperationException("Paket sürümü güncelleme listesiyle eşleşmiyor.");
         await File.WriteAllTextAsync(Path.Combine(stage,"files.json"),JsonSerializer.Serialize(hashes),ct);
         return new Staged(stage,next.ToString(),manifest.Sha256);
     }
@@ -104,7 +105,7 @@ public static class StartupUpdates
                         string encoded=Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(args.Where(x=>x!="--skip-update-once").ToArray())));
                         string Q(string s)=>"\""+s.Replace("\"","\\\"")+"\"";
                         var info=new ProcessStartInfo("powershell.exe"){UseShellExecute=true,Verb="runas",WindowStyle=ProcessWindowStyle.Hidden,Arguments="-NoProfile -ExecutionPolicy Bypass -File "+Q(helper)+" -ParentId "+Environment.ProcessId+" -Source "+Q(stage.Folder)+" -Target "+Q(baseDir.TrimEnd(Path.DirectorySeparatorChar))+" -PackageSha256 "+stage.Sha256+" -RestartArgsBase64 "+encoded};
-                        label.Text="Güncelleme kuruluyor; ardından Anka açılacak…";
+                        label.Text="Güncelleme kuruluyor; ardından TubeFlow açılacak…";
                         using var process=Process.Start(info);installing=process!=null;
                     }
                 }catch(Exception ex){

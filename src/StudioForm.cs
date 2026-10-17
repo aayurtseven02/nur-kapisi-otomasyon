@@ -143,7 +143,7 @@ public sealed partial class StudioForm : Form
 
         var chat = Theme.Button("Sohbet", ToggleAssistant, true, 116);
 
-        chat.Height = 48; chat.Anchor = AnchorStyles.Top | AnchorStyles.Left; chat.AccessibleName = "Anka sohbet yardımcısını aç";
+        chat.Height = 48; chat.Anchor = AnchorStyles.Top | AnchorStyles.Left; chat.AccessibleName = "TubeFlow sohbet yardımcısını aç";
 
         void PlaceChat() { chat.Location = new(ClientSize.Width - chat.Width - 28, ClientSize.Height - chat.Height - 18); chat.BringToFront(); }
 

@@ -3,7 +3,7 @@ public sealed partial class StudioForm
 {
     Form WelcomeSetup()
     {
-        var dialog=Dialog("Anka’ya hoş geldin",670,500);var flow=Theme.Flow(590);flow.Dock=DockStyle.Fill;dialog.Controls.Add(flow);
+        var dialog=Dialog("TubeFlow’ya hoş geldin",670,500);var flow=Theme.Flow(590);flow.Dock=DockStyle.Fill;dialog.Controls.Add(flow);
         int step=0;string channel=store.Settings.ChannelName;string preset="story";
         void Draw(){foreach(var control in flow.Controls.Cast<Control>().ToArray())control.Dispose();flow.Controls.Clear();
             flow.Controls.Add(Theme.Label($"Kolay kurulum • {step+1}/3",20,true,width:560,height:50));

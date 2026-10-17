@@ -16,7 +16,7 @@ public sealed partial class StudioForm
     {
         if(engine.Busy){Message("Önce çalışan üretimi tamamla.");return;}
         if(Theme.Alert(this,"Eski geliştirme dosyaları yedek klasörüne taşınacak. Projeler, görseller ve hesap verileri korunur. Devam edilsin mi?","Program bakımı",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;
-        try{var start=new ProcessStartInfo(Path.Combine(AppContext.BaseDirectory,"AnkaStudio.exe")){UseShellExecute=true,Verb="runas"};start.ArgumentList.Add("--cleanup-program-files");Process.Start(start);}
+        try{var start=new ProcessStartInfo(Path.Combine(AppContext.BaseDirectory,"TubeFlow.exe")){UseShellExecute=true,Verb="runas"};start.ArgumentList.Add("--cleanup-program-files");Process.Start(start);}
         catch(Exception ex){Message("Temizlik başlatılamadı: "+ex.Message);}
     }
 }

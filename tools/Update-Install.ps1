@@ -22,7 +22,7 @@ function Open-Anka([bool]$skipCheck=$false) {
     if($skipCheck){$taskAllArgs.Add('--skip-update-once')}
     foreach($taskArg in $taskArgs){if($null -ne $taskArg){$taskAllArgs.Add([string]$taskArg)}}
     $taskArguments=($taskAllArgs | ForEach-Object {'"'+$_.Replace('"','\"')+'"'}) -join ' '
-    $taskApp=Join-Path $taskTarget 'AnkaStudio.exe'
+    $taskApp=Join-Path $taskTarget 'TubeFlow.exe';if(!(Test-Path -LiteralPath $taskApp)){$taskApp=Join-Path $taskTarget 'AnkaStudio.exe'}
     # Ask the interactive desktop shell to restart with the user's normal desktop token.
     try{$taskShell=New-Object -ComObject Shell.Application;$taskShell.ShellExecute($taskApp,$taskArguments,$taskTarget,'open',1)}
     catch{Start-Process -FilePath $taskApp -ArgumentList $taskArguments -WorkingDirectory $taskTarget}
@@ -35,7 +35,7 @@ try{
     $taskLabel=New-Object Windows.Forms.Label;$taskLabel.Text='Guncelleme yukleniyor. Lutfen bekleyin...';$taskLabel.SetBounds(20,20,480,36)
     $taskBar=New-Object Windows.Forms.ProgressBar;$taskBar.SetBounds(20,65,480,25)
     $taskWindow.Controls.AddRange(@($taskLabel,$taskBar));$taskWindow.Show();[Windows.Forms.Application]::DoEvents()
-    if(!(Test-Path -LiteralPath (Join-Path $taskTarget 'AnkaStudio.exe'))){throw 'Hedef uygulama bulunamadi.'}
+    if(!(Test-Path -LiteralPath (Join-Path $taskTarget 'AnkaStudio.exe')) -and !(Test-Path -LiteralPath (Join-Path $taskTarget 'TubeFlow.exe'))){throw 'Hedef uygulama bulunamadi.'}
     if((File-Sha (Join-Path $Source 'download.zip')) -ne $PackageSha256){throw 'Indirilen paket kurulumdan once degismis.'}
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $taskArchive=[IO.Compression.ZipFile]::OpenRead((Join-Path $Source 'download.zip'))
@@ -51,8 +51,8 @@ try{
         }
         if($taskArchiveCount -ne @($taskFiles.PSObject.Properties).Count){throw 'Paket listesinde fazladan dosya var.'}
     }finally{$taskArchive.Dispose()}
-    if($ParentId -gt 0){$taskParent=Get-Process -Id $ParentId -ErrorAction SilentlyContinue;if($taskParent){$null=$taskParent.WaitForExit(60000);if(!$taskParent.HasExited){throw 'Anka kapanmadi; dosyalar degistirilmedi.'}}}
-    if(Get-Process AnkaStudio -ErrorAction SilentlyContinue | Where-Object {$_.Path -and [IO.Path]::GetFullPath($_.Path).StartsWith($taskTarget+'\',[StringComparison]::OrdinalIgnoreCase)}){throw 'Baska Anka penceresi acik; guncelleme ertelendi.'}
+    if($ParentId -gt 0){$taskParent=Get-Process -Id $ParentId -ErrorAction SilentlyContinue;if($taskParent){$null=$taskParent.WaitForExit(60000);if(!$taskParent.HasExited){throw 'TubeFlow kapanmadi; dosyalar degistirilmedi.'}}}
+    if(Get-Process AnkaStudio,TubeFlow -ErrorAction SilentlyContinue | Where-Object {$_.Path -and [IO.Path]::GetFullPath($_.Path).StartsWith($taskTarget+'\',[StringComparison]::OrdinalIgnoreCase)}){throw 'Baska TubeFlow penceresi acik; guncelleme ertelendi.'}
     foreach($taskEntry in $taskFiles.PSObject.Properties){
         $taskFrom=Bounded $taskSource $taskEntry.Name;$null=Bounded $taskTarget $taskEntry.Name
         if((File-Sha $taskFrom) -ne $taskEntry.Value){throw 'Paket dosyasi degismis; kurulum iptal edildi.'}
@@ -70,7 +70,7 @@ try{
     }
     $taskCheck=Join-Path $Source 'LaunchCheck'
     $taskReport=Join-Path $taskCheck 'health.json'
-    $taskTest=Start-Process -FilePath (Join-Path $taskTarget 'AnkaStudio.exe') -ArgumentList @('--startup-health-check','--health-report',('"'+$taskReport+'"')) -WindowStyle Hidden -PassThru
+    $taskTest=Start-Process -FilePath (Join-Path $taskTarget 'TubeFlow.exe') -ArgumentList @('--startup-health-check','--health-report',('"'+$taskReport+'"')) -WindowStyle Hidden -PassThru
     if(!$taskTest.WaitForExit(30000)){Stop-Process -Id $taskTest.Id -Force;throw 'Yeni surum zamaninda acilamadi.'}
     if($taskTest.ExitCode -ne 0 -or !(Test-Path -LiteralPath $taskReport)){throw 'Yeni surum acilis testi gecemedi.'}
     $taskResult=Get-Content -LiteralPath $taskReport -Raw | ConvertFrom-Json

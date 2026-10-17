@@ -134,7 +134,7 @@ public static class PortableProject
 
         using var lease=new OperationLease(store);using var archive=ZipFile.OpenRead(source);
 
-        var metadata=archive.GetEntry("project.json") ?? throw new InvalidOperationException("Anka proje yedeği değil.");
+        var metadata=archive.GetEntry("project.json") ?? throw new InvalidOperationException("TubeFlow proje yedeği değil.");
 
         if(metadata.Length>20*1024*1024)throw new InvalidOperationException("Proje kaydı aşırı büyük.");
 

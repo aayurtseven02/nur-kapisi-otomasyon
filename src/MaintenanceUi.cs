@@ -66,7 +66,7 @@ public sealed partial class StudioForm
 
             if(engine.Busy || queueRunning)throw new InvalidOperationException("Önce çalışan üretimi durdur.");
 
-            using var picker=new OpenFileDialog{Filter="Anka proje yedeği|*.ankaproject",RestoreDirectory=true};if(picker.ShowDialog(dialog)!=DialogResult.OK)return;
+            using var picker=new OpenFileDialog{Filter="TubeFlow proje yedeği|*.ankaproject",RestoreDirectory=true};if(picker.ShowDialog(dialog)!=DialogResult.OK)return;
 
             var restored=await PortableProject.Restore(store,picker.FileName,CancellationToken.None);dialog.Close();OpenWorkspace(restored);
 
@@ -90,7 +90,7 @@ public sealed partial class StudioForm
 
         flow.Controls.Add(Theme.Button("Temizlenmiş destek kaydı oluştur",()=>{
 
-            using var picker=new SaveFileDialog{Filter="Metin|*.txt",FileName="Anka-destek.txt"};if(picker.ShowDialog(dialog)!=DialogResult.OK)return;
+            using var picker=new SaveFileDialog{Filter="Metin|*.txt",FileName="TubeFlow-destek.txt"};if(picker.ShowDialog(dialog)!=DialogResult.OK)return;
 
             var text=ToolHealth.Check(store)+"\n\n"+string.Join("\n\n",store.Episodes.Select(e=>e.Topic+"\n"+string.Join("\n",e.Events.TakeLast(30))));
 
@@ -110,7 +110,7 @@ public sealed partial class StudioForm
 
         if(engine.Busy || queueRunning)throw new InvalidOperationException("Yedeklemeden önce çalışan üretimi durdur.");
 
-        using var picker=new SaveFileDialog{Filter="Anka proje yedeği|*.ankaproject",FileName="Anka-proje.ankaproject",RestoreDirectory=true};if(picker.ShowDialog(this)!=DialogResult.OK)return;
+        using var picker=new SaveFileDialog{Filter="TubeFlow proje yedeği|*.ankaproject",FileName="TubeFlow-proje.ankaproject",RestoreDirectory=true};if(picker.ShowDialog(this)!=DialogResult.OK)return;
 
         await PortableProject.Export(store,episode,picker.FileName,CancellationToken.None);Message("Kaynaklar ve çıktılarla proje yedeği oluşturuldu ve doğrulandı.");
 

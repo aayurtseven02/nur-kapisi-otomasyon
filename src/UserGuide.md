@@ -347,7 +347,7 @@ Proje kayıtları ve şifreli hesap kasası mevcut biçimde korunmuştur; bu sü
 
 
 ## Açılışta GitHub güncellemesi (0.3.20)
-Normal AnkaStudio.exe açılışında önce güncelleme penceresi görünür. GitHub Releases içindeki anka-update.json listesi okunur; kurulu sürümden sonraki ilk sürüm indirilir. Dosya özeti, paket içindeki uygulama sürümü ve ZIP yolları doğrulanır. Hesap/proje dosyaları paketle değiştirilemez.
+Normal TubeFlow.exe açılışında önce güncelleme penceresi görünür. GitHub Releases içindeki anka-update.json listesi okunur; kurulu sürümden sonraki ilk sürüm indirilir. Dosya özeti, paket içindeki uygulama sürümü ve ZIP yolları doğrulanır. Hesap/proje dosyaları paketle değiştirilemez.
 
 Kurulum öncesi eski program dosyaları yedeklenir. Yeni uygulamanın bağımsız açılış kontrolü başarılıysa uygulama yeniden başlar ve GitHub listesini tekrar kontrol eder. Böylece sıradaki yamalar da uygulanır; liste bitince normal giriş ekranı açılır. Ağ hatası, kullanıcı iptali veya bozuk pakette mevcut sürüm açılır. Kurulum kontrolü başarısızsa yedeklenen program dosyaları geri alınır.
 

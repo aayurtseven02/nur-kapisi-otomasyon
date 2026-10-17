@@ -38,7 +38,7 @@ public sealed class ChatAssistant : UserControl
 
     {
 
-        this.store = store; this.project=project??(()=>null); this.screen=screen??(()=>"Program"); Text = "Anka • Sohbet yardımcısı"; Size = new(520, 660); MinimumSize = new(440, 500);
+        this.store = store; this.project=project??(()=>null); this.screen=screen??(()=>"Program"); Text = "TubeFlow • Sohbet yardımcısı"; Size = new(520, 660); MinimumSize = new(440, 500);
 
         BackColor = Theme.Bg; ForeColor = Theme.Text; 
 
@@ -48,7 +48,7 @@ public sealed class ChatAssistant : UserControl
 
         foreach (var h in new[] { 118, 38, 50, 0, 28, 82, 60 }) layout.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
 
-        var note = Theme.Label("Anka yardımcısı seçili yerel / bulut AI kullanır. API anahtarınla veya yerel yapay zekâyla çalışır. ChatGPT hesabına bağlanmaz. Proje paylaşımı isteğe bağlı; geçmiş bu bilgisayarda tutulur.", 9, width: 460, height: 118); note.Dock = DockStyle.Fill;
+        var note = Theme.Label("TubeFlow yardımcısı seçili yerel / bulut AI kullanır. API anahtarınla veya yerel yapay zekâyla çalışır. ChatGPT hesabına bağlanmaz. Proje paylaşımı isteğe bağlı; geçmiş bu bilgisayarda tutulur.", 9, width: 460, height: 118); note.Dock = DockStyle.Fill;
 
         input.Dock = DockStyle.Fill; input.MaxLength = 6000; input.PlaceholderText = "Mesajını yaz… (Ctrl+Enter: gönder)";
 
@@ -72,7 +72,7 @@ public sealed class ChatAssistant : UserControl
 
     }
 
-    void Welcome() => Append("Anka", "Merhaba! İçerik fikri geliştirebilir, metin yazabilir ve TubeFlow ayarlarını anlamana yardımcı olabilirim.");
+    void Welcome() => Append("TubeFlow", "Merhaba! İçerik fikri geliştirebilir, metin yazabilir ve TubeFlow ayarlarını anlamana yardımcı olabilirim.");
 
     void Append(string who, string text)
 
@@ -125,14 +125,14 @@ public sealed class ChatAssistant : UserControl
             var prompt=string.Join("\n\n",history.TakeLast(12))+"\n\nPaylaşılmış bağlam:\n"+context+"\n\nKullanıcı: "+message;
 
             int answerStart=conversation.TextLength;
-            void Partial(string json){if(IsDisposed)return;conversation.Select(answerStart,conversation.TextLength-answerStart);conversation.SelectionColor=Theme.Teal;conversation.SelectedText="Anka • yanıt hazırlanıyor:\n"+SupportPrivacy.Clean(store,AssistantStreaming.Answer(json))+"\n";conversation.ScrollToCaret();}
+            void Partial(string json){if(IsDisposed)return;conversation.Select(answerStart,conversation.TextLength-answerStart);conversation.SelectionColor=Theme.Teal;conversation.SelectedText="TubeFlow • yanıt hazırlanıyor:\n"+SupportPrivacy.Clean(store,AssistantStreaming.Answer(json))+"\n";conversation.ScrollToCaret();}
             var raw = await services.Generate(system, prompt, cancellation.Token, text => { using var doc = JsonDocument.Parse(Services.ExtractJson(text)); return doc.RootElement.TryGetProperty("answer", out var a) && a.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(a.GetString()); },onPartial:Partial);
 
             using var result = JsonDocument.Parse(Services.ExtractJson(raw)); var answer = SupportPrivacy.Clean(store,result.RootElement.GetProperty("answer").GetString()!);
 
             if (IsDisposed) return; history.Add("Kullanıcı: " + message); history.Add("Anka: " + answer); if (history.Count > 12) history.RemoveRange(0, history.Count - 12);
 
-            SaveHistory();conversation.Select(answerStart,conversation.TextLength-answerStart);conversation.SelectedText=""; Append("Anka", answer); status.Text = "Seçili Anka AI sağlayıcısı";
+            SaveHistory();conversation.Select(answerStart,conversation.TextLength-answerStart);conversation.SelectedText=""; Append("TubeFlow", answer); status.Text = "Seçili TubeFlow AI sağlayıcısı";
 
         }
 

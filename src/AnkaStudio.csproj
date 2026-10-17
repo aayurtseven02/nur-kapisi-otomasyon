@@ -5,10 +5,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>AnkaStudio</AssemblyName>
+    <AssemblyName>TubeFlow</AssemblyName>
+    <RootNamespace>AnkaStudio</RootNamespace>
     <ApplicationIcon>Assets\anka-studio.ico</ApplicationIcon>
-    <Version>0.4.9</Version>
+    <Version>0.4.10</Version>
     <Product>TubeFlow</Product>
+    <Company>TubeFlow</Company>
     <Title>TubeFlow</Title>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
   </PropertyGroup>
@@ -26,5 +28,9 @@
   <ItemGroup><EmbeddedResource Include="Assets\pairing-firebase.json" /></ItemGroup>
   <ItemGroup><Content Include="..\tools\audio-alignment\align.py" Link="tools\audio-alignment\align.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Content Include="..\tools\workflows\*.json" Link="tools\workflows\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <Target Name="LegacyUpdateCompatibility" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetDir)TubeFlow.dll" DestinationFiles="$(TargetDir)AnkaStudio.dll" />
+    <Copy SourceFiles="$(TargetDir)TubeFlow.exe" DestinationFiles="$(TargetDir)AnkaStudio.exe" Condition="Exists('$(TargetDir)TubeFlow.exe')" />
+  </Target>
 </Project>
 

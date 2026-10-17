@@ -16,7 +16,7 @@ public static class UserGuide
         var columns=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2,RowCount=1,Padding=new Padding(0,12,0,12)};columns.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,29));columns.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,71));columns.Controls.Add(list,0,0);columns.Controls.Add(body,1,0);body.Margin=new Padding(16,0,0,0);
         var buttons=new FlowLayoutPanel{Dock=DockStyle.Bottom,Height=56,WrapContents=false};
         buttons.Controls.Add(Theme.Button("Rehberi kopyala",()=>Clipboard.SetText(FullText),false,220));
-        buttons.Controls.Add(Theme.Button("Rehberi dosyaya kaydet",()=>{using var save=new SaveFileDialog{Filter="Metin dosyası|*.txt",FileName="Anka-Studio-Kullanim-Rehberi.txt"};if(save.ShowDialog(form)==DialogResult.OK)File.WriteAllText(save.FileName,FullText);},false,270));
+        buttons.Controls.Add(Theme.Button("Rehberi dosyaya kaydet",()=>{using var save=new SaveFileDialog{Filter="Metin dosyası|*.txt",FileName="TubeFlow-Kullanim-Rehberi.txt"};if(save.ShowDialog(form)==DialogResult.OK)File.WriteAllText(save.FileName,FullText);},false,270));
         buttons.Controls.Add(Theme.Button("Kapat",form.Close,false,140));
         var filtered=Sections.ToList();
         void Filter(){string query=search.Text.Trim();filtered=Sections.Where(s=>query=="" || (s.Title+" "+s.Body).Contains(query,StringComparison.CurrentCultureIgnoreCase)).ToList();list.BeginUpdate();list.Items.Clear();foreach(var section in filtered)list.Items.Add(section.Title);list.EndUpdate();if(list.Items.Count>0)list.SelectedIndex=0;else body.Text="Bu aramayla eşleşen bölüm bulunamadı. Daha kısa bir kelime dene.";}

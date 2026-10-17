@@ -1,0 +1,71 @@
+name: Normal video + Shorts üret
+run-name: 'Anka paket ${{ inputs.job_id }}'
+on:
+  workflow_dispatch:
+    inputs:
+      job_id:
+        description: İçerik paketi kimliği
+        required: true
+        type: string
+      payload:
+        description: Anahtarsız base64 iş paketi
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: 'anka-${{ inputs.job_id }}'
+  cancel-in-progress: false
+jobs:
+  produce:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      VECTEEZY_ACCOUNT_ID: ${{ secrets.VECTEEZY_ACCOUNT_ID }}
+      VECTEEZY_SECRET_KEY: ${{ secrets.VECTEEZY_SECRET_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+      GOOGLE_TTS_API_KEY: ${{ secrets.GOOGLE_TTS_API_KEY }}
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Uygulamayı derle
+        run: dotnet publish src/AnkaStudio.csproj -c Release -r win-x64 --self-contained true -o worker
+      - name: İş paketini ve motoru hazırla
+        shell: pwsh
+        env:
+          ANKA_PAYLOAD: ${{ inputs.payload }}
+        run: |
+          [System.IO.File]::WriteAllText("$PWD/payload.txt", $env:ANKA_PAYLOAD)
+          Invoke-WebRequest 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip' -OutFile ffmpeg.zip
+          Expand-Archive ffmpeg.zip ffmpeg
+          $root = Get-ChildItem ffmpeg -Directory | Select-Object -First 1
+          New-Item -ItemType Directory -Force worker/tools | Out-Null
+          Copy-Item "$($root.FullName)/bin/ffmpeg.exe","$($root.FullName)/bin/ffprobe.exe" worker/tools
+      - name: Araştırma ve iki formatlı üretim
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath worker/TubeFlow.exe -ArgumentList '--worker','--payload',"$PWD/payload.txt",'--data',"$PWD/data" -Wait -PassThru
+          if ($p.ExitCode -ne 0) {
+            if (Test-Path data/startup-error.txt) { Get-Content data/startup-error.txt }
+            throw 'Üretim tamamlanamadı. Anahtar, kota ve Türkçe ses bağlantısını denetle.'
+          }
+      - name: Denetim paketini sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'anka-package-${{ inputs.job_id }}'
+          path: |
+            data/projects/
+            data/episode-export.json
+          retention-days: 7
+          if-no-files-found: warn
