@@ -525,7 +525,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-17-gun09-normal2-osmancomertlik
-  status: pending
+  status: failed
   publish_at: '2026-10-17T15:00:00+03:00'
   format: long
   type: tema
@@ -537,6 +537,8 @@ videos:
   title_hint: 'Hz. Osman''ın Cömertliği: Rume Kuyusu ve Tebük Seferi'
   thumb_title: Hz. Osman'ın Cömertliği
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-17-gun09-short2-alicesaret
   status: pending
   publish_at: '2026-10-17T19:00:00+03:00'
