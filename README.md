@@ -1,3 +1,7 @@
+# TubeFlow 0.4.13 — Sol menüde sohbet
+
+Sohbet düğmesi sol menünün altına taşındı. Menü daraltılınca simge olarak görünür. Arşiv dışındaki gereksiz ikinci müzik önizleme düğmesi kaldırılmıştır.
+
 # TubeFlow 0.4.12 — Müzik bölümünü sadeleştirme
 
 Seçili müziği ön dinle düğmesi ve ikinci oynatıcı kaldırıldı. Arşiv listesindeki önizleme, seçili parçanın adı ve konuşma sesi önizlemesi korunur.

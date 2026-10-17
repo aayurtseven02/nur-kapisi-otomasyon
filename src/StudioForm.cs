@@ -84,7 +84,7 @@ public sealed partial class StudioForm : Form
 
         if (iconStream != null) { using var appIcon = new Icon(iconStream); Icon = (Icon)appIcon.Clone(); }
 
-        var side = new Panel { Dock = DockStyle.Left, Width = 246, BackColor = Color.FromArgb(228,230,234), Padding = new Padding(20, 20, 20, 8) };
+        var side = new Panel { Dock = DockStyle.Left, Width = 246, BackColor = Color.FromArgb(228,230,234), Padding = new Padding(0, 20, 0, 8) };
 
         using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-horizontal.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=new Bitmap(logoSource),Location=new(22,8),Size=new(208,112),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);FormClosed+=(_,_)=>brand.Image?.Dispose();
 
@@ -108,11 +108,13 @@ public sealed partial class StudioForm : Form
 
         var guide=new SidebarButton{Text="Rehber",Glyph="?",Width=226};guide.Click+=(_,_)=>UserGuide.Show(this);guide.Location=new(0,y+12);navigation.Controls.Add(guide);
 
-        var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 44, BackColor = side.BackColor };
+        var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 100, BackColor = side.BackColor, Padding=new Padding(8,4,8,4) };
         footer.Dock = DockStyle.Top;footer.Visible=false; sideFooter.Controls.Add(footer); sideFooter.Controls.Add(subtitle); side.Controls.Add(sideFooter);
 
+bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=226,Height=42,Dock=DockStyle.Top,AccessibleName="TubeFlow sohbet yardımcısını aç"};chat.Click+=(_,_)=>ToggleAssistant();sideFooter.Controls.Add(chat);hints.SetToolTip(chat,"Sohbeti aç / kapat");
+        void PlaceChat(){chat.Width=compact?46:226;chat.Text=compact?"":"Sohbet";chat.Location=new Point(8,Math.Max(0,side.ClientSize.Height-(compact?60:104)));chat.BringToFront();}side.SizeChanged+=(_,_)=>PlaceChat();PlaceChat();
         var scroll = new StudioScrollPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.Transparent }; page.Location = Point.Empty; scroll.Controls.Add(page); body.Controls.Add(scroll);
-        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);side.Controls.Add(collapse);collapse.BringToFront();bool compact=false;collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?64:246;brand.Visible=!compact;sideFooter.Visible=!compact;navigation.Width=compact?56:230;foreach(var (route,b) in nav){b.Width=compact?46:226;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
+        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);side.Controls.Add(collapse);collapse.BringToFront();collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?64:246;brand.Visible=!compact;sideFooter.Height=compact?60:100;subtitle.Visible=!compact;chat.Text=compact?"":"Sohbet";navigation.Width=compact?56:230;foreach(var (route,b) in nav){b.Width=compact?46:226;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
         var sidebarDivider = new Panel { Dock = DockStyle.Left, Width = 2, BackColor = Theme.Warning, AccessibleName = "Sol menü ayırıcı çizgisi" };
         var topDivider = new Panel { Dock = DockStyle.Top, Height = 2, BackColor = Theme.Warning, AccessibleName = "Üst kenar çizgisi" };
         Controls.Add(body); Controls.Add(appHeader); Controls.Add(sidebarDivider); Controls.Add(side); Controls.Add(topDivider);
@@ -141,13 +143,7 @@ public sealed partial class StudioForm : Form
 
         Navigate("Video hazırla");
 
-        var chat = Theme.Button("Sohbet", ToggleAssistant, true, 116);
 
-        chat.Height = 48; chat.Anchor = AnchorStyles.Top | AnchorStyles.Left; chat.AccessibleName = "TubeFlow sohbet yardımcısını aç";
-
-        void PlaceChat() { chat.Location = new(ClientSize.Width - chat.Width - 28, ClientSize.Height - chat.Height - 18); chat.BringToFront(); }
-
-        Controls.Add(chat); Resize += (_, _) => PlaceChat(); PlaceChat();
 
     }
 
