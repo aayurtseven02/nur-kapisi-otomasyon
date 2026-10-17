@@ -37,6 +37,8 @@ public sealed partial class StudioForm : Form
     readonly Store store;
 
     readonly Engine engine;
+    readonly AssistantActions assistantActions;
+    Action? commitAssistantEditor;
 
     readonly Panel body = new StudioGradientPanel() { Dock = DockStyle.Fill, BackColor = Theme.Bg, Padding = new Padding(28, 18, 24, 16) };
 
@@ -71,6 +73,8 @@ public sealed partial class StudioForm : Form
     {
 
         this.store = store; engine = new Engine(store); engine.ReviewStoryImage = ReviewStoryPicture; UiSound.Configure(store.Settings);
+        assistantActions=new AssistantActions(store,engine,()=>store.Episodes.FirstOrDefault(e=>e.Id==selectedWorkspaceId),Navigate){FlushEditor=()=>commitAssistantEditor?.Invoke()};
+        assistantActions.SettingsChanged+=()=>{if(IsHandleCreated&&!IsDisposed)BeginInvoke(()=>{if(!IsDisposed)RefreshCurrentPage();});};
 
         Shown += async (_, _) => { if (!Environment.GetCommandLineArgs().Any(a => a is "--worker" or "--screenshot" || a.StartsWith("--")&&(a.Contains("test")||a.Contains("preview")))) { VideoQueue.Reconcile(store); _ = NvidiaModels.Start(store); await RefreshChannelName(); await RefreshRemote();if(store.Settings.SetupCompleted!=true&&store.Episodes.Count==0&&store.Settings.YouTubeChannelId=="")ShowWelcomeSetup(); } };
 
@@ -2134,6 +2138,7 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
     async Task Tick()
 
     {
+        assistantActions.Observe();
 
         if (queueRunning) return;
 

@@ -1,3 +1,7 @@
+# TubeFlow 0.4.18 — İşlem yapabilen uygulama asistanı
+
+Sohbet ses, sahne, altyazı ve müzik ayarlarını doğrudan uygulayabilir; yaptığı değişiklikleri bildirir ve son ayarı geri alabilir. Hata durumunda bilinen ayar sorunları otomatik denetlenir. İstek üzerine yerel motor kontrolü ve tek üretim yeniden denemesi yapılabilir. Kod, shell/komut, API anahtarı düzenleme, silme ve video yayınlama araçları yoktur. Ücret izinleri, kotalar, metin ve kullanım hakları onayları korunur. Proje metni/hatası paylaşımı ayrı kutuya bağlıdır.
+
 # TubeFlow 0.4.17 — Bilgisayara göre otomatik motor
 
 Her kurulu motorun PyTorch ortamında gerçek GPU işlemi denenir. Kullanılabilir NVIDIA CUDA, AMD ROCm, Intel XPU veya DirectML donanımı algılanır; klasör adı işlemci/GPU yeteneği kabul edilmez. Uyumlu GPU seçenekleri CPU'dan önce denenir; GPU çalışmazsa CPU modu kullanılır. CPU modu daha yavaştır. Bu özellik kurulu, sürücüsü ve modelleri hazır motorları seçer; ayrı motor paketlerini kendiliğinden indirmez. 0.4.16 çok sahneli anlatım ve ses seçimi düzeltmeleri dahildir.
@@ -298,3 +302,5 @@ Ses akışı iyileştirmesi için pakette Videoları üret adımını yeniden ç
 Projeyi tamamen sil: İçerik paketleri ekranındaki kırmızı tuş, Emin misiniz? onayından sonra seçili paketin yerel proje klasörünü ve paket kaydını kalıcı siler. Çalışan iş varken kullanılamaz. Ortak arşivler, hesaplar, YouTube ve GitHub içeriği korunur.
 
 Kanal güvenliği: Güncellemeden sonra Bağlantı Merkezi → YouTube kanalını doğrula ile hedef kimliğini kaydedin. Eski paketleri yüklemeden önce yeniden onaylayın. API anahtarları korunur. GitHub Google TTS üretimi ortak hesap kota sistemi hazır olana kadar engellenir; Windows üretimi kullanılabilir.
+
+0.4.18 sahne kalitesi: Tasarım → Görseller → AI görsel kalitesi • yerel motor. Genel ayar / Hızlı / Dengeli / Ultra sinematik seçilebilir. Asistan da kalite seçebilir. Değişen kalite yerel AI görsellerinin sonraki üretimde yenilenmesini sağlar; kullanıcı dosyaları korunur.

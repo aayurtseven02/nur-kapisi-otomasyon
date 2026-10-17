@@ -18,7 +18,7 @@ public sealed partial class StudioForm
 
         assistantHost=new Panel{Width=460,BackColor=Theme.Panel,Padding=new Padding(1),Visible=false};
 
-        assistant=new ChatAssistant(store,()=>store.Episodes.FirstOrDefault(e=>e.Id==selectedWorkspaceId),()=>PageCaption(current)){Dock=DockStyle.Fill};
+        assistant=new ChatAssistant(store,()=>store.Episodes.FirstOrDefault(e=>e.Id==selectedWorkspaceId),()=>PageCaption(current),assistantActions){Dock=DockStyle.Fill};
 
         assistantHost.Controls.Add(assistant);var grip=new Panel{Dock=DockStyle.Left,Width=7,BackColor=Theme.Teal,Cursor=Cursors.SizeWE};assistantHost.Controls.Add(grip);grip.BringToFront();int origin=0,initial=0;grip.MouseDown+=(_,e)=>{if(e.Button!=MouseButtons.Left)return;origin=Cursor.Position.X;initial=assistantWidth;grip.Capture=true;};grip.MouseMove+=(_,e)=>{if(!grip.Capture)return;assistantWidth=Math.Clamp(initial+origin-Cursor.Position.X,440,Math.Min(680,Math.Max(440,ClientSize.Width-800)));PositionAssistant();};grip.MouseUp+=(_,_)=>grip.Capture=false;Controls.Add(assistantHost);assistant.Show();assistantHost.Visible=true;
 

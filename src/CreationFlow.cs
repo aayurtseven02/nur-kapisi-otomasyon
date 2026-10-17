@@ -30,6 +30,7 @@ public sealed class CreationFlow
     public List<string> Files {get;set;}=[];
     public string Voice {get;set;}="ai";
     public bool UseProjectVoice {get;set;}
+    public string SceneImageQuality {get;set;}="";
     public string AudioFile {get;set;}="";
     public string AudioHash {get;set;}="";
     public string FrozenAudio {get;set;}="";

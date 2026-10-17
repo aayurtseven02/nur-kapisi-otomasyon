@@ -50,7 +50,9 @@ public sealed class GoogleTts(Store store, HttpClient? client = null)
 
     }
 
-    public async Task<string[]> Voices(CancellationToken ct)
+    public sealed record VoiceChoice(string Id,string Gender);
+    public async Task<string[]> Voices(CancellationToken ct)=>(await VoiceDetails(ct)).Select(x=>x.Id).ToArray();
+    public async Task<VoiceChoice[]> VoiceDetails(CancellationToken ct)
 
     {
 
@@ -62,7 +64,7 @@ public sealed class GoogleTts(Store store, HttpClient? client = null)
 
         using var doc = JsonDocument.Parse(await res.Content.ReadAsStringAsync(ct));
 
-        return doc.RootElement.GetProperty("voices").EnumerateArray().Select(v => v.GetProperty("name").GetString()!).Where(v => v.StartsWith("tr-TR-")).Order().ToArray();
+        return doc.RootElement.GetProperty("voices").EnumerateArray().Where(v=>v.GetProperty("name").GetString()!.StartsWith("tr-TR-")).Select(v=>new VoiceChoice(v.GetProperty("name").GetString()!,v.TryGetProperty("ssmlGender",out var gender)?gender.GetString()??"":"")).OrderBy(x=>x.Id).ToArray();
 
     }
 

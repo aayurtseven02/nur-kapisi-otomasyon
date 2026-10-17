@@ -8,6 +8,7 @@ public static class StoryImages
     public static Settings LocalSettings(Episode e,Settings settings)
     {
         var copy=JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(settings,Json.Options),Json.Options)!;
+        if(e.Creation is {} flow&&LocalCoverEngine.Qualities.Contains(flow.SceneImageQuality))copy.CoverLocalQuality=flow.SceneImageQuality;
         if(e.AiStoryLocal){copy.CoverLocalEnabled=true;if(!File.Exists(copy.CoverLocalWorkflow))copy.CoverLocalWorkflow=LocalCoverEngine.FindInstalledWorkflow();}
         else copy.CoverLocalEnabled=false;
         return copy;
@@ -124,7 +125,7 @@ public static class StoryImages
         });
         e.AiStoryReferenceFile=reference;e.AiStoryReferenceHash=Reliability.FileHash(reference);e.AiStoryReferenceIdentityHash=Identity(e);
         string prompt=Prompt(e,script,scene,vertical);
-        string hash=TimedNarration.TextHash(prompt+Reliability.FileHash(reference)+JsonSerializer.Serialize(new {e.AiStoryCastCount,scene.AiCharacterIds})+(e.AiStoryLocal?Reliability.FileHash(settings.CoverLocalWorkflow):""));
+        string hash=TimedNarration.TextHash(prompt+Reliability.FileHash(reference)+JsonSerializer.Serialize(new {e.AiStoryCastCount,scene.AiCharacterIds})+(e.AiStoryLocal?Reliability.FileHash(settings.CoverLocalWorkflow)+"|"+(settings.CoverLocalQuality??"Dengeli"):""));
         var output=Path.Combine(folder,hash+".png");
         if(!Valid(output)) {
             log($"Hikâye • sahne {script.Scenes.IndexOf(scene)+1}/{script.Scenes.Count}: aynı karakter referansıyla görsel üretiliyor…");

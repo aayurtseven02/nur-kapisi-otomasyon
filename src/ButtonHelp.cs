@@ -132,7 +132,7 @@ public static class ButtonHelp
         Add("Açılış şifresini değiştir|Yeni şifreyi kaydet","Uygulamanın yerel giriş şifresini değiştirir veya yeni şifreyi kaydeder. YouTube/Google şifresini değiştirmez.");
         Add("Şifremi unuttum","Kayıtlı kurtarma düzeni ve Windows hesabı üzerinden uygulama şifresini sıfırlama akışını açar.");
         Add("Giriş yap|Şifre oluştur ve aç","Girilen uygulama şifresiyle yerel çalışma alanını açar; ilk kurulumda şifre oluşturur.");
-        Add("Sohbet","Programın sohbet yardım panelini açar. Model bağlantı ayarları yanıt üretimini etkileyebilir.");
+        Add("Sohbet","Uygulama asistanını açar. Proje ayarlarını düzenler, hataları inceler ve isteğinle üretimi yeniden dener. Kod değişikliği ve video yayınlama yapamaz.");
         Add("Program kaynakları","Programın kaynak kod deposu ve kaynak yönetimi araçlarını açar. Video üretmek ve YouTube'a yüklemek için GitHub gerekmez.");
         Add("Program kaynaklarını GitHub’a gönder","Program kaynak kodlarını yapılandırılan GitHub deposuna gönderir. Video yükleme işlemi değildir; depo erişimi gerekir.");
         Add("Kaynak depo ayarlarını kaydet","İsteğe bağlı kaynak kod deposu ayarlarını kaydeder. YouTube bağlantısını ayarlamaz.");

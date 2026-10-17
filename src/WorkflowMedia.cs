@@ -4,6 +4,11 @@ namespace AnkaStudio;
 
 public static class WorkflowMedia
 {
+    public static void ChangeImageQuality(Episode e,string quality)
+    {
+        if(quality!=""&&!LocalCoverEngine.Qualities.Contains(quality))throw new InvalidOperationException("Geçerli görsel kalitesini seç.");var f=e.Creation??throw new InvalidOperationException("Proje akışı bulunamadı.");if(f.SceneImageQuality==quality)return;f.SceneImageQuality=quality;
+        if(e.AiStoryLocal)foreach(var scene in Rules.Scripts(e).SelectMany(x=>x.Script.Scenes).Where(x=>x.AiImageHash!="")){scene.StockFile="";scene.AiImageHash="";}
+    }
     public static string FitFilter(int w,int h,int fps,string fit)=>fit switch{
         "contain"=>$"scale={w}:{h}:force_original_aspect_ratio=decrease,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2:color=black,setsar=1,fps={fps}",
         "blur"=>$"split=2[bg][fg];[bg]scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},boxblur=20[back];[fg]scale={w}:{h}:force_original_aspect_ratio=decrease[front];[back][front]overlay=(W-w)/2:(H-h)/2,setsar=1,fps={fps}",
