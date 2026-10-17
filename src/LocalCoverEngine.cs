@@ -67,11 +67,13 @@ public static class LocalCoverEngine
         var engines=roots.SelectMany(FindEngines).Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
         if(engines.Length==0)throw new InvalidOperationException("Kullanılabilir yerel motor kurulumu bulunamadı.");
         logDirectory??=Path.Combine(AppLock.DefaultDataRoot(),"logs","local-engine");Directory.CreateDirectory(logDirectory);var failures=new List<string>();
-        foreach(var engine in engines){
-            ct.ThrowIfCancellationRequested();string backend=engine.Contains("NVIDIA",StringComparison.OrdinalIgnoreCase)?"NVIDIA":File.Exists(Path.Combine(engine,"run_intel_gpu.bat"))||engine.Contains("Intel",StringComparison.OrdinalIgnoreCase)?"Intel":"Yerel";
+        var detected=new List<(string Folder,EngineHardware.Capability[] Devices)>();
+        foreach(var installed in engines){ct.ThrowIfCancellationRequested();report("Bilgisayardaki GPU ve motor uyumu algılanıyor…");try{var devices=await EngineHardware.Probe(installed,ct);detected.Add((installed,devices));foreach(var device in devices)report("Algılandı: "+device.Backend+" • "+device.Device);}catch(Exception ex)when(ex is not OperationCanceledException||!ct.IsCancellationRequested){failures.Add("Donanım denetimi: "+ex.Message);}}
+        foreach(var candidate in EngineHardware.Order(detected)){
+            string engine=candidate.Folder;ct.ThrowIfCancellationRequested();string backend=candidate.Backend+" • "+candidate.Device;
             string log=Path.Combine(logDirectory,DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N")[..6]+".log");
             var info=new System.Diagnostics.ProcessStartInfo(Path.Combine(engine,"python_embeded","python.exe")){WorkingDirectory=engine,UseShellExecute=false,CreateNoWindow=true,WindowStyle=System.Diagnostics.ProcessWindowStyle.Hidden};
-            foreach(var arg in new[]{"-s","-u","-c","import sys,runpy; log=open(sys.argv.pop(1),'a',buffering=1,encoding='utf-8'); sys.stdout=log; sys.stderr=log; sys.argv[0]='ComfyUI/main.py'; runpy.run_path(sys.argv[0],run_name='__main__')",log,"--windows-standalone-build","--listen","127.0.0.1","--port","8188","--lowvram","--preview-method","none"})info.ArgumentList.Add(arg);
+            foreach(var arg in new[]{"-s","-u","-c","import sys,runpy; log=open(sys.argv.pop(1),'a',buffering=1,encoding='utf-8'); sys.stdout=log; sys.stderr=log; sys.argv[0]='ComfyUI/main.py'; runpy.run_path(sys.argv[0],run_name='__main__')",log,"--windows-standalone-build","--listen","127.0.0.1","--port","8188","--preview-method","none"}.Concat(EngineHardware.Arguments(candidate.Backend)))info.ArgumentList.Add(arg);
             report(backend+" görsel motoru başlatılıyor • bağlantı otomatik kontrol ediliyor…");
             System.Diagnostics.Process? process=null;bool ready=false;
             try{

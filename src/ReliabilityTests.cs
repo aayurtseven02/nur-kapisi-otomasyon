@@ -93,6 +93,11 @@ public static class ReliabilityTests
             Capture("normal");typeof(StudioButton).GetMethod("OnMouseEnter",BindingFlags.Instance|BindingFlags.NonPublic)!.Invoke(primary,[EventArgs.Empty]);Capture("hover");primary.Completed=true;primary.CurrentStep=true;Capture("completed-current");primary.Enabled=false;Capture("disabled");Check(primary.Region!=null&&!primary.Region.IsVisible(0,0),"Düğmenin keskin köşesi tıklama bölgesinde kaldı.");form.Close();
         });
 
+        Test("LOCAL-ENGINE-HARDWARE-ADAPTATION", "Intel, NVIDIA, AMD ve CPU seçimi klasör adına değil kullanılabilir aygıta uyar",()=>{
+            var intel=EngineHardware.Order(new[]{("nvidia-folder",new[]{new EngineHardware.Capability("CPU","CPU")}), ("intel-folder",new[]{new EngineHardware.Capability("XPU","Intel Arc"),new EngineHardware.Capability("CPU","CPU")})});Check(intel[0].Folder=="intel-folder"&&intel[0].Backend=="XPU","Intel GPU yerine NVIDIA klasörü seçildi.");
+            var hybrid=EngineHardware.Order(new[]{("intel",new[]{new EngineHardware.Capability("XPU","Intel")}), ("nvidia",new[]{new EngineHardware.Capability("CUDA","RTX")})});Check(hybrid[0].Backend=="CUDA","Intel işlemcili NVIDIA bilgisayarda GPU sırası yanlış.");
+            Check(EngineHardware.Order(new[]{("amd",new[]{new EngineHardware.Capability("ROCm","AMD")})})[0].Backend=="ROCm","AMD kayboldu.");Check(EngineHardware.Arguments("DirectML").Contains("--directml")&&EngineHardware.Arguments("CPU").SequenceEqual(new[]{"--cpu"})&&EngineHardware.Arguments("XPU").Contains("--lowvram"),"Motor başlatma parametreleri donanıma uymuyor.");Check(intel.Last().Backend=="CPU","CPU yedeği GPU önüne geçti.");
+        });
         Test("STORYBOARD-SCENES-AND-FALLBACK", "AI 5–10 sahne planlar; tek sahne, bozuk yanıt ve bağlantı hatası anlatımı kaybetmez",()=>{
             string text=string.Join(" ",Enumerable.Range(1,207).Select(i=>"kelime"+i+(i%20==0?".":"")));
             var seven=StoryboardSections.Plan(text,(_,_,_)=>Task.FromResult("{\"Ends\":[30,60,90,120,150,180,207]}"),CancellationToken.None,_=>{}).GetAwaiter().GetResult();Check(seven.Count==7&&seven[^1]==207,"Yedi sahne planlanmadı.");

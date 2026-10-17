@@ -1,3 +1,7 @@
+# TubeFlow 0.4.17 — Bilgisayara göre otomatik motor
+
+Her kurulu motorun PyTorch ortamında gerçek GPU işlemi denenir. Kullanılabilir NVIDIA CUDA, AMD ROCm, Intel XPU veya DirectML donanımı algılanır; klasör adı işlemci/GPU yeteneği kabul edilmez. Uyumlu GPU seçenekleri CPU'dan önce denenir; GPU çalışmazsa CPU modu kullanılır. CPU modu daha yavaştır. Bu özellik kurulu, sürücüsü ve modelleri hazır motorları seçer; ayrı motor paketlerini kendiliğinden indirmez. 0.4.16 çok sahneli anlatım ve ses seçimi düzeltmeleri dahildir.
+
 # TubeFlow 0.4.16 — Sahne sahne anlatım ve seçili ses
 
 Otomatik AI görselleri onaylı metni 5–10 görsel sahneye ayırır; eski tek bölüm tercihi bu modda tek görsele zorlamaz. Bölümleme servisi hata verirse metin korunarak cümle geçişlerinden yerel sahne planı çıkarılır. Her sahne için kendi anlatımına uygun ayrı görsel oluşturulur. Genel ayarlardaki son ses seçimi kullanılır; projeye özel açık ses seçimi korunur. Eski tek sahneli çıktılar için İzle ve düzelt adımında yeniden hazırlama düğmesi vardır. 0.4.15 sohbet ve neon dolgu düzeltmeleri dahildir.
