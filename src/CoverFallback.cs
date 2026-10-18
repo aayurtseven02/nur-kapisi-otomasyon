@@ -61,7 +61,7 @@ public sealed class CoverFallback(Store store, Action<string> log, HttpClient? c
                     log("YEREL MOTOR • " + (ex is InvalidOperationException ? ex.Message : "Bağlantı veya üretim tamamlanamadı (" + ex.GetType().Name + ").") + " Yerel üretim tamamlanamadı; neden işlem kaydında gösterildi.");
                 }
             }
-            if(settings.CoverLocalEnabled && scenePrompt!=null)await GenerateLocal();
+            if(settings.CoverLocalEnabled)await GenerateLocal();
             if(scenePrompt != null && settings.CoverLocalEnabled && copy.CoverBackground != "") {
                 File.Copy(copy.CoverBackground,path,true);log("Yerel hikâye sahnesi hazır.");return;
             }
@@ -128,7 +128,6 @@ public sealed class CoverFallback(Store store, Action<string> log, HttpClient? c
                 catch (OperationCanceledException) when (!ct.IsCancellationRequested) { log(provider + " • " + model + " süre sınırı; sıradaki model deneniyor."); }
                 catch (Exception ex) when (ex is not OperationCanceledException) { if(ex is ProviderException {Status:404 or 429}){ReleaseRejectedRequest();log("Sağlayıcının reddettiği istek yerel üretim sayacından çıkarıldı; sağlayıcı kotası ayrıca geçerlidir.");} log(provider + " • " + model + ": " + (ex is ProviderException ? ex.Message : "Görsel yanıtı kullanılamadı (" + ex.GetType().Name + ").") + " Sıradaki model deneniyor."); }
             }
-            if(scenePrompt==null && settings.CoverLocalEnabled && copy.CoverBackground==""){log("Bulut modelleri kapak üretemedi; yerel motora geçiliyor.");await GenerateLocal();}
         }
         ct.ThrowIfCancellationRequested();
         if (scenePrompt != null) {

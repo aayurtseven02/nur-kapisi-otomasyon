@@ -441,7 +441,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
                 var existing = e.Videos.FirstOrDefault(x => x.Key == key);
 
-                if (File.Exists(Path.Combine(sub, "complete.hash")) && File.ReadAllText(Path.Combine(sub, "complete.hash")) == hash && existing != null && Reliability.AssetCurrent(e, existing))
+                if (!e.ArtworkPending && File.Exists(Path.Combine(sub, "complete.hash")) && File.ReadAllText(Path.Combine(sub, "complete.hash")) == hash && existing != null && Reliability.AssetCurrent(e, existing))
 
                 {
 

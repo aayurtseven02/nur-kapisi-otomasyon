@@ -1,3 +1,7 @@
+# TubeFlow 0.4.23 — Kapak ve üretim akışı
+
+Kapak değişiklikleri adımlar arası geçişte kaydedilir; eski küçük resim yeni seçimin yerine kullanılmaz. Kontrol ekranından kapak editörüne doğrudan erişilir. AI kapak tasarımında başlık ve yatay/dikey oran otomatik uygulanır; oluştur/kaydet düğmeleri görünür kalır. Maksimum kalite iki motorda da tam 16:9 üretir. Seçili yerel kapak motoru bulut kotasından önce denenir. Hazır sahne sayısı canlı güncellenir; tek sahne yenilemede düzeltme talimatı yazılabilir.
+
 # TubeFlow 0.4.22 — Hesap menüsü ve tuş hizası
 
 YouTube / Google OAuth alanları varsayılan kapalı tek açılır başlık altında toplandı. Hesaplar ve AI motorları ekranındaki işlem tuşları ortak genişlik, sol hizası ve aralıklarla düzenlendi; pencere boyutu değişince aynı hiza korunur.

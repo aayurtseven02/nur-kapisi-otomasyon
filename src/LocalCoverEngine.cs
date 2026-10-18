@@ -95,13 +95,13 @@ public static class LocalCoverEngine
     {
         if (square) return (768, 768);
         if (vertical) return (576, 1024);
-        return quality switch { "Hızlı" => (1024, 576), "Dengeli" => (1280, 720), _ => IsFlux(graph) ? (1536, 864) : (1344, 768) };
+        return quality switch { "Hızlı" => (1024, 576), "Dengeli" => (1280, 720), _ => (1536, 864) };
     }
     static int? Steps(JsonObject graph,string quality) => quality switch { "Hızlı" => IsFlux(graph) ? 16 : 20, "Dengeli" => IsFlux(graph) ? 26 : 28, _ => IsFlux(graph) ? 36 : 38 };
     public static string Describe(string quality, string model) => quality switch {
         "Hızlı" => "Hızlı • 1024×576 • daha az işlem",
         "Dengeli" => "Dengeli • 1280×720 • iyi kalite",
-        _ => model.StartsWith("FLUX") ? "Ultra sinematik • 1536×864 • daha fazla bellek ve süre" : "Ultra sinematik • 1344×768 • daha fazla bellek ve süre" };
+        _ => "Ultra sinematik • 1536×864 • daha fazla bellek ve süre" };
     // Motor klasörünü ve modele uygun iş akışını kendisi bulur; bulunamazsa paketle gelen hazır iş akışına döner.
     public static string ResolveWorkflow(string model, string current = "")
     {

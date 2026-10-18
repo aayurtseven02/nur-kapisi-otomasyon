@@ -74,13 +74,13 @@ public static class Reliability
 
             settings.VideoLogoEnabled, settings.VideoLogoPosition, settings.VideoLogoWidthPercent, videoLogo = FileHash(settings.VideoLogo),
 
-            settings.CoverAutoStyle, settings.CoverStyle, settings.CoverMode, settings.CoverFont, settings.CoverLogoPosition, settings.CoverAccent,
+            artwork = WorkflowArtwork.Signature(settings), settings.CoverAutoStyle, settings.CoverStyle, settings.CoverMode, settings.CoverFont, settings.CoverLogoPosition, settings.CoverAccent,
 
             background = FileHash(settings.CoverBackground), referenceCover=FileHash(settings.CoverReferenceImage), logo = FileHash(settings.CoverLogo), overlay = FileHash(settings.CoverPng),
 
             media = script.Scenes.Select(s => FileHash(s.StockFile)).ToArray() };
 
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(pipelineVersion + JsonSerializer.Serialize(design, Json.Options)+(episode.Creation is {CoverChoice:not "legacy"} flow?JsonSerializer.Serialize(new{flow.Voice,AudioHash=FileHash(flow.AudioFile),flow.Fit}):""))));
+        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(pipelineVersion + JsonSerializer.Serialize(design, Json.Options)+(episode.Creation is {CoverChoice:not "legacy"} flow?JsonSerializer.Serialize(new{flow.CoverChoice,flow.Voice,AudioHash=FileHash(flow.AudioFile),flow.Fit}):""))));
 
     }
 
@@ -110,7 +110,7 @@ public static class Reliability
 
         var expected = Rules.Scripts(episode).Select(s => s.Key).ToArray();
 
-        return !episode.TextDesignPending && expected.Length > 0 && episode.Videos.Count == expected.Length
+        return !episode.TextDesignPending && !episode.ArtworkPending && expected.Length > 0 && episode.Videos.Count == expected.Length
 
             && expected.All(key => episode.Videos.Count(v => v.Key == key && v.PlanHash == MediaPlanHash(episode, key)
 
@@ -124,7 +124,7 @@ public static class Reliability
 
         var expected = Rules.Scripts(episode).Select(s => s.Key).ToArray();
 
-        return !episode.TextDesignPending && expected.Length > 0 && episode.Videos.Count == expected.Length
+        return !episode.TextDesignPending && !episode.ArtworkPending && expected.Length > 0 && episode.Videos.Count == expected.Length
 
             && expected.All(key => episode.Videos.Count(v => v.Key == key && AssetCurrent(episode, v, checkFile)) == 1);
 
