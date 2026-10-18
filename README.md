@@ -1,8 +1,8 @@
-# TubeFlow 0.4.25
+# TubeFlow 0.4.26
 
 **Windows üzerinde metinden, hazır sesten ve görsel arşivden video hazırlama, inceleme ve yayınlama uygulaması.**
 
-Bu README; son yayımlanan **0.4.25** kaynak kodunun kullanım kılavuzu, çalışma mekanikleri ve geliştirici başvurusudur. Belgeleme tarihi **18 Ekim 2026**. Uygulamanın mevcut davranışları anlatılır; bölümleme sonrası erken zaman çizelgesi, Cortex maskotu ve ücretsiz yerel görsel analizi bu sürümde uygulanmıştır. Model adları ve ayarların başlangıç değerleri kaynak kodundan alınır; ilgili hizmette her zaman kullanılabileceklerine veya ücretsiz olduklarına ilişkin bir taahhüt değildir.
+Bu README; son yayımlanan **0.4.26** kaynak kodunun kullanım kılavuzu, çalışma mekanikleri ve geliştirici başvurusudur. Belgeleme tarihi **18 Ekim 2026**. Uygulamanın mevcut davranışları anlatılır; bölümleme sonrası erken zaman çizelgesi, Cortex maskotu ve ücretsiz yerel görsel analizi bu sürümde uygulanmıştır. Model adları ve ayarların başlangıç değerleri kaynak kodundan alınır; ilgili hizmette her zaman kullanılabileceklerine veya ücretsiz olduklarına ilişkin bir taahhüt değildir.
 
 Ana çalıştırılabilir dosya **TubeFlow.exe**, proje dosyası **src/AnkaStudio.csproj**, C# ad alanı **AnkaStudio** olarak kalmıştır. Eski kurulumların veri ve güncelleme uyumluluğu için bazı dizin, dosya ve protokol adları hâlâ `AnkaStudio` / `anka` içerir. Bunlar ikinci bir ürün veya ilave dil desteği anlamına gelmez.
 
@@ -37,7 +37,7 @@ Ana çalıştırılabilir dosya **TubeFlow.exe**, proje dosyası **src/AnkaStudi
 27. [Komut satırı ve önizleme araçları](#komutlar)
 28. [Sorun giderme](#sorun-giderme)
 29. [Gerçek sınırlar ve önerilen geliştirme](#sinirlar)
-30. [0.4.25 doğrulama ve değişiklik özeti](#dogrulama)
+30. [0.4.26 doğrulama ve değişiklik özeti](#dogrulama)
 31. [Ek A — Kaynak dosyalarının tamamı](#kaynak-katalogu)
 32. [Ek B — Alanlar, türler ve başlangıç değerleri](#alan-katalogu)
 33. [Ek C — Tür ve metot imzaları](#metot-katalogu)
@@ -54,7 +54,7 @@ TubeFlow bir masaüstü üretim koordinatörüdür. Metin servisleri, seslendirm
 | Araştırma | Kaynak URL’leri, araştırma servisi, kaynak listesi, açıklamaya kaynak ekleme | Otomatik araştırma yolunda kaynak doğrulama vardır; doğruluk için insan incelemesi yine gerekir. |
 | Metin denetimi | Süre/kelime bütçesi, Türkçe yazım denetimi, eksik metni tamamlama, sahne başlıkları, seri başlıkları | Kullanıcı anlatımı yolunda otomatik tamamlama/yazım müdahalesi kısıtlanır. |
 | Sahneleme | AI görsellerinde 5–10 sahne, diğer bölümleme yolunda en fazla 50 grup, cümle temelli kurtarma | Bunlar farklı akışlardır; bütün videoların aynı sahne sayısı yoktur. |
-| Yüklenen medya | Fotoğraf/video içeriğini analiz etme, anlatıma göre dosya seçme, açıklama önbelleği | 0.4.25 anlamsal yol: otomatik mod + yalnız kendi görselleri. Karma kaynak akışının tümü bu davranışa dönüştürülmüş değildir. |
+| Yüklenen medya | Fotoğraf/video içeriğini analiz etme, anlatıma göre dosya seçme, açıklama önbelleği | 0.4.26 anlamsal yol: otomatik mod + yalnız kendi görselleri. Karma kaynak akışının tümü bu davranışa dönüştürülmüş değildir. |
 | AI görsel | Ayrı sahne görselleri, karakter tarifi, referans, yerel/bulut seçenekleri, kalite seçimi, tek sahne yenileme | Kurulu model ve izinli sağlayıcı gerekir. |
 | Kapak | Şablon, hazır PNG, AI arka plan, referans kapak, başlık/font/renk/logo, arşiv, kart editörü | Kapak değiştirmek mevcut MP4’ü anında yeniden kodlamaz; geçerlilik ve yeniden üretim akışı vardır. |
 | Ses | Windows, Piper, XTTS, Google Cloud TTS, ElevenLabs, hazır ses dosyası, ses örneği, telaffuz sözlüğü | Seçili sesin gerçekten bulunması gerekir; servis bazında yetenek değişir. |
@@ -225,7 +225,7 @@ flow.OwnVisuals && flow.Mode == "auto"
     && !flow.AiVisuals && !flow.StockVisuals
 ```
 
-Bu koşulda **“yalnız yüklediğim dosyaları otomatik kullan”** yolu devreye girer. Manuel mod ve AI/stok/kendi dosyaları birlikte işaretlenmiş karma kaynak yolları ayrı davranış taşır. 0.4.25’te tüm bu yolların tek bir anlamsal editöre dönüştüğü söylenemez.
+Bu koşulda **“yalnız yüklediğim dosyaları otomatik kullan”** yolu devreye girer. Manuel mod ve AI/stok/kendi dosyaları birlikte işaretlenmiş karma kaynak yolları ayrı davranış taşır. 0.4.26’te tüm bu yolların tek bir anlamsal editöre dönüştüğü söylenemez.
 
 ### 6.3 Dosyaların gerçek içeriğini okuma
 
@@ -468,7 +468,7 @@ Pixabay aramalarında istek aralığı/bütçe, sonuç önbelleği ve bekleme yo
 
 `MediaPool`; dosya, etiket, kategori, kullanım, hak ve kaynak bilgilerini saklar. Klasör tarama, sağlıklı dosya denetimi, puanlama, uygun aday seçimi ve tekrar kullanım aralığı bulunur. `PoolRepeatHours` aynı malzemeyi kısa aralıklarla tekrar kullanmayı sınırlar. Otomatik havuza kaydetme ve havuzu yedek kaynak olarak kullanma ayrı seçeneklerdir.
 
-Havuzdan seçim ile yüklenen dosyalara özel `UploadedMediaMatch` aynı mekanizma değildir. Havuzun etiket/metadata puanı, 0.4.25 yüklenen görsellerin gerçek içerik kataloğuna dayalı eşleştirmesi olarak sunulmamalıdır.
+Havuzdan seçim ile yüklenen dosyalara özel `UploadedMediaMatch` aynı mekanizma değildir. Havuzun etiket/metadata puanı, 0.4.26 yüklenen görsellerin gerçek içerik kataloğuna dayalı eşleştirmesi olarak sunulmamalıdır.
 
 ### 14.3 Haklar ve kaynak kayıtları
 
@@ -693,7 +693,7 @@ flowchart TD
 
 Store’da `OperationGate`/`OperationBusy`, Engine’de iptal kaynağı ve `Busy` bulunur. `OperationLease` aynı veri kökündeki çakışan ağır işlemleri engeller. Bu bir çok kiracılı sunucu iş kuyruğu değildir; masaüstü süreç içi koordinasyonudur.
 
-`async/await` HTTP ve alt süreç beklemelerinde UI’yı serbest bırakır. `Changed` olayı UI güncellemesine bağlanır; gerektiğinde UI thread’ine geçilir. 0.4.25 `External` işi başlamadan durum bildirir ve UI’ya çizim fırsatı verir. `ActivityName`, `BusySince` ve sabit gösterge görünür geri bildirimi destekler.
+`async/await` HTTP ve alt süreç beklemelerinde UI’yı serbest bırakır. `Changed` olayı UI güncellemesine bağlanır; gerektiğinde UI thread’ine geçilir. 0.4.26 `External` işi başlamadan durum bildirir ve UI’ya çizim fırsatı verir. `ActivityName`, `BusySince` ve sabit gösterge görünür geri bildirimi destekler.
 
 FFmpeg, Python hizalama ve ComfyUI ayrı alt süreçler olabilir. HTTP istemcileri bazı sınıflarda paylaşılan, testlerde enjekte edilebilir örneklerdir. İptal istekleri tokenlarla taşınır; alt süreç yaşam döngüsü ilgili adaptörde yönetilir.
 
@@ -795,7 +795,7 @@ Bu, `secrets.dat` dosyasını başka Windows kullanıcısına kopyalamakla aynı
 
 Yaygın durumlar Taslak, Araştırılıyor, Senaryo hazır, Üretiliyor, Denetim bekliyor, Kontrol gerekli, Onaylandı, Yükleniyor, Durduruldu ve Kesildi gibi metinlerle tutulur. Yayın grubu ayrıca platform durumundan hesaplanır. Tek bir durum etiketi bütün sürecin eksiksiz tek state machine tanımı değildir; modelde onay, resume aşaması ve dosya geçerliliği de vardır.
 
-0.4.25 sabit çalışma alanı; hareketli simge, işlem adı, geçen `hh:mm:ss`, dosya/sahne sayısı ve durdurma düğmesi gösterir. Ana tekrar başlatma ve çakışan alanlar işlem boyunca kapatılır. Tahmin edilen kalan süre ile geçen gerçek süre ayrıdır; geçmiş aşama süreleri tahmine yardımcı olabilir, kesin bitiş saati değildir.
+0.4.26 sabit çalışma alanı; hareketli simge, işlem adı, geçen `hh:mm:ss`, dosya/sahne sayısı ve durdurma düğmesi gösterir. Ana tekrar başlatma ve çakışan alanlar işlem boyunca kapatılır. Tahmin edilen kalan süre ile geçen gerçek süre ayrıdır; geçmiş aşama süreleri tahmine yardımcı olabilir, kesin bitiş saati değildir.
 
 `Engine.External` ile plan/analiz gibi dış işler de Busy durumuna bağlanır. `Notify` Store kaydını ve UI bildirimini tetikler. Üretim sırasında ilerleme yalnız model yanıtını değil ses, görsel, render ve çıktı kontrollerini kapsar.
 
@@ -959,7 +959,7 @@ Kod ayrıca wizard, koyu arayüz, laptop yerleşimi, arşiv, kanal bağlantılar
 
 | Belirti | Olası açıklama | Kontrol / doğru adım |
 |---|---|---|
-| “AI bölüm sınırları geçersiz” | Eski akış/bozuk model yanıtı | 0.4.25’te cümle sınırı kurtarması vardır; güncel sürüm ve onaylı metni kontrol et. |
+| “AI bölüm sınırları geçersiz” | Eski akış/bozuk model yanıtı | 0.4.26’te cümle sınırı kurtarması vardır; güncel sürüm ve onaylı metni kontrol et. |
 | Hazırlık uzun sürüyor | Metin modeli, çok sayıda görsel analiz veya başarısız adaylar | Sabit işlem adını/dosya sayısını/geçen süreyi izle; gerekirse durdur. İlerleme yüzdesi kesin süre değildir. |
 | “Başka işlem çalışıyor” | Aynı motor/veri kökünde iş sürüyor | Tekrar tekrar başlatma yerine mevcut işi bekle/durdur; çalışma göstergesini kontrol et. |
 | Görsel eşleşmiyor / uygun dosya yok | Katalog o konuyu kapsamıyor veya model okuyamıyor | Gerçek görüntü, görsel model bağlantısı ve eşleşme gerekçesini incele; rastgele seçim bekleme. |
@@ -998,7 +998,7 @@ Kod ayrıca wizard, koyu arayüz, laptop yerleşimi, arşiv, kanal bağlantılar
 <a id="timeline-oneri"></a>
 ### 29.2 Uygulanan: bölümleme sonrası ayrıntılı zaman çizelgesi
 
-0.4.25 ile bölümleme sonucu `Engine.PreparingPlan` içinde derin kopyayla geçici olarak yayımlanır. Asıl proje, görsel eşleştirme tamamlanana kadar atomik biçimde korunur. İşlem sürerken çizelge incelenebilir; düzenlemeler kilitlidir. İptal veya hata sonunda geçici plan temizlenir.
+0.4.26 ile bölümleme sonucu `Engine.PreparingPlan` içinde derin kopyayla geçici olarak yayımlanır. Asıl proje, görsel eşleştirme tamamlanana kadar atomik biçimde korunur. İşlem sürerken çizelge incelenebilir; düzenlemeler kilitlidir. İptal veya hata sonunda geçici plan temizlenir.
 
 - Görüntü küçük resimleri, konuşma ve altyazı ayrı şeritlerde görünür. Fotoğraflar yerel dosyadan; video önizlemeleri sınırlı eşzamanlı FFmpeg işlemleriyle hazırlanır.
 - Bölüm tablosunda başlangıç, bitiş, süre, anlatım ve seçilen dosya gösterilir. Seçim, ayrıntı panelini ve varsa oynatıcı konumunu günceller.
@@ -1026,11 +1026,11 @@ API listesi Gemini, NVIDIA, Groq, OpenRouter, OpenAI, Kimi, Tavily, Pexels, Pixa
 Kontroller yeni metin, görsel veya ses üretmez; video yüklemez; API açıp kapatmaz. Stok araması ve YouTube okuması küçük API kotası tüketebilir. Her hizmetin kurulması/anahtarının girilmesi şart değildir: yerel ve bulut seçenekleri alternatiflerdir. Sayfanın sonunda her bileşenin ne işe yaradığı, hangi işlev için gerektiği ve tam paketle gelen bileşenler açıklanır. Program amblemleri ilgili resmî sitelerden alınmıştır; bulunmayan hizmette açık ad kısaltması kullanılır, yanlış marka logosu gösterilmez.
 
 <a id="dogrulama"></a>
-## 30. 0.4.25 doğrulama ve değişiklik özeti
+## 30. 0.4.26 doğrulama ve değişiklik özeti
 
-0.4.25; ücretsiz yerel görsel okuma önceliği, geçici görsel API hatalarında sınırlı tekrar, erken ve düzenlenebilir sahne çizelgesi, Cortex maskotu ve kurulum/API kontrol listesini ekler. Önceki sürümün metne göre eşleştirme, gerçek ses süreleri ve yavaş fotoğraf hareketi mekanikleri korunur.
+0.4.26; ücretsiz yerel görsel okuma önceliği, geçici görsel API hatalarında sınırlı tekrar, erken ve düzenlenebilir sahne çizelgesi, Cortex maskotu ve kurulum/API kontrol listesini ekler. Önceki sürümün metne göre eşleştirme, gerçek ses süreleri ve yavaş fotoğraf hareketi mekanikleri korunur.
 
-Yayın hazırlığında **279 güvenilirlik kontrolü + 73 temel test = 352 test** geçti. Güncel GitHub Windows derleme işi ve release işi başarılı oldu. İndirilen güncelleme ZIP’i manifest/SHA-256 üzerinden doğrulandı; indirilen EXE’nin sağlık kontrolü `Success=true`, `Version=0.4.25` verdi.
+Yayın hazırlığında **279 güvenilirlik kontrolü + 73 temel test = 352 test** geçti. Güncel GitHub Windows derleme işi ve release işi başarılı oldu. İndirilen güncelleme ZIP’i manifest/SHA-256 üzerinden doğrulandı; indirilen EXE’nin sağlık kontrolü `Success=true`, `Version=0.4.26` verdi.
 
 Görsel API girdisi/önbellek/anlamsal dosya seçimi sahte yanıtlı bütünleşme testiyle; 18 saniyelik fotoğrafın iki yöndeki hareketi gerçek MP4 çıktısıyla; gerçek bir kullanıcı fotoğrafı ve video örnek karelerinin okunması yalnız yerel Qwen3-VL 4B Instruct ile, bulut kapalı ve ücretsiz öncelik açıkken kontrol edildi. Takılan 26. fotoğrafın doğrudan model testi yaklaşık 9,35 saniyede tamamlandı. Kurulum/API durumları sahte yanıtlı testlerle ve gerçek UI tarama iptaliyle kontrol edildi. Kullanıcının 69 dosyalı projesinin tamamı bu doğrulamada yeniden üretilip izlenmiş değildir. Dolayısıyla “her sahnede mükemmel semantik uyum kanıtlandı” sonucu çıkarılamaz.
 
@@ -1039,7 +1039,7 @@ Bu sürümde erken çizelge, Cortex ve yerel görsel analiz yolu geliştirilmiş
 <a id="kaynak-katalogu"></a>
 ## Ek A — Kaynak dosyalarının tamamı
 
-Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` çıktıları hariçtir. Katalog 0.4.25 kaynaklarına aittir. Dosya bağlantıları depo içinde görelidir; sürüme sabitlenmiş tam kaynak [yayın commit’inde](https://github.com/aayurtseven02/nur-kapisi-otomasyon/tree/v0.4.25/src) bulunur. UI önizleme ve test dosyaları üretim özelliği gibi gösterilmez.
+Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` çıktıları hariçtir. Katalog 0.4.26 kaynaklarına aittir. Dosya bağlantıları depo içinde görelidir; sürüme sabitlenmiş tam kaynak [yayın commit’inde](https://github.com/aayurtseven02/nur-kapisi-otomasyon/tree/v0.4.26/src) bulunur. UI önizleme ve test dosyaları üretim özelliği gibi gösterilmez.
 
 | Dosya | Satır | Sorumluluk |
 |---|---:|---|
@@ -2823,7 +2823,7 @@ Aşağıdaki bildirimler özellik değil alan/sabitlerdir. Değerler çalışma 
 | [SelfTests.GroqJsonHandler.Invalid](src/SelfTests.cs#L1493) | `public bool` | `—` |
 | [SelfTests.FakeHandler.Calls](src/SelfTests.cs#L1513) | `public List<string>` | `[]` |
 | [SelfTests.FakeHandler.FailAll](src/SelfTests.cs#L1513) | `public bool` | `—` |
-| [SetupChecks.Programs](src/SetupChecks.cs#L11) | `public static readonly SetupCheck[]` | `Uzun sabit/ifade (2130 karakter); tam değer kaynak bağlantısında.` |
+| [SetupChecks.Programs](src/SetupChecks.cs#L11) | `public static readonly SetupCheck[]` | `Uzun sabit/ifade (2158 karakter); tam değer kaynak bağlantısında.` |
 | [SetupChecks.Accounts](src/SetupChecks.cs#L22) | `public static readonly SetupCheck[]` | `Uzun sabit/ifade (2782 karakter); tam değer kaynak bağlantısında.` |
 | [SidebarButton.Active](src/SidebarButton.cs#L6) | `public bool` | `—` |
 | [SidebarButton.Glyph](src/SidebarButton.cs#L7) | `public string` | `""` |
@@ -7941,4 +7941,4 @@ Türkçe YouTube kanalları için normal video ve Shorts'u tek konu paketinden y
 
 ## Belge kapsamı ve üçüncü taraflar
 
-Bu README, kaynak sürümü 0.4.25 için hazırlanmıştır. Teknik katalog Roslyn sözdizim ağacından üretilmiş; kullanım/mimari açıklamaları ilgili kod yolları okunarak yazılmıştır. Bir metot imzasının listelenmesi uçtan uca canlı servis testinin yapıldığı anlamına gelmez. Üçüncü taraf bileşen koşulları için [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), stok ayrıntıları için [STOK-KAYNAKLARI.md](STOK-KAYNAKLARI.md), broker kurulum sınırları için [social-connection-service/README.md](social-connection-service/README.md) dosyalarına bak. Bu belge yeni bir yazılım lisansı tanımlamaz.
+Bu README, kaynak sürümü 0.4.26 için hazırlanmıştır. Teknik katalog Roslyn sözdizim ağacından üretilmiş; kullanım/mimari açıklamaları ilgili kod yolları okunarak yazılmıştır. Bir metot imzasının listelenmesi uçtan uca canlı servis testinin yapıldığı anlamına gelmez. Üçüncü taraf bileşen koşulları için [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), stok ayrıntıları için [STOK-KAYNAKLARI.md](STOK-KAYNAKLARI.md), broker kurulum sınırları için [social-connection-service/README.md](social-connection-service/README.md) dosyalarına bak. Bu belge yeni bir yazılım lisansı tanımlamaz.

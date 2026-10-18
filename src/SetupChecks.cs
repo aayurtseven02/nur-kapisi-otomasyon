@@ -15,7 +15,7 @@ public static class SetupChecks
         new("vision","Yerel görsel okuma modeli","qwen","https://ollama.com/library/qwen3-vl:4b-instruct","Fotoğraf ve video örnek karelerini okuyarak konuya göre eşleştirme sağlar. qwen3:8b tek başına görsel okuyamaz.","local"),
         new("comfy","ComfyUI / yerel görsel motoru","comfy","https://github.com/Comfy-Org/ComfyUI","Yerelde yeni kapak ve sahne resmi üretmek için gerekir. Hazır dosyaları okumak için zorunlu değildir. Motor, iş akışı ve model dosyaları ayrı kontrol edilir.","visual"),
         new("workflow","Görsel iş akışı ve model dosyaları","comfy","https://docs.comfy.org/installation/system_requirements","ComfyUI tek başına yeterli değildir; iş akışındaki modeller de kurulmalı. Motor açıksa düğüm ve model seçenekleri ayrıca denetlenir.","visual"),
-        new("alignment","Python / Faster Whisper ses eşleme paketi","python","https://github.com/SYSTRAN/faster-whisper","Hazır ses dosyalarını kelimelerle ve altyazıyla eşler. TubeFlow paketindeki Python, kütüphane ve model gerekir; yalnız genel Python kurulması yeterli değildir."),
+        new("alignment","Python / Faster Whisper ses eşleme paketi","python","https://github.com/aayurtseven02/nur-kapisi-otomasyon/releases/latest","Hazır ses dosyalarını kelimelerle ve altyazıyla eşler. TubeFlow paketindeki Python, kütüphane ve model gerekir; yalnız genel Python kurulması yeterli değildir."),
         new("voices","Windows Türkçe sesleri","windows","https://support.microsoft.com/windows","Windows ile ücretsiz Türkçe seslendirme için gerekir. Google TTS veya başka ses sağlayıcısı kullanıyorsan isteğe bağlıdır."),
         new("runtime","TubeFlow çalışma ortamı (.NET)","tubeflow","https://dotnet.microsoft.com/en-us/download/dotnet/10.0","Resmî Windows paketi çalışma ortamını içerir. Kaynaktan çalıştırırken Windows Desktop Runtime gerekir; tam paket kullanıyorsan ayrıca SDK kurmana gerek yok.")
     ];
@@ -54,7 +54,7 @@ public static class SetupChecks
     {
         var local=new LocalAi(store,client);
         if(id=="runtime")return new(true,"Yüklü",System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription+" • çalışan uygulama doğrulandı");
-        if(id=="ffmpeg"){var exe=Resolve(store.Ffmpeg,"ffmpeg.exe");return exe==null?new(false,"Yüklü değil","FFmpeg bulunamadı; tam paketi çıkar veya ayarlardan dosyasını seç."):await Run(exe,["-version"],ct)?new(true,"Yüklü",exe):new(false,"Kurulu, çalışmıyor","FFmpeg sürüm kontrolü başarısız.");}
+        if(id=="ffmpeg"){var exe=Resolve(store.Settings.FfmpegPath,"ffmpeg.exe");return exe==null?new(false,"Yüklü değil","FFmpeg bulunamadı; tam paketi çıkar veya ayarlardan dosyasını seç."):await Run(exe,["-version"],ct)?new(true,"Yüklü",exe):new(false,"Kurulu, çalışmıyor","FFmpeg sürüm kontrolü başarısız.");}
         if(id=="voices"){var voices=LocalVoice.List();return new(voices.Count>0,voices.Count>0?"Yüklü":"Yüklü değil",voices.Count+" Türkçe Windows sesi bulundu.");}
         if(id is "ollama" or "text" or "vision"){
             var state=await local.Status(ct);
@@ -85,7 +85,7 @@ public static class SetupChecks
         if(id is "GOOGLE_BILLING_JSON" or "GOOGLE_CONTROL_JSON"){
             using var json=JsonDocument.Parse(store.Key(id));bool shape=new[]{"private_key","client_email","project_id"}.All(k=>json.RootElement.TryGetProperty(k,out var v)&&v.ValueKind==JsonValueKind.String&&!string.IsNullOrWhiteSpace(v.GetString()));return shape?new(null,"Kimlik kayıtlı • yetki doğrulanmadı","Dosya yapısı uygun. Gerçek rapor/API yönetim yetkisini ilgili ayarın Dene işlemiyle kontrol et."):new(false,"Kimlik dosyası geçersiz","Gerekli hizmet hesabı alanları eksik.");
         }
-        using var owned=client==null?new HttpClient{Timeout=TimeSpan.FromSeconds(18)}:null;var http=client??owned!;string value=store.Key(id);
+        using var owned=client==null?new HttpClient(new HttpClientHandler{AllowAutoRedirect=false}){Timeout=TimeSpan.FromSeconds(18)}:null;var http=client??owned!;string value=store.Key(id);
         if(id=="youtube"){await new YouTube(store,http).ChannelIdentity(ct);return new(true,"Bağlantı doğrulandı","OAuth oturumu ve tek hedef YouTube kanalı doğrulandı; video yüklenmedi.");}
         if(id=="VECTEEZY_SECRET_KEY"){var quota=await new Vecteezy(store,http).AccountInfo(ct);return new(true,"Bağlantı doğrulandı",$"Arama {quota.GeneralUsed}/{quota.GeneralLimit} • indirme {quota.DownloadUsed}/{quota.DownloadLimit}");}
         string url=id switch{
