@@ -1,3 +1,9 @@
+# TubeFlow 0.4.24 — Anlatıma göre otomatik kurgu
+
+Yüklenen fotoğraf ve kısa videolar gerçek görsel içerikleriyle incelenip onaylı anlatımın konusuna göre eşleştirilir. Dosya sırası ve adları seçim ölçütü değildir. Uygun görüntü bulunamazsa ilgisiz bir dosya yerleştirilmez. Bunun için izinli ve çalışan NVIDIA, Gemini veya kurulu Ollama görsel modeli gerekir. Görsel açıklamaları içerik özetiyle önbelleğe alınır.
+
+AI geçersiz bölüm sınırları döndürürse onaylı metin korunarak cümle sınırlarından devam edilir. Görüntüler gerçek konuşma sürelerine uyarlanır. Fotoğraflara sahne boyunca çok yavaş, dönüşümlü yakınlaşma/uzaklaşma uygulanır. Hazırlık boyunca sabit alanda hareketli gösterge, yapılan iş, dosya/sahne sayısı, geçen süre ve durdurma düğmesi görünür; yeniden başlatma düğmeleri kilitlenir.
+
 # TubeFlow 0.4.23 — Kapak ve üretim akışı
 
 Kapak değişiklikleri adımlar arası geçişte kaydedilir; eski küçük resim yeni seçimin yerine kullanılmaz. Kontrol ekranından kapak editörüne doğrudan erişilir. AI kapak tasarımında başlık ve yatay/dikey oran otomatik uygulanır; oluştur/kaydet düğmeleri görünür kalır. Maksimum kalite iki motorda da tam 16:9 üretir. Seçili yerel kapak motoru bulut kotasından önce denenir. Hazır sahne sayısı canlı güncellenir; tek sahne yenilemede düzeltme talimatı yazılabilir.

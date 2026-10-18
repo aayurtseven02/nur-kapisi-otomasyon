@@ -233,20 +233,25 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
     CancellationTokenSource? cancel;
 
     public bool Busy => cancel != null || store.OperationBusy;
+    public string ActivityName { get; private set; } = "";
+    public DateTimeOffset? BusySince { get; private set; }
+    public string ActivityText(Episode episode) => ActivityName != "" ? ActivityName : episode.CurrentStage != "" && episode.Status is "Araştırılıyor" or "Üretiliyor" or "Yükleniyor" ? episode.CurrentStage : "Arka plan işlemi sürüyor";
+
+    public void ReportActivity(string message) { ActivityName=message;Notify(); }
 
     public void Stop() { foreach (var episode in store.Episodes.Where(e => e.Status is "Araştırılıyor" or "Üretiliyor" or "Yükleniyor")) episode.RetryAt = null; cancel?.Cancel(); }
 
-    public async Task External(Func<CancellationToken, Task> action) {
+    public async Task External(Func<CancellationToken, Task> action, string activity = "İşlem hazırlanıyor") {
 
         using var operation = new OperationLease(store); cancel = new();
 
-        try { await action(cancel.Token); } finally { cancel.Dispose(); cancel = null; operation.Dispose(); Notify(); }
+        try { ActivityName = activity; Notify(); await Task.Yield(); await action(cancel.Token); } finally { cancel.Dispose(); cancel = null; ActivityName = ""; operation.Dispose(); Notify(); }
 
     }
 
     public async Task StopAndWait() { Stop(); while (Busy) await Task.Delay(100); }
 
-    public void Notify() { store.Save(); Changed?.Invoke(); }
+    public void Notify() { if (Busy) BusySince ??= DateTimeOffset.UtcNow; else BusySince = null; store.Save(); Changed?.Invoke(); }
 
     public static void ResetDeletedUploads(Episode episode)
 
@@ -674,7 +679,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
                 var photoClip=Path.Combine(folder,$"photo-scene-{n}.mp4");
                 if((e.AiStoryImages || e.Creation is {CoverChoice:not "legacy",PhotoMotion:true}&&scene.AiImageHash!="") && e.AiStoryMotion && e.AiStoryCinematic)
                     photoClip=await StoryCinema.Render(store,source,scene,w,h,duration,renderSettings,folder,ct,s=>Log(e,s),segmentCaptions);
-                else await Media.Exec(store.Ffmpeg,["-y","-loop","1","-i",source,"-t",Media.Num(duration),"-vf",e.Creation is {CoverChoice:not "legacy"} layout ? WorkflowMedia.PhotoFilter(w,h,renderSettings.FramesPerSecond,layout) : StoryImages.PhotoFilter(w,h,renderSettings.FramesPerSecond,e.AiStoryImages && e.AiStoryMotion),"-an","-c:v","libx264","-preset",renderSettings.EncodingPreset,"-crf",renderSettings.Crf.ToString(),"-pix_fmt","yuv420p",photoClip],folder,ct);
+                else await Media.Exec(store.Ffmpeg,["-y","-loop","1","-i",source,"-t",Media.Num(duration),"-vf",e.Creation is {CoverChoice:not "legacy"} layout ? WorkflowMedia.PhotoFilter(w,h,renderSettings.FramesPerSecond,layout,n%2==0,duration) : StoryImages.PhotoFilter(w,h,renderSettings.FramesPerSecond,e.AiStoryImages && e.AiStoryMotion),"-an","-c:v","libx264","-preset",renderSettings.EncodingPreset,"-crf",renderSettings.Crf.ToString(),"-pix_fmt","yuv420p",photoClip],folder,ct);
                 source=photoClip;
             }
             else if (ManualVideos.Active(e)) {

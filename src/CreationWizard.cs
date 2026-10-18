@@ -18,12 +18,16 @@ public sealed partial class StudioForm
         var tabs=new FlowLayoutPanel{Location=new(16,16),Size=new(card.Width-32,64),WrapContents=false,Tag="phase-tabs"};card.Controls.Add(tabs);
         var content=Theme.Flow(card.Width-48);content.Location=new(24,94);content.AutoSize=false;content.AutoScroll=true;content.Size=new(card.Width-48,card.Height-184);card.Controls.Add(content);
         var footerRow=new Panel{Location=new(24,card.Height-80),Size=new(card.Width-48,58)};card.Controls.Add(footerRow);
-        var frozenControls=new List<(Control Control,bool Enabled)>();bool wasBusy=false,hasChanges=false;
+        var activity=new AiTextActivity{Location=new Point(24,86),Size=new Size(card.Width-190,52),Font=Theme.Font(11,true),BackColor=Theme.AccentSurface,AccessibleName="Çalışan işlem",Visible=false};card.Controls.Add(activity);
+        var stopActivity=Theme.Button("Durdur",()=>engine.Stop(),false,120);stopActivity.Location=new Point(card.Width-150,90);stopActivity.Visible=false;stopActivity.AccessibleName="Çalışan işlemi durdur";card.Controls.Add(stopActivity);
+        var frozenControls=new List<(Control Control,bool Enabled)>();bool wasBusy=false,hasChanges=false,advancing=false;
         Button before=null!,primary=null!;TextBox note=null!;TurquoisePackageBar progress=null!;System.Windows.Forms.Timer dirtyTimer=null!;
         before=Theme.Button("← Önceki adım",()=>Go(e.WizardStep-1),false,180);footerRow.Controls.Add(before);
         primary=Theme.Button("Devam et →",()=>_=Safe(Advance),true,Math.Min(390,footerRow.Width-200));primary.Location=new(footerRow.Width-primary.Width,0);primary.AccessibleName="Ana işlem";footerRow.Controls.Add(primary);
         note=Theme.Input("",true,content.Width-24);note.Height=90;note.ReadOnly=true;note.ScrollBars=ScrollBars.Vertical;note.AccessibleName="Üretim uyarısı";
         progress=new TurquoisePackageBar{Width=content.Width-24,Height=30};
+        var activityTimer=new System.Windows.Forms.Timer{Interval=500};activityTimer.Tick+=(_,_)=>{if(engine.Busy||wasBusy||advancing)Update();};activityTimer.Start();card.Disposed+=(_,_)=>activityTimer.Dispose();
+
         dirtyTimer=new System.Windows.Forms.Timer{Interval=800};dirtyTimer.Tick+=(_,_)=>{dirtyTimer.Stop();if(!engine.Busy&&e.Topic.Trim()!="")Save();};card.Disposed+=(_,_)=>{dirtyTimer.Stop();if(hasChanges&&e.Topic.Trim()!=""&&!engine.Busy)Save();dirtyTimer.Dispose();};
         void Save(){if(e.ProductionSettings!=null&&NarrationFlow.Fingerprint(new VideoScript(),e.ProductionSettings)!=NarrationFlow.Fingerprint(new VideoScript(),settings)){e.TextDesignPending=e.Videos.Count>0;e.Approved=false;e.ApprovalHash="";}if(e.WizardStep==1)WorkflowMusic.Apply(store,e,settings);hasChanges=false;e.Creation??=flow;e.ProductionSettings=settings;if(e.QueueSettings!=null)e.QueueSettings=VideoQueue.Snapshot(settings);WorkflowArtwork.Apply(e,settings,flow.CoverChoice);if(!store.Episodes.Contains(e))store.Episodes.Add(e);wizardDraft=null;store.Save();}
         System.Action flushForAssistant=()=>{dirtyTimer.Stop();if(hasChanges)Save();};commitAssistantEditor=flushForAssistant;card.Disposed+=(_,_)=>{if(commitAssistantEditor==flushForAssistant)commitAssistantEditor=null;};
@@ -124,7 +128,7 @@ public sealed partial class StudioForm
             Pair(content,[("AI destekli otomatik","auto"),("Manuel üretim","manual")],flow.Mode,value=>{flow.Mode=value;Dirty();});
             if(flow.AutomaticStoryboard)content.Controls.Add(Theme.Label("AI, anlatıma göre 5–10 farklı sahne görseli hazırlar. Her sahne kendi anlatımıyla sırayla gösterilir.",10,width:content.Width-24,height:50));else Pair(content,[("AI bölümlere ayırsın","yes"),("Tek bölüm olsun","no")],flow.Split==null?"":flow.Split==true?"yes":"no",value=>{flow.Split=value==""?null:value=="yes";Dirty();});
             content.Controls.Add(note);content.Controls.Add(progress);
-            Action("Bölümleri hazırla / yeniden hazırla",()=>_=Safe(async()=>{if(e.Plan!=null&&Theme.Alert(this,"Bölüm düzenlemeleri yeniden oluşturulsun mu? Mevcut bölüm ayarları değişecek.","Bölümleri yeniden hazırla",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;Save();await engine.External(ct=>WorkflowMedia.Build(store,e,new Services(store,e.Log),ct));Draw();}),true);
+            Action("Bölümleri hazırla / yeniden hazırla",()=>_=Safe(async()=>{if(e.Plan!=null&&Theme.Alert(this,"Bölüm düzenlemeleri yeniden oluşturulsun mu? Mevcut bölüm ayarları değişecek.","Bölümleri yeniden hazırla",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;Save();await engine.External(ct=>WorkflowMedia.Build(store,e,new Services(store,e.Log),ct,engine.ReportActivity),"AI ile bölümler hazırlanıyor");Draw();}),true);
             if(e.Plan!=null){var ready=Theme.Label(WorkflowArtwork.ReadyText(e,settings),11,true,width:content.Width-24,height:38);ready.AccessibleName="Hazır sahne sayısı";content.Controls.Add(ready);WorkflowScenes(content,e,false,flow);}
             Action("Durdur • hazır işleri koru",CancelWorkspaceOperation);
         }
@@ -132,24 +136,31 @@ public sealed partial class StudioForm
         void PublishStep(){Section("5. Kaydet ve yayınla","MP4 • 1080p • 30 FPS. Yayın işlemi ayrıca onayını ister.");foreach(var asset in e.Videos){var selected=asset;content.Controls.Add(Theme.Label((asset.Short?"Kısa video • ":"Normal video • ")+asset.Title,12,true,width:content.Width-24,height:48));Action("Videoyu önizle",()=>Theme.Open(selected.File));Action("Bilgisayara kaydet",()=>{using var file=new SaveFileDialog{Filter="MP4 video|*.mp4",FileName=Path.GetFileName(selected.File)};if(file.ShowDialog(this)==DialogResult.OK)File.Copy(selected.File,file.FileName,true);});}Action("Yayın tarihi ve saatini seç",()=>ScheduleDialog(e));Action("YouTube'a özel yükle",()=>_=Safe(()=>engine.Upload(e,false)));Action("Çıktı klasörünü aç",()=>Theme.Open(store.Folder(e)));content.Controls.Add(note);}
         void Update()
         {
-            if(card.IsDisposed)return;if(engine.Busy&&!wasBusy){frozenControls.Clear();foreach(var control in CardChildren(content).Where(c=>c is TextBox or ComboBox or CheckBox or NumericUpDown or Button)){frozenControls.Add((control,control.Enabled));if(control.Text.StartsWith("Durdur"))continue;control.Enabled=false;}wasBusy=true;}else if(!engine.Busy&&wasBusy){foreach(var item in frozenControls)if(!item.Control.IsDisposed)item.Control.Enabled=item.Enabled;frozenControls.Clear();wasBusy=false;}delete.Enabled=store.Episodes.Contains(e)&&!engine.Busy&&!autoRunning;primary.Enabled=before.Enabled=!engine.Busy;
-            note.Text=e.Error!=""?e.Error:engine.Busy?(e.CurrentStage!=""?e.CurrentStage:e.Events.LastOrDefault()??"İşlem sürüyor; lütfen bekleyin…"):e.WizardStep==0?(flow.TextApproved?"✓ Metin onaylandı.":"Metni tamamla ve onayla."):ProjectState.Message(e);
+            if(card.IsDisposed)return;
+            bool working=engine.Busy||advancing;activity.Visible=working;stopActivity.Visible=engine.Busy;stopActivity.Enabled=engine.Busy;
+            var elapsed=engine.BusySince is { } since?DateTimeOffset.UtcNow-since:TimeSpan.Zero;
+            activity.UpdateActivity((engine.Busy?engine.ActivityText(e):"İşlem başlatılıyor")+" • geçen süre "+elapsed.ToString(@"hh\:mm\:ss"),working);
+            content.Top=working?148:94;content.Height=Math.Max(70,card.Height-(working?238:184));
+            appHeader.Busy=engine.Busy;appHeader.Invalidate();
+            if(engine.Busy&&!wasBusy){frozenControls.Clear();foreach(var control in CardChildren(content).Where(c=>c is TextBox or ComboBox or CheckBox or NumericUpDown or Button)){frozenControls.Add((control,control.Enabled));if(control.Text.StartsWith("Durdur"))continue;control.Enabled=false;}wasBusy=true;}else if(!engine.Busy&&wasBusy){foreach(var item in frozenControls)if(!item.Control.IsDisposed)item.Control.Enabled=item.Enabled;frozenControls.Clear();wasBusy=false;}delete.Enabled=store.Episodes.Contains(e)&&!working&&!autoRunning;primary.Enabled=before.Enabled=!working;picker.Enabled=!working;header.Controls.OfType<Button>().First().Enabled=!working;
+            note.Text=e.Error!=""?e.Error:engine.Busy?engine.ActivityText(e):e.WizardStep==0?(flow.TextApproved?"✓ Metin onaylandı.":"Metni tamamla ve onayla."):ProjectState.Message(e);
             foreach(var ready in content.Controls.OfType<Label>().Where(x=>x.AccessibleName=="Hazır sahne sayısı"))ready.Text=WorkflowArtwork.ReadyText(e,settings);
             progress.Value=ProjectState.Progress(e);progress.Busy=engine.Busy;progress.Text=e.CurrentStage;
             primary.Text=e.WizardStep switch{0=>"Metni onayla • Tasarıma geç →",1=>"Tasarımı kaydet • Üretime geç →",2=>"Üretimi başlat / devam et",3=>"Videoyu onayla • Yayına geç →",_=>"Şimdi YouTube'da yayınla"};
             if(e.WizardStep==0)primary.Enabled=!engine.Busy&&flow.Normal!=null&&flow.TextMode is "own" or "ai"&&flow.Text.Trim()!=""&&(flow.TextMode!="ai"||flow.AiRequestHash==flow.RequestHash(e));if(e.WizardStep<4&&e.Videos.Any(v=>v.YouTubeId!=""))primary.Enabled=false;if(e.WizardStep==4)primary.Enabled=!engine.Busy&&e.Approved&&Reliability.OutputsCurrent(e,false)&&!e.Demo;
-            foreach(var tab in tabs.Controls.OfType<Button>())tab.Enabled=!engine.Busy&&tabs.Controls.GetChildIndex(tab)<=flow.Reached;
+            if(working){primary.Enabled=false;primary.Text=engine.Busy?"İşlem sürüyor…":"İşlem başlatılıyor…";}
+            foreach(var tab in tabs.Controls.OfType<Button>())tab.Enabled=!working&&tabs.Controls.GetChildIndex(tab)<=flow.Reached;
         }
         async Task Advance()
         {
-            if(engine.Busy)return;e.Error="";
+            if(engine.Busy||advancing){Update();return;}advancing=true;Update();primary.Refresh();if(e.WizardStep==2)await Task.Yield();try{e.Error="";
             switch(e.WizardStep){
                 case 0:flow.ApprovedHash=TimedNarration.TextHash(flow.Text);flow.CommitText(e);flow.Reached=Math.Max(flow.Reached,1);Save();Go(1);break;
                 case 1:flow.ValidateDesign();WorkflowMusic.Validate(e,settings);WorkflowMusic.Apply(store,e,settings);WorkflowArtwork.Apply(e,settings,flow.CoverChoice);if(flow.CoverChoice=="file"&&!File.Exists(settings.CoverPng))throw new InvalidOperationException("Kapak dosyasını seç.");flow.Reached=Math.Max(flow.Reached,2);if(e.Plan!=null)foreach(var item in Rules.Scripts(e))item.Script.TextLayout=flow.Layout(settings);Save();Go(2);break;
-                case 2:flow.ValidateSource(e);flow.ValidateDesign();if(flow.Mode==""||(flow.Split==null&&!flow.AutomaticStoryboard))throw new InvalidOperationException("Otomatik / manuel ve bölümleme kararını seç.");Save();if(e.Plan==null||flow.PlannedTextHash!=flow.Signature)await engine.External(ct=>WorkflowMedia.Build(store,e,new Services(store,e.Log),ct));if(!Reliability.OutputsCurrent(e,false))await engine.Produce(e);if(e.Error!=""){Draw();return;}flow.Reached=Math.Max(flow.Reached,3);Save();Go(3);break;
+                case 2:flow.ValidateSource(e);flow.ValidateDesign();if(flow.Mode==""||(flow.Split==null&&!flow.AutomaticStoryboard))throw new InvalidOperationException("Otomatik / manuel ve bölümleme kararını seç.");Save();if(e.Plan==null||flow.PlannedTextHash!=flow.Signature)await engine.External(ct=>WorkflowMedia.Build(store,e,new Services(store,e.Log),ct,engine.ReportActivity),"AI ile bölümler hazırlanıyor");if(!Reliability.OutputsCurrent(e,false))await engine.Produce(e);if(e.Error!=""){Draw();return;}flow.Reached=Math.Max(flow.Reached,3);Save();Go(3);break;
                 case 3:engine.Approve(e);flow.Reached=Math.Max(flow.Reached,4);Save();Go(4);break;
                 case 4:await PublishPackageNow(e);break;
-            }
+            }}finally{advancing=false;Update();}
         }
         packageShape=PackageShape();packageUpdates[e.Id]=Update;Draw();
     }

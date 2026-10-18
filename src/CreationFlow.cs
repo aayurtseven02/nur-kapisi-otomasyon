@@ -6,7 +6,7 @@ public sealed class CreationFlow
     public int Reached {get;set;}
     public string PlannedTextHash {get;set;}="";
     public bool AutomaticStoryboard=>AiVisuals&&Mode=="auto"&&CoverChoice!="legacy";
-    public string Signature=>TimedNarration.TextHash(Text+Normal+Split+ExtraShortCount+string.Join("|",ExtraShortTexts)+(AutomaticStoryboard?"storyboard-5-10-v1":""));
+    public string Signature=>TimedNarration.TextHash(Text+Normal+Split+ExtraShortCount+string.Join("|",ExtraShortTexts)+(AutomaticStoryboard?"storyboard-5-10-v1":"")+(OwnVisuals&&Mode=="auto"&&!AiVisuals&&!StockVisuals?"semantic-upload-v1|"+string.Join("|",Files):""));
     public int ExtraShortCount {get;set;}
     public List<string> ExtraShortTexts {get;set;}=[];
     public string ExtraApprovalHash {get;set;}="";

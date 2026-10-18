@@ -24,6 +24,7 @@ public static class StockVisualReview
     static string WinnerFile(Store store) => Path.Combine(store.Root, "cache", "stock-vision-winner-" + TimedNarration.TextHash(store.Key("NVIDIA_API_KEY")) + ".txt");
 
     static string HealthFile(Store store) => WinnerFile(store) + ".health.json";
+    internal static void RememberUploadedVision(Store store,string model) { File.WriteAllText(WinnerFile(store),model);Health(store,model,true); }
     static bool Waiting(Store store, string model) => Json.Read(HealthFile(store), new Dictionary<string, DateTimeOffset>()).TryGetValue(model, out var next) && next > DateTimeOffset.UtcNow;
     static void Health(Store store, string model, bool working, bool unsupported = false) {
         string path = HealthFile(store);
@@ -34,7 +35,7 @@ public static class StockVisualReview
         }
     }
 
-    static async IAsyncEnumerable<(string Provider, string Model, string Key, string Url)> Routes(Store store, HttpClient http, Action<string> log, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct)
+    internal static async IAsyncEnumerable<(string Provider, string Model, string Key, string Url)> Routes(Store store, HttpClient http, Action<string> log, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct)
     {
         var enabled = store.Settings.EnabledCloudProviders.Split(',', StringSplitOptions.TrimEntries);
         if (CloudReady(store) && enabled.Contains("NVIDIA") && store.Key("NVIDIA_API_KEY") != "") {
