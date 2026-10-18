@@ -1,3 +1,7 @@
+# TubeFlow 0.4.22 — Hesap menüsü ve tuş hizası
+
+YouTube / Google OAuth alanları varsayılan kapalı tek açılır başlık altında toplandı. Hesaplar ve AI motorları ekranındaki işlem tuşları ortak genişlik, sol hizası ve aralıklarla düzenlendi; pencere boyutu değişince aynı hiza korunur.
+
 # TubeFlow 0.4.21 — Koyu giriş logosu
 
 0.4.20 ortak koyu görünümüne ek olarak giriş ekranı beyaz yazılı TubeFlow logosunu kullanır.

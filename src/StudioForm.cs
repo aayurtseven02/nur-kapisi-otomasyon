@@ -221,6 +221,7 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
         }
 
         var compactHeaderTab=responsive.Select(x=>x.Control).OfType<Button>().FirstOrDefault(b=>!b.IsDisposed&&b.AccessibleName=="Bölüm: Hesaplar ve AI");
+        if(compactHeaderTab!=null)foreach(var action in responsive.Select(x=>x.Control).OfType<StudioButton>().Where(b=>!b.IsDisposed&&Equals(b.Tag,"connection-action")&&b.Parent!=null)){action.Width=Math.Min(compactHeaderTab.Width,Math.Max(100,action.Parent!.ClientSize.Width-action.Parent.Padding.Horizontal));action.Height=48;}
         if(compactHeaderTab!=null)foreach(var section in responsive.Select(x=>x.Control).OfType<StudioDisclosure>().Where(x=>!x.IsDisposed))section.LimitHeadingWidth(compactHeaderTab.Width);
         page.ResumeLayout(true);
 
@@ -1384,7 +1385,7 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
 
         g.Controls.Add(Theme.Button("YouTube kanalını doğrula", () => _ = Safe(async () => { store.Settings.ChannelName = await new YouTube(store).Channel(CancellationToken.None); store.Save(); Message("Doğrulanan kanal: " + store.Settings.ChannelName + " • " + store.Settings.YouTubeChannelId); Navigate(current); }), false, 310));
 
-        accountGroup.Controls.Add(socials);accountGroup.Controls.Add(android);accountGroup.Controls.Remove(accountCards);accountGroup.Controls.Add(g);
+        accountGroup.Controls.Add(socials);accountGroup.Controls.Add(android);accountGroup.Controls.Remove(accountCards);var youtube=new StudioDisclosure("YouTube / Google OAuth",page.Width-50);youtube.Content.Controls.Add(g);accountGroup.Controls.Add(youtube);
         var developer=new StudioDisclosure("Geliştirici bağlantısı • isteğe bağlı",page.Width-50);developer.Content.Controls.Add(accountCards);accountGroup.Controls.Add(developer);
 
         var local = Theme.Flow(page.Width); local.BackColor = Theme.Panel; local.Padding = new Padding(20); local.Controls.Add(Theme.Label("Anahtarsız parçalar", 16, true, Theme.Teal, page.Width - 40, 45));
@@ -1405,6 +1406,9 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
         }
         int headerWidth=CardChildren(page).OfType<Button>().First(b=>b.AccessibleName=="Bölüm: Hesaplar ve AI").Width;
         foreach(var section in CardChildren(page).OfType<StudioDisclosure>())section.LimitHeadingWidth(headerWidth);
+        foreach(var action in CardChildren(page).OfType<StudioButton>().Where(b=>b.Parent is FlowLayoutPanel flow && flow is not StudioDisclosure && !Equals(flow.Tag,"equal-tabs") && b.Text is not ("i" or "ⓘ"))) {
+            action.Tag="connection-action";action.Width=Math.Min(headerWidth,Math.Max(100,action.Parent!.Width-action.Parent.Padding.Horizontal));action.Height=48;action.Margin=new Padding(0,0,12,8);action.TextAlign=ContentAlignment.MiddleLeft;
+        }
 
     }
 
