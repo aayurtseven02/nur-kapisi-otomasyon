@@ -596,7 +596,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-18-gun10-short2-dunyagecici
-  status: pending
+  status: failed
   publish_at: '2026-10-18T19:00:00+03:00'
   format: short
   type: tema
@@ -607,6 +607,8 @@ videos:
   title_hint: 'Dünya Hayatının Gerçek Yüzü: Kuran''dan Bir Benzetme'
   thumb_title: Dünya Hayatının Gerçeği
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-19-gun11-normal1-guzelahlak
   status: pending
   publish_at: '2026-10-19T09:00:00+03:00'
