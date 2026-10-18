@@ -150,7 +150,7 @@ public static class AppLock
 
         using var form = new Form { Text = Enabled(root) ? "TubeFlow • giriş" : "TubeFlow • açılış şifresi oluştur", Width = 580, Height = 590, StartPosition = FormStartPosition.CenterScreen, BackColor = Theme.Bg, ForeColor = Theme.Text, FormBorderStyle = FormBorderStyle.FixedDialog, MaximizeBox = false };
 
-        using var logoStream=typeof(AppLock).Assembly.GetManifestResourceStream("AnkaStudio.Assets.anka-studio-3d.png");using var logoSource=Image.FromStream(logoStream!);var logo=new PictureBox{Image=new Bitmap(logoSource),SizeMode=PictureBoxSizeMode.Zoom,BackColor=Theme.Bg,Size=new Size(190,125),Location=new Point((form.ClientSize.Width-190)/2,8),AccessibleName="TubeFlow logosu"};form.FormClosed+=(_,_)=>logo.Image?.Dispose();
+        using var logoStream=typeof(AppLock).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-dark.png");using var logoSource=Image.FromStream(logoStream!);var logo=new PictureBox{Image=new Bitmap(logoSource),SizeMode=PictureBoxSizeMode.Zoom,BackColor=Theme.Bg,Size=new Size(190,125),Location=new Point((form.ClientSize.Width-190)/2,8),AccessibleName="TubeFlow logosu"};form.FormClosed+=(_,_)=>logo.Image?.Dispose();
 
         if (channel != "") form.Text = channel + " • " + form.Text;
 

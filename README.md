@@ -1,3 +1,7 @@
+# TubeFlow 0.4.21 — Koyu giriş logosu
+
+0.4.20 ortak koyu görünümüne ek olarak giriş ekranı beyaz yazılı TubeFlow logosunu kullanır.
+
 # TubeFlow 0.4.20 — Ortak koyu görünüm
 
 Masaüstü referansına göre dar simge şeridi, açılıp kapanan koyu sol menü, son proje bağlantıları, yuvarlatılmış çalışma alanı ve mavi seçim vurgusu uygulandı. Tüm ortak tuşlar, metin/süre alanları, kutucuklar, tablolar, kaydırma çubukları, giriş ve bilgi pencereleri aynı koyu yüzeyleri kullanır. Başlıklarda normal kalın yazı kullanılır; zorunlu italik/büyük harf dönüşümü kaldırıldı. Sohbette seçilebilir mesajlar ve mavi kullanıcı balonları vardır. Menü kapalıyken sohbet simge şeridinden açılabilir. Projeler, üretim tercihleri ve yayın izinleri korunur.
