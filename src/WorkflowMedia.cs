@@ -29,7 +29,7 @@ public static class WorkflowMedia
         return FitFilter(w*2,h*2,fps,flow.Fit)+$",zoompan=z='{(zoomOut?"1.06-":"1+")}{motion}':x='iw/2-iw/zoom/2':y='ih/2-ih/zoom/2':d=1:s={w}x{h}:fps={fps}";
     }
 
-    public static async Task Build(Store store,Episode e,Services services,CancellationToken ct,Action<string>? progress=null)
+    public static async Task Build(Store store,Episode e,Services services,CancellationToken ct,Action<string>? progress=null,Action<ContentPlan>? preview=null)
     {
         void Report(string message){e.CurrentStage=message;e.Log(message);progress?.Invoke(message);}
         var f=e.Creation!;var priorShorts=f.CoverChoice=="legacy"?e.Plan?.Shorts.ToList():null;f.ValidateSource(e);f.ValidateDesign();ct.ThrowIfCancellationRequested();
@@ -50,10 +50,11 @@ public static class WorkflowMedia
             string text=string.Concat(extra.Scenes.Select(x=>x.Narration));var words=Regex.Matches(text,@"\S+");var extraEnds=await StoryboardSections.Plan(text,(system,prompt,token)=>services.Generate(system,prompt,token),ct,e.Log);int first=0;extra.Scenes=[];
             foreach(int end in extraEnds){int from=words[first].Index,to=end<words.Count?words[end].Index:text.Length;string narration=text[from..to];extra.Scenes.Add(new Scene{Narration=narration,Duration=Math.Max(.5,ScriptLength.Count(narration)/2.2),VisualQuery=StockSearch.Normalize(StockSearch.Translate(e.Topic))});first=end;}
         }
+        preview?.Invoke(plan);
         if(f.OwnVisuals&&f.Mode=="auto"&&!f.AiVisuals&&!f.StockVisuals)
             foreach(var planned in new[]{plan.Long}.Where(x=>x!=null).Concat(plan.Shorts))
                 await UploadedMediaMatch.Apply(store,e,planned!,services,Report,ct);
-        ct.ThrowIfCancellationRequested();f.CommitText(e);e.Plan=plan;if(f.Normal==false&&priorShorts?.Count>1)e.ShortCount=plan.Shorts.Count;
+        ct.ThrowIfCancellationRequested();f.CommitText(e);e.Plan=plan;f.SceneTimingMeasured=false;if(f.Normal==false&&priorShorts?.Count>1)e.ShortCount=plan.Shorts.Count;
         f.OriginalScripts=Rules.Scripts(e).ToDictionary(x=>x.Key,x=>JsonSerializer.Serialize(x.Script.Scenes,Json.Options));
         f.OriginalSections=JsonSerializer.Serialize(script.Scenes,Json.Options);f.PlannedTextHash=f.Signature;e.AiStoryImages=false;e.PhotosOnly=false;e.AiStoryAutonomous=true;e.Revision++;e.Approved=false;e.ApprovalHash="";e.Status="Senaryo hazır";e.Progress=25;e.Error="";
         e.ProductionSettings??=VideoQueue.Snapshot(store.Settings);e.ProductionSettings.FramesPerSecond=30;

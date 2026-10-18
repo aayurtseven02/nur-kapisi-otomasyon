@@ -235,6 +235,9 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
     public bool Busy => cancel != null || store.OperationBusy;
     public string ActivityName { get; private set; } = "";
     public DateTimeOffset? BusySince { get; private set; }
+    public ContentPlan? PreparingPlan {get;private set;}
+    public string PreparingProjectId {get;private set;}="";
+    public void ShowPreparingPlan(Episode episode,ContentPlan plan){PreparingProjectId=episode.Id;PreparingPlan=CreationFlow.Copy(plan);Notify();}
     public string ActivityText(Episode episode) => ActivityName != "" ? ActivityName : episode.CurrentStage != "" && episode.Status is "Araştırılıyor" or "Üretiliyor" or "Yükleniyor" ? episode.CurrentStage : "Arka plan işlemi sürüyor";
 
     public void ReportActivity(string message) { ActivityName=message;Notify(); }
@@ -245,7 +248,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
         using var operation = new OperationLease(store); cancel = new();
 
-        try { ActivityName = activity; Notify(); await Task.Yield(); await action(cancel.Token); } finally { cancel.Dispose(); cancel = null; ActivityName = ""; operation.Dispose(); Notify(); }
+        try { ActivityName = activity; Notify(); await Task.Yield(); await action(cancel.Token); } finally { cancel.Dispose(); cancel = null; ActivityName = ""; PreparingPlan=null;PreparingProjectId="";operation.Dispose(); Notify(); }
 
     }
 
@@ -487,6 +490,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
             foreach (var asset in e.Videos) { asset.PlanHash = Reliability.MediaPlanHash(e, asset.Key); var script=Rules.Scripts(e).Single(x=>x.Key==asset.Key).Script; asset.RenderFingerprint=Reliability.RenderHash(script,e,store.Settings); asset.PipelineVersion=Reliability.PipelineVersion; }
 
+            if(e.Creation!=null)e.Creation.SceneTimingMeasured=true;
             e.TextDesignPending = false; e.ArtworkPending = false; e.RetryAt = null; e.RetryAttempts = 0; e.ResumeStage = ""; store.RecordProduction(e);
 
             Json.Write(Path.Combine(folder, "media-rights.json"), scripts.SelectMany(x => x.Script.Scenes).Where(x => x.StockUrl != "").Select(x => new { x.StockUrl, x.Creator, x.LicenseUrl, x.StockFile, x.Attribution, retrievedAt = DateTimeOffset.UtcNow }));

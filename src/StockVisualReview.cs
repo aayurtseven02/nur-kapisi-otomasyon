@@ -24,6 +24,7 @@ public static class StockVisualReview
     static string WinnerFile(Store store) => Path.Combine(store.Root, "cache", "stock-vision-winner-" + TimedNarration.TextHash(store.Key("NVIDIA_API_KEY")) + ".txt");
 
     static string HealthFile(Store store) => WinnerFile(store) + ".health.json";
+    internal static void FailedUploadedVision(Store store,string model,bool unsupported=false)=>Health(store,model,false,unsupported);
     internal static void RememberUploadedVision(Store store,string model) { File.WriteAllText(WinnerFile(store),model);Health(store,model,true); }
     static bool Waiting(Store store, string model) => Json.Read(HealthFile(store), new Dictionary<string, DateTimeOffset>()).TryGetValue(model, out var next) && next > DateTimeOffset.UtcNow;
     static void Health(Store store, string model, bool working, bool unsupported = false) {
@@ -35,8 +36,9 @@ public static class StockVisualReview
         }
     }
 
-    internal static async IAsyncEnumerable<(string Provider, string Model, string Key, string Url)> Routes(Store store, HttpClient http, Action<string> log, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct)
+    internal static async IAsyncEnumerable<(string Provider, string Model, string Key, string Url)> Routes(Store store, HttpClient http, Action<string> log, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct,bool includeLocal=true)
     {
+        if(includeLocal&&store.Settings.LocalAiFirst&&store.Settings.UseOllama)await foreach(var row in LocalRoutes(store,http,log,ct))yield return row;
         var enabled = store.Settings.EnabledCloudProviders.Split(',', StringSplitOptions.TrimEntries);
         if (CloudReady(store) && enabled.Contains("NVIDIA") && store.Key("NVIDIA_API_KEY") != "") {
             var models = new List<string>();
@@ -68,7 +70,12 @@ public static class StockVisualReview
         if (CloudReady(store) && enabled.Contains("Gemini") && store.Key("GEMINI_API_KEY") != "")
             yield return ("Gemini", store.Settings.GeminiModel, store.Key("GEMINI_API_KEY"), "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions");
 
-        log("Son seçenek: Ollama'nın kurulu görsel modelleri kontrol ediliyor.");
+        if(includeLocal&&!store.Settings.LocalAiFirst&&store.Settings.UseOllama)await foreach(var row in LocalRoutes(store,http,log,ct))yield return row;
+    }
+
+    internal static async IAsyncEnumerable<(string Provider,string Model,string Key,string Url)> LocalRoutes(Store store,HttpClient http,Action<string> log,[System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct)
+    {
+        log("Ollama'nın kurulu görsel modelleri kontrol ediliyor.");
         var local = new List<string>();
         try {
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct); timeout.CancelAfter(TimeSpan.FromSeconds(10));
@@ -77,18 +84,18 @@ public static class StockVisualReview
             using var doc = JsonDocument.Parse(await Reliability.ReadText(response, 1_000_000, timeout.Token));
             local.AddRange(doc.RootElement.GetProperty("models").EnumerateArray().Select(m => m.GetProperty("name").GetString() ?? ""));
         } catch (Exception) when (!ct.IsCancellationRequested) { log("Ollama'ya ulaşılamadı; yerel görsel denetimi kullanılamıyor."); }
-        foreach (var model in local.OrderByDescending(m => m == store.Settings.OllamaModel)) {
+        foreach (var model in local.Where(LocalAi.IsLocalName).OrderByDescending(m => m == store.Settings.OllamaVisionModel)) {
             bool vision = false;
             try {
                 using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct); timeout.CancelAfter(TimeSpan.FromSeconds(10));
                 using var response = await http.PostAsJsonAsync("http://127.0.0.1:11434/api/show", new { model }, timeout.Token);
                 response.EnsureSuccessStatusCode();
                 using var doc = JsonDocument.Parse(await Reliability.ReadText(response, 1_000_000, timeout.Token));
-                vision = doc.RootElement.TryGetProperty("capabilities", out var caps) && caps.EnumerateArray().Any(c => c.GetString() == "vision");
+                vision = !new[]{"remote_model","remote_host"}.Any(k=>doc.RootElement.TryGetProperty(k,out var remote)&&remote.ValueKind==JsonValueKind.String&&!string.IsNullOrWhiteSpace(remote.GetString())) && doc.RootElement.TryGetProperty("capabilities", out var caps) && caps.EnumerateArray().Any(c => c.GetString() == "vision");
             } catch (Exception) when (!ct.IsCancellationRequested) { }
             if (vision) yield return ("Ollama", model, "", "http://127.0.0.1:11434/api/chat");
         }
-        if (local.Count > 0) log("Ollama görsel model taraması tamamlandı.");
+        if (local.Count > 0) log("Ollama görsel model taraması tamamlandı. Görsel yetenekli olmayan metin modelleri atlandı.");
     }
 
     public static Result Parse(string raw)

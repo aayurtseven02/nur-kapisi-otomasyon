@@ -49,6 +49,7 @@ public sealed class CreationFlow
     public string CoverChoice {get;set;}="";
     public string Fit {get;set;}="crop";
     public bool PhotoMotion {get;set;}=true;
+    public bool SceneTimingMeasured {get;set;}
     public string Text=>TextMode=="ai"?AiText:OwnText;
     public bool TextApproved=>Text.Trim()!=""&&ApprovedHash==TimedNarration.TextHash(Text);
     public static readonly string[] SubtitleStyles=["Sade beyaz","Sarı vurgulu","Kelime kelime renklenen","Koyu kutulu","Sinematik altın"];

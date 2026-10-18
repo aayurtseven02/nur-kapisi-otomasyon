@@ -16,7 +16,7 @@ public sealed partial class StudioForm
 
         panel.Controls.Add(Theme.Label("YEREL YAPAY ZEKÂ • OLLAMA", 16, true, Theme.Teal, panel.Width, 42));
 
-        panel.Controls.Add(Theme.Label("Ana sağlayıcı bilgisayarında çalışır; API anahtarı veya token bakiyesi gerekmez. Model ilk yüklemede internetten indirilir. RAM, disk ve elektrik kullanır. Metin üretir; stok video veya ses motorunun yerine geçmez.", 10, width: panel.Width, height: 76));
+        panel.Controls.Add(Theme.Label("Ollama bilgisayarında çalışır; API anahtarı gerekmez. Qwen3 metin üretir; Qwen3-VL fotoğraf ve video karelerini okur. İlk kurulumda model indirilir; RAM, disk ve elektrik kullanır. Seslendirme veya görsel üretim motorunun yerine geçmez.", 10, width: panel.Width, height: 90));
 
         panel.Controls.Add(Theme.Label(DeviceMemory.Note(),10,color:Theme.Muted,width:panel.Width,height:92));
         var labels = LocalAi.Catalog.Select(m => m.Label).ToList();
@@ -108,6 +108,8 @@ public sealed partial class StudioForm
         })), true, 220));
 
         panel.Controls.Add(buttons); panel.Controls.Add(status);
+        var visionStatus=Theme.Label("Görsel okuma modeli: "+store.Settings.OllamaVisionModel+" • yerel/ücretsiz",10,true,width:panel.Width,height:55);panel.Controls.Add(visionStatus);
+        panel.Controls.Add(Theme.Button("Ücretsiz görsel okuma modelini yükle / kontrol et",()=>_=Safe(()=>Run(async ct=>{string model="qwen3-vl:4b-instruct";await local.Pull(model,progress,ct);store.Settings.OllamaVisionModel=model;store.Settings.UseOllama=true;store.Settings.LocalAiFirst=true;store.Save();if(!visionStatus.IsDisposed)visionStatus.Text="Görsel okuma hazır: "+model+" • fotoğraf/video analizi yerelde öncelikli.";})),true,Math.Min(520,panel.Width)));
 
         panel.Controls.Add(Theme.Button("Yükleme / yerel AI işlemini iptal et", () => { if (working) engine.Stop(); }, false, 430));
 

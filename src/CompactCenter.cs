@@ -14,7 +14,7 @@ public sealed partial class StudioForm
             Width=width;
             foreach(var route in new[]{"Video hazırla","Videolarım","Bağlantı Merkezi","Yönetim ayarları","Medya arşivleri"}){
                 Navigate(route);PerformLayout();Application.DoEvents();
-                Check(nav.Count==3,"Ana menü üç bölüm değil.");
+                Check(nav.Count==4&&nav.ContainsKey("Yüklenmesi gerekenler"),"Kurulum listesi ana menüde değil.");
                 Check(!CardChildren(page).OfType<Button>().Any(b=>b.Text=="Klasik çalışma alanı"),"İkinci üretim kapısı görünür.");
                 if(route=="Video hazırla"){
                     var steps=CardChildren(page).OfType<StudioButton>().Where(b=>b.AccessibleName?.StartsWith("Üretim adımı:")==true).ToArray();

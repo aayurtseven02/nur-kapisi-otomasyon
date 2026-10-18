@@ -30,6 +30,7 @@ public static class UploadedMediaMatch
         async IAsyncEnumerable<(string Provider,string Model,string Key,string Url)> Routes()
         {
             var winner=Json.Read(winnerFile,new Winner());var seen=new HashSet<string>();
+            if(store.Settings.LocalAiFirst&&store.Settings.UseOllama)await foreach(var row in StockVisualReview.LocalRoutes(store,http,log,ct))if(seen.Add(row.Provider+"|"+row.Model))yield return row;
             if(!store.Settings.FreeOnly&&store.Settings.CloudAiEnabled&&store.Settings.EnabledCloudProviders.Split(',',StringSplitOptions.TrimEntries).Contains(winner.Provider)&&winner.Model.Length is >0 and <256){
                 string key=store.Key(winner.Provider=="Gemini"?"GEMINI_API_KEY":winner.Provider=="NVIDIA"?"NVIDIA_API_KEY":"");
                 if(key!=""&&winner.Provider is "Gemini" or "NVIDIA"){
@@ -37,7 +38,8 @@ public static class UploadedMediaMatch
                     yield return (winner.Provider,winner.Model,key,winner.Provider=="Gemini"?"https://generativelanguage.googleapis.com/v1beta/openai/chat/completions":"https://integrate.api.nvidia.com/v1/chat/completions");
                 }
             }
-            await foreach(var row in StockVisualReview.Routes(store,http,log,ct))if(seen.Add(row.Provider+"|"+row.Model))yield return row;
+            await foreach(var row in StockVisualReview.Routes(store,http,log,ct,includeLocal:false))if(seen.Add(row.Provider+"|"+row.Model))yield return row;
+            if(!store.Settings.LocalAiFirst&&store.Settings.UseOllama)await foreach(var row in StockVisualReview.LocalRoutes(store,http,log,ct))if(seen.Add(row.Provider+"|"+row.Model))yield return row;
         }
         await foreach(var route in Routes())
         {
@@ -45,18 +47,17 @@ public static class UploadedMediaMatch
             if(route.Provider=="NVIDIA"&&++nvidiaAttempts>6)continue;
             if(route.Provider=="Ollama"&&++localAttempts>2)continue;
             ct.ThrowIfCancellationRequested();log("Yüklenen görüntü inceleniyor • "+route.Provider+" / "+route.Model);
-            using var req=new HttpRequestMessage(HttpMethod.Post,route.Url);
-            if(route.Key!="")req.Headers.Authorization=new AuthenticationHeaderValue("Bearer",route.Key);
+            
             object[] content=[new{type="text",text="Görünen içeriği tarif et; dosya adını veya genel proje konusunu tahmin kaynağı olarak kullanma."},new{type="image_url",image_url=new{url="data:image/jpeg;base64,"+data}}];
             var body=new Dictionary<string,object>{["model"]=route.Model,["max_tokens"]=1024,["messages"]=new object[]{new{role="system",content=instruction},new{role="user",content}}};
             if(route.Provider=="NVIDIA")NvidiaModels.Configure(body,route.Model);
-            if(route.Provider=="Ollama")body=new(){["model"]=route.Model,["stream"]=false,["format"]="json",["options"]=new{num_predict=1024},["messages"]=new object[]{new{role="system",content=instruction},new{role="user",content="Görünen içeriği tarif et.",images=new[]{data}}}};
-            req.Content=JsonContent.Create(body);
+            if(route.Provider=="Ollama")body=new(){["model"]=route.Model,["stream"]=false,["format"]="json",["think"]=false,["keep_alive"]="10m",["options"]=new{num_predict=1024,num_ctx=4096,temperature=0},["messages"]=new object[]{new{role="system",content=instruction},new{role="user",content="Görünen içeriği tarif et.",images=new[]{data}}}};
+            HttpRequestMessage Request(){var req=new HttpRequestMessage(HttpMethod.Post,route.Url){Content=JsonContent.Create(body)};if(route.Key!="")req.Headers.Authorization=new AuthenticationHeaderValue("Bearer",route.Key);return req;}
             try
             {
-                using var timeout=CancellationTokenSource.CreateLinkedTokenSource(ct);timeout.CancelAfter(TimeSpan.FromSeconds(route.Provider=="Ollama"?180:45));
-                using var response=await http.SendAsync(req,timeout.Token);response.EnsureSuccessStatusCode();
-                using var doc=JsonDocument.Parse(await Reliability.ReadText(response,1_000_000,timeout.Token));
+                using var response=await VisionRequests.Send(http,Request,route.Provider,log,ct);
+                using var doc=JsonDocument.Parse(await Reliability.ReadText(response,1_000_000,ct));
+                if(route.Provider=="Ollama"?doc.RootElement.TryGetProperty("done_reason",out var reason)&&reason.GetString()=="length":doc.RootElement.GetProperty("choices")[0].TryGetProperty("finish_reason",out var finish)&&finish.GetString()=="length")throw new InvalidOperationException("Görsel açıklaması tamamlanamadı; yarım yanıt kaydedilmedi.");
                 string raw=route.Provider=="Ollama"?doc.RootElement.GetProperty("message").GetProperty("content").GetString()??"":doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString()??"";
                 string description;
                 if(raw.Contains('{')){using var result=JsonDocument.Parse(Services.ExtractJson(raw));description=result.RootElement.GetProperty("Description").GetString()??"";}
@@ -67,9 +68,9 @@ public static class UploadedMediaMatch
                 Json.Write(winnerFile,new Winner{Provider=route.Provider,Model=route.Model});
                 return description.Trim();
             }
-            catch(Exception ex)when(ex is not OperationCanceledException||!ct.IsCancellationRequested){log("Görsel modeli yanıt vermedi; izinli başka model deneniyor ("+ex.GetType().Name+").");}
+            catch(Exception ex)when(ex is not OperationCanceledException||!ct.IsCancellationRequested){if(route.Provider=="NVIDIA")StockVisualReview.FailedUploadedVision(store,route.Model,ex is HttpRequestException h&&h.StatusCode is System.Net.HttpStatusCode.BadRequest or System.Net.HttpStatusCode.NotFound or System.Net.HttpStatusCode.UnprocessableEntity);log(route.Provider+" / "+route.Model+" • "+(ex is HttpRequestException request&&request.StatusCode!=null?"HTTP "+(int)request.StatusCode:ex.GetType().Name)+"; başka izinli model deneniyor.");}
         }
-        throw new InvalidOperationException("Yüklediğin dosyaları içeriğine göre sıralamak için çalışan bir görsel analiz modeli gerekiyor. NVIDIA/Gemini bağlantısını veya kurulu Ollama görsel modelini kontrol et. Dosyalar sırayla veya rastgele dizilmedi.");
+        throw new InvalidOperationException("Yüklediğin dosyaları içeriğine göre sıralamak için çalışan bir görsel analiz modeli gerekiyor. Ollama’da qwen3-vl:4b-instruct gibi görsel okuma yetenekli bir model kur. qwen3:8b yalnız metin okuyabilir. İzinli NVIDIA/Gemini bağlantısı da kullanılabilir; HTTP/kota nedeni işlem kaydında gösterilir. Dosyalar sırayla veya rastgele dizilmedi.");
     }
 
     public static async Task<List<Item>> Analyze(Store store,IReadOnlyList<string> files,Action<string> report,Action<string> log,CancellationToken ct,HttpClient? client=null)

@@ -222,6 +222,7 @@ public class Settings
     public bool UseKimi { get; set; }
 
     public string OllamaModel { get; set; } = "qwen3:4b";
+    public string OllamaVisionModel {get;set;}="qwen3-vl:4b-instruct";
 
     public string VoiceProvider { get; set; } = "Windows / ücretsiz";
 

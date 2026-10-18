@@ -30,7 +30,7 @@ public sealed partial class StudioForm : Form
 
     static IEnumerable<Control> CardChildren(Control parent) { foreach (Control child in parent.Controls) { yield return child; foreach (var nested in CardChildren(child)) yield return nested; } }
 
-    string PackageShape() => string.Join("|", store.Episodes.OrderByDescending(x => x.Created).Select(e => e.Id + ":" + (e.Plan != null) + ":" + (e.Error != "") + ":" + PackageArchive.Group(e) + ":" + string.Join(',', e.Videos.Select(v => v.YouTubeState))));
+    string PackageShape() => engine.PreparingProjectId+":"+(engine.PreparingPlan!=null)+"|"+string.Join("|", store.Episodes.OrderByDescending(x => x.Created).Select(e => e.Id + ":" + (e.Plan != null) + ":" + (e.Error != "") + ":" + PackageArchive.Group(e) + ":" + string.Join(',', e.Videos.Select(v => v.YouTubeState))));
 
     readonly HashSet<string> openArchiveGroups = [];
 
@@ -100,9 +100,9 @@ public sealed partial class StudioForm : Form
         subtitle.TextAlign = ContentAlignment.MiddleCenter;
         subtitle.Dock = DockStyle.Bottom;
 
-        var navigation = new StudioScrollPanel { Location = new(8, 132), Size = new(252, 220), Anchor = AnchorStyles.Top | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
+        var navigation = new StudioScrollPanel { Location = new(8, 132), Size = new(252, 254), Anchor = AnchorStyles.Top | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
 
-        var items = new[] { (Route: "Video hazırla", Label: "Stüdyo • Üret"), (Route: "Videolarım", Label: "Projelerim"), (Route: "Ayarlar", Label: "Merkez") };
+        var items = new[] { (Route: "Video hazırla", Label: "Stüdyo • Üret"), (Route: "Videolarım", Label: "Projelerim"), (Route: "Ayarlar", Label: "Merkez"), (Route: "Yüklenmesi gerekenler", Label: "Yüklenmesi gerekenler") };
 
         int y=0;
 
@@ -126,12 +126,12 @@ public sealed partial class StudioForm : Form
         };
         side.SizeChanged+=(_,_)=>{recent.Height=Math.Max(0,side.ClientSize.Height-500);recent.Visible=side.Width>70&&recent.Height>60;};
 
-        var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 100, BackColor = side.BackColor, Padding=new Padding(8,4,8,4) };
+        var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 124, BackColor = side.BackColor, Padding=new Padding(8,4,8,4) };
         footer.Visible=false; sideFooter.Controls.Add(subtitle); side.Controls.Add(sideFooter);
 
-bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=248,Height=42,Dock=DockStyle.Top,AccessibleName="TubeFlow sohbet yardımcısını aç"};chat.Click+=(_,_)=>ToggleAssistant();sideFooter.Controls.Add(chat);sideFooter.BringToFront();hints.SetToolTip(chat,"Sohbeti aç / kapat");
+bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.Top,AccessibleName="TubeFlow sohbet yardımcısını aç"};chat.Click+=(_,_)=>ToggleAssistant();sideFooter.Controls.Add(chat);sideFooter.BringToFront();hints.SetToolTip(chat,"Sohbeti aç / kapat");
         var scroll = new StudioScrollPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.Transparent }; page.Location = Point.Empty; scroll.Controls.Add(page); body.Controls.Add(scroll);
-        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);var rail=new Panel{Dock=DockStyle.Left,Width=56,BackColor=Theme.Shell,Padding=new Padding(4,12,4,8)};rail.Controls.Add(collapse);collapse.Location=new Point(5,8);collapse.Width=46;collapse.Height=42;collapse.BringToFront();int railY=66;foreach(var item in items){string route=item.Route;var shortcut=new SidebarButton{Glyph=route=="Video hazırla"?"⌂":route=="Videolarım"?"▤":"⚙",Location=new Point(5,railY),Width=46,Height=42,Tag="rail:"+route,AccessibleName="Hızlı bölüm: "+item.Label};shortcut.Click+=(_,_)=>Navigate(route);rail.Controls.Add(shortcut);railY+=54;}var railChat=new SidebarButton{Glyph="💬",Dock=DockStyle.Bottom,Height=44,AccessibleName="Hızlı sohbet"};railChat.Click+=(_,_)=>ToggleAssistant();rail.Controls.Add(railChat);collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?0:268;brand.Visible=!compact;brandTitle.Visible=!compact;sectionLabel.Visible=!compact;sideFooter.Height=compact?60:100;subtitle.Visible=!compact;chat.Text=compact?"":"Sohbet";navigation.Width=compact?56:252;foreach(var (route,b) in nav){b.Width=compact?46:248;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
+        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);var rail=new Panel{Dock=DockStyle.Left,Width=56,BackColor=Theme.Shell,Padding=new Padding(4,12,4,8)};rail.Controls.Add(collapse);collapse.Location=new Point(5,8);collapse.Width=46;collapse.Height=42;collapse.BringToFront();int railY=66;foreach(var item in items){string route=item.Route;var shortcut=new SidebarButton{Glyph=route=="Video hazırla"?"⌂":route=="Videolarım"?"▤":"⚙",Location=new Point(5,railY),Width=46,Height=42,Tag="rail:"+route,AccessibleName="Hızlı bölüm: "+item.Label};shortcut.Click+=(_,_)=>Navigate(route);rail.Controls.Add(shortcut);railY+=54;}var railChat=new CortexButton{Dock=DockStyle.Bottom,Height=58,AccessibleName="Hızlı sohbet"};railChat.Click+=(_,_)=>ToggleAssistant();rail.Controls.Add(railChat);collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?0:268;brand.Visible=!compact;brandTitle.Visible=!compact;sectionLabel.Visible=!compact;sideFooter.Height=compact?70:124;subtitle.Visible=!compact;chat.Text=compact?"":"Cortex";navigation.Width=compact?56:252;foreach(var (route,b) in nav){b.Width=compact?46:248;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
         var sidebarDivider = new Panel { Dock = DockStyle.Left, Width = 1, BackColor = Theme.Border, AccessibleName = "Sol menü ayırıcı çizgisi" };
         var topDivider = new Panel { Dock = DockStyle.Top, Height = 1, BackColor = Theme.Border, AccessibleName = "Üst kenar çizgisi" };
         Controls.Add(body); Controls.Add(appHeader); Controls.Add(sidebarDivider); Controls.Add(side); Controls.Add(rail); Controls.Add(topDivider);
@@ -306,7 +306,7 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
 
         ContextNavigation(name);
 
-        switch (name) { case "Video hazırla": ProductionWizard(); break; case "Klasik çalışma alanı": ProductionWizard(); break; case "Videolarım": VideoLibrary(); break; case "Ayarlar": Connections(); break; case "Gelişmiş": AdvancedPage(); break; case "Medya arşivleri": MediaHome(); break; case "Stüdyo": Dashboard(); break; case "İçerik paketleri": Packages(); break; case "Üretim ve yayın planı": QueuePage(); break; case "Yayın takvimi": Calendar(); break; case "Bağlantı Merkezi": Connections(); break; case "Program kaynakları": GitHubPage(); break; case "Stok havuzu": PoolPage(); break; case "Ses arşivi": AudioPage(); break; case "Kapak tasarımları": CoverPage(); break; case "Yönetim ayarları": SettingsPage(); break; case "İşlem kayıtları": Logs(); break; }
+        switch (name) { case "Yüklenmesi gerekenler": SetupChecklist(); break; case "Video hazırla": ProductionWizard(); break; case "Klasik çalışma alanı": ProductionWizard(); break; case "Videolarım": VideoLibrary(); break; case "Ayarlar": Connections(); break; case "Gelişmiş": AdvancedPage(); break; case "Medya arşivleri": MediaHome(); break; case "Stüdyo": Dashboard(); break; case "İçerik paketleri": Packages(); break; case "Üretim ve yayın planı": QueuePage(); break; case "Yayın takvimi": Calendar(); break; case "Bağlantı Merkezi": Connections(); break; case "Program kaynakları": GitHubPage(); break; case "Stok havuzu": PoolPage(); break; case "Ses arşivi": AudioPage(); break; case "Kapak tasarımları": CoverPage(); break; case "Yönetim ayarları": SettingsPage(); break; case "İşlem kayıtları": Logs(); break; }
 
         page.Height = page.Controls.Cast<Control>().Sum(c => c.Height + c.Margin.Vertical) + 24;
 

@@ -32,7 +32,8 @@ public sealed class LocalAi(Store store, HttpClient? client = null, Func<string?
 
         new("qwen3:4b", "Qwen3 4B • 2,5 GB • hafif başlangıç önerisi", 2_500_000_000),
 
-        new("qwen3:8b", "Qwen3 8B • 5,2 GB • daha fazla bellek; daha güçlü seçenek", 5_200_000_000)
+        new("qwen3:8b", "Qwen3 8B • 5,2 GB • daha fazla bellek; daha güçlü seçenek", 5_200_000_000),
+        new("qwen3-vl:4b-instruct", "Qwen3-VL 4B • 3,3 GB • fotoğraf/video karelerini okur • yerel/ücretsiz",3_300_000_000)
 
     ];
 

@@ -45,6 +45,7 @@ public sealed partial class StudioForm
     public static string NavigationRoot(string name) => name switch {
 
         "Stüdyo" or "Ana ekran" => "Video hazırla",
+        "Yüklenmesi gerekenler" => "Yüklenmesi gerekenler",
 
         "Video hazırla" or "Klasik çalışma alanı" => "Video hazırla",
 

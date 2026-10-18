@@ -50,7 +50,7 @@ public sealed class ChatAssistant : UserControl
 
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
-        foreach (var h in new[] { 48, 38, 50, 0, 28, 82, 60 }) layout.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
+        foreach (var h in new[] { 70, 38, 50, 0, 28, 82, 60 }) layout.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
 
         var note = Theme.Label("Asistan ses, sahne, altyazı ve müzik ayarlarını düzenler; hataları inceler ve isteğinle üretimi yeniden dener. Koda müdahale etmez, video silmez/yayımlamaz. Seçili AI sağlayıcısını kullanır; proje metnini paylaşmak isteğe bağlıdır.", 9, width: 460, height: 118); note.Dock = DockStyle.Fill;
 
@@ -70,7 +70,7 @@ public sealed class ChatAssistant : UserControl
         share.Dock=DockStyle.Fill;share.ForeColor=Theme.Text;
         share.CheckedChanged+=(_,_)=>request?.Cancel();
 
-        string explanation=note.Text;var heading=new Panel{Dock=DockStyle.Fill};var title=Theme.Label("TubeFlow asistanı",13,true,width:300,height:40);title.Dock=DockStyle.Fill;var info=Theme.Button("i",()=>Theme.Alert(FindForm(),explanation,"Asistan hakkında"),false,36);info.Dock=DockStyle.Right;info.AccessibleName="Asistan yetkileri ve gizlilik açıklaması";heading.Controls.Add(title);heading.Controls.Add(info);note.Dispose();
+        string explanation=note.Text;var heading=new Panel{Dock=DockStyle.Fill};var title=Theme.Label("Cortex • TubeFlow asistanı",12,true,width:300,height:40);title.Dock=DockStyle.Fill;var info=Theme.Button("i",()=>Theme.Alert(FindForm(),explanation,"Asistan hakkında"),false,36);info.Dock=DockStyle.Right;info.AccessibleName="Asistan yetkileri ve gizlilik açıklaması";var mascot=CortexMascot.Corner(60);mascot.Dock=DockStyle.Left;mascot.Width=66;heading.Controls.Add(title);heading.Controls.Add(info);heading.Controls.Add(mascot);note.Dispose();
         var composer=new StudioCard{Dock=DockStyle.Fill,BackColor=Theme.Elevated,Borderless=true,CornerRadius=24,Padding=new Padding(12),Margin=Padding.Empty};
         actions.Dock=DockStyle.Bottom;actions.Height=48;input.Dock=DockStyle.Fill;composer.Controls.Add(input);composer.Controls.Add(actions);
         layout.Controls.Add(heading,0,0);layout.Controls.Add(share,0,1);layout.Controls.Add(quick,0,2);layout.Controls.Add(transcript,0,3);layout.Controls.Add(status,0,4);layout.Controls.Add(composer,0,5);layout.SetRowSpan(composer,2);Controls.Add(layout); ModernScrollbars.Apply(this);
