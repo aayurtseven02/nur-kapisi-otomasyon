@@ -18,6 +18,8 @@ public sealed partial class StudioForm : Form
 
     static string ReleaseVersion => typeof(StudioForm).Assembly.GetName().Version?.ToString(3) ?? "unknown";
 
+    Action? refreshRecent;
+
     readonly StudioHeader appHeader = new() { Dock = DockStyle.Top };
 
     readonly Dictionary<string, Action> packageUpdates = [];
@@ -88,9 +90,9 @@ public sealed partial class StudioForm : Form
 
         if (iconStream != null) { using var appIcon = new Icon(iconStream); Icon = (Icon)appIcon.Clone(); }
 
-        var side = new Panel { Dock = DockStyle.Left, Width = 246, BackColor = Color.FromArgb(228,230,234), Padding = new Padding(0, 20, 0, 8) };
+        var side = new Panel { Dock = DockStyle.Left, Width = 268, BackColor = Theme.Sidebar, Padding = new Padding(0, 20, 0, 8) };
 
-        using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-horizontal.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=new Bitmap(logoSource),Location=new(22,8),Size=new(208,112),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);FormClosed+=(_,_)=>brand.Image?.Dispose();
+        using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-dark.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=Icon?.ToBitmap() ?? new Bitmap(logoSource),Location=new(14,10),Size=new(56,56),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);var brandTitle=Theme.Label("TubeFlow",17,true,width:170,height:48);brandTitle.Location=new(78,15);side.Controls.Add(brandTitle);var sectionLabel=Theme.Label("Çalışma alanı",10,true,Theme.Muted,240,32);sectionLabel.Location=new(16,92);side.Controls.Add(sectionLabel);FormClosed+=(_,_)=>brand.Image?.Dispose();
 
         channelHeading.Location = new(20, 6); channelHeading.AutoEllipsis = true; channelHeading.Visible = false;
 
@@ -98,7 +100,7 @@ public sealed partial class StudioForm : Form
         subtitle.TextAlign = ContentAlignment.MiddleCenter;
         subtitle.Dock = DockStyle.Bottom;
 
-        var navigation = new StudioScrollPanel { Location = new(8, 126), Size = new(230, 220), Anchor = AnchorStyles.Top | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
+        var navigation = new StudioScrollPanel { Location = new(8, 132), Size = new(252, 220), Anchor = AnchorStyles.Top | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
 
         var items = new[] { (Route: "Video hazırla", Label: "Stüdyo • Üret"), (Route: "Videolarım", Label: "Projelerim"), (Route: "Ayarlar", Label: "Merkez") };
 
@@ -106,21 +108,33 @@ public sealed partial class StudioForm : Form
 
         foreach(var item in items) {
 
-            var button=new SidebarButton{Text=item.Label,Width=226,Glyph=item.Route=="Video hazırla"?"＋":item.Route=="Videolarım"?"◷":"⚙",Location=new Point(0,y),AccessibleName="Ana bölüm: "+item.Label};button.Click+=(_,_)=>Navigate(item.Route);navigation.Controls.Add(button);nav[item.Route]=button;y+=42;
+            var button=new SidebarButton{Text=item.Label,Width=248,Glyph=item.Route=="Video hazırla"?"＋":item.Route=="Videolarım"?"◷":"⚙",Location=new Point(0,y),AccessibleName="Ana bölüm: "+item.Label};button.Click+=(_,_)=>Navigate(item.Route);navigation.Controls.Add(button);nav[item.Route]=button;y+=42;
 
         }
 
-        var guide=new SidebarButton{Text="Rehber",Glyph="?",Width=226};guide.Click+=(_,_)=>UserGuide.Show(this);guide.Location=new(0,y+12);navigation.Controls.Add(guide);
+        var guide=new SidebarButton{Text="Rehber",Glyph="?",Width=248};guide.Click+=(_,_)=>UserGuide.Show(this);guide.Location=new(0,y+12);navigation.Controls.Add(guide);
+
+        var recent=new StudioScrollPanel { Location=new Point(8,380), Width=252, Height=180, AutoScroll=true, BackColor=Theme.Sidebar, AccessibleName="Son projeler" };side.Controls.Add(recent);
+        refreshRecent=()=>{
+            foreach(Control child in recent.Controls.Cast<Control>().ToArray()) child.Dispose();
+            var heading=Theme.Label("Son projeler",10,true,Theme.Muted,240,30);heading.Location=new Point(8,0);recent.Controls.Add(heading);
+            int row=38;foreach(var episode in store.Episodes.TakeLast(6).Reverse()) {
+                var target=episode;var link=new SidebarButton {Text=episode.Topic,Glyph="",Location=new Point(0,row),Width=248,Height=36,Active=selectedWorkspaceId==episode.Id,AccessibleName="Projeyi aç: "+episode.Topic};
+                link.Click+=(_,_)=>{selectedWorkspaceId=target.Id;wizardDraft=null;Navigate("Video hazırla");};recent.Controls.Add(link);row+=38;
+            }
+            if(row==38){var empty=Theme.Label("Henüz proje yok",10,color:Theme.Muted,width:240,height:30);empty.Location=new Point(8,row);recent.Controls.Add(empty);}
+        };
+        side.SizeChanged+=(_,_)=>{recent.Height=Math.Max(0,side.ClientSize.Height-500);recent.Visible=side.Width>70&&recent.Height>60;};
 
         var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 100, BackColor = side.BackColor, Padding=new Padding(8,4,8,4) };
         footer.Visible=false; sideFooter.Controls.Add(subtitle); side.Controls.Add(sideFooter);
 
-bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=226,Height=42,Dock=DockStyle.Top,AccessibleName="TubeFlow sohbet yardımcısını aç"};chat.Click+=(_,_)=>ToggleAssistant();sideFooter.Controls.Add(chat);sideFooter.BringToFront();hints.SetToolTip(chat,"Sohbeti aç / kapat");
+bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=248,Height=42,Dock=DockStyle.Top,AccessibleName="TubeFlow sohbet yardımcısını aç"};chat.Click+=(_,_)=>ToggleAssistant();sideFooter.Controls.Add(chat);sideFooter.BringToFront();hints.SetToolTip(chat,"Sohbeti aç / kapat");
         var scroll = new StudioScrollPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.Transparent }; page.Location = Point.Empty; scroll.Controls.Add(page); body.Controls.Add(scroll);
-        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);side.Controls.Add(collapse);collapse.BringToFront();collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?64:246;brand.Visible=!compact;sideFooter.Height=compact?60:100;subtitle.Visible=!compact;chat.Text=compact?"":"Sohbet";navigation.Width=compact?56:230;foreach(var (route,b) in nav){b.Width=compact?46:226;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
-        var sidebarDivider = new Panel { Dock = DockStyle.Left, Width = 2, BackColor = Theme.Warning, AccessibleName = "Sol menü ayırıcı çizgisi" };
-        var topDivider = new Panel { Dock = DockStyle.Top, Height = 2, BackColor = Theme.Warning, AccessibleName = "Üst kenar çizgisi" };
-        Controls.Add(body); Controls.Add(appHeader); Controls.Add(sidebarDivider); Controls.Add(side); Controls.Add(topDivider);
+        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);var rail=new Panel{Dock=DockStyle.Left,Width=56,BackColor=Theme.Shell,Padding=new Padding(4,12,4,8)};rail.Controls.Add(collapse);collapse.Location=new Point(5,8);collapse.Width=46;collapse.Height=42;collapse.BringToFront();int railY=66;foreach(var item in items){string route=item.Route;var shortcut=new SidebarButton{Glyph=route=="Video hazırla"?"⌂":route=="Videolarım"?"▤":"⚙",Location=new Point(5,railY),Width=46,Height=42,Tag="rail:"+route,AccessibleName="Hızlı bölüm: "+item.Label};shortcut.Click+=(_,_)=>Navigate(route);rail.Controls.Add(shortcut);railY+=54;}var railChat=new SidebarButton{Glyph="💬",Dock=DockStyle.Bottom,Height=44,AccessibleName="Hızlı sohbet"};railChat.Click+=(_,_)=>ToggleAssistant();rail.Controls.Add(railChat);collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?0:268;brand.Visible=!compact;brandTitle.Visible=!compact;sectionLabel.Visible=!compact;sideFooter.Height=compact?60:100;subtitle.Visible=!compact;chat.Text=compact?"":"Sohbet";navigation.Width=compact?56:252;foreach(var (route,b) in nav){b.Width=compact?46:248;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
+        var sidebarDivider = new Panel { Dock = DockStyle.Left, Width = 1, BackColor = Theme.Border, AccessibleName = "Sol menü ayırıcı çizgisi" };
+        var topDivider = new Panel { Dock = DockStyle.Top, Height = 1, BackColor = Theme.Border, AccessibleName = "Üst kenar çizgisi" };
+        Controls.Add(body); Controls.Add(appHeader); Controls.Add(sidebarDivider); Controls.Add(side); Controls.Add(rail); Controls.Add(topDivider);
 
         HandleCreated += (_, _) => Shapes.DarkTitle(Handle);
 
@@ -281,10 +295,12 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
 
         packageUpdates.Clear();
 
+        refreshRecent?.Invoke();
         current = name; appHeader.PageName = SectionHeading(PageCaption(name)); UpdateChannelHeading(); appHeader.Busy = engine.Busy; appHeader.Invalidate(); SuspendLayout(); foreach (var old in page.Controls.Cast<Control>().ToArray()) old.Dispose(); page.Controls.Clear(); page.Width = Math.Max(620, body.ClientSize.Width - 90 - (assistantHost?.Visible==true && ClientSize.Width>=1720 ? assistantWidth : 0));
 
         foreach (var (key, button) in nav) { if(button is SidebarButton entry)entry.Active=key==NavigationRoot(name);button.Invalidate(); }
 
+        foreach(var entry in Controls.Cast<Control>().SelectMany(c=>c.Controls.OfType<SidebarButton>()).Where(b=>b.Tag is string t&&t.StartsWith("rail:"))) {entry.Active=Equals(entry.Tag,"rail:"+NavigationRoot(name));entry.Invalidate();}
         UpdateFooter();
 
         ContextNavigation(name);
@@ -655,7 +671,7 @@ bool compact=false;var chat=new SidebarButton{Text="Sohbet",Glyph="💬",Width=2
 
             var open = compactLibrary&&libraryFilter!="Tümü"||openArchiveGroups.Contains(group);
 
-            var groupButton=Theme.Button((compactLibrary&&group=="Tamamlanmış projeler"?"Tamamlanan Yerel Projeler":group).ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR")) + " (" + items.Count + ")", () => { if (!openArchiveGroups.Add(group)) openArchiveGroups.Remove(group); Navigate(current); }, false, page.Width);groupButton.TextAlign=ContentAlignment.MiddleLeft;groupButton.Font=Theme.Font(10,true);((StudioButton)groupButton).LeadingChevron=open?"⌄":"›";groupButton.AccessibleName="Proje grubu: "+group;page.Controls.Add(groupButton);
+            var groupButton=Theme.Button((compactLibrary&&group=="Tamamlanmış projeler"?"Tamamlanan yerel projeler":group) + " (" + items.Count + ")", () => { if (!openArchiveGroups.Add(group)) openArchiveGroups.Remove(group); Navigate(current); }, false, page.Width);groupButton.TextAlign=ContentAlignment.MiddleLeft;groupButton.Font=Theme.Font(10,true);((StudioButton)groupButton).LeadingChevron=open?"⌄":"›";groupButton.AccessibleName="Proje grubu: "+group;page.Controls.Add(groupButton);
 
             if (!open) continue;
 

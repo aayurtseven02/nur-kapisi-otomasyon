@@ -1,3 +1,7 @@
+# TubeFlow 0.4.20 — Ortak koyu görünüm
+
+Masaüstü referansına göre dar simge şeridi, açılıp kapanan koyu sol menü, son proje bağlantıları, yuvarlatılmış çalışma alanı ve mavi seçim vurgusu uygulandı. Tüm ortak tuşlar, metin/süre alanları, kutucuklar, tablolar, kaydırma çubukları, giriş ve bilgi pencereleri aynı koyu yüzeyleri kullanır. Başlıklarda normal kalın yazı kullanılır; zorunlu italik/büyük harf dönüşümü kaldırıldı. Sohbette seçilebilir mesajlar ve mavi kullanıcı balonları vardır. Menü kapalıyken sohbet simge şeridinden açılabilir. Projeler, üretim tercihleri ve yayın izinleri korunur.
+
 # TubeFlow 0.4.19 — Derin tarama düzeltmeleri
 
 İptalde önceki sahne planı korunur. Asistan geri alma işlemi yüklenmiş/sonradan değişmiş çıktılara uygulanmaz; paylaşım kapalıyken araç hatası metni modele gönderilmez. Ses/müzik ayar grubu açılışı düzeltildi. Genel görsel kalite ve AI önbellek bütünlüğü denetlenir; kullanıcı görseli eski AI işaretinden ayrılır. Yedek anlatıcı sesi seçili sağlayıcının önbelleği gibi kullanılmaz; kurulu olmayan seçili Windows sesi sessizce değiştirilmez. Kaynak aktarımı ve güncelleme paketi öncesinde gizli bilgi içeriği denetlenir; kritik hata tekrar kontrolleri GitHub Windows iş akışına eklendi.

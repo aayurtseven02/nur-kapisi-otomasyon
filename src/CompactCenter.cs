@@ -19,7 +19,7 @@ public sealed partial class StudioForm
                 if(route=="Video hazırla"){
                     var steps=CardChildren(page).OfType<StudioButton>().Where(b=>b.AccessibleName?.StartsWith("Üretim adımı:")==true).ToArray();
                     Check(steps.Length==5&&steps[0].Completed&&steps[1].Completed&&!steps[2].Completed,"Tamamlanan adımlar doğru işaretlenmedi.");
-                    Check(steps[0].BackColor==Theme.SuccessSurface&&steps[0].ForeColor==Color.Black,"Tamamlanan adımlar yeşil/siyah değil.");
+                    Check(steps[0].BackColor==Theme.SuccessSurface&&steps[0].ForeColor==Theme.Text,"Tamamlanan adımlar yeşil/siyah değil.");
                 }
                 if(route=="Videolarım"){var table=CardChildren(page).OfType<DataGridView>().Single();Check(table.Rows.Count==2,"Kanal videoları tablosu eksik.");}
                 using var image=new Bitmap(Width,Height);DrawToBitmap(image,new Rectangle(Point.Empty,Size));image.Save(Path.Combine(folder,width+"-"+route+".png"));
@@ -35,7 +35,7 @@ public sealed partial class StudioForm
             }
         }
         Check(before==System.Text.Json.JsonSerializer.Serialize(new{store.Settings,store.Episodes},Json.Options),"Gezinme proje veya ayarları değiştirdi.");
-        using var button=new StudioButton{Completed=true,Enabled=false,Size=new(180,46),Text="Tamamlandı"};using var shot=new Bitmap(180,46);button.DrawToBitmap(shot,new Rectangle(Point.Empty,shot.Size));var fill=shot.GetPixel(160,36);Check(fill.G>220&&fill.R<190&&fill.B<135,"Devre dışı tamamlanmış adımın yeşili kayboldu.");
+        using var button=new StudioButton{Completed=true,Enabled=false,Size=new(180,46),Text="Tamamlandı"};using var shot=new Bitmap(180,46);button.DrawToBitmap(shot,new Rectangle(Point.Empty,shot.Size));var fill=shot.GetPixel(160,36);Check(fill.ToArgb()==Theme.SuccessSurface.ToArgb(),"Devre dışı tamamlanmış adımın yeşili kayboldu.");
     }
     static void FitFormFields(Control parent,int width)
     {
@@ -60,7 +60,7 @@ public sealed partial class StudioForm
         group.Content.Controls.Add(Theme.Label(data.Updated==default?"Kanalının tüm videolarını getirmek için YouTube ve projeleri güncelle düğmesine bas.":"Son başarılı tarama: "+data.Updated.ToLocalTime().ToString("dd.MM.yyyy HH:mm")+" • Başlığa çift tıklayarak videoyu aç.",10,width:page.Width-30,height:50));
         if(items.Length==0)return;
         var grid=new DataGridView{Width=page.Width-30,Height=Math.Min(260,48+items.Length*32),ReadOnly=true,AllowUserToAddRows=false,AllowUserToDeleteRows=false,RowHeadersVisible=false,AutoSizeColumnsMode=DataGridViewAutoSizeColumnsMode.Fill,BackgroundColor=Theme.Panel,BorderStyle=BorderStyle.None,EnableHeadersVisualStyles=false,SelectionMode=DataGridViewSelectionMode.FullRowSelect,MultiSelect=false};
-        grid.DefaultCellStyle.BackColor=Theme.Panel;grid.DefaultCellStyle.ForeColor=Theme.Text;grid.DefaultCellStyle.SelectionBackColor=Color.FromArgb(0,90,85);grid.DefaultCellStyle.SelectionForeColor=Color.White;grid.DefaultCellStyle.Font=Theme.Font(10);grid.ColumnHeadersDefaultCellStyle.BackColor=Theme.Elevated;grid.ColumnHeadersDefaultCellStyle.ForeColor=Theme.Text;grid.RowTemplate.Height=32;
+        grid.DefaultCellStyle.BackColor=Theme.Panel;grid.DefaultCellStyle.ForeColor=Theme.Text;grid.DefaultCellStyle.SelectionBackColor=Theme.AccentSurface;grid.DefaultCellStyle.SelectionForeColor=Color.White;grid.DefaultCellStyle.Font=Theme.Font(10);grid.ColumnHeadersDefaultCellStyle.BackColor=Theme.Elevated;grid.ColumnHeadersDefaultCellStyle.ForeColor=Theme.Text;grid.RowTemplate.Height=32;
         foreach(var column in new[]{"Video Başlığı","Tür","Durum","İzlenme","Tarih"})grid.Columns.Add(column,column);
         grid.Columns[0].FillWeight=45;grid.Columns[1].FillWeight=13;grid.Columns[2].FillWeight=13;grid.Columns[3].FillWeight=12;grid.Columns[4].FillWeight=17;grid.Columns[3].ValueType=typeof(long);grid.Columns[3].DefaultCellStyle.Format="N0";
         foreach(var video in items){int row=grid.Rows.Add(video.Title,video.Kind,video.ScheduledAt.HasValue?"Planlı":video.Visibility switch{"public"=>"Yayında","unlisted"=>"Liste dışı",_=>"Gizli"},video.Views,(video.ScheduledAt??video.Published).ToLocalTime().ToString("dd.MM.yyyy"));grid.Rows[row].Tag=video.Id;}

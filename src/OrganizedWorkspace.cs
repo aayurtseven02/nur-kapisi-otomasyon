@@ -30,7 +30,7 @@ public sealed partial class StudioForm
 
 {
 
-    static string SectionHeading(string text)=>text.ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR"));
+    static string SectionHeading(string text)=>text;
 
     string selectedWorkspaceId = "";
 

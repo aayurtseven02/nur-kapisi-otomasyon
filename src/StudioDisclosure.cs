@@ -19,7 +19,7 @@ public sealed class StudioDisclosure : FlowLayoutPanel
     }
     public void SetExpanded(bool value)
     {
-        Expanded = value; Content.Visible = value; heading.Text = title.ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR"));
+        Expanded = value; Content.Visible = value; heading.Text = title;
         ((StudioButton)heading).LeadingChevron = value ? "⌄" : "›"; heading.Invalidate();
         heading.AccessibleDescription = value ? "Açık bölüm" : "Kapalı bölüm"; PerformLayout();
     }

@@ -43,9 +43,9 @@ public sealed partial class StudioForm
 
             if (card is StudioCard stateCard) stateCard.Completed = !warning;
 
-            var title = Theme.Label((warning ? "" : "✓ ") + heading, 14, true, warning ? Theme.Warning : Color.Black, 870, 40); title.Location = new(20, 12);
+            var title = Theme.Label((warning ? "" : "✓ ") + heading, 14, true, warning ? Theme.Orange : Theme.Text, 870, 40); title.Location = new(20, 12);
 
-            var text = Theme.Label(body, 10, color: warning ? Theme.Warning : Color.Black, width: 870, height: height); text.Location = new(20, 55);
+            var text = Theme.Label(body, 10, color: warning ? Theme.Orange : Theme.Text, width: 870, height: height); text.Location = new(20, 55);
 
             var row = new FlowLayoutPanel { Location = new(20, height + 60), Width = 880, Height = 50, BackColor = Color.Transparent }; row.Controls.AddRange(actions);
 

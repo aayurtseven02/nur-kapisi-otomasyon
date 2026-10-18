@@ -295,7 +295,7 @@ public sealed class TurquoisePackageBar : Control
 
         if (fillWidth > 0) {
 
-            using var fill = new SolidBrush(Color.FromArgb(0, 255, 220)); e.Graphics.FillRectangle(fill, 0, 0, fillWidth, Height);
+            using var fill = new SolidBrush(Theme.Teal); e.Graphics.FillRectangle(fill, 0, 0, fillWidth, Height);
 
         }
 

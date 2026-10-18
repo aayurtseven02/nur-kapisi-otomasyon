@@ -17,7 +17,7 @@ public sealed class StudioNumber : NumericUpDown
     protected override void OnPaint(PaintEventArgs e){
         base.OnPaint(e);e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
         using var shape=Shapes.Round(new Rectangle(0,0,Width-1,Height-1),Math.Min(8,Height/2));
-        using var pen=new Pen(Color.FromArgb(100,108,118),1);e.Graphics.DrawPath(pen,shape);
+        using var pen=new Pen(Theme.Border,1);e.Graphics.DrawPath(pen,shape);
     }
     protected override void OnHandleCreated(EventArgs e){
         base.OnHandleCreated(e); foreach(var edit in Controls.OfType<TextBox>())SendMessage(edit.Handle,0x00D3,new IntPtr(3),new IntPtr((3<<16)|6));

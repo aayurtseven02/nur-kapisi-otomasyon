@@ -24,7 +24,9 @@ public sealed class ChatAssistant : UserControl
 
     string HistoryPath=>Path.Combine(store.Root,"assistant-history",historyKey+".json");
 
-    readonly RichTextBox conversation = new() { Dock = DockStyle.Fill, ReadOnly = true, BackColor = Theme.Panel, ForeColor = Theme.Text, BorderStyle = BorderStyle.None, Font = Theme.Font(11), DetectUrls = false };
+    readonly RichTextBox conversation = new() { Dock = DockStyle.Fill, ReadOnly = true, BackColor = Theme.Bg, ForeColor = Theme.Text, BorderStyle = BorderStyle.None, Font = Theme.Font(11), DetectUrls = false };
+
+    readonly ChatTranscript transcript = new() { Dock=DockStyle.Fill };
 
     readonly TextBox input = Theme.Input("", true);
 
@@ -48,11 +50,11 @@ public sealed class ChatAssistant : UserControl
 
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
-        foreach (var h in new[] { 118, 38, 50, 0, 28, 82, 60 }) layout.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
+        foreach (var h in new[] { 48, 38, 50, 0, 28, 82, 60 }) layout.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
 
         var note = Theme.Label("Asistan ses, sahne, altyazı ve müzik ayarlarını düzenler; hataları inceler ve isteğinle üretimi yeniden dener. Koda müdahale etmez, video silmez/yayımlamaz. Seçili AI sağlayıcısını kullanır; proje metnini paylaşmak isteğe bağlıdır.", 9, width: 460, height: 118); note.Dock = DockStyle.Fill;
 
-        input.Dock = DockStyle.Fill; input.MaxLength = 6000; input.PlaceholderText = "Mesajını yaz… (Ctrl+Enter: gönder)";
+        input.Dock = DockStyle.Fill; input.BackColor=Theme.Elevated; input.Margin=new Padding(0,8,0,6); input.MaxLength = 6000; input.PlaceholderText = "Mesajını yaz… (Ctrl+Enter: gönder)";
 
         var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false };
 
@@ -68,11 +70,14 @@ public sealed class ChatAssistant : UserControl
         share.Dock=DockStyle.Fill;share.ForeColor=Theme.Text;
         share.CheckedChanged+=(_,_)=>request?.Cancel();
 
-        layout.Controls.Add(note,0,0);layout.Controls.Add(share,0,1);layout.Controls.Add(quick,0,2);layout.Controls.Add(conversation,0,3);layout.Controls.Add(status,0,4);layout.Controls.Add(input,0,5);layout.Controls.Add(actions,0,6);Controls.Add(layout); ModernScrollbars.Apply(this);
+        string explanation=note.Text;var heading=new Panel{Dock=DockStyle.Fill};var title=Theme.Label("TubeFlow asistanı",13,true,width:300,height:40);title.Dock=DockStyle.Fill;var info=Theme.Button("i",()=>Theme.Alert(FindForm(),explanation,"Asistan hakkında"),false,36);info.Dock=DockStyle.Right;info.AccessibleName="Asistan yetkileri ve gizlilik açıklaması";heading.Controls.Add(title);heading.Controls.Add(info);note.Dispose();
+        var composer=new StudioCard{Dock=DockStyle.Fill,BackColor=Theme.Elevated,Borderless=true,CornerRadius=24,Padding=new Padding(12),Margin=Padding.Empty};
+        actions.Dock=DockStyle.Bottom;actions.Height=48;input.Dock=DockStyle.Fill;composer.Controls.Add(input);composer.Controls.Add(actions);
+        layout.Controls.Add(heading,0,0);layout.Controls.Add(share,0,1);layout.Controls.Add(quick,0,2);layout.Controls.Add(transcript,0,3);layout.Controls.Add(status,0,4);layout.Controls.Add(composer,0,5);layout.SetRowSpan(composer,2);Controls.Add(layout); ModernScrollbars.Apply(this);
 
         input.KeyDown += (_, e) => { if (e.Control && e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; _ = Send(); } };
 
-        Disposed += (_, _) => request?.Cancel(); Welcome();
+        Disposed += (_, _) => { request?.Cancel(); conversation.Dispose(); }; Welcome();
 
     }
 
@@ -84,15 +89,16 @@ public sealed class ChatAssistant : UserControl
 
     {
 
-        conversation.SelectionStart = conversation.TextLength; conversation.SelectionColor = who == "Uyarı" ? Theme.Warning : who == "Anka" ? Theme.Teal : Theme.Text;
+        conversation.SelectionStart = conversation.TextLength; conversation.SelectionColor = who == "Sen" ? Theme.Teal : who == "Uyarı" ? Theme.Orange : Theme.Text;
+        conversation.SelectionBackColor = who == "Sen" ? Theme.AccentSurface : Theme.Bg;
 
-        conversation.AppendText(who + ":\n" + text + "\n\n"); conversation.ScrollToCaret();
+        conversation.AppendText(who + ":\n" + text + "\n\n"); transcript.Append(who,text);
 
     }
 
     void LoadHistory() {
 
-        var key=project()?.Id??"general";if(key==historyKey)return;historyKey=key;history.Clear();conversation.Clear();
+        var key=project()?.Id??"general";if(key==historyKey)return;historyKey=key;history.Clear();conversation.Clear();transcript.Clear();
 
         try{history.AddRange(Json.Read(HistoryPath,new List<string>()).TakeLast(12));}catch{Append("Uyarı","Önceki sohbet okunamadı; dosya korundu.");}
 
@@ -132,7 +138,7 @@ public sealed class ChatAssistant : UserControl
             if(agent!=null&&selected!=null)prompt+="\nUygulama durumu: "+agent.Inspect(selected,share.Checked);
 
             int partialStart=-1,partialLength=0;
-            void Partial(string json){if(IsDisposed)return;if(partialStart<0)partialStart=conversation.TextLength;conversation.Select(partialStart,partialLength);conversation.SelectionColor=Theme.Teal;string text="TubeFlow • yanıt hazırlanıyor:\n"+SupportPrivacy.Clean(store,AssistantStreaming.Answer(json))+"\n";conversation.SelectedText=text;partialLength=text.Length;conversation.ScrollToCaret();}
+            void Partial(string json){if(IsDisposed)return;if(partialStart<0)partialStart=conversation.TextLength;conversation.Select(partialStart,partialLength);conversation.SelectionColor=Theme.Teal;string text="TubeFlow • yanıt hazırlanıyor:\n"+SupportPrivacy.Clean(store,AssistantStreaming.Answer(json))+"\n";conversation.SelectedText=text;partialLength=text.Length;transcript.Partial(SupportPrivacy.Clean(store,AssistantStreaming.Answer(json)));}
             string raw="";int mutations=0,retries=0;var results=new List<string>();
             for(int round=0;round<8;round++){
                 cancellation.Token.ThrowIfCancellationRequested();
@@ -158,7 +164,7 @@ public sealed class ChatAssistant : UserControl
 
             if (IsDisposed) return; history.Add("Kullanıcı: " + message); history.Add("Anka: " + answer); if (history.Count > 12) history.RemoveRange(0, history.Count - 12);
 
-            SaveHistory();if(partialStart>=0){conversation.Select(partialStart,partialLength);conversation.SelectedText="";}Append("TubeFlow", answer); status.Text = "Seçili TubeFlow AI sağlayıcısı";
+            SaveHistory();transcript.EndPartial();if(partialStart>=0){conversation.Select(partialStart,partialLength);conversation.SelectedText="";}Append("TubeFlow", answer); status.Text = "Seçili TubeFlow AI sağlayıcısı";
 
         }
 
@@ -166,7 +172,7 @@ public sealed class ChatAssistant : UserControl
 
         catch (Exception ex) { if (!IsDisposed) { Append("Uyarı", SupportPrivacy.Clean(store,ex.Message)); status.Text = "Bağlantıları kontrol et"; status.ForeColor = Theme.Warning; } }
 
-        finally { request = null; cancellation.Dispose(); if (!IsDisposed) { send.Enabled = true; input.Enabled = true; input.Focus(); } }
+        finally { transcript.EndPartial();request = null; cancellation.Dispose(); if (!IsDisposed) { send.Enabled = true; input.Enabled = true; input.Focus(); } }
 
     }
 

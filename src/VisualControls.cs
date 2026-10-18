@@ -69,10 +69,10 @@ public static class Shapes
 
         try {
 
-            int dark=0;DwmSetWindowAttribute(handle,20,ref dark,4);
+            int dark=1;DwmSetWindowAttribute(handle,20,ref dark,4);
             int rounded=2;DwmSetWindowAttribute(handle,33,ref rounded,4);
 
-            int caption=ColorTranslator.ToWin32(Theme.Bg),text=ColorTranslator.ToWin32(Theme.Teal),border=ColorTranslator.ToWin32(Theme.Border);
+            int caption=ColorTranslator.ToWin32(Theme.Bg),text=ColorTranslator.ToWin32(Theme.Text),border=ColorTranslator.ToWin32(Theme.Border);
 
             DwmSetWindowAttribute(handle,35,ref caption,4);DwmSetWindowAttribute(handle,36,ref text,4);DwmSetWindowAttribute(handle,34,ref border,4);
 
@@ -155,13 +155,13 @@ public class StudioButton : Button
         int offset = 0;
         var face = new Rectangle(1, 1, Width - 3, Height - 3);
         using var shape=Shapes.Round(face,Math.Min(11,Math.Min(face.Width,face.Height)/2));
-        bool neonStep=Completed;
-        Color top=neonStep?Color.FromArgb(129,255,62):Color.FromArgb(253,254,255);
-        Color bottom=neonStep?Color.FromArgb(79,240,16):pressed?Color.FromArgb(218,224,230):hovered?Color.FromArgb(230,235,240):Color.FromArgb(238,241,244);
-        if(!Enabled&&!Completed){top=Color.FromArgb(249,250,251);bottom=Color.FromArgb(242,243,245);}
+        bool primary = BackColor == Theme.Teal;
+        Color top = Completed ? Theme.SuccessSurface : CurrentStep ? Theme.AccentSurface : primary ? Theme.AccentSurface : Theme.Elevated;
+        Color bottom = top; if (pressed) top = bottom = Theme.Selection; else if (hovered) top = bottom = primary || CurrentStep ? Color.FromArgb(35,78,137) : Theme.Hover;
+        if(!Enabled&&!Completed){top=bottom=Theme.Panel;}
         using(var fill=new LinearGradientBrush(face,top,bottom,90f))g.FillPath(fill,shape);
-        using(var border=new Pen(neonStep?Color.FromArgb(71,163,28):Completed?Color.FromArgb(137,185,150):CurrentStep||Focused?Color.FromArgb(146,158,172):Color.FromArgb(201,208,216),CurrentStep||Focused?1.5f:1f))g.DrawPath(border,shape);
-        var shine=g.Save();g.SetClip(shape);using(var sheen=new SolidBrush(Color.FromArgb(80,Color.White)))g.FillRectangle(sheen,face.X+1,face.Y+1,face.Width-2,Math.Max(1,face.Height/2));g.Restore(shine);
+        using(var border=new Pen(Completed ? Theme.Success : CurrentStep||Focused ? Theme.Teal : Theme.Border,CurrentStep||Focused?1.5f:1f))g.DrawPath(border,shape);
+        
         Color ink=Enabled||Completed?Theme.Text:Theme.Muted;
 
         if (Completed && !Equals(Tag,"wizard-step")) {
@@ -250,6 +250,8 @@ public sealed class StudioGradientPanel : Panel
 public sealed class StudioCard : Panel
 
 {
+    public bool Borderless;
+    public int CornerRadius = 12;
 
     public bool Completed;
     public bool CurrentStep;
@@ -269,10 +271,10 @@ public sealed class StudioCard : Panel
 
         base.OnPaint(e); var g = e.Graphics; g.SmoothingMode = SmoothingMode.AntiAlias;
 
-        using var path = Shapes.Round(new(0, 0, Width - 1, Height - 1), 10);
+        using var path = Shapes.Round(new(0, 0, Width - 1, Height - 1), Math.Min(CornerRadius,Math.Min(Width-1,Height-1)/2));
 
         using var fill = new SolidBrush(Completed ? Theme.SuccessSurface : BackColor); g.FillPath(fill, path);
-        using var border = new Pen(CurrentStep ? Theme.Teal : Completed ? Theme.Success : Theme.Border, CurrentStep ? 3 : 1); g.DrawPath(border, path);
+        using var border = new Pen(CurrentStep ? Theme.Teal : Completed ? Theme.Success : Theme.Border, CurrentStep ? 3 : 1); if(!Borderless)g.DrawPath(border, path);
 
     }
 
@@ -290,28 +292,28 @@ public sealed class StudioHeader : Control
 
     public bool Busy;
 
-    public StudioHeader() { Height = 66; DoubleBuffered = true; SetStyle(ControlStyles.ResizeRedraw, true); BackColor = Theme.Bg; }
+    public StudioHeader() { Height = 76; DoubleBuffered = true; SetStyle(ControlStyles.ResizeRedraw, true); BackColor = Theme.Bg; }
 
     protected override void OnPaint(PaintEventArgs e)
 
     {
 
-        base.OnPaint(e); var g = e.Graphics; using var f = Theme.Font(10); using var b = Theme.Font(10, true);
+        base.OnPaint(e); var g = e.Graphics; g.SmoothingMode=SmoothingMode.AntiAlias; using(var outline=Shapes.Round(new Rectangle(0,0,Width-1,Height+18),18)) { using var edge=new Pen(Theme.Border); g.DrawPath(edge,outline); } using var f = Theme.Font(10); using var b = Theme.Font(10, true);
 
-        TextRenderer.DrawText(g, "ÇALIŞMA ALANI  /  " + PageName, b, new Rectangle(28, 32, Math.Max(100, Width - 210), 28), Theme.Muted, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
-        int workspaceWidth=TextRenderer.MeasureText("ÇALIŞMA ALANI  /  "+PageName,b).Width;
+        TextRenderer.DrawText(g, "Çalışma alanı  /  " + PageName, b, new Rectangle(28, 32, Math.Max(100, Width - 210), 28), Theme.Muted, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+        int workspaceWidth=TextRenderer.MeasureText("Çalışma alanı  /  "+PageName,b).Width;
         int statsLeft=28+workspaceWidth+26;
         int statsWidth=Width-230-statsLeft;
         if(statsWidth>150) TextRenderer.DrawText(g,statsWidth>730?PublicationSummary:PublicationSummaryShort,f,new Rectangle(statsLeft,32,statsWidth,28),Theme.Success,TextFormatFlags.Left|TextFormatFlags.VerticalCenter|TextFormatFlags.SingleLine|TextFormatFlags.EndEllipsis);
 
         using var channelFont = Theme.Font(14, true);
 
-        TextRenderer.DrawText(g, string.IsNullOrWhiteSpace(Channel) || Channel == "YouTube kanalı bağlı değil" ? "YOUTUBE KANALI BAĞLI DEĞİL" : "BAĞLI OLAN YOUTUBE KANALI: " + Channel.ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR")), channelFont, new Rectangle(28, 3, Math.Max(100, Width - 240), 30), Theme.Text, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+        TextRenderer.DrawText(g, string.IsNullOrWhiteSpace(Channel) || Channel == "YouTube kanalı bağlı değil" ? "YouTube kanalı bağlı değil" : Channel + "  •  TubeFlow", channelFont, new Rectangle(28, 3, Math.Max(100, Width - 240), 30), Theme.Text, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
 
         using var stateFont = Theme.Font(Busy ? 10 : 14, true);
-        TextRenderer.DrawText(g, Busy ? "ÜRETİM ÇALIŞIYOR" : "HAZIR", stateFont, new Rectangle(Width - 220, 0, 190, Height), Busy ? Theme.Text : Theme.Success, TextFormatFlags.Right | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
+        TextRenderer.DrawText(g, Busy ? "Üretim çalışıyor" : "Hazır", stateFont, new Rectangle(Width - 220, 0, 190, Height), Busy ? Theme.Text : Theme.Success, TextFormatFlags.Right | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis);
 
-        using var pen = new Pen(Theme.Warning); g.DrawLine(pen, 28, Height - 1, Width - 30, Height - 1);
+        using var pen = new Pen(Theme.Border); g.DrawLine(pen, 28, Height - 1, Width - 30, Height - 1);
 
     }
 

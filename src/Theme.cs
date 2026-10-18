@@ -16,7 +16,7 @@ public static class Theme
 
 {
 
-    public static readonly Color Warning = Color.FromArgb(30, 30, 30);
+    public static readonly Color Warning = Color.FromArgb(232, 232, 232);
 
     public static DialogResult Alert(string message, string title = "TubeFlow", MessageBoxButtons buttons = MessageBoxButtons.OK) => Alert(null, message, title, buttons);
 
@@ -52,28 +52,29 @@ public static class Theme
 
     }
 
-    public static Color Bg = Color.White, Panel = Color.FromArgb(248,248,248), Elevated = Color.FromArgb(241,242,243), Text = Color.FromArgb(25,25,27), Muted = Color.FromArgb(98,100,105), Teal = Color.Black, Orange = Color.FromArgb(120,100,64), Border = Color.FromArgb(214,215,218);
-    public static readonly Color Success = Color.FromArgb(20, 125, 55), SuccessSurface = Color.FromArgb(218, 244, 224);
+    public static readonly Color Shell = Color.FromArgb(30,34,32), Sidebar = Color.FromArgb(27,30,28), Hover = Color.FromArgb(46,49,47), Selection = Color.FromArgb(42,46,44), AccentSurface = Color.FromArgb(25,62,115);
+    public static Color Bg = Color.FromArgb(24,24,24), Panel = Color.FromArgb(29,29,29), Elevated = Color.FromArgb(48,48,48), Text = Color.FromArgb(236,236,236), Muted = Color.FromArgb(153,155,154), Teal = Color.FromArgb(76,139,235), Orange = Color.FromArgb(230,177,92), Border = Color.FromArgb(52,55,53);
+    public static readonly Color Success = Color.FromArgb(108, 203, 143), SuccessSurface = Color.FromArgb(32, 64, 46);
 
     static readonly HashSet<string> InstalledFonts = FontFamily.Families.Select(f => f.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
     static string PickFont(params string[] names) => names.FirstOrDefault(InstalledFonts.Contains) ?? "Segoe UI";
     public static readonly string BodyFont = PickFont("Segoe UI", "Arial");
     public static readonly string HeadingFont = BodyFont;
-    public static Font Font(float size = 10, bool bold = false) => new(BodyFont, size, bold ? FontStyle.Bold | FontStyle.Italic : FontStyle.Regular);
+    public static Font Font(float size = 10, bool bold = false) => new(BodyFont, size, bold ? FontStyle.Bold : FontStyle.Regular);
 
-    public static Label Label(string text, float size = 10, bool bold = false, Color? color = null, int width = 900, int height = 32) => new StudioLabel() { Text = bold ? text.ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR")) : text, Font = Font(size, bold), ForeColor = color ?? Text, AutoSize = false, Width = width, Height = height, TextAlign = ContentAlignment.MiddleLeft, BackColor = Color.Transparent, Margin = Padding.Empty };
+    public static Label Label(string text, float size = 10, bool bold = false, Color? color = null, int width = 900, int height = 32) => new StudioLabel() { Text = text, Font = Font(size, bold), ForeColor = color ?? Text, AutoSize = false, Width = width, Height = height, TextAlign = ContentAlignment.MiddleLeft, BackColor = Color.Transparent, Margin = Padding.Empty };
 
     public static Button Button(string text, Action click, bool primary = false, int width = 150)
 
     {
 
-        var b = new StudioButton { Text = text, AutoSize=false, Width = width, Height = 46, FlatStyle = FlatStyle.Flat, Font = Font(10, false), BackColor = primary ? Teal : Elevated, ForeColor = primary ? Bg : Text, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 10, 0) };
+        var b = new StudioButton { Text = text, AutoSize=false, Width = width, Height = 46, FlatStyle = FlatStyle.Flat, Font = Font(10, false), BackColor = primary ? Teal : Elevated, ForeColor = Text, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 10, 0) };
         string name = text.ToLower(CultureInfo.GetCultureInfo("tr-TR"));
         if (name == "işlemi iptal et") { b.BackColor = Warning; b.ForeColor = Text; }
         if (name is "stok video arşivi" or "stok videolar") b.LeadingIcon = "film";
         else if (name is "ses ve müzik arşivi" or "ses ve müzik") b.LeadingIcon = "music";
         else if (name == "kapak şablonları") b.LeadingIcon = "image";
-        if (b.LeadingIcon != null) b.UppercaseCaption = true;
+        b.UppercaseCaption = false;
 
         b.FlatAppearance.BorderSize = 0; b.Click += (_, _) => click(); return b;
 
@@ -87,7 +88,7 @@ public static class Theme
 
         var c = new DarkComboBox { Width = width, Height = 36, ItemHeight = 28, DrawMode = DrawMode.OwnerDrawFixed, BackColor = Elevated, ForeColor = Text, FlatStyle = FlatStyle.Flat, DropDownStyle = ComboBoxStyle.DropDownList, Font = Font(11) };
 
-        c.DrawItem += (_, e) => { using var brush = new SolidBrush(Elevated); e.Graphics.FillRectangle(brush, e.Bounds); if (e.Index >= 0) TextRenderer.DrawText(e.Graphics, c.Items[e.Index]?.ToString(), c.Font, new Rectangle(e.Bounds.X + 9, e.Bounds.Y, e.Bounds.Width - 9, e.Bounds.Height), Text, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis); };
+        c.DrawItem += (_, e) => { using var brush = new SolidBrush((e.State & DrawItemState.Selected) != 0 ? Selection : Elevated); e.Graphics.FillRectangle(brush, e.Bounds); if (e.Index >= 0) TextRenderer.DrawText(e.Graphics, c.Items[e.Index]?.ToString(), c.Font, new Rectangle(e.Bounds.X + 9, e.Bounds.Y, e.Bounds.Width - 9, e.Bounds.Height), Text, TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis); };
 
         c.Items.AddRange(items); c.SelectedItem = current; if (c.SelectedIndex < 0 && c.Items.Count > 0) c.SelectedIndex = 0; return c;
 

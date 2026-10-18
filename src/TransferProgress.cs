@@ -34,7 +34,7 @@ public sealed class GreenTransferBar : Control
 
     protected override void OnPaint(PaintEventArgs e) {
 
-        base.OnPaint(e); using var brush = new SolidBrush(Color.FromArgb(57, 255, 94));
+        base.OnPaint(e); using var brush = new SolidBrush(Theme.Teal);
 
         e.Graphics.FillRectangle(brush, 0, 0, Width * Math.Clamp(Value, 0, 100) / 100, Height);
 
