@@ -582,7 +582,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-18-gun10-normal2-imanislamihsan
-  status: pending
+  status: failed
   publish_at: '2026-10-18T15:00:00+03:00'
   format: long
   type: tema
@@ -593,6 +593,8 @@ videos:
   title_hint: İman, İslam ve İhsan Nedir? Cibril Hadisi
   thumb_title: İman-İslam-İhsan
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-18-gun10-short2-dunyagecici
   status: pending
   publish_at: '2026-10-18T19:00:00+03:00'
