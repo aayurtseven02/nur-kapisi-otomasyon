@@ -779,7 +779,7 @@ public sealed partial class Services(Store store, Action<string> log, HttpClient
 
         req.Headers.Add("xi-api-key", store.Key("ELEVENLABS_API_KEY"));
 
-        req.Content = new StringContent(JsonSerializer.Serialize(new { text, model_id = s.VoiceModel, language_code = "tr", voice_settings = new { stability = 0.5, similarity_boost = 0.75, speed = s.VoiceSpeed } }), Encoding.UTF8, "application/json");
+        req.Content = new StringContent(JsonSerializer.Serialize(new { text, model_id = s.VoiceModel, language_code = "tr", voice_settings = new { stability = Math.Clamp(s.ElevenStability,0,1), similarity_boost = Math.Clamp(s.ElevenSimilarity,0,1), style = Math.Clamp(s.ElevenStyle,0,1), use_speaker_boost=s.ElevenSpeakerBoost, speed = s.VoiceSpeed } }), Encoding.UTF8, "application/json");
 
         using var res = await http.SendAsync(req, ct); if (!res.IsSuccessStatusCode) throw new ProviderException("ElevenLabs", (int)res.StatusCode);
 

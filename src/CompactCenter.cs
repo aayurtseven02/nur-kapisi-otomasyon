@@ -77,6 +77,7 @@ public sealed partial class StudioForm
         _=>true};
     void MediaHub()
     {
+        page.Controls.Add(Theme.Button("Ücretsiz medya • resim, video, müzik ve SFX ara",()=>FreeMediaDialog(),true,600));
         page.Controls.Add(Actions(new[]{"Tümü","Video","Fotoğraf","Müzik","Ses efekti","Seslendirme","Kapak","Kart","Logo"}.Select(kind=>Theme.Button(kind,()=>{mediaKind=kind;audioOffset=0;Navigate("Medya arşivleri");},mediaKind==kind,130)).ToArray()));
         switch(mediaKind){
             case "Video":PoolPage();break;

@@ -88,7 +88,7 @@ public static class LocalCoverEngine
     }
     // Kolay menü: kullanıcı JSON düzenlemez; kalite ve model seçimi burada iş akışına uygulanır.
     public static readonly string[] Qualities = ["Hızlı", "Dengeli", "Ultra sinematik"];
-    public static readonly string[] Models = ["Otomatik", "FLUX.2", "Stable Diffusion XL"];
+    public static readonly string[] Models = ["Otomatik", "FLUX Schnell", "FLUX.2", "Stable Diffusion XL"];
 
     static bool IsFlux(JsonObject graph) => graph.Any(x => x.Value?["class_type"]?.GetValue<string>() == "EmptyFlux2LatentImage");
     static (int W, int H) Size(JsonObject graph, bool square, bool vertical,string quality)
@@ -97,7 +97,8 @@ public static class LocalCoverEngine
         if (vertical) return (576, 1024);
         return quality switch { "Hızlı" => (1024, 576), "Dengeli" => (1280, 720), _ => (1536, 864) };
     }
-    static int? Steps(JsonObject graph,string quality) => quality switch { "Hızlı" => IsFlux(graph) ? 16 : 20, "Dengeli" => IsFlux(graph) ? 26 : 28, _ => IsFlux(graph) ? 36 : 38 };
+    static bool IsSchnell(JsonObject graph)=>graph.ToJsonString().Contains("schnell",StringComparison.OrdinalIgnoreCase);
+    static int? Steps(JsonObject graph,string quality) => IsSchnell(graph)?quality switch{"Hızlı"=>4,"Dengeli"=>6,_=>8}:quality switch { "Hızlı" => IsFlux(graph) ? 16 : 20, "Dengeli" => IsFlux(graph) ? 26 : 28, _ => IsFlux(graph) ? 36 : 38 };
     public static string Describe(string quality, string model) => quality switch {
         "Hızlı" => "Hızlı • 1024×576 • daha az işlem",
         "Dengeli" => "Dengeli • 1280×720 • iyi kalite",
@@ -105,14 +106,14 @@ public static class LocalCoverEngine
     // Motor klasörünü ve modele uygun iş akışını kendisi bulur; bulunamazsa paketle gelen hazır iş akışına döner.
     public static string ResolveWorkflow(string model, string current = "")
     {
-        string wanted = model.StartsWith("FLUX") ? "anka-flux2.json" : model.StartsWith("Stable") ? "anka-sdxl.json" : "";
+        string wanted = model=="FLUX Schnell"?"anka-flux-schnell.json":model.StartsWith("FLUX") ? "anka-flux2.json" : model.StartsWith("Stable") ? "anka-sdxl.json" : "";
         string found = File.Exists(current) ? current : FindInstalledWorkflow();
         if (wanted == "") return found != "" ? found : Bundled("anka-flux2.json");
         if (found != "") { var sibling = Path.Combine(Path.GetDirectoryName(found)!, wanted); if (File.Exists(sibling)) return sibling; }
         return Bundled(wanted);
     }
     static string Bundled(string name) { var path = Path.Combine(AppContext.BaseDirectory, "tools", "workflows", name); return File.Exists(path) ? path : ""; }
-    public static string ModelOf(string workflow) { try { return File.Exists(workflow) && File.ReadAllText(workflow).Contains("EmptyFlux2LatentImage") ? "FLUX.2" : "Stable Diffusion XL"; } catch (IOException) { return "Stable Diffusion XL"; } }
+    public static string ModelOf(string workflow) { try {if(!File.Exists(workflow))return "Stable Diffusion XL";string text=File.ReadAllText(workflow);return text.Contains("schnell",StringComparison.OrdinalIgnoreCase)?"FLUX Schnell":text.Contains("EmptyFlux2LatentImage")?"FLUX.2":"Stable Diffusion XL";}catch(IOException){return "Stable Diffusion XL";} }
     public static JsonObject Prepare(string file, string prompt, bool vertical, bool square=false,string quality="Dengeli")
     {
         if (!File.Exists(file)) throw new InvalidOperationException("Yerel motor için ComfyUI API iş akışı dosyasını seç.");
@@ -124,7 +125,7 @@ public static class LocalCoverEngine
             if (entry.Value is not JsonObject node || node["inputs"] is not JsonObject inputs) continue;
             var type = node["class_type"]?.GetValue<string>() ?? "";
             if (type == "VAEDecodeTiled") { inputs["temporal_size"] ??= 64; inputs["temporal_overlap"] ??= 8; }
-            string[] localTypes = ["CheckpointLoaderSimple", "CLIPTextEncode", "EmptyLatentImage", "EmptySD3LatentImage", "KSampler", "KSamplerAdvanced", "VAEDecode", "VAEDecodeTiled", "SaveImage", "PreviewImage", "UNETLoader", "CLIPLoader", "DualCLIPLoader", "VAELoader", "ModelSamplingAuraFlow", "ModelSamplingFlux", "FluxGuidance", "ConditioningZeroOut", "CLIPSetLastLayer", "LoraLoader", "ModelSamplingDiscrete"];
+            string[] localTypes = ["CheckpointLoaderSimple", "CLIPTextEncode", "EmptyLatentImage", "EmptySD3LatentImage", "KSampler", "KSamplerAdvanced", "VAEDecode", "VAEDecodeTiled", "SaveImage", "PreviewImage", "UNETLoader", "CLIPLoader", "DualCLIPLoader", "VAELoader", "ModelSamplingAuraFlow", "ModelSamplingFlux", "FluxGuidance", "ConditioningZeroOut", "CLIPSetLastLayer", "LoraLoader", "ModelSamplingDiscrete","PulidFluxModelLoader","PulidFluxInsightFaceLoader","PulidFluxEvaClipLoader","ApplyPulidFlux","FixPulidFluxPatch","PulidFluxOptions","LoadImage","ImageCrop","ImageScale","VAEEncode"];
             if (!localTypes.Contains(type) && !new[]{"EmptyFlux2LatentImage","Flux2Scheduler","CFGGuider","KSamplerSelect","SamplerCustomAdvanced","RandomNoise","ReferenceLatent"}.Contains(type)) throw new InvalidOperationException("Bu iş akışı desteklenmeyen veya bulut bağlantılı bir düğüm içeriyor: " + type + ". Yerel kapak iş akışını kullan.");
             foreach (var input in inputs.ToArray())
                 if (input.Value is JsonValue v && v.TryGetValue<string>(out var value) && value.Contains("{{ANKA_PROMPT}}"))
@@ -135,7 +136,10 @@ public static class LocalCoverEngine
             { var (w,h)=Size(graph,square,vertical,quality); inputs["width"] = w; inputs["height"] = h; if(type!="Flux2Scheduler")inputs["batch_size"] = 1; }
             if (type is "KSampler" or "Flux2Scheduler" && inputs["steps"] is JsonValue && Steps(graph,quality) is int steps) inputs["steps"] = steps;
         }
-        if (!found) throw new InvalidOperationException("API iş akışının olumlu görsel talimatına {{ANKA_PROMPT}} eklenmeli.");
+        if(!found)foreach(var sampler in graph.Where(x=>x.Value?["class_type"]?.GetValue<string>() is "KSampler" or "KSamplerAdvanced")){
+            if(sampler.Value?["inputs"]?["positive"] is JsonArray link&&link[0]?.GetValue<string>() is string id&&graph[id]?["class_type"]?.GetValue<string>()=="CLIPTextEncode"){graph[id]!["inputs"]!["text"]=prompt;found=true;}
+        }
+        if(!found)throw new InvalidOperationException("ComfyUI API iş akışının olumlu talimat düğümü bulunamadı. Hazır motor seç veya API biçiminde dışa aktar.");
         return graph;
     }
     public static JsonObject ApplyReference(JsonObject graph,string uploaded,long seed,int castCount=1,IReadOnlyList<int>? characterIds=null,int referenceWidth=768,bool styleReference=false)
@@ -150,6 +154,29 @@ public static class LocalCoverEngine
                 foreach(string field in new[]{"positive","negative"}){string id="anka_flux_reference_"+field;var original=inputs[field]!.DeepClone();graph[id]=new JsonObject{["class_type"]="ReferenceLatent",["inputs"]=new JsonObject{["conditioning"]=original,["latent"]=new JsonArray("anka_reference_latent",0)}};inputs[field]=new JsonArray(id,0);}
             }
             foreach(var noise in graph.Where(x=>x.Value?["class_type"]?.GetValue<string>()=="RandomNoise"))noise.Value!["inputs"]!["noise_seed"]=seed;
+            return graph;
+        }
+        if(IsSchnell(graph)){
+            var loader=graph.First(x=>x.Value?["class_type"]?.GetValue<string>()=="CheckpointLoaderSimple");
+            var schnellLatent=graph.First(x=>x.Value?["class_type"]?.GetValue<string>()=="EmptySD3LatentImage").Value!["inputs"]!;
+            graph["tf_reference"]=new JsonObject{["class_type"]="LoadImage",["inputs"]=new JsonObject{["image"]=uploaded}};
+            var subjects=characterIds??Enumerable.Range(0,castCount).ToArray();
+            if(!styleReference&&subjects.Count>0){
+                if(castCount<1||castCount>4||subjects.Any(x=>x<0||x>=castCount))throw new InvalidOperationException("Karakter referansı kimlikleri geçersiz.");
+                graph["tf_pulid_model"]=new JsonObject{["class_type"]="PulidFluxModelLoader",["inputs"]=new JsonObject{["pulid_file"]="pulid_flux_v0.9.1.safetensors"}};
+                graph["tf_pulid_clip"]=new JsonObject{["class_type"]="PulidFluxEvaClipLoader",["inputs"]=new JsonObject()};
+                graph["tf_pulid_face"]=new JsonObject{["class_type"]="PulidFluxInsightFaceLoader",["inputs"]=new JsonObject{["provider"]="CPU"}};
+                string previousModel=loader.Key;
+                foreach(int subject in subjects){string node="tf_pulid_"+subject,image="tf_reference";
+                    if(castCount>1){image="tf_face_"+subject;int slot=referenceWidth/castCount;graph[image]=new JsonObject{["class_type"]="ImageCrop",["inputs"]=new JsonObject{["image"]=new JsonArray("tf_reference",0),["width"]=slot,["height"]=slot,["x"]=slot*subject,["y"]=0}};}
+                    graph[node]=new JsonObject{["class_type"]="ApplyPulidFlux",["inputs"]=new JsonObject{["model"]=new JsonArray(previousModel,0),["pulid_flux"]=new JsonArray("tf_pulid_model",0),["eva_clip"]=new JsonArray("tf_pulid_clip",0),["face_analysis"]=new JsonArray("tf_pulid_face",0),["image"]=new JsonArray(image,0),["weight"]=.8,["start_at"]=0.0,["end_at"]=.9}};previousModel=node;
+                }
+                foreach(var sampler in graph.Where(x=>x.Value?["class_type"]?.GetValue<string>()=="KSampler").ToArray()){sampler.Value!["inputs"]!["model"]=new JsonArray(previousModel,0);sampler.Value!["inputs"]!["seed"]=seed;}
+                return graph;
+            }
+            graph["tf_reference_scale"]=new JsonObject{["class_type"]="ImageScale",["inputs"]=new JsonObject{["image"]=new JsonArray("tf_reference",0),["upscale_method"]="lanczos",["width"]=schnellLatent["width"]!.DeepClone(),["height"]=schnellLatent["height"]!.DeepClone(),["crop"]="center"}};
+            graph["tf_reference_encode"]=new JsonObject{["class_type"]="VAEEncode",["inputs"]=new JsonObject{["pixels"]=new JsonArray("tf_reference_scale",0),["vae"]=new JsonArray(loader.Key,2)}};
+            foreach(var sampler in graph.Where(x=>x.Value?["class_type"]?.GetValue<string>()=="KSampler").ToArray()){sampler.Value!["inputs"]!["latent_image"]=new JsonArray("tf_reference_encode",0);sampler.Value!["inputs"]!["denoise"]=.8;sampler.Value!["inputs"]!["seed"]=seed;}
             return graph;
         }
         // Condition identity on the reference while keeping a fresh scene latent.
@@ -187,6 +214,7 @@ public static class LocalCoverEngine
     }
     public static async Task CheckStorySupport(CancellationToken ct,string? workflow=null)
     {
+        if(workflow!=null&&File.Exists(workflow)&&ModelOf(workflow)=="FLUX Schnell"){await Check(workflow,ct);return;}
         if(workflow!=null&&File.Exists(workflow)&&File.ReadAllText(workflow).Contains("EmptyFlux2LatentImage")) {
             using var response=await Http.GetAsync("object_info/ReferenceLatent",ct);response.EnsureSuccessStatusCode();
             var info=JsonNode.Parse(await response.Content.ReadAsStringAsync(ct));if(info?["ReferenceLatent"]==null)throw new InvalidOperationException("FLUX.2 yerel referans desteği bulunamadı. NVIDIA motorunu güncelle.");return;
@@ -198,10 +226,27 @@ public static class LocalCoverEngine
                 throw new InvalidOperationException("Yerel hikâye karakter desteği eksik: "+node+" "+model+". Hikâye motoru kurulumunu tamamla ve ComfyUI'yi yeniden başlat.");
         }
     }
-    public static async Task<byte[]> Generate(string file, string prompt, bool vertical, Action<string> log, CancellationToken ct, HttpClient? client = null, bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli")
+    public static async Task<byte[]> Generate(string file,string prompt,bool vertical,Action<string> log,CancellationToken ct,HttpClient? client=null,bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli",string resolution="auto")
+    {
+        long? free=null;
+        if(client==null){
+            using var check=CancellationTokenSource.CreateLinkedTokenSource(ct);check.CancelAfter(TimeSpan.FromSeconds(5));
+            try{using var response=await Http.GetAsync("system_stats",check.Token);response.EnsureSuccessStatusCode();var stats=JsonNode.Parse(await response.Content.ReadAsStringAsync(check.Token));var device=stats?["devices"]?.AsArray().FirstOrDefault();free=device?["vram_free"]?.GetValue<long>();log("Yerel donanım: "+(device?["name"]?.GetValue<string>()??"bilinmiyor")+(free is long bytes?$" • boş bellek {bytes/1073741824d:0.0} GB":""));}
+            catch(Exception ex)when(ex is HttpRequestException or System.Text.Json.JsonException or OperationCanceledException){ct.ThrowIfCancellationRequested();log("Boş bellek okunamadı; korumalı çözünürlük kullanılıyor.");free=3L*1024*1024*1024;}
+        }
+        var size=LocalImagePolicy.Resolve(resolution,quality,vertical,square,free);
+        for(int attempt=0;;attempt++){
+            ct.ThrowIfCancellationRequested();log($"Yerel görsel: {size.W} × {size.H} piksel • {quality}");
+            try{return await GenerateCore(file,prompt,vertical,log,ct,client,square,referenceImage,castCount,characterIds,styleReference,quality,size.W,size.H);}
+            catch(InvalidOperationException ex)when(attempt<2&&ex.Message.Contains("GPU_MEMORY",StringComparison.Ordinal)){
+                int edge=Math.Max(size.W,size.H);edge=edge>1024?1024:edge>768?768:512;size=square?(edge,edge):vertical?(edge*9/16,edge):(edge,edge*9/16);log($"Ekran kartı belleği yetmedi; {size.W} × {size.H} piksel ile yeniden deneniyor.");
+            }
+        }
+    }
+    static async Task<byte[]> GenerateCore(string file, string prompt, bool vertical, Action<string> log, CancellationToken ct, HttpClient? client = null, bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli",int width=0,int height=0)
     {
         var transport = client ?? Http;
-        var graph = Prepare(file, prompt, vertical,square,quality);
+        var graph = Prepare(file, prompt, vertical,square,quality);if(width>0&&height>0)LocalImagePolicy.Resize(graph,width,height);
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(ct); budget.CancelAfter(TimeSpan.FromMinutes(15));
         var token = budget.Token;
         if(referenceImage!=null) {
@@ -227,7 +272,7 @@ public static class LocalCoverEngine
             await Task.Delay(1500, token);
             using var response = await transport.GetAsync(LocalUrl("history/" + Uri.EscapeDataString(id)), token); response.EnsureSuccessStatusCode();
             var history = JsonNode.Parse(await response.Content.ReadAsStringAsync(token))?[id];
-            if (history?["status"]?["status_str"]?.GetValue<string>() == "error") throw new InvalidOperationException("Yerel model üretim hatası; ComfyUI işlem kaydını kontrol et.");
+            if(history?["status"]?["status_str"]?.GetValue<string>()=="error"){string details=history["status"]!.ToJsonString();if(details.Contains("out of memory",StringComparison.OrdinalIgnoreCase)||details.Contains("OutOfMemory",StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException("GPU_MEMORY: Ekran kartı belleği yetersiz.");throw new InvalidOperationException("Yerel model üretim hatası; ComfyUI işlem kaydını kontrol et.");}
             if (history?["outputs"] is JsonObject outputs)
                 foreach (var output in outputs)
                     if (output.Value?["images"] is JsonArray images && images.FirstOrDefault() is JsonObject image)
@@ -245,8 +290,10 @@ public static class LocalCoverEngine
             try {
                 using var remove=new StringContent(new JsonObject{["delete"]=new JsonArray(id)}.ToJsonString(),Encoding.UTF8,"application/json");
                 using var removed=await transport.PostAsync(LocalUrl("queue"),remove,cleanup.Token);
-                using var interrupt=new StringContent(new JsonObject{["prompt_id"]=id}.ToJsonString(),Encoding.UTF8,"application/json");
-                using var stopped=await transport.PostAsync(LocalUrl("interrupt"),interrupt,cleanup.Token);
+                using var queue=await transport.GetAsync(LocalUrl("queue"),cleanup.Token);queue.EnsureSuccessStatusCode();
+                var state=JsonNode.Parse(await queue.Content.ReadAsStringAsync(cleanup.Token));
+                bool ownsCurrent=state?["queue_running"] is JsonArray running&&running.Any(row=>row is JsonArray fields&&fields.Count>1&&fields[1]?.GetValue<string>()==id);
+                if(ownsCurrent){using var interrupt=new StringContent(new JsonObject{["prompt_id"]=id}.ToJsonString(),Encoding.UTF8,"application/json");using var stopped=await transport.PostAsync(LocalUrl("interrupt"),interrupt,cleanup.Token);}
                 log("Yerel motorun yalnız bu hikâye işine durdurma isteği gönderildi; hazır sahneler korunuyor.");
             }catch(Exception){log("Yerel motor durdurma yanıtı alınamadı; motor hâlâ hesaplıyor olabilir. Hazır dosyalar korunuyor.");}
             throw;

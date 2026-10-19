@@ -141,6 +141,7 @@ public class Settings
     public string? CoverLocalModel { get; set; }
     [System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
     public string? CoverLocalQuality { get; set; }
+    public string CoverLocalResolution {get;set;}="auto";
 
     public string CoverGeminiModel { get; set; } = "gemini-2.5-flash-image";
 
@@ -297,6 +298,10 @@ public class Settings
 
     public string Model { get; set; } = "gpt-4.1";
 
+    public double ElevenStability {get;set;}=.5;
+    public double ElevenSimilarity {get;set;}=.75;
+    public double ElevenStyle {get;set;}=0;
+    public bool ElevenSpeakerBoost {get;set;}=true;
     public string VoiceId { get; set; } = "";
 
     public string VoiceModel { get; set; } = "eleven_multilingual_v2";
@@ -541,6 +546,8 @@ public class VideoScript
     public string SceneTitleHash { get; set; } = "";
 
     public MusicTrack? MusicTrack { get; set; }
+    [System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public List<MusicTrack>? SoundEffects {get;set;}
 
     public TextLayout? TextLayout { get; set; }
 
@@ -1060,6 +1067,7 @@ public static class Rules
             s.TextLayout?.Validate();
 
             s.MusicTrack?.Validate();
+            foreach(var effect in s.SoundEffects??[])effect.Validate();
 
             if (s.Scenes.Any(x => !double.IsFinite(x.TitleStart) || x.TitleStart is < 0 or > 1800 || !double.IsFinite(x.TitleDuration) || x.TitleDuration is < 0 or > 1800)) throw new InvalidOperationException("Başlık zamanları geçersiz.");
 

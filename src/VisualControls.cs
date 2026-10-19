@@ -93,6 +93,8 @@ public class StudioButton : Button
     public bool WrapCaption;
     public string? LeadingIcon;
     public bool UppercaseCaption;
+    public Color GlassAccent=Color.Empty;
+    public bool NeonFill;
 
     readonly ToolTip helpTip=new(){AutoPopDelay=20000,InitialDelay=350,ReshowDelay=100,ShowAlways=true};
 
@@ -156,13 +158,26 @@ public class StudioButton : Button
         var face = new Rectangle(1, 1, Width - 3, Height - 3);
         using var shape=Shapes.Round(face,Math.Min(11,Math.Min(face.Width,face.Height)/2));
         bool primary = BackColor == Theme.Teal;
-        Color top = Completed ? Theme.SuccessSurface : CurrentStep ? Theme.AccentSurface : primary ? Theme.AccentSurface : Theme.Elevated;
-        Color bottom = top; if (pressed) top = bottom = Theme.Selection; else if (hovered) top = bottom = primary || CurrentStep ? Color.FromArgb(35,78,137) : Theme.Hover;
+        Color top = Completed ? Theme.SuccessSurface : CurrentStep ? Theme.AccentSurface : primary ? Color.FromArgb(79,70,229) : Theme.Elevated;
+        Color bottom = primary&&!Completed&&!CurrentStep?Color.FromArgb(8,145,178):StudioGlass.Blend(top,Theme.Shell,.2);
+        if(!GlassAccent.IsEmpty){top=NeonFill?GlassAccent:StudioGlass.Blend(Theme.Panel,GlassAccent,.27);bottom=NeonFill?StudioGlass.Blend(GlassAccent,Color.White,.08):StudioGlass.Blend(Theme.Panel,GlassAccent,.12);}
+        if(Completed)bottom=top;
+        if (pressed) {top=StudioGlass.Blend(top,Theme.Shell,.25);bottom=StudioGlass.Blend(bottom,Theme.Shell,.25);} else if (hovered) {top=StudioGlass.Blend(top,Color.White,.1);bottom=StudioGlass.Blend(bottom,Color.White,.06);}
         if(!Enabled&&!Completed){top=bottom=Theme.Panel;}
         using(var fill=new LinearGradientBrush(face,top,bottom,90f))g.FillPath(fill,shape);
-        using(var border=new Pen(Completed ? Theme.Success : CurrentStep||Focused ? Theme.Teal : Theme.Border,CurrentStep||Focused?1.5f:1f))g.DrawPath(border,shape);
+        if(Enabled&&!Completed){
+            var state=g.Save();g.SetClip(shape,CombineMode.Intersect);
+            var reflection=new Rectangle(face.Left,face.Top,face.Width,Math.Max(2,face.Height/2));
+            using(var gloss=new LinearGradientBrush(reflection,Color.FromArgb(hovered?66:43,255,255,255),Color.FromArgb(0,255,255,255),90f))g.FillRectangle(gloss,reflection);
+            g.Restore(state);
+            var accent=!GlassAccent.IsEmpty?GlassAccent:primary?StudioGlass.Cyan:StudioGlass.Indigo;
+            using var innerEdge=new Pen(Color.FromArgb(hovered?100:48,accent),2);
+            using var inner=Shapes.Round(new Rectangle(3,3,Width-7,Height-7),Math.Min(9,Math.Min(Width-7,Height-7)/2));g.DrawPath(innerEdge,inner);
+        }
+        using(var border=new Pen(Completed ? Theme.Success : CurrentStep||Focused ? Theme.Teal : !GlassAccent.IsEmpty?Color.FromArgb(170,GlassAccent):primary?StudioGlass.Indigo:Theme.Border,CurrentStep||Focused?1.5f:1f))g.DrawPath(border,shape);
+        if(Enabled&&!Completed){using var glint=new Pen(Color.FromArgb(38,255,255,255));g.DrawLine(glint,face.Left+10,face.Top+1,face.Right-10,face.Top+1);}
         
-        Color ink=Enabled||Completed?Theme.Text:Theme.Muted;
+        Color ink=Enabled&&NeonFill?Color.FromArgb(15,23,42):Enabled||Completed?Theme.Text:Theme.Muted;
 
         if (Completed && !Equals(Tag,"wizard-step")) {
 
@@ -242,7 +257,7 @@ public sealed class StudioGradientPanel : Panel
     protected override void OnPaintBackground(PaintEventArgs e)
     {
         if (ClientSize.Width < 1 || ClientSize.Height < 1) return;
-        using var gradient = new LinearGradientBrush(ClientRectangle, Theme.Bg, Theme.Bg, 35f);
+        using var gradient = new LinearGradientBrush(ClientRectangle, Theme.Bg, Theme.Shell, 35f);
         e.Graphics.FillRectangle(gradient, ClientRectangle);
     }
 }
@@ -273,8 +288,11 @@ public sealed class StudioCard : Panel
 
         using var path = Shapes.Round(new(0, 0, Width - 1, Height - 1), Math.Min(CornerRadius,Math.Min(Width-1,Height-1)/2));
 
-        using var fill = new SolidBrush(Completed ? Theme.SuccessSurface : BackColor); g.FillPath(fill, path);
+        var surface=Completed?Theme.SuccessSurface:BackColor;
+        if(Completed||Borderless){using var fill=new SolidBrush(surface);g.FillPath(fill,path);}
+        else StudioGlass.Surface(g,new Rectangle(0,0,Width-1,Height-1),surface,CurrentStep?StudioGlass.Cyan:StudioGlass.Indigo,CornerRadius,CurrentStep);
         using var border = new Pen(CurrentStep ? Theme.Teal : Completed ? Theme.Success : Theme.Border, CurrentStep ? 3 : 1); if(!Borderless)g.DrawPath(border, path);
+        if(!Borderless&&Width>24){using var light=new Pen(Color.FromArgb(22,255,255,255));g.DrawLine(light,12,1,Width-13,1);}
 
     }
 

@@ -793,6 +793,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
         finalArgs.AddRange(["-vf", vf, "-c:v", "libx264", "-preset", renderSettings.EncodingPreset, "-crf", renderSettings.Crf.ToString(), "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-t", Media.Num(offset), "-movflags", "+faststart", output]);
 
         await Media.Exec(store.Ffmpeg, finalArgs, folder, ct); report?.Invoke(.82);
+        await TimelineEffects.Apply(store,script,output,offset,ct);
 
         if (renderSettings.VideoLogoEnabled) {
 
@@ -938,6 +939,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
         if (store.Settings.YouTubeChannelId == "") throw new InvalidOperationException("Bağlantı Merkezi → YouTube kanalını doğrula tuşuyla hedef kanalı kaydet; sonra yeniden onayla.");
 
         if (Rules.Scripts(e).SelectMany(x => x.Script.Scenes).Any(s => !s.RightsConfirmed)) throw new InvalidOperationException("Yerel görüntü kullanım hakları doğrulanmalı. İncele/onayla ekranında kaynakları kontrol edip hak teyidini kaydet.");
+        if(Rules.Scripts(e).SelectMany(x=>x.Script.SoundEffects??[]).Any(x=>x.Enabled&&!x.RightsConfirmed))throw new InvalidOperationException("Ses efektinin kullanım iznini ses arşivinden doğrula.");
 
         e.ApprovedChannelId = store.Settings.YouTubeChannelId;
 

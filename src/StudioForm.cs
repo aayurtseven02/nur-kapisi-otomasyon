@@ -93,7 +93,7 @@ public sealed partial class StudioForm : Form
 
         var side = new Panel { Dock = DockStyle.Left, Width = 268, BackColor = Theme.Sidebar, Padding = new Padding(0, 20, 0, 8) };
 
-        using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-dark.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=Icon?.ToBitmap() ?? new Bitmap(logoSource),Location=new(14,10),Size=new(56,56),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);var brandTitle=Theme.Label("TubeFlow",17,true,width:170,height:48);brandTitle.Location=new(78,15);side.Controls.Add(brandTitle);var sectionLabel=Theme.Label("Çalışma alanı",10,true,Theme.Muted,240,32);sectionLabel.Location=new(16,92);side.Controls.Add(sectionLabel);FormClosed+=(_,_)=>brand.Image?.Dispose();
+        using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-dark.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=AppBranding.Logo(),Location=new(14,10),Size=new(235,70),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);var brandTitle=Theme.Label("TubeFlow",17,true,width:170,height:48);brandTitle.Location=new(78,15);brandTitle.Visible=false;side.Controls.Add(brandTitle);var sectionLabel=Theme.Label("Çalışma alanı",10,true,Theme.Muted,240,32);sectionLabel.Location=new(16,92);side.Controls.Add(sectionLabel);FormClosed+=(_,_)=>brand.Image?.Dispose();
 
         channelHeading.Location = new(20, 6); channelHeading.AutoEllipsis = true; channelHeading.Visible = false;
 
@@ -143,7 +143,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         engine.Changed += () => { if (IsHandleCreated && !IsDisposed && Interlocked.Exchange(ref refreshQueued, 1) == 0) BeginInvoke(() => { Interlocked.Exchange(ref refreshQueued, 0); if (IsDisposed) return; UpdateFooter(); appHeader.Busy=engine.Busy; appHeader.Invalidate(); if (current is "İçerik paketleri" or "Video hazırla" && packageShape == PackageShape()) { foreach (var update in packageUpdates.Values) update(); } else if (current is "İçerik paketleri" or "Video hazırla" or "Videolarım" or "İşlem kayıtları" or "Üretim ve yayın planı" or "Stüdyo") RefreshCurrentPage(); }); };
 
-        ticker.Tick += async (_, _) => await Tick(); ticker.Start();
+        ticker.Tick += async (_, _) => { assistantActions.Observe(); await Tick(); }; ticker.Start();
 
         bool closing = false;
 
@@ -1913,6 +1913,10 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         var elevenVoice = TextSetting(voice, "ElevenLabs ses kimliği", s.VoiceId, v => s.VoiceId = v); TextSetting(voice, "ElevenLabs ses modeli", s.VoiceModel, v => s.VoiceModel = v); Numeric(voice, "Konuşma hızı", (decimal)s.VoiceSpeed, .7m, 1.2m, v => s.VoiceSpeed = (double)v, 2);
 
+        voice.Controls.Add(Theme.Button("Ses Stüdyosu • klonlama ve altyazı",VoiceStudio,true,420));
+        Numeric(voice,"ElevenLabs ses kararlılığı",(decimal)s.ElevenStability,0,1,v=>s.ElevenStability=(double)v,2);
+        Numeric(voice,"ElevenLabs referans sese benzerlik",(decimal)s.ElevenSimilarity,0,1,v=>s.ElevenSimilarity=(double)v,2);
+        Numeric(voice,"ElevenLabs anlatım vurgusu",(decimal)s.ElevenStyle,0,1,v=>s.ElevenStyle=(double)v,2);
         voice.Controls.Add(Theme.Button("ElevenLabs seslerini listele", () => _ = Safe(async () => { var list = await new Services(store, _ => { }).Voices(CancellationToken.None); using var d = Dialog("Ses çeşitleri", 800, 650); var text = Theme.Input(string.Join("\r\n", list.Select(v => v.Name + "  →  " + v.Id)), true, 720); text.Dock = DockStyle.Fill; text.ReadOnly = true; d.Controls.Add(text); d.ShowDialog(this); }), false, 270));
 
         var music = Theme.Input(s.MusicPath, width: 650); Field(voice, "Müzik dosyası", music); saves.Add(() => s.MusicPath = music.Text.Trim()); voice.Controls.Add(Theme.Button("Müzik dosyası seç", () => { using var d = new OpenFileDialog { Filter = "Ses|*.mp3;*.wav;*.m4a;*.ogg" }; if (d.ShowDialog() == DialogResult.OK) music.Text = d.FileName; }, false, 240));

@@ -4,6 +4,12 @@ namespace AnkaStudio;
 
 internal static class AppBranding
 {
+    public static Image Logo()
+    {
+        using var stream=typeof(AppBranding).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-horizontal.png")!;
+        using var source=Image.FromStream(stream);var logo=new Bitmap(710,200);
+        using(var g=Graphics.FromImage(logo)){g.Clear(Color.Transparent);g.DrawImage(source,new Rectangle(0,0,710,200),new Rectangle(155,185,710,200),GraphicsUnit.Pixel);}return logo;
+    }
     [DllImport("shell32.dll")] static extern void SHChangeNotify(uint events,uint flags,IntPtr item1,IntPtr item2);
     public static bool ForwardLegacy(string[] args){
         var next=Path.Combine(AppContext.BaseDirectory,"TubeFlow.exe");

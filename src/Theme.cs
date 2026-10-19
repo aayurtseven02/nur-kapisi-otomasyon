@@ -52,9 +52,9 @@ public static class Theme
 
     }
 
-    public static readonly Color Shell = Color.FromArgb(30,34,32), Sidebar = Color.FromArgb(27,30,28), Hover = Color.FromArgb(46,49,47), Selection = Color.FromArgb(42,46,44), AccentSurface = Color.FromArgb(25,62,115);
-    public static Color Bg = Color.FromArgb(24,24,24), Panel = Color.FromArgb(29,29,29), Elevated = Color.FromArgb(48,48,48), Text = Color.FromArgb(236,236,236), Muted = Color.FromArgb(153,155,154), Teal = Color.FromArgb(76,139,235), Orange = Color.FromArgb(230,177,92), Border = Color.FromArgb(52,55,53);
-    public static readonly Color Success = Color.FromArgb(108, 203, 143), SuccessSurface = Color.FromArgb(32, 64, 46);
+    public static readonly Color Shell = Color.FromArgb(2,6,23), Sidebar = Color.FromArgb(15,23,42), Hover = Color.FromArgb(39,53,78), Selection = Color.FromArgb(40,48,82), AccentSurface = Color.FromArgb(30,27,75);
+    public static Color Bg = Color.FromArgb(11,18,34), Panel = Color.FromArgb(17,28,51), Elevated = Color.FromArgb(30,41,59), Text = Color.FromArgb(241,245,249), Muted = Color.FromArgb(148,163,184), Teal = Color.FromArgb(34,211,238), Orange = Color.FromArgb(251,191,36), Border = Color.FromArgb(40,55,78);
+    public static readonly Color Success = Color.FromArgb(52,211,153), SuccessSurface = Color.FromArgb(6,78,59);
 
     static readonly HashSet<string> InstalledFonts = FontFamily.Families.Select(f => f.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
     static string PickFont(params string[] names) => names.FirstOrDefault(InstalledFonts.Contains) ?? "Segoe UI";
@@ -70,6 +70,10 @@ public static class Theme
 
         var b = new StudioButton { Text = text, AutoSize=false, Width = width, Height = 46, FlatStyle = FlatStyle.Flat, Font = Font(10, false), BackColor = primary ? Teal : Elevated, ForeColor = Text, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 10, 0) };
         string name = text.ToLower(CultureInfo.GetCultureInfo("tr-TR"));
+        if(name.Contains("sil")||name.StartsWith("durdur"))b.GlassAccent=StudioGlass.Rose;
+        else if(name.Contains("kapak")||name.Contains("tasarla")||name.Contains("resim stüdyosu"))b.GlassAccent=StudioGlass.Purple;
+        else if(name.Contains("müzik")||name.Contains("ses arşivi"))b.GlassAccent=StudioGlass.Purple;
+        else if(name.Contains("kaydet")||name.Contains("onayla"))b.GlassAccent=StudioGlass.Emerald;
         if (name == "işlemi iptal et") { b.BackColor = Warning; b.ForeColor = Text; }
         if (name is "stok video arşivi" or "stok videolar") b.LeadingIcon = "film";
         else if (name is "ses ve müzik arşivi" or "ses ve müzik") b.LeadingIcon = "music";

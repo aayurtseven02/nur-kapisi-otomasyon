@@ -16,6 +16,7 @@ public sealed class AssistantActions(Store store,Engine engine,Func<Episode?> se
     public const string Tools="""
 Available application tools, one per response, JSON {"answer":"short Turkish explanation","tool":{"name":"...","args":{...}}}. Omit tool when finished.
 inspect: selected project's status/settings/error, no args.
+diagnose: local error diagnosis with concrete recovery options, no args. Does not change settings or start production.
 list_voices: args provider exactly 'Google Cloud TTS', 'ElevenLabs', 'Windows / ücretsiz' or 'Piper / ücretsiz'. Returns valid IDs; never invent a voice or infer gender from its name.
 list_music: locally available music IDs/names, no args.
 set_voice: args provider and id copied EXACTLY from list_voices. Changes selected project only.
@@ -51,6 +52,8 @@ No other tools exist. Cannot read/write software code, run commands, change API 
     {
         ct.ThrowIfCancellationRequested();if(args.ValueKind!=JsonValueKind.Object)throw new InvalidOperationException("Asistan işlem parametreleri geçersiz.");var e=Project(projectId);
         if(name=="inspect")return Inspect(e,share);
+        if(name=="diagnose")return Diagnose(e);
+        if(name=="open_setup"){navigate("Yüklenmesi gerekenler");return "Kurulum ve API doğrulama listesi açıldı.";}
         if(name=="navigate"){string page=Str(args,"page");if(!new[]{"Video hazırla","Videolarım","Bağlantı Merkezi","Yönetim ayarları"}.Contains(page))throw new InvalidOperationException("Bu ekran açılamaz.");navigate(page);return "Ekran açıldı: "+page;}
         if(name=="list_music")return JsonSerializer.Serialize(new AudioLibrary(store).List().Where(x=>File.Exists(x.File)).Select(x=>new{x.Id,x.Name,x.RightsConfirmed}));
         if(name=="list_voices"){
@@ -102,7 +105,27 @@ No other tools exist. Cannot read/write software code, run commands, change API 
         if(fixes.Count>0)Change(e,string.Join("; ",fixes),()=>{if(subtitle){f.SubtitleStyle="Sade beyaz";foreach(var row in Rules.Scripts(e))row.Script.TextLayout=f.Layout(settings);}if(voice)SaveSettings(e,settings);if(split)f.Split=true;});
         var unresolved=new List<string>();if(e.Music&&!File.Exists(settings.MusicPath))unresolved.Add("Seçili müzik dosyası bulunamadı; arşivden yeniden seçilmeli.");if(!File.Exists(store.Probe))unresolved.Add("FFmpeg/FFprobe kurulumu bulunamadı.");if(!f.TextApproved)unresolved.Add("Anlatım metni kullanıcı onayı bekliyor.");
         try{f.ValidateSource(e);}catch(Exception ex){unresolved.Add(SupportPrivacy.Clean(store,ex.Message));}try{f.ValidateDesign();}catch(Exception ex){unresolved.Add(SupportPrivacy.Clean(store,ex.Message));}
-        return (fixes.Count==0?"Bilinen otomatik ayar hatası bulunamadı.":"Düzeltildi: "+string.Join("; ",fixes))+" "+string.Join(" ",unresolved)+" Üretim kendiliğinden başlatılmadı; kod değiştirilmedi.";
+        return (fixes.Count==0?"Bu sorun için otomatik ayar değişikliği uygulanmadı.":"Düzeltildi: "+string.Join("; ",fixes))+" "+string.Join(" ",unresolved)+"\n"+Diagnose(e)+"\nÜretim başlatılmadı. Devam etmek için ‘Üretimi yeniden dene’ seçeneğini kullan.";
+    }
+    public string Diagnose(Episode e)
+    {
+        if(engine.Busy)return "Bir işlem sürüyor: "+SupportPrivacy.Clean(store,engine.ActivityName)+". İşlem göstergesini izle; gerekirse üretim ekranındaki Durdur ile hazır işleri koruyarak durdur.";
+        string error=e.Error.ToLowerInvariant();string detail;
+        if(error.Contains("görüntü")&&(error.Contains("eşleş")||error.Contains("bulunamadı")))detail="Yüklenen görüntüler ile anlatım eşleştirmesi tamamlanmamış. Mevcut arşivden en uygun dosyayı seçme adımını yeniden dene; analiz önbelleği tekrar kullanılır. Kaynak dosyaları değiştirmen gerekmez.";
+        else if(error.Contains("görsel analiz")||error.Contains("ollama")||error.Contains("görsel okuma"))detail="Görsel okuma bağlantısı çalışmıyor. Yüklenmesi gerekenler ekranında Ollama görsel modelini ve izinli API bağlantılarını doğrula. Yalnız metin modeli görüntü okuyamaz.";
+        else if(error.Contains("bellek")||error.Contains("out of memory")||error.Contains("cuda"))detail="Görsel motorunda bellek/aygıt sorunu olabilir. Diğer GPU işlerini kapat; motor ve model uyumluluğunu kontrol et. Daha hafif üretim ayarlarıyla tekrar dene.";
+        else if(error.Contains("altyazı")||error.Contains("eşleme")||error.Contains("alignment"))detail="Ses ve altyazı eşleştirmesi tamamlanmamış. Özgün ses korunur; mevcut kelime ve ses önbelleğiyle yeniden dene. Sorun tekrarlanırsa üretim kaydındaki ilgili ses parçası incelenmeli; sırf devam etmek için altyazıyı kapatmıyorum.";
+        else if(error.Contains("429")||error.Contains("kota")||error.Contains("quota"))detail="Sağlayıcı kota/hız sınırına takılmış olabilir. Yüklenmesi gerekenler ekranından bağlantı durumunu kontrol et. Kota yenilendiğinde veya başka izinli sağlayıcı seçildiğinde yeniden dene; ücret izni değiştirilmeyecek.";
+        else if(error.Contains("401")||error.Contains("403")||error.Contains("anahtar"))detail="Hizmet erişimi veya yetkilendirme sorunu var. Merkez • Ayarlar bölümünde ilgili bağlantıyı doğrula; anahtar değerini sohbete yazma.";
+        else if(error.Contains("comfy")||error.Contains("motor")||error.Contains("workflow"))detail="Görsel motorunu ve iş akışındaki model dosyalarını kontrol et. ‘Motoru kontrol et’ seçeneği bağlantı ve uyumluluğu sınar; görüntü üretmez.";
+        else if(error=="")detail="Kayıtlı üretim hatası yok. Son hazırlık adımında bir uyarı gördüysen bölüm hazırlığını tekrar dene; yeni hata proje kaydına alınacak. ‘Ayarları onar’ bilinen ayar sorunlarını kontrol eder.";
+        else detail="İşlem tamamlanamamış; bu hata için doğrulanmış otomatik çözüm yok. Önce ‘Ayarları onar’, ardından ‘Üretimi yeniden dene’ seçilebilir. Tekrarlanırsa üretim kaydını incele; kod değişikliği gereken hatayı ayar değişikliğiyle çözülmüş gibi göstermiyorum.";
+        return "Sorun incelemesi\n"+detail+"\nSeçenekler: Ayarları onar • Motoru kontrol et • Üretimi yeniden dene • Kurulum listesini aç.";
+    }
+    public void PreparationFailed(Episode e,Exception error)
+    {
+        if(error is OperationCanceledException)return;
+        e.Error=SupportPrivacy.Clean(store,error.Message);e.Log("Bölüm hazırlığı tamamlanamadı: "+e.Error);store.Save();Notice?.Invoke(Diagnose(e));
     }
     public void Observe()
     {

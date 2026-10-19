@@ -120,8 +120,12 @@ public sealed class YouTube(Store store, HttpClient? client = null, Func<Cancell
 
     {
 
-        var credits = string.Join("\n", script.Scenes.Select(s => s.Attribution).Concat(script.MusicTrack?.Enabled == true ? new[] { script.MusicTrack.Attribution } : Array.Empty<string>()).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct());
+        // Visual matching explanations are project diagnostics, not licensing credits.
+        // Normalize older projects too; retain all real provider/license attributions.
+        var credits = string.Join("\n", script.Scenes.Select(s => s.UserLocal&&string.IsNullOrWhiteSpace(s.LicenseUrl)&&s.Attribution.StartsWith("Yüklenen dosya • AI metin eşleşmesi:",StringComparison.Ordinal)?"Kullanıcı tarafından eklenen görsel":s.Attribution).Concat(script.MusicTrack?.Enabled == true ? new[] { script.MusicTrack.Attribution } : Array.Empty<string>()).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct());
 
+        var effectCredits=(script.SoundEffects??[]).Where(x=>x.Enabled&&!string.IsNullOrWhiteSpace(x.Attribution)).Select(x=>x.Attribution);
+        credits=string.Join("\n",new[]{credits}.Concat(effectCredits).Where(x=>x!="").Distinct());
         if (credits.Length > 4400) throw new InvalidOperationException("Zorunlu kaynak yazıları açıklama sınırına sığmıyor. Kaynakları düzenlemeden yükleme yapılamaz.");
 
         var optional = script.Description.Trim();

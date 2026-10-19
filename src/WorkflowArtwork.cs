@@ -4,6 +4,14 @@ namespace AnkaStudio;
 
 public static class WorkflowArtwork
 {
+    public static void SelectCover(Episode episode,Settings settings,CreationFlow flow,string path)
+    {
+        if(!File.Exists(path))throw new InvalidOperationException("Seçilen kapak dosyası bulunamadı; arşivden yeniden seç.");
+        using(var image=Image.FromFile(path)){if((long)image.Width*image.Height>40_000_000)throw new InvalidOperationException("Kapak görseli çok büyük.");}
+        settings.CoverMode="Kendi PNG kapak";settings.CoverPng=Path.GetFullPath(path);settings.CoverAiEnabled=false;flow.CoverChoice="file";
+        episode.Creation=flow;episode.ProductionSettings??=new Settings();PackageArtwork.Apply(episode.ProductionSettings,settings,PackageArtwork.CoverFields);
+        Apply(episode,settings,"file",true);
+    }
     public static string Signature(Settings settings) => JsonSerializer.Serialize(
         PackageArtwork.Fields.ToDictionary(name => name, name => typeof(Settings).GetProperty(name)!.GetValue(settings)), Json.Options);
 

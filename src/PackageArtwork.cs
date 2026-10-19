@@ -8,7 +8,7 @@ public static class PackageArtwork
 
 {
 
-    public static readonly string[] CoverFields = "CoverLocalEnabled,CoverLocalWorkflow,CoverLocalModel,CoverLocalQuality,CoverTitleStyle,CoverSubtitleText,CoverDesignInstructions,CoverReferenceImage,CoverAiEnabled,CoverPaidAllowed,CoverProviderOrder,CoverNvidiaModel,CoverGeminiModel,CoverOpenAiModel,CoverMonthlyRequests,CoverStyle,CoverAutoStyle,CoverMode,CoverPng,CoverBackground,CoverLogo,CoverChannelName,CoverShowChannelName,CoverFont,CoverLogoPosition,CoverAccent".Split(',');
+    public static readonly string[] CoverFields = "CoverLocalEnabled,CoverLocalWorkflow,CoverLocalModel,CoverLocalQuality,CoverLocalResolution,CoverTitleStyle,CoverSubtitleText,CoverDesignInstructions,CoverReferenceImage,CoverAiEnabled,CoverPaidAllowed,CoverProviderOrder,CoverNvidiaModel,CoverGeminiModel,CoverOpenAiModel,CoverMonthlyRequests,CoverStyle,CoverAutoStyle,CoverMode,CoverPng,CoverBackground,CoverLogo,CoverChannelName,CoverShowChannelName,CoverFont,CoverLogoPosition,CoverAccent".Split(',');
 
     public static readonly string[] CardFields = "OpeningCardEnabled,OpeningCardFile,OpeningCardSeconds,ClosingCardEnabled,ClosingCardFile,ClosingCardSeconds".Split(',');
 

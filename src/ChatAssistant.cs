@@ -50,7 +50,7 @@ public sealed class ChatAssistant : UserControl
 
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
-        foreach (var h in new[] { 70, 38, 50, 0, 28, 82, 60 }) layout.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
+        foreach (var h in new[] { 70, 38, 112, 0, 28, 82, 60 }) layout.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
 
         var note = Theme.Label("Asistan ses, sahne, altyazı ve müzik ayarlarını düzenler; hataları inceler ve isteğinle üretimi yeniden dener. Koda müdahale etmez, video silmez/yayımlamaz. Seçili AI sağlayıcısını kullanır; proje metnini paylaşmak isteğe bağlıdır.", 9, width: 460, height: 118); note.Dock = DockStyle.Fill;
 
@@ -62,9 +62,9 @@ public sealed class ChatAssistant : UserControl
 
         actions.Controls.AddRange([send, Theme.Button("Durdur", () => request?.Cancel(), false, 100), Theme.Button("Geri al",()=>_=Undo(),false,100)]);
 
-        var quick=new FlowLayoutPanel{Dock=DockStyle.Fill,WrapContents=false};
+        var quick=new FlowLayoutPanel{Dock=DockStyle.Fill,WrapContents=true,AutoScroll=true};
 
-        foreach(var (label,prompt) in new[]{("Durumu incele","Seçili projenin durumunu ve ayarlarını kontrol et."),("Hatayı düzelt","Seçili projenin hatasını incele, uygun ayarları düzelt ve mümkünse üretime devam et.")})quick.Controls.Add(Theme.Button(label,()=>input.Text=prompt,false,125));
+        foreach(var (label,tool) in new[]{("Sorunu incele","diagnose"),("Ayarları onar","repair_settings"),("Motoru kontrol et","check_visual_engine"),("Üretimi yeniden dene","retry_production"),("Kurulum listesini aç","open_setup")})quick.Controls.Add(Theme.Button(label,()=>_=LocalAction(tool),false,160));
         if(agent!=null){var auto=Theme.Check("Oto ayar",agent.Preferences.AutoRepair,110);auto.AccessibleName="Asistan otomatik ayar onarımı";auto.CheckedChanged+=(_,_)=>agent.SetAutoRepair(auto.Checked);quick.Controls.Add(auto);agent.Notice+=AgentNotice;Disposed+=(_,_)=>agent.Notice-=AgentNotice;}
 
         share.Dock=DockStyle.Fill;share.ForeColor=Theme.Text;
@@ -82,6 +82,15 @@ public sealed class ChatAssistant : UserControl
     }
 
     void Welcome() => Append("TubeFlow", "Merhaba! Proje ayarlarını düzenleyebilir ve hataları inceleyebilirim. Örneğin: ‘Genel ayarlardaki sesi kullan’, ‘5–10 sahne ayarla’, ‘Müzik seviyesini %15 yap’ veya ‘Hatayı düzelt ve yeniden dene’. Yaptığım ayarları Geri al ile geri çevirebilirsin.");
+    async Task LocalAction(string name)
+    {
+        if(request!=null||agent==null)return;LoadHistory();var selected=project();if(selected==null){Append("Uyarı","Önce Stüdyo ekranında bir proje seç.");return;}
+        var cancellation=new CancellationTokenSource(TimeSpan.FromHours(2));request=cancellation;send.Enabled=input.Enabled=false;status.Text="Asistan • işlem yürütülüyor";
+        try{using var doc=JsonDocument.Parse("{}");var result=await agent.Execute(name,doc.RootElement,selected.Id,false,name=="retry_production"?"Üretimi yeniden dene":"Yerel kontrol",cancellation.Token);Append("İşlem",result);history.Add("Anka: "+result);SaveHistory();}
+        catch(OperationCanceledException){Append("Uyarı","İşlem durduruldu; hazır işler korundu.");}
+        catch(Exception ex){Append("Uyarı",SupportPrivacy.Clean(store,ex.Message));Append("Cortex",agent.Diagnose(selected));}
+        finally{request=null;cancellation.Dispose();if(!IsDisposed){send.Enabled=input.Enabled=true;status.Text="Yerel işlem tamamlandı";}}
+    }
     void AgentNotice(string text){if(IsDisposed)return;if(InvokeRequired){BeginInvoke(()=>AgentNotice(text));return;}Append("İşlem",text);}
     async Task Undo(){if(request!=null||agent==null||project() is not {} selected)return;try{using var doc=JsonDocument.Parse("{}");Append("İşlem",await agent.Execute("undo",doc.RootElement,selected.Id,false,"Geri al",CancellationToken.None));}catch(Exception ex){Append("Uyarı",SupportPrivacy.Clean(store,ex.Message));}}
 
@@ -113,6 +122,9 @@ public sealed class ChatAssistant : UserControl
     {
 
         var message = input.Text.Trim(); if (message == "" || request != null) return;
+        if(agent!=null&&project()!=null&&new[]{"hatayı düzelt","hatayı düzelt ve yeniden dene","seçili projenin hatasını incele, uygun ayarları düzelt ve mümkünse üretime devam et."}.Contains(message.ToLowerInvariant())){
+            input.Clear();await LocalAction("repair_settings");await LocalAction("retry_production");return;
+        }
 
         LoadHistory(); message=SupportPrivacy.Clean(store,message); input.Clear(); Append("Sen", message); send.Enabled = false; input.Enabled = false;
 

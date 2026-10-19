@@ -38,7 +38,7 @@ public static class WorkflowMedia
         if(f.AutomaticStoryboard){ends=await StoryboardSections.Plan(f.Text,(system,prompt,token)=>services.Generate(system,prompt,token),ct,e.Log);e.Log($"Anlatım {ends.Count} ayrı görsel sahneye ayrıldı.");}
         else if(f.Split==true){
             Report("Metin konu ve cümle geçişlerine göre bölümleniyor");
-            ends=await UploadedSections.Plan(f.Text,(system,prompt,token)=>services.Generate(system,prompt,token,maxOutputTokens:4096),ct,e.Log);
+            ends=f.Mode=="manual"?UploadedSections.Fallback(f.Text):await UploadedSections.Plan(f.Text,(system,prompt,token)=>services.Generate(system,prompt,token,maxOutputTokens:4096),ct,e.Log);
         }
 
         var script=new VideoScript{Title=e.Topic[..Math.Min(100,e.Topic.Length)],Description=e.Topic,ThumbnailText=e.Topic[..Math.Min(100,e.Topic.Length)],TextLayout=f.Layout(VideoSettings.For(store.Settings,e))};int start=0;
@@ -82,7 +82,7 @@ public static class WorkflowMedia
         foreach(var (_,vertical,script) in Rules.Scripts(e))foreach(var scene in script.Scenes){ct.ThrowIfCancellationRequested();index++;if(VisualReady(e,scene,store.Settings)){notify();continue;}
             e.CurrentStage=$"Görseller • sahne {index}";e.Log(e.CurrentStage);notify();string selected=allowed.Count==0?"":allowed[(index-1)%allowed.Count];
             try{
-                if(selected=="own"){scene.StockFile=f.Files[(index-1)%f.Files.Count];if(!File.Exists(scene.StockFile))throw new InvalidOperationException("Eklenen dosya bulunamadı.");scene.AiImageHash="";scene.AiImageQuality="";scene.UserLocal=true;scene.RightsConfirmed=false;scene.Attribution="Kullanıcı dosyası";continue;}
+                if(selected=="own"&&(f.Mode!="manual"||f.Files.Count==1&&Rules.Scripts(e).Sum(x=>x.Script.Scenes.Count)==1)){scene.StockFile=f.Files[(index-1)%f.Files.Count];if(!File.Exists(scene.StockFile))throw new InvalidOperationException("Eklenen dosya bulunamadı.");scene.AiImageHash="";scene.AiImageQuality="";scene.UserLocal=true;scene.RightsConfirmed=false;scene.Attribution="Kullanıcı dosyası";continue;}
                 if(f.Mode=="manual")throw new InvalidOperationException("Görsel seç veya bu bölüm için AI yardımını kullan.");
                 async Task Ai(){
                     if(storyFailure!=null)throw new InvalidOperationException("AI görsel bağlantısı hazırlanamadı.",storyFailure);

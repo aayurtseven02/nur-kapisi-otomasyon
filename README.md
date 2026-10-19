@@ -1,8 +1,8 @@
-# TubeFlow 0.4.28
+# TubeFlow 0.4.29
 
 **Windows üzerinde metinden, hazır sesten ve görsel arşivden video hazırlama, inceleme ve yayınlama uygulaması.**
 
-Bu README; son yayımlanan **0.4.28** kaynak kodunun kullanım kılavuzu, çalışma mekanikleri ve geliştirici başvurusudur. Belgeleme tarihi **19 Ekim 2026**. Uygulamanın mevcut davranışları anlatılır; bölümleme sonrası erken zaman çizelgesi, Cortex maskotu ve ücretsiz yerel görsel analizi bu sürümde uygulanmıştır. Model adları ve ayarların başlangıç değerleri kaynak kodundan alınır; ilgili hizmette her zaman kullanılabileceklerine veya ücretsiz olduklarına ilişkin bir taahhüt değildir.
+Bu README; son yayımlanan **0.4.29** kaynak kodunun kullanım kılavuzu, çalışma mekanikleri ve geliştirici başvurusudur. Belgeleme tarihi **19 Ekim 2026**. Uygulamanın mevcut davranışları anlatılır; bölümleme sonrası erken zaman çizelgesi, Cortex maskotu ve ücretsiz yerel görsel analizi bu sürümde uygulanmıştır. Model adları ve ayarların başlangıç değerleri kaynak kodundan alınır; ilgili hizmette her zaman kullanılabileceklerine veya ücretsiz olduklarına ilişkin bir taahhüt değildir.
 
 Ana çalıştırılabilir dosya **TubeFlow.exe**, proje dosyası **src/AnkaStudio.csproj**, C# ad alanı **AnkaStudio** olarak kalmıştır. Eski kurulumların veri ve güncelleme uyumluluğu için bazı dizin, dosya ve protokol adları hâlâ `AnkaStudio` / `anka` içerir. Bunlar ikinci bir ürün veya ilave dil desteği anlamına gelmez.
 
@@ -37,7 +37,7 @@ Ana çalıştırılabilir dosya **TubeFlow.exe**, proje dosyası **src/AnkaStudi
 27. [Komut satırı ve önizleme araçları](#komutlar)
 28. [Sorun giderme](#sorun-giderme)
 29. [Gerçek sınırlar ve önerilen geliştirme](#sinirlar)
-30. [0.4.28 doğrulama ve değişiklik özeti](#dogrulama)
+30. [0.4.29 doğrulama ve değişiklik özeti](#dogrulama)
 31. [Ek A — Kaynak dosyalarının tamamı](#kaynak-katalogu)
 32. [Ek B — Alanlar, türler ve başlangıç değerleri](#alan-katalogu)
 33. [Ek C — Tür ve metot imzaları](#metot-katalogu)
@@ -54,7 +54,7 @@ TubeFlow bir masaüstü üretim koordinatörüdür. Metin servisleri, seslendirm
 | Araştırma | Kaynak URL’leri, araştırma servisi, kaynak listesi, açıklamaya kaynak ekleme | Otomatik araştırma yolunda kaynak doğrulama vardır; doğruluk için insan incelemesi yine gerekir. |
 | Metin denetimi | Süre/kelime bütçesi, Türkçe yazım denetimi, eksik metni tamamlama, sahne başlıkları, seri başlıkları | Kullanıcı anlatımı yolunda otomatik tamamlama/yazım müdahalesi kısıtlanır. |
 | Sahneleme | AI görsellerinde 5–10 sahne, diğer bölümleme yolunda en fazla 50 grup, cümle temelli kurtarma | Bunlar farklı akışlardır; bütün videoların aynı sahne sayısı yoktur. |
-| Yüklenen medya | Fotoğraf/video içeriğini analiz etme, anlatıma göre dosya seçme, açıklama önbelleği | 0.4.28 anlamsal yol: otomatik mod + yalnız kendi görselleri. Karma kaynak akışının tümü bu davranışa dönüştürülmüş değildir. |
+| Yüklenen medya | Fotoğraf/video içeriğini analiz etme, anlatıma göre dosya seçme, açıklama önbelleği | 0.4.29 anlamsal yol: otomatik mod + yalnız kendi görselleri. Karma kaynak akışının tümü bu davranışa dönüştürülmüş değildir. |
 | AI görsel | Ayrı sahne görselleri, karakter tarifi, referans, yerel/bulut seçenekleri, kalite seçimi, tek sahne yenileme | Kurulu model ve izinli sağlayıcı gerekir. |
 | Kapak | Şablon, hazır PNG, AI arka plan, referans kapak, başlık/font/renk/logo, arşiv, kart editörü | Kapak değiştirmek mevcut MP4’ü anında yeniden kodlamaz; geçerlilik ve yeniden üretim akışı vardır. |
 | Ses | Windows, Piper, XTTS, Google Cloud TTS, ElevenLabs, hazır ses dosyası, ses örneği, telaffuz sözlüğü | Seçili sesin gerçekten bulunması gerekir; servis bazında yetenek değişir. |
@@ -225,7 +225,7 @@ flow.OwnVisuals && flow.Mode == "auto"
     && !flow.AiVisuals && !flow.StockVisuals
 ```
 
-Bu koşulda **“yalnız yüklediğim dosyaları otomatik kullan”** yolu devreye girer. Manuel mod ve AI/stok/kendi dosyaları birlikte işaretlenmiş karma kaynak yolları ayrı davranış taşır. 0.4.28’te tüm bu yolların tek bir anlamsal editöre dönüştüğü söylenemez.
+Bu koşulda **“yalnız yüklediğim dosyaları otomatik kullan”** yolu devreye girer. Manuel mod ve AI/stok/kendi dosyaları birlikte işaretlenmiş karma kaynak yolları ayrı davranış taşır. 0.4.29’te tüm bu yolların tek bir anlamsal editöre dönüştüğü söylenemez.
 
 ### 6.3 Dosyaların gerçek içeriğini okuma
 
@@ -379,7 +379,7 @@ Hazır stiller: **Sade beyaz**, **Sarı vurgulu**, **Kelime kelime renklenen**, 
 
 `LocalAudioAlignment`, Python betiği ve kurulu `model/model.bin` ile çalışır. Python alt işlemi çevrimdışı model kullanımını zorlar (`HF_HUB_OFFLINE=1`) ve telemetriyi kapatır. Yerel eşleme için 15 dakika süre sınırı vardır; iptalde alt işlem kapatılır. Model/runtime bulunmuyorsa yalnız betiğin bulunması yeterli değildir.
 
-0.4.28 ile `align.py` önce aynı ses/metin anahtarının ölçülmüş kelime önbelleğini sınar; uygun veri varsa sesi tekrar çözümlemez. Zamanlar sonlu, sıralı ve ses süresi içinde olmalıdır. Tam metin için en az %65 tam token eşleşmesi aranır; katı satır eşleştirmesi başarısızsa yalnız komşu satırlar gruplanabilir. Bir grup en fazla dört satır, 180 karakter ve 18 saniyedir; grup metni ile bu ses aralığındaki tanınan metnin karakter benzerliği en az 0,5 olmalıdır. Bütün kaynak satırlar sıralı `Id`–`LastId` aralıklarıyla kapsanır. Belirsiz sözcüklere tahmini zaman dağıtılmaz: ilgili metin birlikte, doğrulanmış ses aralığında gösterilir. Sınırlı aralık doğrulanamıyorsa yanlış altyazı başarı sayılmaz. Arama sonuçları en fazla 4096 durumluk önbellekle tekrarlı dallanmayı sınırlar.
+0.4.29 ile `align.py` önce aynı ses/metin anahtarının ölçülmüş kelime önbelleğini sınar; uygun veri varsa sesi tekrar çözümlemez. Zamanlar sonlu, sıralı ve ses süresi içinde olmalıdır. Tam metin için en az %65 tam token eşleşmesi aranır; katı satır eşleştirmesi başarısızsa yalnız komşu satırlar gruplanabilir. Bir grup en fazla dört satır, 180 karakter ve 18 saniyedir; grup metni ile bu ses aralığındaki tanınan metnin karakter benzerliği en az 0,5 olmalıdır. Bütün kaynak satırlar sıralı `Id`–`LastId` aralıklarıyla kapsanır. Belirsiz sözcüklere tahmini zaman dağıtılmaz: ilgili metin birlikte, doğrulanmış ses aralığında gösterilir. Sınırlı aralık doğrulanamıyorsa yanlış altyazı başarı sayılmaz. Arama sonuçları en fazla 4096 durumluk önbellekle tekrarlı dallanmayı sınırlar.
 
 Üretilmiş konuşma blokları proje düzeyinde `audio-cache/blocks` altında, metin ve seçili ses/telaffuz kimliğiyle saklanır. Eski `r*-*/audio-cache/blocks` klasöründe aynı anahtar ve sağlam SHA bulunan dosya yeni düzenlemede tekrar kullanılabilir; ses değişirse anahtar değişir, bozuk dosya alınmaz. İlgili ölçülmüş altyazı/kelime önbelleği de korunur. Birleşik altyazı önbelleği `.bounded-lines-v1` ile işaretlenir; yalnız altyazı kapalıyken üretilen uzun tek parçalar sonradan açıldığında gerçek eşlemeye alınmaya devam eder. Çözülemeyen `TimingUnavailableException`, aynı ses/metin üzerinde geçici ağ hatası gibi otomatik tekrar döngüsüne sokulmaz.
 
@@ -472,7 +472,7 @@ Pixabay aramalarında istek aralığı/bütçe, sonuç önbelleği ve bekleme yo
 
 `MediaPool`; dosya, etiket, kategori, kullanım, hak ve kaynak bilgilerini saklar. Klasör tarama, sağlıklı dosya denetimi, puanlama, uygun aday seçimi ve tekrar kullanım aralığı bulunur. `PoolRepeatHours` aynı malzemeyi kısa aralıklarla tekrar kullanmayı sınırlar. Otomatik havuza kaydetme ve havuzu yedek kaynak olarak kullanma ayrı seçeneklerdir.
 
-Havuzdan seçim ile yüklenen dosyalara özel `UploadedMediaMatch` aynı mekanizma değildir. Havuzun etiket/metadata puanı, 0.4.28 yüklenen görsellerin gerçek içerik kataloğuna dayalı eşleştirmesi olarak sunulmamalıdır.
+Havuzdan seçim ile yüklenen dosyalara özel `UploadedMediaMatch` aynı mekanizma değildir. Havuzun etiket/metadata puanı, 0.4.29 yüklenen görsellerin gerçek içerik kataloğuna dayalı eşleştirmesi olarak sunulmamalıdır.
 
 ### 14.3 Haklar ve kaynak kayıtları
 
@@ -697,7 +697,7 @@ flowchart TD
 
 Store’da `OperationGate`/`OperationBusy`, Engine’de iptal kaynağı ve `Busy` bulunur. `OperationLease` aynı veri kökündeki çakışan ağır işlemleri engeller. Bu bir çok kiracılı sunucu iş kuyruğu değildir; masaüstü süreç içi koordinasyonudur.
 
-`async/await` HTTP ve alt süreç beklemelerinde UI’yı serbest bırakır. `Changed` olayı UI güncellemesine bağlanır; gerektiğinde UI thread’ine geçilir. 0.4.28 `External` işi başlamadan durum bildirir ve UI’ya çizim fırsatı verir. `ActivityName`, `BusySince` ve sabit gösterge görünür geri bildirimi destekler.
+`async/await` HTTP ve alt süreç beklemelerinde UI’yı serbest bırakır. `Changed` olayı UI güncellemesine bağlanır; gerektiğinde UI thread’ine geçilir. 0.4.29 `External` işi başlamadan durum bildirir ve UI’ya çizim fırsatı verir. `ActivityName`, `BusySince` ve sabit gösterge görünür geri bildirimi destekler.
 
 FFmpeg, Python hizalama ve ComfyUI ayrı alt süreçler olabilir. HTTP istemcileri bazı sınıflarda paylaşılan, testlerde enjekte edilebilir örneklerdir. İptal istekleri tokenlarla taşınır; alt süreç yaşam döngüsü ilgili adaptörde yönetilir.
 
@@ -799,7 +799,7 @@ Bu, `secrets.dat` dosyasını başka Windows kullanıcısına kopyalamakla aynı
 
 Yaygın durumlar Taslak, Araştırılıyor, Senaryo hazır, Üretiliyor, Denetim bekliyor, Kontrol gerekli, Onaylandı, Yükleniyor, Durduruldu ve Kesildi gibi metinlerle tutulur. Yayın grubu ayrıca platform durumundan hesaplanır. Tek bir durum etiketi bütün sürecin eksiksiz tek state machine tanımı değildir; modelde onay, resume aşaması ve dosya geçerliliği de vardır.
 
-0.4.28 sabit çalışma alanı; hareketli simge, işlem adı, geçen `hh:mm:ss`, dosya/sahne sayısı ve durdurma düğmesi gösterir. Ana tekrar başlatma ve çakışan alanlar işlem boyunca kapatılır. Tahmin edilen kalan süre ile geçen gerçek süre ayrıdır; geçmiş aşama süreleri tahmine yardımcı olabilir, kesin bitiş saati değildir.
+0.4.29 sabit çalışma alanı; hareketli simge, işlem adı, geçen `hh:mm:ss`, dosya/sahne sayısı ve durdurma düğmesi gösterir. Ana tekrar başlatma ve çakışan alanlar işlem boyunca kapatılır. Tahmin edilen kalan süre ile geçen gerçek süre ayrıdır; geçmiş aşama süreleri tahmine yardımcı olabilir, kesin bitiş saati değildir.
 
 `Engine.External` ile plan/analiz gibi dış işler de Busy durumuna bağlanır. `Notify` Store kaydını ve UI bildirimini tetikler. Üretim sırasında ilerleme yalnız model yanıtını değil ses, görsel, render ve çıktı kontrollerini kapsar.
 
@@ -963,7 +963,7 @@ Kod ayrıca wizard, koyu arayüz, laptop yerleşimi, arşiv, kanal bağlantılar
 
 | Belirti | Olası açıklama | Kontrol / doğru adım |
 |---|---|---|
-| “AI bölüm sınırları geçersiz” | Eski akış/bozuk model yanıtı | 0.4.28’te cümle sınırı kurtarması vardır; güncel sürüm ve onaylı metni kontrol et. |
+| “AI bölüm sınırları geçersiz” | Eski akış/bozuk model yanıtı | 0.4.29’te cümle sınırı kurtarması vardır; güncel sürüm ve onaylı metni kontrol et. |
 | Hazırlık uzun sürüyor | Metin modeli, çok sayıda görsel analiz veya başarısız adaylar | Sabit işlem adını/dosya sayısını/geçen süreyi izle; gerekirse durdur. İlerleme yüzdesi kesin süre değildir. |
 | “Başka işlem çalışıyor” | Aynı motor/veri kökünde iş sürüyor | Tekrar tekrar başlatma yerine mevcut işi bekle/durdur; çalışma göstergesini kontrol et. |
 | Görsel eşleşmiyor / uygun dosya yok | Katalog o konuyu kapsamıyor veya model okuyamıyor | Gerçek görüntü, görsel model bağlantısı ve eşleşme gerekçesini incele; rastgele seçim bekleme. |
@@ -1002,7 +1002,7 @@ Kod ayrıca wizard, koyu arayüz, laptop yerleşimi, arşiv, kanal bağlantılar
 <a id="timeline-oneri"></a>
 ### 29.2 Uygulanan: bölümleme sonrası ayrıntılı zaman çizelgesi
 
-0.4.28 ile bölümleme sonucu `Engine.PreparingPlan` içinde derin kopyayla geçici olarak yayımlanır. Asıl proje, görsel eşleştirme tamamlanana kadar atomik biçimde korunur. İşlem sürerken çizelge incelenebilir; düzenlemeler kilitlidir. İptal veya hata sonunda geçici plan temizlenir.
+0.4.29 ile bölümleme sonucu `Engine.PreparingPlan` içinde derin kopyayla geçici olarak yayımlanır. Asıl proje, görsel eşleştirme tamamlanana kadar atomik biçimde korunur. İşlem sürerken çizelge incelenebilir; düzenlemeler kilitlidir. İptal veya hata sonunda geçici plan temizlenir.
 
 - Görüntü küçük resimleri, konuşma ve altyazı ayrı şeritlerde görünür. Fotoğraflar yerel dosyadan; video önizlemeleri sınırlı eşzamanlı FFmpeg işlemleriyle hazırlanır.
 - Bölüm tablosunda başlangıç, bitiş, süre, anlatım ve seçilen dosya gösterilir. Seçim, ayrıntı panelini ve varsa oynatıcı konumunu günceller.
@@ -1021,7 +1021,7 @@ Sol alt sohbet başlatıcısı **Cortex** robotuyla değiştirilmiştir; sohbet 
 
 ### 29.4 Yüklenmesi gerekenler: kurulum ve API kontrol listesi
 
-0.4.28 ile sol menü etiketi **Merkez • Ayarlar** olarak düzenlenmiştir. **Yüklenmesi gerekenler** düğmesinde hem geniş hem dar menüde sarı üçgen içinde siyah ünlem simgesi kullanılır.
+0.4.29 ile sol menü etiketi **Merkez • Ayarlar** olarak düzenlenmiştir. **Yüklenmesi gerekenler** düğmesinde hem geniş hem dar menüde sarı üçgen içinde siyah ünlem simgesi kullanılır.
 
 Sol menüdeki **Yüklenmesi gerekenler** sayfası açılınca tarama başlar. **Güncelle • yeniden tara** düğmesi kurulumları ve kayıtlı API bağlantılarını yeniden kontrol eder; sürerken ikinci tarama başlatılmaz. **Taramayı durdur** ve sayfadan ayrılma mevcut taramayı iptal eder. Son kontrol saati ve doğrulandı / eksik-hatalı / kontrol gerekli sayıları gösterilir. Sonuçlar yalnız o kontrol anına aittir; kişisel anahtar değerleri gösterilmez veya tarama raporuna yazılmaz.
 
@@ -1032,11 +1032,11 @@ API listesi Gemini, NVIDIA, Groq, OpenRouter, OpenAI, Kimi, Tavily, Pexels, Pixa
 Kontroller yeni metin, görsel veya ses üretmez; video yüklemez; API açıp kapatmaz. Stok araması ve YouTube okuması küçük API kotası tüketebilir. Her hizmetin kurulması/anahtarının girilmesi şart değildir: yerel ve bulut seçenekleri alternatiflerdir. Sayfanın sonunda her bileşenin ne işe yaradığı, hangi işlev için gerektiği ve tam paketle gelen bileşenler açıklanır. Program amblemleri ilgili resmî sitelerden alınmıştır; bulunmayan hizmette açık ad kısaltması kullanılır, yanlış marka logosu gösterilmez.
 
 <a id="dogrulama"></a>
-## 30. 0.4.28 doğrulama ve değişiklik özeti
+## 30. 0.4.29 doğrulama ve değişiklik özeti
 
-0.4.28; ASR'nin ayırt edemediği kısa alıntılarda sınırları doğrulanmış komşu altyazı gruplaması, eski düzenlemelerden sağlam konuşma bloğu kurtarma ve deterministik hatalarda tekrar döngüsünü durdurma düzeltmelerini getirir. İşlem sırasında açılan sahne paneli bitince düzenlemeye açılır; pencere boyutu değişince içerik ve alt işlem düğmeleri yeniden yerleşir. Dar sohbet çalışma alanının üstüne binmez. Tek bölüm ve birden fazla dosya seçildiğinde tek görsel kullanılacağı açıkça belirtilir; metne göre sahnelere ayır düğmesi eklenmiştir. Merkez • Ayarlar etiketi ve sarı ünlem simgesi de bu sürümdedir.
+0.4.29; ASR'nin ayırt edemediği kısa alıntılarda sınırları doğrulanmış komşu altyazı gruplaması, eski düzenlemelerden sağlam konuşma bloğu kurtarma ve deterministik hatalarda tekrar döngüsünü durdurma düzeltmelerini getirir. İşlem sırasında açılan sahne paneli bitince düzenlemeye açılır; pencere boyutu değişince içerik ve alt işlem düğmeleri yeniden yerleşir. Dar sohbet çalışma alanının üstüne binmez. Tek bölüm ve birden fazla dosya seçildiğinde tek görsel kullanılacağı açıkça belirtilir; metne göre sahnelere ayır düğmesi eklenmiştir. Merkez • Ayarlar etiketi ve sarı ünlem simgesi de bu sürümdedir.
 
-Yayın hazırlığında **285 güvenilirlik kontrolü + 73 temel test = 358 test** geçti. Ek Python kontrollerinde yanlış metin ve geçersiz zamanlar reddedildi; gerçek hatalı parça yeniden üretildi ve özgün ses değiştirilmeden kurtarıldı. Elde bulunan 16 kelime önbelleği de doğrulandı. Güncel GitHub Windows derleme işi ve release işi başarılı oldu. İndirilen güncelleme ZIP’i manifest/SHA-256 üzerinden doğrulandı; indirilen EXE’nin sağlık kontrolü `Success=true`, `Version=0.4.28` verdi.
+Yayın hazırlığında **285 güvenilirlik kontrolü + 73 temel test = 358 test** geçti. Ek Python kontrollerinde yanlış metin ve geçersiz zamanlar reddedildi; gerçek hatalı parça yeniden üretildi ve özgün ses değiştirilmeden kurtarıldı. Elde bulunan 16 kelime önbelleği de doğrulandı. Güncel GitHub Windows derleme işi ve release işi başarılı oldu. İndirilen güncelleme ZIP’i manifest/SHA-256 üzerinden doğrulandı; indirilen EXE’nin sağlık kontrolü `Success=true`, `Version=0.4.29` verdi.
 
 Görsel API girdisi/önbellek/anlamsal dosya seçimi sahte yanıtlı bütünleşme testiyle; 18 saniyelik fotoğrafın iki yöndeki hareketi gerçek MP4 çıktısıyla; gerçek bir kullanıcı fotoğrafı ve video örnek karelerinin okunması yalnız yerel Qwen3-VL 4B Instruct ile, bulut kapalı ve ücretsiz öncelik açıkken kontrol edildi. Takılan 26. fotoğrafın doğrudan model testi yaklaşık 9,35 saniyede tamamlandı. Kurulum/API durumları sahte yanıtlı testlerle ve gerçek UI tarama iptaliyle kontrol edildi. Kullanıcının 69 dosyalı projesinin tamamı bu doğrulamada yeniden üretilip izlenmiş değildir. Dolayısıyla “her sahnede mükemmel semantik uyum kanıtlandı” sonucu çıkarılamaz.
 
@@ -1044,26 +1044,39 @@ Bu sürümde erken çizelge, Cortex ve yerel görsel analiz yolu geliştirilmiş
 
 
 
-### 0.4.28 — Eldeki arşivden en uygun görüntü
+### 0.4.29 — Eldeki arşivden en uygun görüntü
 
 69 dosyanın analizi tamamlandıktan sonra eşleştirmenin ilk 8/50 bölümde durmasına yol açan mutlak uygunluk eşiği kaldırıldı. Soyut anlatımlar dahil mevcut katalogdan en uygun dosya seçilir; eksik yanıtlar sahne bazında tekrar karşılaştırılır. Görüntü içeriği uydurulmaz, dosya sırası veya rastgele seçim kullanılmaz. İptal, sınırlı tekrar ve katalog kimliği doğrulaması için kontroller eklendi.
+
+
+## 0.4.29 güncel kurgu ve servis mekanikleri
+
+Manuel moda geçmek hazırlanmış çok sahneli planı korur. Manuel kaynak paleti görsel/video ve müzik/SFX listelerini açar. Görseller seçili sahneye atanabilir veya timeline üzerine sürüklenebilir. Sahne görselleri yer değiştirirken anlatım sırası korunur. Sahne bölme, birleştirme, süre, metin, altyazı, görsel değiştirme ve geri alma desteklenir. Kaydet proje durumunu saklar; Test et / videoyu güncelle yeni çıktıyı üretir. Monitör kaynak listesinin yanında, timeline görüntünün altındadır. Görüntü, konuşma, altyazı ve müzik/efekt katmanları ayrı çizilir. Ses efektleri zaman, kaynak ofseti, seviye, fade ve duck ayarlarıyla gerçek çıktı miksine eklenir.
+
+Ücretsiz medya penceresi Wikimedia Commons üzerinde anahtarsız arama yapar. Pexels ve Pixabay kayıtlı anahtar varsa fotoğraf/video sonuçları sağlar. Önizleme ile indirme ayrıdır; kullanıcı eklediğinde dosya arşive/projeye alınır. Kaynak ve lisans bilgileri korunur; Commons tarafında NC/ND lisanslar kabul edilmez. Her sonuç kendi kullanım koşullarına tabidir. Eşleştirme teşhis metinleri YouTube açıklamasına telif bildirimi olarak doldurulmaz.
+
+Yerel resim stüdyosu FLUX Schnell, FLUX.2 ve SDXL iş akışlarını destekler. Hızlı/Dengeli/Yüksek seçenekleri ve açık piksel çözünürlükleri bulunur. GPU boş belleğine göre güvenli boyut seçilir; bellek hatasında sınırlı küçültme tekrarı uygulanır. ComfyUI yanında seçilen modele ait checkpoint ve kullanılan iş akışının düğümleri de kurulmuş olmalıdır. ComfyUI tek başına bütün modelleri sağlamaz. Ortak sahne referansı kullanıcı tarafından seçilebilir; otomatik üretimde konu/karakter planından ortak referans hazırlanır. Referans değişince ilgili AI görüntü önbelleği geçersizleşir. Schnell stil referansı img2img, karakter referansı PuLID düğümleri üzerinden işlenir.
+
+Ses stüdyosu ElevenLabs IVC örnek yükleme ve rıza kontrolü, hesap sesini seçme, ses önizleme, stability/similarity/style/speaker boost ayarları ile Scribe zaman damgalı metin/SRT dışa aktarmayı içerir. Profesyonel ses klonunun hesap doğrulama/eğitim işlemleri ElevenLabs hesabında tamamlanır; uygulama bunları otomatik tamamladığını iddia etmez. Ücretsiz-only politikası ücretli hesap çağrılarını engeller. Yerel Whisper yolu korunur.
+
+Doğrulama kapsamı: ComfyUI üzerinde iki gerçek 768x432 sahne, ikincisinde ilk görüntü stil referansı olarak üretilmiştir. Gerçek FFmpeg ses efekti miksinde video akışı korunarak süre doğrulanmıştır. ElevenLabs klonlama ve STT sözleşmeleri sahte HTTP servisinde test edilmiştir; gerçek hesapta klon eğitimi yapılmamıştır. Kullanıcının mevcut uzun projesi bu testler sırasında değiştirilmemiştir.
 
 <a id="kaynak-katalogu"></a>
 ## Ek A — Kaynak dosyalarının tamamı
 
-Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` çıktıları hariçtir. Katalog 0.4.28 kaynaklarına aittir. Dosya bağlantıları depo içinde görelidir; sürüme sabitlenmiş tam kaynak [yayın commit’inde](https://github.com/aayurtseven02/nur-kapisi-otomasyon/tree/v0.4.28/src) bulunur. UI önizleme ve test dosyaları üretim özelliği gibi gösterilmez.
+Bu tablo `src/` içindeki **163 C# dosyasının tamamını** kapsar; `bin/obj` çıktıları hariçtir. Katalog 0.4.29 kaynaklarına aittir. Dosya bağlantıları depo içinde görelidir; sürüme sabitlenmiş tam kaynak [yayın commit’inde](https://github.com/aayurtseven02/nur-kapisi-otomasyon/tree/v0.4.29/src) bulunur. UI önizleme ve test dosyaları üretim özelliği gibi gösterilmez.
 
 | Dosya | Satır | Sorumluluk |
 |---|---:|---|
-| [AiDesignDialog.cs](src/AiDesignDialog.cs) | 65 | AI kapak konusu, talimat, model/kalite seçimi, oluşturma ve arşive kaydetme penceresi. |
+| [AiDesignDialog.cs](src/AiDesignDialog.cs) | 76 | AI kapak konusu, talimat, model/kalite seçimi, oluşturma ve arşive kaydetme penceresi. |
 | [AiSchema.cs](src/AiSchema.cs) | 17 | AI plan yanıtlarının dizi/nesne/normal-Shorts JSON şemaları. |
 | [AiTextActivity.cs](src/AiTextActivity.cs) | 18 | Animasyon kareleri ve erişilebilir açıklamayla çalışan iş göstergesi. |
-| [AppBranding.cs](src/AppBranding.cs) | 25 | Eski EXE yönlendirmesi, TubeFlow kısayolları ve simge yenilemesi. |
+| [AppBranding.cs](src/AppBranding.cs) | 31 | Eski EXE yönlendirmesi, TubeFlow kısayolları ve simge yenilemesi. |
 | [AppLock.cs](src/AppLock.cs) | 339 | Uygulama giriş kilidi, parola doğrulama, hatırlama ve Windows hesabına bağlı kurtarma. |
 | [ArchiveActionsPreview.cs](src/ArchiveActionsPreview.cs) | 43 | Arşiv işlem düğmelerinin UI önizleme/test yakalaması. |
 | [ArchiveMusicPlayer.cs](src/ArchiveMusicPlayer.cs) | 54 | Gömülü arşiv ses oynatımı, hazırlık, zaman ve konum denetimi. |
 | [ArchiveVideoPreview.cs](src/ArchiveVideoPreview.cs) | 23 | MCI ile uygulama içi video önizlemesi, oynat/durdur ve kadraj. |
-| [AssistantActions.cs](src/AssistantActions.cs) | 114 | Sohbetin izinli araç yürütücüsü; ayar değişimi, onarım, motor kontrolü, tekrar ve geri alma. |
+| [AssistantActions.cs](src/AssistantActions.cs) | 137 | Sohbetin izinli araç yürütücüsü; ayar değişimi, onarım, motor kontrolü, tekrar ve geri alma. |
 | [AssistantStreaming.cs](src/AssistantStreaming.cs) | 46 | SSE/Ollama satır akışını birleştirme, tamamlanma denetimi ve kısmi yanıt çözme. |
 | [AudioLibrary.cs](src/AudioLibrary.cs) | 261 | Parça kayıtları, hak/atıf bilgileri, dosya ekleme ve müzik arşivi ekranı. |
 | [AudioLibraryScan.cs](src/AudioLibraryScan.cs) | 29 | Müzik klasörü tarama arayüzü. |
@@ -1073,11 +1086,11 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [CardEditor.cs](src/CardEditor.cs) | 224 | Kart editörü, medya içe/dışa aktarımı, önizleme ve geri alma. |
 | [ChannelPack.cs](src/ChannelPack.cs) | 7 | Kanal paketine uygunluk ve kanal varlıklarını bulma. |
 | [ChannelStatisticsUi.cs](src/ChannelStatisticsUi.cs) | 52 | Kanal istatistik ve öneri pencereleri. |
-| [ChatAssistant.cs](src/ChatAssistant.cs) | 181 | Sohbet UI, rehber/bağlam, geçmiş, paylaşım, araç döngüsü ve iptal. |
+| [ChatAssistant.cs](src/ChatAssistant.cs) | 193 | Sohbet UI, rehber/bağlam, geçmiş, paylaşım, araç döngüsü ve iptal. |
 | [ChatTranscript.cs](src/ChatTranscript.cs) | 63 | Seçilebilir mesajlar ve kısmi yanıtın görsel konuşma yerleşimi. |
 | [ClosingCards.cs](src/ClosingCards.cs) | 53 | Açılış/kapanış kartı dosyası doğrulama ve videoya ekleme. |
 | [CloudUsage.cs](src/CloudUsage.cs) | 165 | Google Cloud kullanım/billing raporu, hizmet hesabı tokenı ve isteğe bağlı API yönetimi. |
-| [CompactCenter.cs](src/CompactCenter.cs) | 133 | Merkez/medya havuzu/fotoğraf arşivi ve yerel görsel panelinin kompakt düzeni. |
+| [CompactCenter.cs](src/CompactCenter.cs) | 134 | Merkez/medya havuzu/fotoğraf arşivi ve yerel görsel panelinin kompakt düzeni. |
 | [CompactUi.cs](src/CompactUi.cs) | 20 | Açılır UI grupları ve ortak etiket yardımcıları. |
 | [ConnectionHelp.cs](src/ConnectionHelp.cs) | 50 | Sağlayıcı bağlantı açıklamaları ve kurulum rehber verileri. |
 | [CortexMascot.cs](src/CortexMascot.cs) | 20 | Şeffaf Cortex maskot varlığı ve uyarlanabilir sohbet başlatıcısı. |
@@ -1085,8 +1098,8 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [CoverDesigner.cs](src/CoverDesigner.cs) | 301 | Kapak tarzı önerisi, yerel şablon çizimi ve kaydetme. |
 | [CoverFallback.cs](src/CoverFallback.cs) | 145 | Yerel/bulut AI kapak/sahne üretimi, referans desteği ve görsel istek kotası. |
 | [CoverReference.cs](src/CoverReference.cs) | 15 | Kapak stil referansını projeye güvenli içe alma. |
-| [CreationFlow.cs](src/CreationFlow.cs) | 95 | Beş adımın veri/karar modeli, metin onayı, plan imzası ve eski proje geçişi. |
-| [CreationWizard.cs](src/CreationWizard.cs) | 172 | Kaynak-Metin, Tasarım, Üretim, İzle-Düzelt ve Yayın ana akışı. |
+| [CreationFlow.cs](src/CreationFlow.cs) | 103 | Beş adımın veri/karar modeli, metin onayı, plan imzası ve eski proje geçişi. |
+| [CreationWizard.cs](src/CreationWizard.cs) | 177 | Kaynak-Metin, Tasarım, Üretim, İzle-Düzelt ve Yayın ana akışı. |
 | [DarkReferencePreview.cs](src/DarkReferencePreview.cs) | 33 | Koyu arayüzün önizleme/test yakalaması. |
 | [DeviceMemory.cs](src/DeviceMemory.cs) | 9 | Windows bellek durumu ve kullanıcıya donanım notu. |
 | [DurationStandard.cs](src/DurationStandard.cs) | 47 | Süre/kelime bütçesi, tolerans ve genel sahne sayısı kuralları. |
@@ -1096,10 +1109,11 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [EditorPreview.cs](src/EditorPreview.cs) | 121 | Editör zamanlaması, altyazıları, kare/video önizlemesi. |
 | [EditorPreviewFast.cs](src/EditorPreviewFast.cs) | 34 | Hızlı tek kare editör önizlemesi. |
 | [EditorTimeline.cs](src/EditorTimeline.cs) | 201 | Başlık zaman/konum sürüklemeleri ve zaman çizelgesi çizimi. |
-| [Engine.cs](src/Engine.cs) | 1056 | FFmpeg/FFprobe çalıştırma, Windows sesi ve ana araştırma/üretim/onay/yayın koordinasyonu. |
+| [Engine.cs](src/Engine.cs) | 1058 | FFmpeg/FFprobe çalıştırma, Windows sesi ve ana araştırma/üretim/onay/yayın koordinasyonu. |
 | [EngineHardware.cs](src/EngineHardware.cs) | 47 | Kurulu PyTorch ortamlarında CUDA/ROCm/XPU/DirectML/CPU probu ve aday sırası. |
 | [FeaturePreview.cs](src/FeaturePreview.cs) | 55 | Yeni özelliklerin UI önizleme/test senaryoları. |
 | [FirebaseKeyPairing.cs](src/FirebaseKeyPairing.cs) | 111 | Android/Firebase eşleştirme oturumu ve izinli API anahtarlarını şifreli aktarma. |
+| [FreeMediaLibrary.cs](src/FreeMediaLibrary.cs) | 96 | Wikimedia, Pexels ve Pixabay arama; lisans kontrolü, önizleme, arşiv ve projeye ekleme. |
 | [GeminiModels.cs](src/GeminiModels.cs) | 55 | Gemini metin model listesini alma. |
 | [GitHub.cs](src/GitHub.cs) | 421 | Depo/API, kaynak izin filtresi, Secrets, Actions dispatch ve worker payload/çalışması. |
 | [GlobalMusic.cs](src/GlobalMusic.cs) | 31 | Genel/paket müzik tercihlerini çözüp etkin parçayı belirleme. |
@@ -1113,14 +1127,16 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [LocalAiSchema.cs](src/LocalAiSchema.cs) | 81 | Yerel AI için yanıt şeması oluşturma. |
 | [LocalAiSmokeTests.cs](src/LocalAiSmokeTests.cs) | 49 | Gerçek yerel AI bağlantısı ve şema smoke testi. |
 | [LocalAudioAlignment.cs](src/LocalAudioAlignment.cs) | 61 | Çevrimdışı Python/Whisper hizalama işlemi, önbellek, süre ve iptal yönetimi. |
-| [LocalCoverEngine.cs](src/LocalCoverEngine.cs) | 256 | ComfyUI keşif/başlatma, workflow kontrolü, kalite parametreleri ve görsel üretimi. |
+| [LocalCoverEngine.cs](src/LocalCoverEngine.cs) | 303 | ComfyUI keşif/başlatma, workflow kontrolü, kalite parametreleri ve görsel üretimi. |
+| [LocalImagePolicy.cs](src/LocalImagePolicy.cs) | 24 | GPU boş belleğine ve en boy oranına göre güvenli piksel çözünürlüğü. |
 | [MaintenanceUi.cs](src/MaintenanceUi.cs) | 123 | Sohbet paneli yerleşimi, bakım ve taşınabilir proje dışa aktarımı. |
+| [ManualTimelineAssets.cs](src/ManualTimelineAssets.cs) | 39 | Manuel kurguda görsel/video ve müzik/SFX paleti; sürükleme, önizleme ve yerleştirme. |
 | [ManualVideos.cs](src/ManualVideos.cs) | 42 | Manuel dosya seçimi, normal/Shorts dosya ayrımı ve plan uygulaması. |
 | [MediaFormat.cs](src/MediaFormat.cs) | 45 | Görsel/video ölçü ve biçim doğrulaması. |
 | [MediaPool.cs](src/MediaPool.cs) | 331 | Kalıcı medya kayıtları, puan/etiket/kategori, hak, tekrar aralığı ve seçim. |
 | [MediaPoolScan.cs](src/MediaPoolScan.cs) | 33 | Medya klasörü tarama arayüzü. |
 | [ModelDiscovery.cs](src/ModelDiscovery.cs) | 200 | NVIDIA/Groq/Kimi/bulut model listeleri ve model seçici pencereler. |
-| [Models.cs](src/Models.cs) | 1134 | JSON atomik kayıt, Settings/Episode/plan/sahne/çıktı, Store, Vault ve alan kuralları. |
+| [Models.cs](src/Models.cs) | 1142 | JSON atomik kayıt, Settings/Episode/plan/sahne/çıktı, Store, Vault ve alan kuralları. |
 | [ModernScrollbars.cs](src/ModernScrollbars.cs) | 354 | Win32 denetim kaydırma çubukları, köşe ve combo yüzeylerini koyu temayla çizme. |
 | [MusicClips.cs](src/MusicClips.cs) | 185 | Ana müzik klibi modeli, kredi, plan, ses ve altyazı hazırlığı. |
 | [MusicUsage.cs](src/MusicUsage.cs) | 19 | Müzik kullanım/lisans bilgisini editöre yükleme ve kaydetme denetimi. |
@@ -1148,10 +1164,10 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [PublicationHelp.cs](src/PublicationHelp.cs) | 73 | Yayın adımlarının açıklama ve önizleme pencereleri. |
 | [PublicationStatistics.cs](src/PublicationStatistics.cs) | 13 | Yayınlanan normal/Shorts/proje sayaçları. |
 | [Reliability.cs](src/Reliability.cs) | 247 | Plan/render/dosya hash, çıktı geçerliliği, sınırlı indirme ve OperationLease. |
-| [ReliabilityTests.cs](src/ReliabilityTests.cs) | 3354 | Geniş güvenilirlik ve hata tekrar testlerinin izole çalıştırıcısı. |
+| [ReliabilityTests.cs](src/ReliabilityTests.cs) | 3418 | Geniş güvenilirlik ve hata tekrar testlerinin izole çalıştırıcısı. |
 | [ReviewFlow.cs](src/ReviewFlow.cs) | 166 | Video izleme ve son onay akışı. |
 | [SceneHeadings.cs](src/SceneHeadings.cs) | 125 | AI sahne başlığı şeması, hash ve başlık hazırlama. |
-| [SceneTimeline.cs](src/SceneTimeline.cs) | 99 | Görsel, konuşma, altyazı çizelgesi; zamanlar, küçük resimler, bölme/birleştirme/süre düzenleme. |
+| [SceneTimeline.cs](src/SceneTimeline.cs) | 175 | Görsel, konuşma, altyazı çizelgesi; zamanlar, küçük resimler, bölme/birleştirme/süre düzenleme. |
 | [SceneTransitions.cs](src/SceneTransitions.cs) | 44 | FFmpeg sahne geçiş filtreleri ve uygulama. |
 | [SceneVideoChoice.cs](src/SceneVideoChoice.cs) | 33 | Seçili sahneye video dosyası atama formu. |
 | [ScriptLength.cs](src/ScriptLength.cs) | 413 | Kelime/süre sorunu, tekrar yapmayan devam metni ve anlatım checkpoint. |
@@ -1176,22 +1192,24 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [StoryboardSections.cs](src/StoryboardSections.cs) | 35 | AI görsel üretimi için 5–10 metin sahnesi ve yerel kurtarma. |
 | [StoryCinema.cs](src/StoryCinema.cs) | 74 | AI sahne görsellerine sinematik kamera profilleri ve render. |
 | [StoryImageReview.cs](src/StoryImageReview.cs) | 28 | Üretilen sahne görselinin kullanıcı inceleme/onay penceresi. |
-| [StoryImages.cs](src/StoryImages.cs) | 150 | Karakter/sahne istemleri, kimlik/referans, kalite/hash ve AI görsel hazırlığı. |
+| [StoryImages.cs](src/StoryImages.cs) | 165 | Karakter/sahne istemleri, kimlik/referans, kalite/hash ve AI görsel hazırlığı. |
 | [StudioCheck.cs](src/StudioCheck.cs) | 19 | Özel koyu tema onay kutusu çizimi. |
 | [StudioDisclosure.cs](src/StudioDisclosure.cs) | 37 | Açılır bölüm başlığı, genişlik ve içerik yerleşimi. |
-| [StudioForm.cs](src/StudioForm.cs) | 2216 | Ana pencere, gezinme, hesaplar, projeler, takvim, motor/ayar/log ekranları ve timer. |
+| [StudioForm.cs](src/StudioForm.cs) | 2220 | Ana pencere, gezinme, hesaplar, projeler, takvim, motor/ayar/log ekranları ve timer. |
+| [StudioGlass.cs](src/StudioGlass.cs) | 36 | Ortak camsı panel, neon kenar ve timeline klip çizimi. |
 | [StudioNumber.cs](src/StudioNumber.cs) | 35 | Sayı alanı çerçevesi, oklar ve yerel alt denetim yerleşimi. |
 | [StudioTabs.cs](src/StudioTabs.cs) | 31 | Koyu tema sekmeler ve seçim çizimi. |
 | [StudioTextBox.cs](src/StudioTextBox.cs) | 27 | Metin alanı Win32 kenar/odak ve koyu tema çerçevesi. |
 | [SupportPrivacy.cs](src/SupportPrivacy.cs) | 30 | Paylaşılan destek/sohbet metninden hassas bilgiyi temizleme. |
 | [TextDesign.cs](src/TextDesign.cs) | 333 | TextLayout modeli, ASS yazı efektleri, animasyon ve önizleme. |
 | [TextEditor.cs](src/TextEditor.cs) | 976 | Yazı/müzik/video editörü, timeline, sahne başlıkları ve taslağı kaydetme. |
-| [Theme.cs](src/Theme.cs) | 184 | Ortak renk/font/form denetimi fabrikaları, uyarı penceresi ve combo çizimi. |
+| [Theme.cs](src/Theme.cs) | 188 | Ortak renk/font/form denetimi fabrikaları, uyarı penceresi ve combo çizimi. |
 | [TimedNarration.cs](src/TimedNarration.cs) | 322 | İşaretli/gerçek konuşma zamanları, altyazı metni eşleme ve doğal bloklar. |
+| [TimelineEffects.cs](src/TimelineEffects.cs) | 24 | Ses efektlerini başlangıç, süre, seviye ve geçişlerle son ses miksine ekleme. |
 | [TitlePlacement.cs](src/TitlePlacement.cs) | 99 | Güvenli sahne başlığı yerleşimi ve sığdırma. |
 | [TransferProgress.cs](src/TransferProgress.cs) | 47 | HTTP aktarım içeriği ve aktarım ilerleme çizimi. |
 | [UiSound.cs](src/UiSound.cs) | 49 | Yerel arayüz tıklama sesi dalga üretimi ve seviye ayarı. |
-| [UploadedMediaMatch.cs](src/UploadedMediaMatch.cs) | 159 | Yüklenen dosya gerçek içerik analizi, hash cache, model seçimi ve sahne eşleştirmesi. |
+| [UploadedMediaMatch.cs](src/UploadedMediaMatch.cs) | 161 | Yüklenen dosya gerçek içerik analizi, hash cache, model seçimi ve sahne eşleştirmesi. |
 | [UploadedSections.cs](src/UploadedSections.cs) | 46 | Cümle sonu indeksleri, AI bölüm yanıtı doğrulama ve en fazla 50 grup kurtarma. |
 | [UserGuide.cs](src/UserGuide.cs) | 40 | Gömülü Markdown rehberi okuma/gösterme ve test yakalama. |
 | [UserNarration.cs](src/UserNarration.cs) | 250 | Kullanıcı anlatım ve manuel video modelleri; metni koruyan plan/editör. |
@@ -1201,22 +1219,23 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [VideoQueueForm.cs](src/VideoQueueForm.cs) | 654 | Kuyruk UI, takvim, duraklat/başlat ve sıra yürütme. |
 | [VideoSettings.cs](src/VideoSettings.cs) | 75 | Etkin ayar önceliği, genel/proje sesi, freeze ve proje/motor durum özeti. |
 | [VisionRequests.cs](src/VisionRequests.cs) | 30 | Görsel HTTP isteklerinde sınırlı geçici hata tekrarı ve kota/iptal koruması. |
-| [VisualControls.cs](src/VisualControls.cs) | 346 | Özel düğme/başlık/kart/panel/header çizimi ve Windows koyu başlık yardımcıları. |
+| [VisualControls.cs](src/VisualControls.cs) | 364 | Özel düğme/başlık/kart/panel/header çizimi ve Windows koyu başlık yardımcıları. |
+| [VoiceStudio.cs](src/VoiceStudio.cs) | 65 | ElevenLabs ses klonlama ve zaman damgalı konuşmayı metne çevirme penceresi. |
 | [WarningResolution.cs](src/WarningResolution.cs) | 13 | Bilinen uyarılara uygun çözüm/ayar yolu belirleme. |
 | [WelcomeSetup.cs](src/WelcomeSetup.cs) | 20 | Üç adımlı ilk kanal/kalıp kurulum sihirbazı. |
-| [WorkflowArtwork.cs](src/WorkflowArtwork.cs) | 42 | Kapak değişikliği hash, pending ve hazır sahne sayısı. |
+| [WorkflowArtwork.cs](src/WorkflowArtwork.cs) | 50 | Kapak değişikliği hash, pending ve hazır sahne sayısı. |
 | [WorkflowMedia.cs](src/WorkflowMedia.cs) | 154 | Plan kurma, kaynak hazırlığı, fotoğraf filtresi, ses içe alma/dondurma/yeniden kesme. |
 | [WorkflowMusic.cs](src/WorkflowMusic.cs) | 17 | Proje müzik dosyasını doğrulama, uygulama ve görünen seçili parça etiketi. |
-| [WorkflowTimeline.cs](src/WorkflowTimeline.cs) | 57 | Bölüm süre/sınır çizelgesi, oynatıcı ve bölüm kaldırma/geri alma UI. |
+| [WorkflowTimeline.cs](src/WorkflowTimeline.cs) | 128 | Bölüm süre/sınır çizelgesi, oynatıcı ve bölüm kaldırma/geri alma UI. |
 | [XttsTts.cs](src/XttsTts.cs) | 29 | XTTS endpoint ve seçili konuşmacı ile ses isteği. |
-| [YouTube.cs](src/YouTube.cs) | 385 | OAuth/PKCE, token, kanal, resumable upload, thumbnail, yayın tarihi/görünürlük ve durum. |
+| [YouTube.cs](src/YouTube.cs) | 389 | OAuth/PKCE, token, kanal, resumable upload, thumbnail, yayın tarihi/görünürlük ve durum. |
 | [YouTubeEditorial.cs](src/YouTubeEditorial.cs) | 22 | Başlık/kapak/açılış için editoryal uyarılar. |
 | [YouTubeStatistics.cs](src/YouTubeStatistics.cs) | 136 | Kanal/video istatistikleri, içerik türü ayrımı ve öneriler. |
 
 <a id="alan-katalogu"></a>
 ## Ek B — Alanlar, türler ve başlangıç değerleri
 
-Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildirimini** içerir. Aynı `partial` tür farklı dosyalarda görünebilir. Veri modeli yanında UI/sonuç nesneleri de dahildir; burada görünmek JSON’a mutlaka kaydedildiği anlamına gelmez. Getter ifadesi, JsonIgnore ve erişim bilgisi bu ayrımı gösterir. `—` doğrudan initializer olmadığını anlatır; kurucu, C# tür varsayılanı veya başka bir çözümleyici değeri belirleyebilir.
+Bu bölüm yapısal C# çözümlemesinden çıkarılmış **724 özellik bildirimini** içerir. Aynı `partial` tür farklı dosyalarda görünebilir. Veri modeli yanında UI/sonuç nesneleri de dahildir; burada görünmek JSON’a mutlaka kaydedildiği anlamına gelmez. Getter ifadesi, JsonIgnore ve erişim bilgisi bu ayrımı gösterir. `—` doğrudan initializer olmadığını anlatır; kurucu, C# tür varsayılanı veya başka bir çözümleyici değeri belirleyebilir.
 
 ### B. AiDesignDialog.cs
 
@@ -1473,7 +1492,7 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [PhotoFolder](src/CompactCenter.cs#L95) | `string` | `=> Path.Combine(store.Root,"photo-library")` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `` |
+| [PhotoFolder](src/CompactCenter.cs#L96) | `string` | `=> Path.Combine(store.Root,"photo-library")` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `` |
 
 </details>
 
@@ -1492,7 +1511,7 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 ### B. CreationFlow.cs
 
 <details>
-<summary>CreationFlow — 48 özellik</summary>
+<summary>CreationFlow — 50 özellik</summary>
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
@@ -1523,27 +1542,29 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 | [Voice](src/CreationFlow.cs#L31) | `string` | `"ai"` | Akış ses kaynağı; AI/TTS yolu veya file hazır ses yolu. `public {get;set;}` |
 | [UseProjectVoice](src/CreationFlow.cs#L32) | `bool` | `—` | True ise projeye özel ses; false ise güncel genel ses alanları kullanılır. `public {get;set;}` |
 | [SceneImageQuality](src/CreationFlow.cs#L33) | `string` | `""` | Projeye özel yerel sahne kalitesi; boşsa genel tercih. `public {get;set;}` |
-| [AudioFile](src/CreationFlow.cs#L34) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public {get;set;}` |
-| [AudioHash](src/CreationFlow.cs#L35) | `string` | `""` | Hazır/ana sesin dosya içerik özeti. `public {get;set;}` |
-| [FrozenAudio](src/CreationFlow.cs#L36) | `string` | `""` | Yeniden kullanım için korunmuş anlatım dosyası yolu. `public {get;set;}` |
-| [FrozenTiming](src/CreationFlow.cs#L37) | `string` | `""` | Korunmuş anlatım zamanlama kaydı yolu. `public {get;set;}` |
-| [FrozenAudioHash](src/CreationFlow.cs#L38) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
-| [FrozenCaptioned](src/CreationFlow.cs#L39) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
-| [FrozenVoiceHash](src/CreationFlow.cs#L40) | `string` | `""` | Korunan sesin seçili ses parametreleriyle ilişki özeti. `public {get;set;}` |
-| [EditHistory](src/CreationFlow.cs#L41) | `List<string>` | `[]` | Sahne düzenlemelerinde geri alma snapshot listesi. `public {get;set;}` |
-| [FrozenTextHash](src/CreationFlow.cs#L42) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
-| [AudioDuration](src/CreationFlow.cs#L43) | `double` | `—` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public {get;set;}` |
-| [AudioCaptions](src/CreationFlow.cs#L44) | `List<Caption>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public {get;set;}` |
-| [Mode](src/CreationFlow.cs#L45) | `string` | `""` | Akış üretim yöntemi; otomatik için auto, manuel için manual. `public {get;set;}` |
-| [Split](src/CreationFlow.cs#L46) | `bool?` | `—` | Bölümleme kararı; null henüz seçim yapılmadığını ifade eder. `public {get;set;}` |
-| [OriginalSections](src/CreationFlow.cs#L47) | `string` | `""` | İlk bölümlemenin geri dönülebilir sahne kaydı. `public {get;set;}` |
-| [BeforeRender](src/CreationFlow.cs#L48) | `List<Scene>` | `[]` | Elle düzenlenen sınırları render öncesi korumaya yarayan sahne durumu. `public {get;set;}` |
-| [CoverChoice](src/CreationFlow.cs#L49) | `string` | `""` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public {get;set;}` |
-| [Fit](src/CreationFlow.cs#L50) | `string` | `"crop"` | Görüntü oran uyarlaması: crop, contain veya blur. `public {get;set;}` |
-| [PhotoMotion](src/CreationFlow.cs#L51) | `bool` | `true` | Hazır fotoğraflara sahne boyunca hareket uygulama seçimi. `public {get;set;}` |
-| [SceneTimingMeasured](src/CreationFlow.cs#L52) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
-| [Text](src/CreationFlow.cs#L53) | `string` | `=> TextMode=="ai"?AiText:OwnText` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
-| [TextApproved](src/CreationFlow.cs#L54) | `bool` | `=> Text.Trim()!=""&&ApprovedHash==TimedNarration.TextHash(Text)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [SceneReferenceFile](src/CreationFlow.cs#L34) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public {get;set;}` |
+| [SceneReferenceHash](src/CreationFlow.cs#L35) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
+| [AudioFile](src/CreationFlow.cs#L36) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public {get;set;}` |
+| [AudioHash](src/CreationFlow.cs#L37) | `string` | `""` | Hazır/ana sesin dosya içerik özeti. `public {get;set;}` |
+| [FrozenAudio](src/CreationFlow.cs#L38) | `string` | `""` | Yeniden kullanım için korunmuş anlatım dosyası yolu. `public {get;set;}` |
+| [FrozenTiming](src/CreationFlow.cs#L39) | `string` | `""` | Korunmuş anlatım zamanlama kaydı yolu. `public {get;set;}` |
+| [FrozenAudioHash](src/CreationFlow.cs#L40) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
+| [FrozenCaptioned](src/CreationFlow.cs#L41) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [FrozenVoiceHash](src/CreationFlow.cs#L42) | `string` | `""` | Korunan sesin seçili ses parametreleriyle ilişki özeti. `public {get;set;}` |
+| [EditHistory](src/CreationFlow.cs#L43) | `List<string>` | `[]` | Sahne düzenlemelerinde geri alma snapshot listesi. `public {get;set;}` |
+| [FrozenTextHash](src/CreationFlow.cs#L44) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
+| [AudioDuration](src/CreationFlow.cs#L45) | `double` | `—` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public {get;set;}` |
+| [AudioCaptions](src/CreationFlow.cs#L46) | `List<Caption>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public {get;set;}` |
+| [Mode](src/CreationFlow.cs#L47) | `string` | `""` | Akış üretim yöntemi; otomatik için auto, manuel için manual. `public {get;set;}` |
+| [Split](src/CreationFlow.cs#L48) | `bool?` | `—` | Bölümleme kararı; null henüz seçim yapılmadığını ifade eder. `public {get;set;}` |
+| [OriginalSections](src/CreationFlow.cs#L55) | `string` | `""` | İlk bölümlemenin geri dönülebilir sahne kaydı. `public {get;set;}` |
+| [BeforeRender](src/CreationFlow.cs#L56) | `List<Scene>` | `[]` | Elle düzenlenen sınırları render öncesi korumaya yarayan sahne durumu. `public {get;set;}` |
+| [CoverChoice](src/CreationFlow.cs#L57) | `string` | `""` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public {get;set;}` |
+| [Fit](src/CreationFlow.cs#L58) | `string` | `"crop"` | Görüntü oran uyarlaması: crop, contain veya blur. `public {get;set;}` |
+| [PhotoMotion](src/CreationFlow.cs#L59) | `bool` | `true` | Hazır fotoğraflara sahne boyunca hareket uygulama seçimi. `public {get;set;}` |
+| [SceneTimingMeasured](src/CreationFlow.cs#L60) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [Text](src/CreationFlow.cs#L61) | `string` | `=> TextMode=="ai"?AiText:OwnText` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [TextApproved](src/CreationFlow.cs#L62) | `bool` | `=> Text.Trim()!=""&&ApprovedHash==TimedNarration.TextHash(Text)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
 
 </details>
 
@@ -1769,7 +1790,7 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 ### B. Models.cs
 
 <details>
-<summary>Settings — 126 özellik</summary>
+<summary>Settings — 131 özellik</summary>
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
@@ -1791,114 +1812,119 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 | [CoverTitleRendered](src/Models.cs#L138) | `bool` | `—` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]` |
 | [CoverLocalModel](src/Models.cs#L140) | `string?` | `—` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]` |
 | [CoverLocalQuality](src/Models.cs#L142) | `string?` | `—` | Genel yerel görsel kalite kimliği; model yeteneği ayrıca gerekir. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]` |
-| [CoverGeminiModel](src/Models.cs#L145) | `string` | `"gemini-2.5-flash-image"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
-| [CoverOpenAiModel](src/Models.cs#L147) | `string` | `"gpt-image-1"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
-| [CoverMonthlyRequests](src/Models.cs#L149) | `int` | `20` | Bulut görsel üretimi istek sayacı sınırı; TL harcama limiti değildir. `public { get; set; }` |
-| [CoverAutoStyle](src/Models.cs#L151) | `bool` | `true` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
-| [CoverMode](src/Models.cs#L155) | `string` | `"Şablon"` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
-| [CoverBackground](src/Models.cs#L157) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [CoverLogo](src/Models.cs#L159) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [ScriptCardsOverride](src/Models.cs#L161) | `bool` | `—` | Senaryo kapak/kart tercihlerinin paket/genel tercihlere göre uygulanma işareti. `public { get; set; }` |
-| [OpeningCardEnabled](src/Models.cs#L163) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [OpeningCardFile](src/Models.cs#L165) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [OpeningCardSeconds](src/Models.cs#L167) | `double` | `3` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
-| [ClosingCardEnabled](src/Models.cs#L169) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ClosingCardFile](src/Models.cs#L171) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [ClosingCardSeconds](src/Models.cs#L173) | `double` | `4` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
-| [VideoLogo](src/Models.cs#L175) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [VideoLogoEnabled](src/Models.cs#L177) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [VideoLogoPosition](src/Models.cs#L179) | `string` | `"Sağ üst"` | Video üzerine eklenen sürekli logonun yerleşimi; kapak logosundan ayrıdır. `public { get; set; }` |
-| [VideoLogoWidthPercent](src/Models.cs#L181) | `int` | `10` | Video logosunun hedef genişliğinin yüzde değeri. `public { get; set; }` |
-| [CoverPng](src/Models.cs#L183) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [CoverChannelName](src/Models.cs#L185) | `string?` | `—` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
-| [CoverShowChannelName](src/Models.cs#L186) | `bool` | `true` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
-| [CoverFont](src/Models.cs#L187) | `string` | `"Segoe UI"` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
-| [CoverLogoPosition](src/Models.cs#L189) | `string` | `"Sağ alt"` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
-| [CoverAccent](src/Models.cs#L191) | `string` | `""` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
-| [UiSounds](src/Models.cs#L193) | `bool` | `true` | Arayüz tıklama seslerini açma/kapatma. `public { get; set; }` |
-| [UiClickSoundRevision](src/Models.cs#L194) | `int` | `—` | Tıklama sesi değişiklik/uyumluluk sürümü. `public { get; set; }` |
-| [UiSoundVolume](src/Models.cs#L196) | `double` | `.25` | Arayüz tıklama sesi düzeyi; fon müziği ve anlatımdan ayrıdır. `public { get; set; }` |
-| [FreeOnly](src/Models.cs#L198) | `bool` | `true` | Ücretsiz öncelik/ücretli servis kısıtı; her entegrasyonun kendi kapısı ayrıca değerlendirilir. `public { get; set; }` |
-| [LocalAiPolicyVersion](src/Models.cs#L200) | `int` | `—` | Yerel öncelik/isteğe bağlı bulut politikası geçiş sürümü. `public { get; set; }` |
-| [LocalAiFirst](src/Models.cs#L202) | `bool` | `true` | Uygun yerel modelin metin sağlayıcı sırasındaki önceliği. `public { get; set; }` |
-| [CloudAiEnabled](src/Models.cs#L204) | `bool` | `—` | İsteğe bağlı bulut metin/ilgili analiz servislerinin etkinlik kapısı. `public { get; set; }` |
-| [EnabledCloudProviders](src/Models.cs#L206) | `string` | `""` | Virgülle ayrılmış izinli bulut sağlayıcı adları. `public { get; set; }` |
-| [OllamaTimeoutMinutes](src/Models.cs#L208) | `int` | `15` | Yerel metin modeli için bekleme limiti; 1–30 dakika doğrulanır. `public { get; set; }` |
-| [UseOllama](src/Models.cs#L210) | `bool` | `true` | Yerel Ollama kullanım tercihi; kurulum/model mevcudiyeti ayrı denetlenir. `public { get; set; }` |
-| [GeminiModel](src/Models.cs#L212) | `string` | `"gemini-3.8-flash"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
-| [NvidiaAutoSelect](src/Models.cs#L214) | `bool` | `true` | NVIDIA için gerçek JSON denetimini geçen modellerin otomatik seçimi. `public { get; set; }` |
-| [NvidiaModel](src/Models.cs#L215) | `string` | `"meta/llama-3.1-70b-instruct"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
-| [GroqModel](src/Models.cs#L216) | `string` | `"openai/gpt-oss-120b"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
-| [OpenRouterModel](src/Models.cs#L218) | `string` | `"openrouter/free"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
-| [KimiModel](src/Models.cs#L220) | `string` | `"kimi-k3"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
-| [UseKimi](src/Models.cs#L222) | `bool` | `—` | Kimi hizmetinin ilgili sağlayıcı seçimi tercihi. `public { get; set; }` |
-| [OllamaModel](src/Models.cs#L224) | `string` | `"qwen3:4b"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
-| [OllamaVisionModel](src/Models.cs#L225) | `string` | `"qwen3-vl:4b-instruct"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public {get;set;}` |
-| [VoiceProvider](src/Models.cs#L227) | `string` | `"Windows / ücretsiz"` | Anlatıcı/ses kimliği veya konuşma tercihi; Ses bölümüne bak. `public { get; set; }` |
-| [GoogleTtsEnabled](src/Models.cs#L229) | `bool` | `true` | Google TTS kullanımının uygulama içi etkinlik anahtarı. `public { get; set; }` |
-| [CloudApiControl](src/Models.cs#L231) | `bool` | `—` | Google Cloud API yönetimi için isteğe bağlı kontrol tercihi. `public { get; set; }` |
-| [CloudAutoDisable](src/Models.cs#L233) | `bool` | `—` | İlgili Cloud yönetimi yolunda otomatik kapatma tercihi. `public { get; set; }` |
-| [CloudControlProject](src/Models.cs#L235) | `string` | `""` | Google Cloud yönetim işlemlerinin proje kimliği. `public { get; set; }` |
-| [CloudUsageRequired](src/Models.cs#L237) | `bool` | `true` | Yapılandırılmış Google Cloud usage kontrolünün gerekliliği. `public { get; set; }` |
-| [CloudBillingTable](src/Models.cs#L239) | `string` | `""` | Yapılandırılmış BigQuery kullanım/billing tablosu. `public { get; set; }` |
-| [CloudBillingLocation](src/Models.cs#L241) | `string` | `"EU"` | BigQuery billing sorgusunun yapılandırılmış bölgesi. `public { get; set; }` |
-| [GoogleTtsVoice](src/Models.cs#L243) | `string` | `"tr-TR-Standard-A"` | Anlatıcı/ses kimliği veya konuşma tercihi; Ses bölümüne bak. `public { get; set; }` |
-| [GoogleTtsMonthlyLimit](src/Models.cs#L245) | `int` | `900000` | Google TTS uygulama içi karakter kullanım sınırı. `public { get; set; }` |
-| [GoogleTtsFallback](src/Models.cs#L247) | `bool` | `true` | Google ses yolunda izin verilen yedek davranış; gerçek sağlayıcı cache işaretiyle ayrılır. `public { get; set; }` |
-| [WindowsVoice](src/Models.cs#L249) | `string` | `""` | Kurulu Windows sesinin gerçek kimliği/adı; bulunmayan seçim sessizce başka ses sayılmaz. `public { get; set; }` |
-| [PiperPath](src/Models.cs#L251) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [PiperModel](src/Models.cs#L253) | `string` | `""` | Piper yerel model dosyası yolu; bir bulut model ID’si değildir. `public { get; set; }` |
-| [XttsUrl](src/Models.cs#L254) | `string` | `"http://127.0.0.1:8020"` | XTTS sunucu adresi; varsayılan loopback 8020. `public { get; set; }` |
-| [XttsSpeaker](src/Models.cs#L255) | `string` | `""` | XTTS hizmetinde seçili konuşmacı kimliği. `public { get; set; }` |
-| [SourceUrls](src/Models.cs#L257) | `string` | `""` | Araştırmada kullanılması istenen kaynak URL girdileri. `public { get; set; }` |
-| [ProviderOrder](src/Models.cs#L259) | `string` | `"Ollama,OpenRouter,Groq,NVIDIA,Gemini,OpenAI,Kimi"` | Metin servislerinin deneneceği sıra. `public { get; set; }` |
-| [PoolEnabled](src/Models.cs#L261) | `bool` | `true` | Kalıcı medya havuzunu kaynak seçiminde kullanma. `public { get; set; }` |
-| [PoolAutoSave](src/Models.cs#L263) | `bool` | `true` | Uygun indirilen medyayı havuza otomatik ekleme. `public { get; set; }` |
-| [PoolFallback](src/Models.cs#L265) | `bool` | `true` | Havuzu ilgili kaynak bulma akışında yedek olarak kullanma. `public { get; set; }` |
-| [StockGeneralFallback](src/Models.cs#L267) | `bool` | `true` | İlgili stok yolunda genel sorgu yedeğine geçme tercihi. `public { get; set; }` |
-| [PoolRepeatHours](src/Models.cs#L269) | `int` | `24` | Havuz malzemesinin tekrar kullanımını saat bazında sınırlandırma. `public { get; set; }` |
-| [StockOrder](src/Models.cs#L271) | `string` | `"Pexels,Pixabay,Vecteezy"` | Pexels/Pixabay/Vecteezy arama sırası. `public { get; set; }` |
-| [VecteezyEnabled](src/Models.cs#L273) | `bool` | `true` | Vecteezy entegrasyon kullanım tercihi. `public { get; set; }` |
-| [VecteezyMonthlyDownloads](src/Models.cs#L275) | `int` | `450` | Vecteezy için yapılandırılmış aylık indirme üst sınırı; gerçek hesap kotası ayrıca geçerlidir. `public { get; set; }` |
-| [LocalMediaFolder](src/Models.cs#L277) | `string` | `""` | Yerel medya arşiv/tarama klasörü. `public { get; set; }` |
-| [CategoryId](src/Models.cs#L279) | `string` | `"27"` | YouTube yayın kategori kimliği. `public { get; set; }` |
-| [EncodingPreset](src/Models.cs#L281) | `string` | `"veryfast"` | FFmpeg/libx264 kodlama önayarı; hız ve sıkıştırma maliyetini etkiler. `public { get; set; }` |
-| [Crf](src/Models.cs#L283) | `int` | `20` | Sabit kalite kodlama parametresi; daha düşük değer genellikle daha yüksek kalite/boyut getirir. `public { get; set; }` |
-| [FramesPerSecond](src/Models.cs#L285) | `int` | `30` | Nihai video kare hızı. `public { get; set; }` |
-| [SeriesCounters](src/Models.cs#L287) | `Dictionary<string, int>` | `[]` | Seriler için saklanan numara sayaçları. `public { get; set; }` |
-| [SeriesAssignments](src/Models.cs#L289) | `Dictionary<string, int>` | `[]` | Proje/seri başlığı numara atamaları. `public { get; set; }` |
-| [SocialBrokerUrl](src/Models.cs#L291) | `string` | `""` | İsteğe bağlı sosyal OAuth broker HTTPS adresi. `public { get; set; }` |
-| [SocialGraphVersion](src/Models.cs#L292) | `string` | `"v25.0"` | Meta Graph API için kodda yapılandırılmış sürüm kimliği. `public { get; set; }` |
-| [SocialAccounts](src/Models.cs#L293) | `List<SocialAccount>` | `[]` | Bağlanan sosyal hesap metadata listesi; erişim tokenları kasada ayrı tutulur. `public { get; set; }` |
-| [ChannelName](src/Models.cs#L294) | `string` | `"Benim kanalım"` | Elle ayarlanan çalışma alanı/kapak kanal adı; doğrulanan OAuth kanal başlığıyla aynı kavram değildir. `public { get; set; }` |
-| [Audience](src/Models.cs#L296) | `string` | `"Meraklı Türkçe izleyiciler"` | AI anlatımı için hedef kitle tarifi. `public { get; set; }` |
-| [Model](src/Models.cs#L298) | `string` | `"gpt-4.1"` | OpenAI metin yolunun model kimliği; canlı erişim garantisi değildir. `public { get; set; }` |
-| [VoiceId](src/Models.cs#L300) | `string` | `""` | İlgili ses servisindeki seçili ses kimliği; bağlamı VoiceProvider belirler. `public { get; set; }` |
-| [VoiceModel](src/Models.cs#L302) | `string` | `"eleven_multilingual_v2"` | İlgili ses servisinin model kimliği. `public { get; set; }` |
-| [VoiceSpeed](src/Models.cs#L304) | `double` | `1` | Ses üretiminde kullanılan hız tercihi; sağlayıcıya göre uygulanması değişir. `public { get; set; }` |
-| [ShortVoiceOverride](src/Models.cs#L306) | `bool` | `—` | Shorts için normal videodan ayrı ses tercihini etkinleştirir. `public { get; set; }` |
-| [ShortVoiceProvider](src/Models.cs#L308) | `string` | `"Normal videoyla aynı"` | Shorts’a özel sağlayıcı; aynı ses seçimi ayrı seçenek olarak tutulur. `public { get; set; }` |
-| [ShortVoiceId](src/Models.cs#L310) | `string` | `""` | Shorts’a özel ses kimliği. `public { get; set; }` |
-| [ShortVoiceSpeed](src/Models.cs#L312) | `double` | `1.05` | Shorts ses hız tercihi. `public { get; set; }` |
-| [ShortMusicVolume](src/Models.cs#L314) | `double` | `.1` | Shorts fon müziği seviyesi. `public { get; set; }` |
-| [FfmpegPath](src/Models.cs#L316) | `string` | `""` | Seçili FFmpeg yürütülebilir dosyası; FFprobe aynı dizinde aranır. `public { get; set; }` |
-| [VideoBackupFolder](src/Models.cs#L318) | `string` | `""` | Video yedeklerinin hedef klasörü. `public { get; set; }` |
-| [MusicPath](src/Models.cs#L320) | `string` | `""` | Genel/proje snapshot bağlamında seçili müzik dosyası. `public { get; set; }` |
-| [LibraryMusic](src/Models.cs#L322) | `MusicTrack?` | `—` | Arşivden seçilen parçanın yapılandırılmış müzik/metadata kaydı. `public { get; set; }` |
-| [MusicVolume](src/Models.cs#L324) | `double` | `0.12` | Genel/normal video fon müziği karışım seviyesi. `public { get; set; }` |
-| [MusicStyle](src/Models.cs#L326) | `string` | `"Sakin / ambient"` | Müzik tarzı tercihi; gerçek dosya seçiminin yerine geçmez. `public { get; set; }` |
-| [GoogleClientId](src/Models.cs#L328) | `string` | `""` | OAuth masaüstü istemci kimliği; istemci sırrı/token ayrı kasadadır. `public { get; set; }` |
-| [YouTubeChannelId](src/Models.cs#L330) | `string` | `""` | Doğrulanan/kayıtlı YouTube kanal kimliği. `public { get; set; }` |
-| [YouTubeChannelTitle](src/Models.cs#L332) | `string` | `""` | Doğrulanan/kayıtlı YouTube kanal başlığı. `public { get; set; }` |
-| [Repo](src/Models.cs#L334) | `string` | `""` | Uzak GitHub işleri için kullanıcı/depo kimliği. `public { get; set; }` |
-| [GitHubRef](src/Models.cs#L336) | `string` | `"main"` | GitHub dispatch/kaynak bağlamında seçili dal/ref. `public { get; set; }` |
-| [AutoPublish](src/Models.cs#L338) | `bool` | `—` | İlgili onaylı otomasyon yolunda otomatik yayın tercihi; sohbet yetkisi değildir. `public { get; set; }` |
-| [AutoResearch](src/Models.cs#L340) | `bool` | `—` | İlgili otomasyon döngüsünde araştırmayı otomatik başlatma tercihi. `public { get; set; }` |
-| [AutoProduce](src/Models.cs#L342) | `bool` | `—` | İlgili otomasyon döngüsünde üretimi otomatik başlatma tercihi. `public { get; set; }` |
-| [DailyProductionLimit](src/Models.cs#L344) | `int` | `4` | Yerel üretim defterine göre günlük üst sınır. `public { get; set; }` |
-| [SubtitleColor](src/Models.cs#L346) | `string` | `"FFFFFF"` | Yazı/görsel renk tercihi veya çizim değeri. `public { get; set; }` |
-| [LongFontSize](src/Models.cs#L348) | `int` | `46` | Normal video için genel yazı boyutu. `public { get; set; }` |
-| [ShortFontSize](src/Models.cs#L350) | `int` | `68` | Shorts için genel yazı boyutu. `public { get; set; }` |
+| [CoverLocalResolution](src/Models.cs#L144) | `string` | `"auto"` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public {get;set;}` |
+| [CoverGeminiModel](src/Models.cs#L146) | `string` | `"gemini-2.5-flash-image"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
+| [CoverOpenAiModel](src/Models.cs#L148) | `string` | `"gpt-image-1"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
+| [CoverMonthlyRequests](src/Models.cs#L150) | `int` | `20` | Bulut görsel üretimi istek sayacı sınırı; TL harcama limiti değildir. `public { get; set; }` |
+| [CoverAutoStyle](src/Models.cs#L152) | `bool` | `true` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
+| [CoverMode](src/Models.cs#L156) | `string` | `"Şablon"` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
+| [CoverBackground](src/Models.cs#L158) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [CoverLogo](src/Models.cs#L160) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [ScriptCardsOverride](src/Models.cs#L162) | `bool` | `—` | Senaryo kapak/kart tercihlerinin paket/genel tercihlere göre uygulanma işareti. `public { get; set; }` |
+| [OpeningCardEnabled](src/Models.cs#L164) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [OpeningCardFile](src/Models.cs#L166) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [OpeningCardSeconds](src/Models.cs#L168) | `double` | `3` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
+| [ClosingCardEnabled](src/Models.cs#L170) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ClosingCardFile](src/Models.cs#L172) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [ClosingCardSeconds](src/Models.cs#L174) | `double` | `4` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
+| [VideoLogo](src/Models.cs#L176) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [VideoLogoEnabled](src/Models.cs#L178) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [VideoLogoPosition](src/Models.cs#L180) | `string` | `"Sağ üst"` | Video üzerine eklenen sürekli logonun yerleşimi; kapak logosundan ayrıdır. `public { get; set; }` |
+| [VideoLogoWidthPercent](src/Models.cs#L182) | `int` | `10` | Video logosunun hedef genişliğinin yüzde değeri. `public { get; set; }` |
+| [CoverPng](src/Models.cs#L184) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [CoverChannelName](src/Models.cs#L186) | `string?` | `—` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
+| [CoverShowChannelName](src/Models.cs#L187) | `bool` | `true` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
+| [CoverFont](src/Models.cs#L188) | `string` | `"Segoe UI"` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
+| [CoverLogoPosition](src/Models.cs#L190) | `string` | `"Sağ alt"` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
+| [CoverAccent](src/Models.cs#L192) | `string` | `""` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
+| [UiSounds](src/Models.cs#L194) | `bool` | `true` | Arayüz tıklama seslerini açma/kapatma. `public { get; set; }` |
+| [UiClickSoundRevision](src/Models.cs#L195) | `int` | `—` | Tıklama sesi değişiklik/uyumluluk sürümü. `public { get; set; }` |
+| [UiSoundVolume](src/Models.cs#L197) | `double` | `.25` | Arayüz tıklama sesi düzeyi; fon müziği ve anlatımdan ayrıdır. `public { get; set; }` |
+| [FreeOnly](src/Models.cs#L199) | `bool` | `true` | Ücretsiz öncelik/ücretli servis kısıtı; her entegrasyonun kendi kapısı ayrıca değerlendirilir. `public { get; set; }` |
+| [LocalAiPolicyVersion](src/Models.cs#L201) | `int` | `—` | Yerel öncelik/isteğe bağlı bulut politikası geçiş sürümü. `public { get; set; }` |
+| [LocalAiFirst](src/Models.cs#L203) | `bool` | `true` | Uygun yerel modelin metin sağlayıcı sırasındaki önceliği. `public { get; set; }` |
+| [CloudAiEnabled](src/Models.cs#L205) | `bool` | `—` | İsteğe bağlı bulut metin/ilgili analiz servislerinin etkinlik kapısı. `public { get; set; }` |
+| [EnabledCloudProviders](src/Models.cs#L207) | `string` | `""` | Virgülle ayrılmış izinli bulut sağlayıcı adları. `public { get; set; }` |
+| [OllamaTimeoutMinutes](src/Models.cs#L209) | `int` | `15` | Yerel metin modeli için bekleme limiti; 1–30 dakika doğrulanır. `public { get; set; }` |
+| [UseOllama](src/Models.cs#L211) | `bool` | `true` | Yerel Ollama kullanım tercihi; kurulum/model mevcudiyeti ayrı denetlenir. `public { get; set; }` |
+| [GeminiModel](src/Models.cs#L213) | `string` | `"gemini-3.8-flash"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
+| [NvidiaAutoSelect](src/Models.cs#L215) | `bool` | `true` | NVIDIA için gerçek JSON denetimini geçen modellerin otomatik seçimi. `public { get; set; }` |
+| [NvidiaModel](src/Models.cs#L216) | `string` | `"meta/llama-3.1-70b-instruct"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
+| [GroqModel](src/Models.cs#L217) | `string` | `"openai/gpt-oss-120b"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
+| [OpenRouterModel](src/Models.cs#L219) | `string` | `"openrouter/free"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
+| [KimiModel](src/Models.cs#L221) | `string` | `"kimi-k3"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
+| [UseKimi](src/Models.cs#L223) | `bool` | `—` | Kimi hizmetinin ilgili sağlayıcı seçimi tercihi. `public { get; set; }` |
+| [OllamaModel](src/Models.cs#L225) | `string` | `"qwen3:4b"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public { get; set; }` |
+| [OllamaVisionModel](src/Models.cs#L226) | `string` | `"qwen3-vl:4b-instruct"` | Model kimliği; kod başlangıç değeri canlı servis erişimi garantisi değildir. `public {get;set;}` |
+| [VoiceProvider](src/Models.cs#L228) | `string` | `"Windows / ücretsiz"` | Anlatıcı/ses kimliği veya konuşma tercihi; Ses bölümüne bak. `public { get; set; }` |
+| [GoogleTtsEnabled](src/Models.cs#L230) | `bool` | `true` | Google TTS kullanımının uygulama içi etkinlik anahtarı. `public { get; set; }` |
+| [CloudApiControl](src/Models.cs#L232) | `bool` | `—` | Google Cloud API yönetimi için isteğe bağlı kontrol tercihi. `public { get; set; }` |
+| [CloudAutoDisable](src/Models.cs#L234) | `bool` | `—` | İlgili Cloud yönetimi yolunda otomatik kapatma tercihi. `public { get; set; }` |
+| [CloudControlProject](src/Models.cs#L236) | `string` | `""` | Google Cloud yönetim işlemlerinin proje kimliği. `public { get; set; }` |
+| [CloudUsageRequired](src/Models.cs#L238) | `bool` | `true` | Yapılandırılmış Google Cloud usage kontrolünün gerekliliği. `public { get; set; }` |
+| [CloudBillingTable](src/Models.cs#L240) | `string` | `""` | Yapılandırılmış BigQuery kullanım/billing tablosu. `public { get; set; }` |
+| [CloudBillingLocation](src/Models.cs#L242) | `string` | `"EU"` | BigQuery billing sorgusunun yapılandırılmış bölgesi. `public { get; set; }` |
+| [GoogleTtsVoice](src/Models.cs#L244) | `string` | `"tr-TR-Standard-A"` | Anlatıcı/ses kimliği veya konuşma tercihi; Ses bölümüne bak. `public { get; set; }` |
+| [GoogleTtsMonthlyLimit](src/Models.cs#L246) | `int` | `900000` | Google TTS uygulama içi karakter kullanım sınırı. `public { get; set; }` |
+| [GoogleTtsFallback](src/Models.cs#L248) | `bool` | `true` | Google ses yolunda izin verilen yedek davranış; gerçek sağlayıcı cache işaretiyle ayrılır. `public { get; set; }` |
+| [WindowsVoice](src/Models.cs#L250) | `string` | `""` | Kurulu Windows sesinin gerçek kimliği/adı; bulunmayan seçim sessizce başka ses sayılmaz. `public { get; set; }` |
+| [PiperPath](src/Models.cs#L252) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [PiperModel](src/Models.cs#L254) | `string` | `""` | Piper yerel model dosyası yolu; bir bulut model ID’si değildir. `public { get; set; }` |
+| [XttsUrl](src/Models.cs#L255) | `string` | `"http://127.0.0.1:8020"` | XTTS sunucu adresi; varsayılan loopback 8020. `public { get; set; }` |
+| [XttsSpeaker](src/Models.cs#L256) | `string` | `""` | XTTS hizmetinde seçili konuşmacı kimliği. `public { get; set; }` |
+| [SourceUrls](src/Models.cs#L258) | `string` | `""` | Araştırmada kullanılması istenen kaynak URL girdileri. `public { get; set; }` |
+| [ProviderOrder](src/Models.cs#L260) | `string` | `"Ollama,OpenRouter,Groq,NVIDIA,Gemini,OpenAI,Kimi"` | Metin servislerinin deneneceği sıra. `public { get; set; }` |
+| [PoolEnabled](src/Models.cs#L262) | `bool` | `true` | Kalıcı medya havuzunu kaynak seçiminde kullanma. `public { get; set; }` |
+| [PoolAutoSave](src/Models.cs#L264) | `bool` | `true` | Uygun indirilen medyayı havuza otomatik ekleme. `public { get; set; }` |
+| [PoolFallback](src/Models.cs#L266) | `bool` | `true` | Havuzu ilgili kaynak bulma akışında yedek olarak kullanma. `public { get; set; }` |
+| [StockGeneralFallback](src/Models.cs#L268) | `bool` | `true` | İlgili stok yolunda genel sorgu yedeğine geçme tercihi. `public { get; set; }` |
+| [PoolRepeatHours](src/Models.cs#L270) | `int` | `24` | Havuz malzemesinin tekrar kullanımını saat bazında sınırlandırma. `public { get; set; }` |
+| [StockOrder](src/Models.cs#L272) | `string` | `"Pexels,Pixabay,Vecteezy"` | Pexels/Pixabay/Vecteezy arama sırası. `public { get; set; }` |
+| [VecteezyEnabled](src/Models.cs#L274) | `bool` | `true` | Vecteezy entegrasyon kullanım tercihi. `public { get; set; }` |
+| [VecteezyMonthlyDownloads](src/Models.cs#L276) | `int` | `450` | Vecteezy için yapılandırılmış aylık indirme üst sınırı; gerçek hesap kotası ayrıca geçerlidir. `public { get; set; }` |
+| [LocalMediaFolder](src/Models.cs#L278) | `string` | `""` | Yerel medya arşiv/tarama klasörü. `public { get; set; }` |
+| [CategoryId](src/Models.cs#L280) | `string` | `"27"` | YouTube yayın kategori kimliği. `public { get; set; }` |
+| [EncodingPreset](src/Models.cs#L282) | `string` | `"veryfast"` | FFmpeg/libx264 kodlama önayarı; hız ve sıkıştırma maliyetini etkiler. `public { get; set; }` |
+| [Crf](src/Models.cs#L284) | `int` | `20` | Sabit kalite kodlama parametresi; daha düşük değer genellikle daha yüksek kalite/boyut getirir. `public { get; set; }` |
+| [FramesPerSecond](src/Models.cs#L286) | `int` | `30` | Nihai video kare hızı. `public { get; set; }` |
+| [SeriesCounters](src/Models.cs#L288) | `Dictionary<string, int>` | `[]` | Seriler için saklanan numara sayaçları. `public { get; set; }` |
+| [SeriesAssignments](src/Models.cs#L290) | `Dictionary<string, int>` | `[]` | Proje/seri başlığı numara atamaları. `public { get; set; }` |
+| [SocialBrokerUrl](src/Models.cs#L292) | `string` | `""` | İsteğe bağlı sosyal OAuth broker HTTPS adresi. `public { get; set; }` |
+| [SocialGraphVersion](src/Models.cs#L293) | `string` | `"v25.0"` | Meta Graph API için kodda yapılandırılmış sürüm kimliği. `public { get; set; }` |
+| [SocialAccounts](src/Models.cs#L294) | `List<SocialAccount>` | `[]` | Bağlanan sosyal hesap metadata listesi; erişim tokenları kasada ayrı tutulur. `public { get; set; }` |
+| [ChannelName](src/Models.cs#L295) | `string` | `"Benim kanalım"` | Elle ayarlanan çalışma alanı/kapak kanal adı; doğrulanan OAuth kanal başlığıyla aynı kavram değildir. `public { get; set; }` |
+| [Audience](src/Models.cs#L297) | `string` | `"Meraklı Türkçe izleyiciler"` | AI anlatımı için hedef kitle tarifi. `public { get; set; }` |
+| [Model](src/Models.cs#L299) | `string` | `"gpt-4.1"` | OpenAI metin yolunun model kimliği; canlı erişim garantisi değildir. `public { get; set; }` |
+| [ElevenStability](src/Models.cs#L301) | `double` | `.5` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [ElevenSimilarity](src/Models.cs#L302) | `double` | `.75` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [ElevenStyle](src/Models.cs#L303) | `double` | `0` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [ElevenSpeakerBoost](src/Models.cs#L304) | `bool` | `true` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [VoiceId](src/Models.cs#L305) | `string` | `""` | İlgili ses servisindeki seçili ses kimliği; bağlamı VoiceProvider belirler. `public { get; set; }` |
+| [VoiceModel](src/Models.cs#L307) | `string` | `"eleven_multilingual_v2"` | İlgili ses servisinin model kimliği. `public { get; set; }` |
+| [VoiceSpeed](src/Models.cs#L309) | `double` | `1` | Ses üretiminde kullanılan hız tercihi; sağlayıcıya göre uygulanması değişir. `public { get; set; }` |
+| [ShortVoiceOverride](src/Models.cs#L311) | `bool` | `—` | Shorts için normal videodan ayrı ses tercihini etkinleştirir. `public { get; set; }` |
+| [ShortVoiceProvider](src/Models.cs#L313) | `string` | `"Normal videoyla aynı"` | Shorts’a özel sağlayıcı; aynı ses seçimi ayrı seçenek olarak tutulur. `public { get; set; }` |
+| [ShortVoiceId](src/Models.cs#L315) | `string` | `""` | Shorts’a özel ses kimliği. `public { get; set; }` |
+| [ShortVoiceSpeed](src/Models.cs#L317) | `double` | `1.05` | Shorts ses hız tercihi. `public { get; set; }` |
+| [ShortMusicVolume](src/Models.cs#L319) | `double` | `.1` | Shorts fon müziği seviyesi. `public { get; set; }` |
+| [FfmpegPath](src/Models.cs#L321) | `string` | `""` | Seçili FFmpeg yürütülebilir dosyası; FFprobe aynı dizinde aranır. `public { get; set; }` |
+| [VideoBackupFolder](src/Models.cs#L323) | `string` | `""` | Video yedeklerinin hedef klasörü. `public { get; set; }` |
+| [MusicPath](src/Models.cs#L325) | `string` | `""` | Genel/proje snapshot bağlamında seçili müzik dosyası. `public { get; set; }` |
+| [LibraryMusic](src/Models.cs#L327) | `MusicTrack?` | `—` | Arşivden seçilen parçanın yapılandırılmış müzik/metadata kaydı. `public { get; set; }` |
+| [MusicVolume](src/Models.cs#L329) | `double` | `0.12` | Genel/normal video fon müziği karışım seviyesi. `public { get; set; }` |
+| [MusicStyle](src/Models.cs#L331) | `string` | `"Sakin / ambient"` | Müzik tarzı tercihi; gerçek dosya seçiminin yerine geçmez. `public { get; set; }` |
+| [GoogleClientId](src/Models.cs#L333) | `string` | `""` | OAuth masaüstü istemci kimliği; istemci sırrı/token ayrı kasadadır. `public { get; set; }` |
+| [YouTubeChannelId](src/Models.cs#L335) | `string` | `""` | Doğrulanan/kayıtlı YouTube kanal kimliği. `public { get; set; }` |
+| [YouTubeChannelTitle](src/Models.cs#L337) | `string` | `""` | Doğrulanan/kayıtlı YouTube kanal başlığı. `public { get; set; }` |
+| [Repo](src/Models.cs#L339) | `string` | `""` | Uzak GitHub işleri için kullanıcı/depo kimliği. `public { get; set; }` |
+| [GitHubRef](src/Models.cs#L341) | `string` | `"main"` | GitHub dispatch/kaynak bağlamında seçili dal/ref. `public { get; set; }` |
+| [AutoPublish](src/Models.cs#L343) | `bool` | `—` | İlgili onaylı otomasyon yolunda otomatik yayın tercihi; sohbet yetkisi değildir. `public { get; set; }` |
+| [AutoResearch](src/Models.cs#L345) | `bool` | `—` | İlgili otomasyon döngüsünde araştırmayı otomatik başlatma tercihi. `public { get; set; }` |
+| [AutoProduce](src/Models.cs#L347) | `bool` | `—` | İlgili otomasyon döngüsünde üretimi otomatik başlatma tercihi. `public { get; set; }` |
+| [DailyProductionLimit](src/Models.cs#L349) | `int` | `4` | Yerel üretim defterine göre günlük üst sınır. `public { get; set; }` |
+| [SubtitleColor](src/Models.cs#L351) | `string` | `"FFFFFF"` | Yazı/görsel renk tercihi veya çizim değeri. `public { get; set; }` |
+| [LongFontSize](src/Models.cs#L353) | `int` | `46` | Normal video için genel yazı boyutu. `public { get; set; }` |
+| [ShortFontSize](src/Models.cs#L355) | `int` | `68` | Shorts için genel yazı boyutu. `public { get; set; }` |
 
 </details>
 
@@ -1907,86 +1933,86 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [Creation](src/Models.cs#L358) | `CreationFlow?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` Nitelik: `[System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]` |
-| [ProductionSettings](src/Models.cs#L360) | `Settings?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [CurrentStage](src/Models.cs#L362) | `string` | `""` | Kullanıcıya bildirilen mevcut işlem/aşama metni. `public { get; set; }` |
-| [DeferMissedPublication](src/Models.cs#L364) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
-| [StageSeconds](src/Models.cs#L366) | `Dictionary<string,double>` | `[]` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public {get;set;}` |
-| [MusicClip](src/Models.cs#L368) | `MusicClipOptions?` | `—` | Müzik seçimi/karışımı veya arşiv metadata’sı; Müzik bölümüne bak. `public { get; set; }` |
-| [PhotosOnly](src/Models.cs#L369) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
-| [AiStoryImages](src/Models.cs#L370) | `bool` | `—` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [AiStoryStyle](src/Models.cs#L371) | `string` | `"Sinematik tarihî illüstrasyon, doğal ışık, tutarlı karakterler ve kıyafetler"` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [AiStoryCharacters](src/Models.cs#L372) | `string` | `""` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [AiStoryMotion](src/Models.cs#L373) | `bool` | `true` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [AiStoryCinematic](src/Models.cs#L374) | `bool` | `true` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [AiStoryAutonomous](src/Models.cs#L375) | `bool` | `—` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [WizardStep](src/Models.cs#L376) | `int` | `—` | Seçili üretim adımının indeksi. `public {get;set;}` |
-| [WizardPreset](src/Models.cs#L377) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
-| [AiStoryLocal](src/Models.cs#L378) | `bool` | `true` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [AiStoryCastPrompt](src/Models.cs#L379) | `string` | `""` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [AiStoryPromptHash](src/Models.cs#L380) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
-| [AiStoryIdentityHash](src/Models.cs#L381) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
-| [AiStoryCastCount](src/Models.cs#L382) | `int` | `1` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
-| [AiStoryReferenceFile](src/Models.cs#L383) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public {get;set;}` |
-| [AiStoryReferenceHash](src/Models.cs#L384) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
-| [AiStoryReferenceIdentityHash](src/Models.cs#L385) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
-| [WordRepairResumeProduction](src/Models.cs#L386) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
-| [UserNarration](src/Models.cs#L388) | `UserNarrationOptions?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [QueueOrder](src/Models.cs#L392) | `int` | `—` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
-| [QueueState](src/Models.cs#L394) | `string` | `""` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
-| [QueueAuthorized](src/Models.cs#L396) | `bool` | `—` | Sıra işinin yetkilendirme tercihi. `public { get; set; }` |
-| [QueueSettings](src/Models.cs#L398) | `Settings?` | `—` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
-| [QueueMusic](src/Models.cs#L400) | `MusicTrack?` | `—` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
-| [QueueLayout](src/Models.cs#L402) | `TextLayout?` | `—` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
-| [ResumeStage](src/Models.cs#L404) | `string` | `""` | Kesinti/hata sonrası devam edilecek mantıksal aşama. `public { get; set; }` |
-| [ResumeSchedule](src/Models.cs#L406) | `bool?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [RetryAttempts](src/Models.cs#L408) | `int` | `—` | Yeniden deneme sayısı. `public { get; set; }` |
-| [RetryAt](src/Models.cs#L410) | `DateTimeOffset?` | `—` | Uygun yeniden deneme için kaydedilen zaman. `public { get; set; }` |
-| [ProductionDays](src/Models.cs#L412) | `List<string>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
-| [TextDesignPending](src/Models.cs#L414) | `bool` | `—` | Metin/tasarım değişikliği nedeniyle yeniden üretim gerektiği işareti. `public { get; set; }` |
-| [SocialPosts](src/Models.cs#L416) | `List<SocialPost>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
-| [ScenesReviewed](src/Models.cs#L417) | `bool?` | `—` | Sahne incelemesinin tamamlandığı işareti. `public { get; set; }` |
-| [SkipArtworkEditing](src/Models.cs#L418) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [SkipTextDesignEditing](src/Models.cs#L419) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Id](src/Models.cs#L421) | `string` | `Guid.NewGuid().ToString("N")` | Nesne/kayıt kimliği; anlamı ilgili sahip tür ve yöntemlerde belirlenir. `public { get; set; }` |
-| [Topic](src/Models.cs#L423) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
-| [Brief](src/Models.cs#L425) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
-| [Style](src/Models.cs#L427) | `string` | `"Belgesel"` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
-| [LongMinutes](src/Models.cs#L429) | `int` | `6` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ShortSeconds](src/Models.cs#L431) | `int` | `45` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
-| [ShortCount](src/Models.cs#L433) | `int` | `2` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
-| [IncludeLong](src/Models.cs#L435) | `bool` | `true` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ShortMode](src/Models.cs#L437) | `string` | `"Bağlantılı Shorts"` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
-| [Music](src/Models.cs#L439) | `bool` | `—` | Müzik seçimi/karışımı veya arşiv metadata’sı; Müzik bölümüne bak. `public { get; set; }` |
-| [Demo](src/Models.cs#L441) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [MadeForKids](src/Models.cs#L443) | `bool` | `—` | YouTube çocuklara yönelik içerik metadata tercihi. `public { get; set; }` |
-| [DiscloseSynthetic](src/Models.cs#L445) | `bool` | `—` | Yayın metadata’sındaki sentetik içerik açıklama tercihi. `public { get; set; }` |
-| [Status](src/Models.cs#L447) | `string` | `"Taslak"` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Progress](src/Models.cs#L449) | `int` | `—` | Saklanan ilerleme değeri; kesin kalan süre değildir. `public { get; set; }` |
-| [Error](src/Models.cs#L451) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Created](src/Models.cs#L453) | `DateTimeOffset` | `DateTimeOffset.UtcNow` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [PublishAt](src/Models.cs#L455) | `DateTimeOffset?` | `—` | Planlanan yayın zamanı; null tarih seçilmediğini gösterebilir. `public { get; set; }` |
-| [ShortSpacingHours](src/Models.cs#L457) | `int` | `24` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
-| [Approved](src/Models.cs#L459) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ApprovedChannelId](src/Models.cs#L461) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ApprovalHash](src/Models.cs#L463) | `string` | `""` | Onaylanan içerik planı hash değeri; yayın öncesi güncel planla karşılaştırılır. `public { get; set; }` |
-| [RemoteUploadJob](src/Models.cs#L465) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteUploadNotifiedJob](src/Models.cs#L467) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteUploadRepo](src/Models.cs#L469) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteUploadNote](src/Models.cs#L471) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteUploadState](src/Models.cs#L473) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteUploadRelease](src/Models.cs#L475) | `long` | `—` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteUploadAsset](src/Models.cs#L477) | `long` | `—` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteUploadSchedule](src/Models.cs#L479) | `bool` | `—` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteState](src/Models.cs#L481) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteRepo](src/Models.cs#L483) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [RemoteRunId](src/Models.cs#L485) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [Plan](src/Models.cs#L487) | `ContentPlan?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ArtworkSettings](src/Models.cs#L489) | `Settings?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ArtworkPending](src/Models.cs#L491) | `bool` | `—` | Kapak/kart değişikliğinin çıktıya yeniden uygulanması gerektiği işareti. `public { get; set; }` |
-| [Videos](src/Models.cs#L493) | `List<AssetVideo>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
-| [Events](src/Models.cs#L495) | `List<string>` | `[]` | Proje işlem günlüğü. `public { get; set; }` |
-| [Revision](src/Models.cs#L497) | `int` | `1` | Projenin üretim/düzenleme revizyon sayısı. `public { get; set; }` |
+| [Creation](src/Models.cs#L363) | `CreationFlow?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` Nitelik: `[System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]` |
+| [ProductionSettings](src/Models.cs#L365) | `Settings?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [CurrentStage](src/Models.cs#L367) | `string` | `""` | Kullanıcıya bildirilen mevcut işlem/aşama metni. `public { get; set; }` |
+| [DeferMissedPublication](src/Models.cs#L369) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [StageSeconds](src/Models.cs#L371) | `Dictionary<string,double>` | `[]` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public {get;set;}` |
+| [MusicClip](src/Models.cs#L373) | `MusicClipOptions?` | `—` | Müzik seçimi/karışımı veya arşiv metadata’sı; Müzik bölümüne bak. `public { get; set; }` |
+| [PhotosOnly](src/Models.cs#L374) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [AiStoryImages](src/Models.cs#L375) | `bool` | `—` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [AiStoryStyle](src/Models.cs#L376) | `string` | `"Sinematik tarihî illüstrasyon, doğal ışık, tutarlı karakterler ve kıyafetler"` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [AiStoryCharacters](src/Models.cs#L377) | `string` | `""` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [AiStoryMotion](src/Models.cs#L378) | `bool` | `true` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [AiStoryCinematic](src/Models.cs#L379) | `bool` | `true` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [AiStoryAutonomous](src/Models.cs#L380) | `bool` | `—` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [WizardStep](src/Models.cs#L381) | `int` | `—` | Seçili üretim adımının indeksi. `public {get;set;}` |
+| [WizardPreset](src/Models.cs#L382) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [AiStoryLocal](src/Models.cs#L383) | `bool` | `true` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [AiStoryCastPrompt](src/Models.cs#L384) | `string` | `""` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [AiStoryPromptHash](src/Models.cs#L385) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
+| [AiStoryIdentityHash](src/Models.cs#L386) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
+| [AiStoryCastCount](src/Models.cs#L387) | `int` | `1` | AI sahne/karakter/referans üretimi tercihi veya kaydı. `public {get;set;}` |
+| [AiStoryReferenceFile](src/Models.cs#L388) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public {get;set;}` |
+| [AiStoryReferenceHash](src/Models.cs#L389) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
+| [AiStoryReferenceIdentityHash](src/Models.cs#L390) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` |
+| [WordRepairResumeProduction](src/Models.cs#L391) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [UserNarration](src/Models.cs#L393) | `UserNarrationOptions?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [QueueOrder](src/Models.cs#L397) | `int` | `—` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
+| [QueueState](src/Models.cs#L399) | `string` | `""` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
+| [QueueAuthorized](src/Models.cs#L401) | `bool` | `—` | Sıra işinin yetkilendirme tercihi. `public { get; set; }` |
+| [QueueSettings](src/Models.cs#L403) | `Settings?` | `—` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
+| [QueueMusic](src/Models.cs#L405) | `MusicTrack?` | `—` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
+| [QueueLayout](src/Models.cs#L407) | `TextLayout?` | `—` | Kuyruk işine özel durum/anlık görüntü; genel tercihten ayrı saklanır. `public { get; set; }` |
+| [ResumeStage](src/Models.cs#L409) | `string` | `""` | Kesinti/hata sonrası devam edilecek mantıksal aşama. `public { get; set; }` |
+| [ResumeSchedule](src/Models.cs#L411) | `bool?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [RetryAttempts](src/Models.cs#L413) | `int` | `—` | Yeniden deneme sayısı. `public { get; set; }` |
+| [RetryAt](src/Models.cs#L415) | `DateTimeOffset?` | `—` | Uygun yeniden deneme için kaydedilen zaman. `public { get; set; }` |
+| [ProductionDays](src/Models.cs#L417) | `List<string>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
+| [TextDesignPending](src/Models.cs#L419) | `bool` | `—` | Metin/tasarım değişikliği nedeniyle yeniden üretim gerektiği işareti. `public { get; set; }` |
+| [SocialPosts](src/Models.cs#L421) | `List<SocialPost>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
+| [ScenesReviewed](src/Models.cs#L422) | `bool?` | `—` | Sahne incelemesinin tamamlandığı işareti. `public { get; set; }` |
+| [SkipArtworkEditing](src/Models.cs#L423) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [SkipTextDesignEditing](src/Models.cs#L424) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Id](src/Models.cs#L426) | `string` | `Guid.NewGuid().ToString("N")` | Nesne/kayıt kimliği; anlamı ilgili sahip tür ve yöntemlerde belirlenir. `public { get; set; }` |
+| [Topic](src/Models.cs#L428) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
+| [Brief](src/Models.cs#L430) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
+| [Style](src/Models.cs#L432) | `string` | `"Belgesel"` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
+| [LongMinutes](src/Models.cs#L434) | `int` | `6` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ShortSeconds](src/Models.cs#L436) | `int` | `45` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
+| [ShortCount](src/Models.cs#L438) | `int` | `2` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
+| [IncludeLong](src/Models.cs#L440) | `bool` | `true` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ShortMode](src/Models.cs#L442) | `string` | `"Bağlantılı Shorts"` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
+| [Music](src/Models.cs#L444) | `bool` | `—` | Müzik seçimi/karışımı veya arşiv metadata’sı; Müzik bölümüne bak. `public { get; set; }` |
+| [Demo](src/Models.cs#L446) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [MadeForKids](src/Models.cs#L448) | `bool` | `—` | YouTube çocuklara yönelik içerik metadata tercihi. `public { get; set; }` |
+| [DiscloseSynthetic](src/Models.cs#L450) | `bool` | `—` | Yayın metadata’sındaki sentetik içerik açıklama tercihi. `public { get; set; }` |
+| [Status](src/Models.cs#L452) | `string` | `"Taslak"` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Progress](src/Models.cs#L454) | `int` | `—` | Saklanan ilerleme değeri; kesin kalan süre değildir. `public { get; set; }` |
+| [Error](src/Models.cs#L456) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Created](src/Models.cs#L458) | `DateTimeOffset` | `DateTimeOffset.UtcNow` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [PublishAt](src/Models.cs#L460) | `DateTimeOffset?` | `—` | Planlanan yayın zamanı; null tarih seçilmediğini gösterebilir. `public { get; set; }` |
+| [ShortSpacingHours](src/Models.cs#L462) | `int` | `24` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
+| [Approved](src/Models.cs#L464) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ApprovedChannelId](src/Models.cs#L466) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ApprovalHash](src/Models.cs#L468) | `string` | `""` | Onaylanan içerik planı hash değeri; yayın öncesi güncel planla karşılaştırılır. `public { get; set; }` |
+| [RemoteUploadJob](src/Models.cs#L470) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteUploadNotifiedJob](src/Models.cs#L472) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteUploadRepo](src/Models.cs#L474) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteUploadNote](src/Models.cs#L476) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteUploadState](src/Models.cs#L478) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteUploadRelease](src/Models.cs#L480) | `long` | `—` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteUploadAsset](src/Models.cs#L482) | `long` | `—` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteUploadSchedule](src/Models.cs#L484) | `bool` | `—` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteState](src/Models.cs#L486) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteRepo](src/Models.cs#L488) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [RemoteRunId](src/Models.cs#L490) | `string` | `""` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [Plan](src/Models.cs#L492) | `ContentPlan?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ArtworkSettings](src/Models.cs#L494) | `Settings?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ArtworkPending](src/Models.cs#L496) | `bool` | `—` | Kapak/kart değişikliğinin çıktıya yeniden uygulanması gerektiği işareti. `public { get; set; }` |
+| [Videos](src/Models.cs#L498) | `List<AssetVideo>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
+| [Events](src/Models.cs#L500) | `List<string>` | `[]` | Proje işlem günlüğü. `public { get; set; }` |
+| [Revision](src/Models.cs#L502) | `int` | `1` | Projenin üretim/düzenleme revizyon sayısı. `public { get; set; }` |
 
 </details>
 
@@ -1995,8 +2021,8 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [Title](src/Models.cs#L509) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
-| [Url](src/Models.cs#L511) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Title](src/Models.cs#L514) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
+| [Url](src/Models.cs#L516) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
 
 </details>
 
@@ -2005,30 +2031,31 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [SpellingHash](src/Models.cs#L519) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public { get; set; }` |
-| [Research](src/Models.cs#L521) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ResearchedAt](src/Models.cs#L523) | `DateTimeOffset` | `DateTimeOffset.UtcNow` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Sources](src/Models.cs#L525) | `List<SourceRef>` | `[]` | Kaynak kayıtları. `public { get; set; }` |
-| [Warnings](src/Models.cs#L527) | `List<string>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
-| [Long](src/Models.cs#L529) | `VideoScript?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Shorts](src/Models.cs#L531) | `List<VideoScript>` | `[]` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
+| [SpellingHash](src/Models.cs#L524) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public { get; set; }` |
+| [Research](src/Models.cs#L526) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ResearchedAt](src/Models.cs#L528) | `DateTimeOffset` | `DateTimeOffset.UtcNow` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Sources](src/Models.cs#L530) | `List<SourceRef>` | `[]` | Kaynak kayıtları. `public { get; set; }` |
+| [Warnings](src/Models.cs#L532) | `List<string>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
+| [Long](src/Models.cs#L534) | `VideoScript?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Shorts](src/Models.cs#L536) | `List<VideoScript>` | `[]` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
 
 </details>
 
 <details>
-<summary>VideoScript — 9 özellik</summary>
+<summary>VideoScript — 10 özellik</summary>
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [CoverSettings](src/Models.cs#L539) | `Settings?` | `—` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
-| [SceneTitleHash](src/Models.cs#L541) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public { get; set; }` |
-| [MusicTrack](src/Models.cs#L543) | `MusicTrack?` | `—` | Müzik seçimi/karışımı veya arşiv metadata’sı; Müzik bölümüne bak. `public { get; set; }` |
-| [TextLayout](src/Models.cs#L545) | `TextLayout?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Title](src/Models.cs#L547) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
-| [Description](src/Models.cs#L549) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
-| [ThumbnailText](src/Models.cs#L551) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Tags](src/Models.cs#L553) | `List<string>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
-| [Scenes](src/Models.cs#L555) | `List<Scene>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
+| [CoverSettings](src/Models.cs#L544) | `Settings?` | `—` | Kapak tasarımı/üretimi tercihi; Kapak ve ayar önceliği bölümlerine bak. `public { get; set; }` |
+| [SceneTitleHash](src/Models.cs#L546) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public { get; set; }` |
+| [MusicTrack](src/Models.cs#L548) | `MusicTrack?` | `—` | Müzik seçimi/karışımı veya arşiv metadata’sı; Müzik bölümüne bak. `public { get; set; }` |
+| [SoundEffects](src/Models.cs#L549) | `List<MusicTrack>?` | `—` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public {get;set;}` Nitelik: `[System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]` |
+| [TextLayout](src/Models.cs#L552) | `TextLayout?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Title](src/Models.cs#L554) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
+| [Description](src/Models.cs#L556) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
+| [ThumbnailText](src/Models.cs#L558) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Tags](src/Models.cs#L560) | `List<string>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
+| [Scenes](src/Models.cs#L562) | `List<Scene>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` |
 
 </details>
 
@@ -2037,33 +2064,33 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [SourceLinks](src/Models.cs#L563) | `string` | `""` | Sahneye bağlanan kaynak URL listesi. `public {get;set;}` |
-| [AiImageHash](src/Models.cs#L564) | `string` | `""` | AI görsel üretimi/önbellek ilişkisini doğrulayan işaret. `public {get;set;}` |
-| [AiImageQuality](src/Models.cs#L565) | `string` | `""` | Bu sahne görselinin üretildiği kalite işareti. `public {get;set;}` |
-| [AiImagePrompt](src/Models.cs#L566) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
-| [AiPromptSourceHash](src/Models.cs#L567) | `string?` | `—` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` Nitelik: `[System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]` |
-| [AiCharacterIds](src/Models.cs#L569) | `List<int>` | `[]` | Sahneye bağlı karakter referans kimlikleri. `public {get;set;}` |
-| [RightsConfirmed](src/Models.cs#L571) | `bool` | `—` | Medya/müzik kullanım hakkı için kayıtlı kullanıcı onayı. `public { get; set; }` |
-| [UserLocal](src/Models.cs#L573) | `bool` | `—` | Dosyanın kullanıcı/yerel kaynak olarak atanma işareti; tek başına lisans kanıtı değildir. `public { get; set; }` |
-| [TitleStart](src/Models.cs#L575) | `double` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [TitleDuration](src/Models.cs#L577) | `double` | `—` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
-| [SubtitleText](src/Models.cs#L579) | `string` | `""` | Altyazı/yazı çizimi tercihi; TextLayout ve Altyazı bölümüne bak. `public { get; set; }` |
-| [Narration](src/Models.cs#L581) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
-| [SpeechCaptions](src/Models.cs#L583) | `List<Caption>` | `[]` | Sahnenin ses eşleme kaynaklı altyazı/zaman bilgisi. `public { get; set; }` |
-| [SpeechTextHash](src/Models.cs#L585) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public { get; set; }` |
-| [TitlePlacement](src/Models.cs#L587) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [StockMetadata](src/Models.cs#L589) | `string` | `""` | Seçili kaynağın metadata’sı; yüklenen medya yolunda gerçek görsel açıklaması. `public { get; set; }` |
-| [StockSelectionVersion](src/Models.cs#L591) | `int` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [StockReviewQuery](src/Models.cs#L592) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [StockReviewTheme](src/Models.cs#L593) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [VisualQuery](src/Models.cs#L595) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [OnScreen](src/Models.cs#L597) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [StockFile](src/Models.cs#L599) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [StockUrl](src/Models.cs#L601) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Creator](src/Models.cs#L603) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [LicenseUrl](src/Models.cs#L605) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Attribution](src/Models.cs#L607) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Duration](src/Models.cs#L609) | `double` | `—` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
+| [SourceLinks](src/Models.cs#L570) | `string` | `""` | Sahneye bağlanan kaynak URL listesi. `public {get;set;}` |
+| [AiImageHash](src/Models.cs#L571) | `string` | `""` | AI görsel üretimi/önbellek ilişkisini doğrulayan işaret. `public {get;set;}` |
+| [AiImageQuality](src/Models.cs#L572) | `string` | `""` | Bu sahne görselinin üretildiği kalite işareti. `public {get;set;}` |
+| [AiImagePrompt](src/Models.cs#L573) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` |
+| [AiPromptSourceHash](src/Models.cs#L574) | `string?` | `—` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public {get;set;}` Nitelik: `[System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]` |
+| [AiCharacterIds](src/Models.cs#L576) | `List<int>` | `[]` | Sahneye bağlı karakter referans kimlikleri. `public {get;set;}` |
+| [RightsConfirmed](src/Models.cs#L578) | `bool` | `—` | Medya/müzik kullanım hakkı için kayıtlı kullanıcı onayı. `public { get; set; }` |
+| [UserLocal](src/Models.cs#L580) | `bool` | `—` | Dosyanın kullanıcı/yerel kaynak olarak atanma işareti; tek başına lisans kanıtı değildir. `public { get; set; }` |
+| [TitleStart](src/Models.cs#L582) | `double` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [TitleDuration](src/Models.cs#L584) | `double` | `—` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
+| [SubtitleText](src/Models.cs#L586) | `string` | `""` | Altyazı/yazı çizimi tercihi; TextLayout ve Altyazı bölümüne bak. `public { get; set; }` |
+| [Narration](src/Models.cs#L588) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
+| [SpeechCaptions](src/Models.cs#L590) | `List<Caption>` | `[]` | Sahnenin ses eşleme kaynaklı altyazı/zaman bilgisi. `public { get; set; }` |
+| [SpeechTextHash](src/Models.cs#L592) | `string` | `""` | İlgili içerik/istek/durum için geçerlilik veya önbellek özeti. `public { get; set; }` |
+| [TitlePlacement](src/Models.cs#L594) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [StockMetadata](src/Models.cs#L596) | `string` | `""` | Seçili kaynağın metadata’sı; yüklenen medya yolunda gerçek görsel açıklaması. `public { get; set; }` |
+| [StockSelectionVersion](src/Models.cs#L598) | `int` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [StockReviewQuery](src/Models.cs#L599) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [StockReviewTheme](src/Models.cs#L600) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [VisualQuery](src/Models.cs#L602) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [OnScreen](src/Models.cs#L604) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [StockFile](src/Models.cs#L606) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [StockUrl](src/Models.cs#L608) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Creator](src/Models.cs#L610) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [LicenseUrl](src/Models.cs#L612) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Attribution](src/Models.cs#L614) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Duration](src/Models.cs#L616) | `double` | `—` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
 
 </details>
 
@@ -2072,30 +2099,30 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [RenderFingerprint](src/Models.cs#L617) | `string` | `""` | Etkin renderer ayarları ve kaynak içerikleri özeti. `public { get; set; }` |
-| [NarrationFile](src/Models.cs#L619) | `string` | `""` | Çıktıyla ilişkili korunmuş tam anlatım dosyası. `public {get;set;}` |
-| [NarrationTimingFile](src/Models.cs#L621) | `string` | `""` | Çıktıyla ilişkili tam anlatım zamanlama dosyası. `public {get;set;}` |
-| [PipelineVersion](src/Models.cs#L623) | `string` | `""` | Çıktıyı üreten güvenilirlik/render sürüm işareti. `public { get; set; }` |
-| [PlanHash](src/Models.cs#L625) | `string` | `""` | Çıktının bağlı olduğu içerik planı özeti. `public { get; set; }` |
-| [RemotePublishAt](src/Models.cs#L627) | `DateTimeOffset?` | `—` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
-| [Key](src/Models.cs#L629) | `string` | `""` | Nesne/kayıt kimliği; anlamı ilgili sahip tür ve yöntemlerde belirlenir. `public { get; set; }` |
-| [Short](src/Models.cs#L631) | `bool` | `—` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
-| [Title](src/Models.cs#L633) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
-| [File](src/Models.cs#L635) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
-| [Thumbnail](src/Models.cs#L637) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Duration](src/Models.cs#L639) | `double` | `—` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
-| [PublishAt](src/Models.cs#L641) | `DateTimeOffset?` | `—` | Planlanan yayın zamanı; null tarih seçilmediğini gösterebilir. `public { get; set; }` |
-| [YouTubeId](src/Models.cs#L643) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [UploadSession](src/Models.cs#L645) | `string` | `""` | Devam edebilen YouTube yükleme oturumu. `public { get; set; }` |
-| [YouTubeState](src/Models.cs#L647) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [YouTubeCheckedAt](src/Models.cs#L649) | `DateTimeOffset?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [Scheduled](src/Models.cs#L651) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
-| [ThumbnailUploaded](src/Models.cs#L653) | `bool` | `—` | YouTube küçük resim yüklemesinin ayrı başarı işareti. `public { get; set; }` |
-| [ThumbnailAttempted](src/Models.cs#L655) | `bool` | `—` | YouTube küçük resim gönderiminin denendiği işareti. `public { get; set; }` |
-| [ThumbnailNote](src/Models.cs#L657) | `string` | `""` | Küçük resim gönderimi sonucu/uyarısı. `public { get; set; }` |
-| [QualityPassed](src/Models.cs#L659) | `bool` | `—` | Teknik medya kontrollerinin geçtiği işareti; içerik doğruluğu garantisi değildir. `public { get; set; }` |
-| [Checks](src/Models.cs#L661) | `List<string>` | `[]` | Teknik doğrulama sonuç/açıklama listesi. `public { get; set; }` |
-| [FileHash](src/Models.cs#L663) | `string` | `""` | Gerçek dosya içeriğinin bütünlük özeti. `public { get; set; }` |
+| [RenderFingerprint](src/Models.cs#L624) | `string` | `""` | Etkin renderer ayarları ve kaynak içerikleri özeti. `public { get; set; }` |
+| [NarrationFile](src/Models.cs#L626) | `string` | `""` | Çıktıyla ilişkili korunmuş tam anlatım dosyası. `public {get;set;}` |
+| [NarrationTimingFile](src/Models.cs#L628) | `string` | `""` | Çıktıyla ilişkili tam anlatım zamanlama dosyası. `public {get;set;}` |
+| [PipelineVersion](src/Models.cs#L630) | `string` | `""` | Çıktıyı üreten güvenilirlik/render sürüm işareti. `public { get; set; }` |
+| [PlanHash](src/Models.cs#L632) | `string` | `""` | Çıktının bağlı olduğu içerik planı özeti. `public { get; set; }` |
+| [RemotePublishAt](src/Models.cs#L634) | `DateTimeOffset?` | `—` | Uzak iş/yükleme izleme alanı; kullanımı ilgili uzak iş modülündedir. `public { get; set; }` |
+| [Key](src/Models.cs#L636) | `string` | `""` | Nesne/kayıt kimliği; anlamı ilgili sahip tür ve yöntemlerde belirlenir. `public { get; set; }` |
+| [Short](src/Models.cs#L638) | `bool` | `—` | Shorts çıktısı için bağımsız tercih veya kayıt; genel modelle birlikte değerlendirilir. `public { get; set; }` |
+| [Title](src/Models.cs#L640) | `string` | `""` | İlgili nesnenin metin/başlık/anlatım içeriği; bağlamı sahibi olan türdür. `public { get; set; }` |
+| [File](src/Models.cs#L642) | `string` | `""` | Yerel dosya/araç yolu; varlık/biçim ilgili kullanımda doğrulanır. `public { get; set; }` |
+| [Thumbnail](src/Models.cs#L644) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Duration](src/Models.cs#L646) | `double` | `—` | Süre/zaman alanı; birim ve sınır ilgili iş akışında kontrol edilir. `public { get; set; }` |
+| [PublishAt](src/Models.cs#L648) | `DateTimeOffset?` | `—` | Planlanan yayın zamanı; null tarih seçilmediğini gösterebilir. `public { get; set; }` |
+| [YouTubeId](src/Models.cs#L650) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [UploadSession](src/Models.cs#L652) | `string` | `""` | Devam edebilen YouTube yükleme oturumu. `public { get; set; }` |
+| [YouTubeState](src/Models.cs#L654) | `string` | `""` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [YouTubeCheckedAt](src/Models.cs#L656) | `DateTimeOffset?` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [Scheduled](src/Models.cs#L658) | `bool` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` |
+| [ThumbnailUploaded](src/Models.cs#L660) | `bool` | `—` | YouTube küçük resim yüklemesinin ayrı başarı işareti. `public { get; set; }` |
+| [ThumbnailAttempted](src/Models.cs#L662) | `bool` | `—` | YouTube küçük resim gönderiminin denendiği işareti. `public { get; set; }` |
+| [ThumbnailNote](src/Models.cs#L664) | `string` | `""` | Küçük resim gönderimi sonucu/uyarısı. `public { get; set; }` |
+| [QualityPassed](src/Models.cs#L666) | `bool` | `—` | Teknik medya kontrollerinin geçtiği işareti; içerik doğruluğu garantisi değildir. `public { get; set; }` |
+| [Checks](src/Models.cs#L668) | `List<string>` | `[]` | Teknik doğrulama sonuç/açıklama listesi. `public { get; set; }` |
+| [FileHash](src/Models.cs#L670) | `string` | `""` | Gerçek dosya içeriğinin bütünlük özeti. `public { get; set; }` |
 
 </details>
 
@@ -2104,10 +2131,10 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [SchemaVersion](src/Models.cs#L673) | `int` | `2` | Kaydedilen birleşik veri şemasının sürümü. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonRequired]` |
-| [Settings](src/Models.cs#L677) | `Settings` | `new()` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonRequired]` |
-| [Episodes](src/Models.cs#L681) | `List<Episode>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonRequired]` |
-| [ProductionLedger](src/Models.cs#L685) | `List<string>` | `[]` | Gün/proje bazında üretim sayım defteri. `public { get; set; }` |
+| [SchemaVersion](src/Models.cs#L680) | `int` | `2` | Kaydedilen birleşik veri şemasının sürümü. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonRequired]` |
+| [Settings](src/Models.cs#L684) | `Settings` | `new()` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonRequired]` |
+| [Episodes](src/Models.cs#L688) | `List<Episode>` | `[]` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; set; }` Nitelik: `[System.Text.Json.Serialization.JsonRequired]` |
+| [ProductionLedger](src/Models.cs#L692) | `List<string>` | `[]` | Gün/proje bazında üretim sayım defteri. `public { get; set; }` |
 
 </details>
 
@@ -2116,14 +2143,14 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [Root](src/Models.cs#L701) | `string` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; }` |
-| [Settings](src/Models.cs#L703) | `Settings` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; private set; }` |
-| [Episodes](src/Models.cs#L705) | `List<Episode>` | `—` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; private set; }` |
-| [ProductionLedger](src/Models.cs#L707) | `List<string>` | `[]` | Gün/proje bazında üretim sayım defteri. `public { get; private set; }` |
-| [Vault](src/Models.cs#L709) | `Vault` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; }` |
-| [ProducedToday](src/Models.cs#L813) | `int` | `=> ProductionLedger.Count(x => x.StartsWith(DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(3)).ToString("yyyy-MM-dd") + ":"))` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
-| [Ffmpeg](src/Models.cs#L817) | `string` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get { if (File.Exists(Settings.FfmpegPath)) return Settings.FfmpegPath; var local = Path.Combine(AppContext.BaseDirectory, "tools", "ffmpeg.exe"); if (File.Exists(local)) return local; foreach (var path in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator)) { var f = Path.Combine(path, "ffmpeg.exe"); if (File.Exists(f)) return f; } throw new InvalidOperationException("Video motoru bulunamadı. Bağlantılar ekranından FFmpeg dosyasını seç."); } }` |
-| [Probe](src/Models.cs#L839) | `string` | `=> Path.Combine(Path.GetDirectoryName(Ffmpeg)!, "ffprobe.exe")` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [Root](src/Models.cs#L708) | `string` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; }` |
+| [Settings](src/Models.cs#L710) | `Settings` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; private set; }` |
+| [Episodes](src/Models.cs#L712) | `List<Episode>` | `—` | İlgili türdeki kayıt/tercih koleksiyonu; öğe şeması aynı katalogda gösterilir. `public { get; private set; }` |
+| [ProductionLedger](src/Models.cs#L714) | `List<string>` | `[]` | Gün/proje bazında üretim sayım defteri. `public { get; private set; }` |
+| [Vault](src/Models.cs#L716) | `Vault` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get; }` |
+| [ProducedToday](src/Models.cs#L820) | `int` | `=> ProductionLedger.Count(x => x.StartsWith(DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(3)).ToString("yyyy-MM-dd") + ":"))` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [Ffmpeg](src/Models.cs#L824) | `string` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public { get { if (File.Exists(Settings.FfmpegPath)) return Settings.FfmpegPath; var local = Path.Combine(AppContext.BaseDirectory, "tools", "ffmpeg.exe"); if (File.Exists(local)) return local; foreach (var path in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator)) { var f = Path.Combine(path, "ffmpeg.exe"); if (File.Exists(f)) return f; } throw new InvalidOperationException("Video motoru bulunamadı. Bağlantılar ekranından FFmpeg dosyasını seç."); } }` |
+| [Probe](src/Models.cs#L846) | `string` | `=> Path.Combine(Path.GetDirectoryName(Ffmpeg)!, "ffprobe.exe")` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
 
 </details>
 
@@ -2302,7 +2329,7 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 ### B. SceneTimeline.cs
 
 <details>
-<summary>WorkflowTimeline — 5 özellik</summary>
+<summary>WorkflowTimeline — 11 özellik</summary>
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
@@ -2310,7 +2337,23 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 | [Selected](src/SceneTimeline.cs#L7) | `int` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;private set;}` |
 | [AllowEditing](src/SceneTimeline.cs#L8) | `bool` | `true` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` Nitelik: `[System.ComponentModel.DefaultValue(true)]` |
 | [Estimated](src/SceneTimeline.cs#L9) | `bool` | `true` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` Nitelik: `[System.ComponentModel.DefaultValue(true)]` |
-| [Total](src/SceneTimeline.cs#L20) | `double` | `=> Math.Max(.1,Script.Scenes.Sum(s=>Math.Max(.1,s.Duration)))` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [ContentWidth](src/SceneTimeline.cs#L19) | `int` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` Nitelik: `[System.ComponentModel.DefaultValue(0)]` |
+| [ViewOffset](src/SceneTimeline.cs#L20) | `int` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;set;}` Nitelik: `[System.ComponentModel.DefaultValue(0)]` |
+| [DrawingWidth](src/SceneTimeline.cs#L21) | `int` | `=> Math.Max(Width,ContentWidth)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `` |
+| [MusicRowTop](src/SceneTimeline.cs#L23) | `int` | `=> Height<290?181:217` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [EffectsRowTop](src/SceneTimeline.cs#L24) | `int` | `=> Height<290?210:249` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [VisualRowBottom](src/SceneTimeline.cs#L25) | `int` | `=> Height<290?83:96` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `` |
+| [Total](src/SceneTimeline.cs#L26) | `double` | `=> Math.Max(.1,Script.Scenes.Sum(s=>Math.Max(.1,s.Duration)))` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+
+</details>
+
+<details>
+<summary>WorkflowTimelineViewport — 2 özellik</summary>
+
+| Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
+|---|---|---|---|
+| [Timeline](src/SceneTimeline.cs#L117) | `WorkflowTimeline` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;}` |
+| [Scrollbar](src/SceneTimeline.cs#L118) | `HScrollBar` | `new(){Dock=DockStyle.Bottom,Height=20}` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get;}` |
 
 </details>
 
@@ -2663,10 +2706,21 @@ Bu bölüm yapısal C# çözümlemesinden çıkarılmış **707 özellik bildiri
 
 | Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
 |---|---|---|---|
-| [HelpText](src/VisualControls.cs#L102) | `string` | `=> ButtonHelp.Explain(Text)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
-| [HasHelp](src/VisualControls.cs#L104) | `bool` | `=> Width>=64 && ButtonHelp.NeedsInfo(Text) && !(Parent?.Controls.OfType<Button>().Any(b=>Equals(b.Tag,"publication-info"))??false)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
-| [HelpBounds](src/VisualControls.cs#L106) | `Rectangle` | `=> new(Math.Max(0,Width-24),3,18,18)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
-| [SurfaceColor](src/VisualControls.cs#L112) | `Color` | `—` | Yazı/görsel renk tercihi veya çizim değeri. `{get{for(Control? parent=Parent;parent!=null;parent=parent.Parent)if(parent.BackColor.A==255)return parent.BackColor;return Theme.Bg;}}` |
+| [HelpText](src/VisualControls.cs#L104) | `string` | `=> ButtonHelp.Explain(Text)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [HasHelp](src/VisualControls.cs#L106) | `bool` | `=> Width>=64 && ButtonHelp.NeedsInfo(Text) && !(Parent?.Controls.OfType<Button>().Any(b=>Equals(b.Tag,"publication-info"))??false)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [HelpBounds](src/VisualControls.cs#L108) | `Rectangle` | `=> new(Math.Max(0,Width-24),3,18,18)` | Hesaplanan/çözümlenen özellik; ifade aşağıda gösterilir, saklanan sabit değer değildir. `public` |
+| [SurfaceColor](src/VisualControls.cs#L114) | `Color` | `—` | Yazı/görsel renk tercihi veya çizim değeri. `{get{for(Control? parent=Parent;parent!=null;parent=parent.Parent)if(parent.BackColor.A==255)return parent.BackColor;return Theme.Bg;}}` |
+
+</details>
+
+### B. WorkflowTimeline.cs
+
+<details>
+<summary>WorkflowPlayer — 1 özellik</summary>
+
+| Alan | C# türü | Başlangıç / hesaplama | Anlam ve erişim |
+|---|---|---|---|
+| [Position](src/WorkflowTimeline.cs#L10) | `double` | `—` | Bu türün yapılandırma/durum alanı; kullanım ayrıntısı dosya/metot bağlantısından izlenebilir. `public {get{try{dynamic player=GetOcx()!;return (double)player.controls.currentPosition;}catch{return 0;}}}` |
 
 </details>
 
@@ -2729,11 +2783,11 @@ Aşağıdaki bildirimler özellik değil alan/sabitlerdir. Değerler çalışma 
 
 | Sahip tür / alan | Tür ve niteleyici | Kaynak başlangıç ifadesi |
 |---|---|---|
-| [AssistantActions.Tools](src/AssistantActions.cs#L16) | `public const string` | `Uzun sabit/ifade (2183 karakter); tam değer kaynak bağlantısında.` |
+| [AssistantActions.Tools](src/AssistantActions.cs#L16) | `public const string` | `Uzun sabit/ifade (2302 karakter); tam değer kaynak bağlantısında.` |
 | [CardDesign.Frames](src/CardDesign.cs#L149) | `public static readonly string[]` | `["Çerçevesiz","İnce çizgi","Çift çizgi","Yuvarlatılmış","Köşe süsleri","Geometrik","Kemer"]` |
 | [ConnectionHelp.Guides](src/ConnectionHelp.cs#L11) | `public static readonly Dictionary<string, Guide>` | `Uzun sabit/ifade (12089 karakter); tam değer kaynak bağlantısında.` |
 | [CoverDesigner.Styles](src/CoverDesigner.cs#L15) | `public static readonly string[]` | `["Minimal", "Sinematik", "Belgesel", "Teknoloji", "Eğitim", "Haber", "Manevi", "Nur Kapısı • Altın sinema", "Eğlence"]` |
-| [CreationFlow.SubtitleStyles](src/CreationFlow.cs#L55) | `public static readonly string[]` | `["Sade beyaz","Sarı vurgulu","Kelime kelime renklenen","Koyu kutulu","Sinematik altın"]` |
+| [CreationFlow.SubtitleStyles](src/CreationFlow.cs#L63) | `public static readonly string[]` | `["Sade beyaz","Sarı vurgulu","Kelime kelime renklenen","Koyu kutulu","Sinematik altın"]` |
 | [DeviceMemory.MemoryStatus.Length](src/DeviceMemory.cs#L5) | `public uint` | `—` |
 | [DeviceMemory.MemoryStatus.Load](src/DeviceMemory.cs#L5) | `public uint` | `—` |
 | [DeviceMemory.MemoryStatus.TotalPhysical](src/DeviceMemory.cs#L5) | `public ulong` | `—` |
@@ -2753,16 +2807,16 @@ Aşağıdaki bildirimler özellik değil alan/sabitlerdir. Değerler çalışma 
 | [LocalAi.Catalog](src/LocalAi.cs#L29) | `public static readonly LocalModel[]` | `[ new("qwen3:1.7b", "Qwen3 1.7B • 1,4 GB • en hafif; doğruluk daha sınırlı", 1_400_000_000), new("qwen3:4b", "Qwen3 4B • 2,5 GB • hafif başlangıç önerisi", 2_500_000_000), new("qwen3:8b", "Qwen3 8B • 5,2 GB • daha fazla bellek; daha güçlü seçenek", 5_200_000_000), new("qwen3-vl:4b-instruct", "Qwen3-VL 4B • 3,3 GB • fotoğraf/video karelerini okur • yerel/ücretsiz",3_300_000_000) ]` |
 | [LocalAi.Shared](src/LocalAi.cs#L40) | `internal static readonly HttpClient` | `new() { Timeout = Timeout.InfiniteTimeSpan }` |
 | [LocalCoverEngine.Qualities](src/LocalCoverEngine.cs#L90) | `public static readonly string[]` | `["Hızlı", "Dengeli", "Ultra sinematik"]` |
-| [LocalCoverEngine.Models](src/LocalCoverEngine.cs#L91) | `public static readonly string[]` | `["Otomatik", "FLUX.2", "Stable Diffusion XL"]` |
+| [LocalCoverEngine.Models](src/LocalCoverEngine.cs#L91) | `public static readonly string[]` | `["Otomatik", "FLUX Schnell", "FLUX.2", "Stable Diffusion XL"]` |
 | [Json.Options](src/Models.cs#L21) | `public static readonly JsonSerializerOptions` | `new() { WriteIndented = true, PropertyNameCaseInsensitive = true, RespectNullableAnnotations = true }` |
 | [Json.RecoveryMessages](src/Models.cs#L25) | `public static readonly System.Collections.Concurrent.ConcurrentQueue<string>` | `new()` |
-| [Store.OperationGate](src/Models.cs#L693) | `public readonly object` | `new()` |
-| [Store.OperationBusy](src/Models.cs#L695) | `public bool` | `—` |
-| [Store.ProviderBlocked](src/Models.cs#L697) | `public readonly Dictionary<string, DateTimeOffset>` | `new(StringComparer.OrdinalIgnoreCase)` |
-| [Store.PreferredProvider](src/Models.cs#L699) | `public string` | `""` |
-| [Vault.PasswordProvider](src/Models.cs#L851) | `public static Func<bool, string?>?` | `—` |
-| [Vault.Blob.Length](src/Models.cs#L853) | `public int` | `—` |
-| [Vault.Blob.Data](src/Models.cs#L853) | `public IntPtr` | `—` |
+| [Store.OperationGate](src/Models.cs#L700) | `public readonly object` | `new()` |
+| [Store.OperationBusy](src/Models.cs#L702) | `public bool` | `—` |
+| [Store.ProviderBlocked](src/Models.cs#L704) | `public readonly Dictionary<string, DateTimeOffset>` | `new(StringComparer.OrdinalIgnoreCase)` |
+| [Store.PreferredProvider](src/Models.cs#L706) | `public string` | `""` |
+| [Vault.PasswordProvider](src/Models.cs#L858) | `public static Func<bool, string?>?` | `—` |
+| [Vault.Blob.Length](src/Models.cs#L860) | `public int` | `—` |
+| [Vault.Blob.Data](src/Models.cs#L860) | `public IntPtr` | `—` |
 | [ModernScrollbars.Rect.Left](src/ModernScrollbars.cs#L61) | `public int` | `—` |
 | [ModernScrollbars.Rect.Top](src/ModernScrollbars.cs#L61) | `public int` | `—` |
 | [ModernScrollbars.Rect.Right](src/ModernScrollbars.cs#L61) | `public int` | `—` |
@@ -2791,7 +2845,7 @@ Aşağıdaki bildirimler özellik değil alan/sabitlerdir. Değerler çalışma 
 | [NvidiaModels.State.Task](src/NvidiaModels.cs#L37) | `public Task?` | `—` |
 | [NvidiaModels.State.KeyId](src/NvidiaModels.cs#L38) | `public string` | `""` |
 | [NvidiaModels.State.Progress](src/NvidiaModels.cs#L39) | `public string` | `"Tarama henüz başlamadı."` |
-| [PackageArtwork.CoverFields](src/PackageArtwork.cs#L11) | `public static readonly string[]` | `"CoverLocalEnabled,CoverLocalWorkflow,CoverLocalModel,CoverLocalQuality,CoverTitleStyle,CoverSubtitleText,CoverDesignInstructions,CoverReferenceImage,CoverAiEnabled,CoverPaidAllowed,CoverProviderOrder,CoverNvidiaModel,CoverGeminiModel,CoverOpenAiModel,CoverMonthlyRequests,CoverStyle,CoverAutoStyle,CoverMode,CoverPng,CoverBackground,CoverLogo,CoverChannelName,CoverShowChannelName,CoverFont,CoverLogoPosition,CoverAccent".Split(',')` |
+| [PackageArtwork.CoverFields](src/PackageArtwork.cs#L11) | `public static readonly string[]` | `"CoverLocalEnabled,CoverLocalWorkflow,CoverLocalModel,CoverLocalQuality,CoverLocalResolution,CoverTitleStyle,CoverSubtitleText,CoverDesignInstructions,CoverReferenceImage,CoverAiEnabled,CoverPaidAllowed,CoverProviderOrder,CoverNvidiaModel,CoverGeminiModel,CoverOpenAiModel,CoverMonthlyRequests,CoverStyle,CoverAutoStyle,CoverMode,CoverPng,CoverBackground,CoverLogo,CoverChannelName,CoverShowChannelName,CoverFont,CoverLogoPosition,CoverAccent".Split(',')` |
 | [PackageArtwork.CardFields](src/PackageArtwork.cs#L13) | `public static readonly string[]` | `"OpeningCardEnabled,OpeningCardFile,OpeningCardSeconds,ClosingCardEnabled,ClosingCardFile,ClosingCardSeconds".Split(',')` |
 | [PackageArtwork.Fields](src/PackageArtwork.cs#L15) | `public static readonly string[]` | `CoverFields.Concat("ScriptCardsOverride,OpeningCardEnabled,OpeningCardFile,OpeningCardSeconds,ClosingCardEnabled,ClosingCardFile,ClosingCardSeconds,VideoLogoEnabled,VideoLogo,VideoLogoPosition,VideoLogoWidthPercent".Split(',')).ToArray()` |
 | [ProductionPresets.All](src/ProductionPresets.cs#L6) | `public static readonly Preset[]` | `[ new("story","Kıssa ve Hikâye • 9:16","Karakter referanslı AI görselleri, sinematik hareket, altın altyazı."), new("documentary","Belgesel • 16:9","Yatay video, konuya göre stok görüntü, sade ve okunaklı altyazı."), new("package","Normal video + 2 Shorts","Bir yatay ana video ve iki bağımsız dikey kısa video."), new("music","Müzik / Fotoğraf Klibi","Seçtiğin müzikle fotoğraf akışı; parça ve hak bilgileri ayrıca seçilir.")]` |
@@ -2809,6 +2863,9 @@ Aşağıdaki bildirimler özellik değil alan/sabitlerdir. Değerler çalışma 
 | [ReliabilityTests.NativeRect.Top](src/ReliabilityTests.cs#L21) | `public int` | `—` |
 | [ReliabilityTests.NativeRect.Right](src/ReliabilityTests.cs#L21) | `public int` | `—` |
 | [ReliabilityTests.NativeRect.Bottom](src/ReliabilityTests.cs#L21) | `public int` | `—` |
+| [WorkflowTimeline.MusicLabel](src/SceneTimeline.cs#L52) | `public string` | `""` |
+| [WorkflowTimeline.SubtitlesEnabled](src/SceneTimeline.cs#L53) | `public bool` | `true` |
+| [WorkflowTimeline.PlayheadSeconds](src/SceneTimeline.cs#L54) | `public double` | `—` |
 | [SelfTests.KimiHandler.Calls](src/SelfTests.cs#L1167) | `public int` | `—` |
 | [SelfTests.RateAiHandler.DirectLimit](src/SelfTests.cs#L1189) | `public bool` | `—` |
 | [SelfTests.RateAiHandler.Bodies](src/SelfTests.cs#L1189) | `public List<string>` | `[]` |
@@ -2844,25 +2901,31 @@ Aşağıdaki bildirimler özellik değil alan/sabitlerdir. Değerler çalışma 
 | [StockSearch.SelectionVersion](src/StockSearch.cs#L114) | `public const int` | `3` |
 | [StockSearch.NeutralReviewQuery](src/StockSearch.cs#L128) | `public const string` | `"Neutral background: nature, forest, sea, sky, landscape or abstract light. No people, combat or unrelated city footage. This is an explicitly permitted representative background, not a depiction of the historical person or event."` |
 | [StoryCinema.Version](src/StoryCinema.cs#L11) | `public const string` | `"story-cinema-v1"` |
+| [StudioGlass.Indigo](src/StudioGlass.cs#L8) | `public static readonly Color` | `Color.FromArgb(99,102,241)` |
+| [StudioGlass.Cyan](src/StudioGlass.cs#L8) | `public static readonly Color` | `Color.FromArgb(34,211,238)` |
+| [StudioGlass.Emerald](src/StudioGlass.cs#L8) | `public static readonly Color` | `Color.FromArgb(52,211,153)` |
+| [StudioGlass.Amber](src/StudioGlass.cs#L8) | `public static readonly Color` | `Color.FromArgb(251,191,36)` |
+| [StudioGlass.Purple](src/StudioGlass.cs#L8) | `public static readonly Color` | `Color.FromArgb(192,132,252)` |
+| [StudioGlass.Rose](src/StudioGlass.cs#L8) | `public static readonly Color` | `Color.FromArgb(251,113,133)` |
 | [TextLayout.Effects](src/TextDesign.cs#L69) | `public static readonly string[]` | `["Düz", "Gölge", "Neon parıltı", "3D kabartma"]` |
 | [TextLayout.Animations](src/TextDesign.cs#L71) | `public static readonly string[]` | `["Yok", "Soluk giriş", "Alttan kayma", "Soldan kayma", "Sağdan kayma", "Yakınlaşma", "Vurgu / pop"]` |
 | [TextLayout.Transitions](src/TextDesign.cs#L73) | `public static readonly string[]` | `["Kesme", "Yumuşak karışım", "Siyaha geçiş", "Beyaza geçiş", "Sola silme", "Sağa silme", "Yukarı kayma", "Dairesel açılma"]` |
 | [Theme.Warning](src/Theme.cs#L19) | `public static readonly Color` | `Color.FromArgb(232, 232, 232)` |
-| [Theme.Shell](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(30,34,32)` |
-| [Theme.Sidebar](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(27,30,28)` |
-| [Theme.Hover](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(46,49,47)` |
-| [Theme.Selection](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(42,46,44)` |
-| [Theme.AccentSurface](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(25,62,115)` |
-| [Theme.Bg](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(24,24,24)` |
-| [Theme.Panel](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(29,29,29)` |
-| [Theme.Elevated](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(48,48,48)` |
-| [Theme.Text](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(236,236,236)` |
-| [Theme.Muted](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(153,155,154)` |
-| [Theme.Teal](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(76,139,235)` |
-| [Theme.Orange](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(230,177,92)` |
-| [Theme.Border](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(52,55,53)` |
-| [Theme.Success](src/Theme.cs#L57) | `public static readonly Color` | `Color.FromArgb(108, 203, 143)` |
-| [Theme.SuccessSurface](src/Theme.cs#L57) | `public static readonly Color` | `Color.FromArgb(32, 64, 46)` |
+| [Theme.Shell](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(2,6,23)` |
+| [Theme.Sidebar](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(15,23,42)` |
+| [Theme.Hover](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(39,53,78)` |
+| [Theme.Selection](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(40,48,82)` |
+| [Theme.AccentSurface](src/Theme.cs#L55) | `public static readonly Color` | `Color.FromArgb(30,27,75)` |
+| [Theme.Bg](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(11,18,34)` |
+| [Theme.Panel](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(17,28,51)` |
+| [Theme.Elevated](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(30,41,59)` |
+| [Theme.Text](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(241,245,249)` |
+| [Theme.Muted](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(148,163,184)` |
+| [Theme.Teal](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(34,211,238)` |
+| [Theme.Orange](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(251,191,36)` |
+| [Theme.Border](src/Theme.cs#L56) | `public static Color` | `Color.FromArgb(40,55,78)` |
+| [Theme.Success](src/Theme.cs#L57) | `public static readonly Color` | `Color.FromArgb(52,211,153)` |
+| [Theme.SuccessSurface](src/Theme.cs#L57) | `public static readonly Color` | `Color.FromArgb(6,78,59)` |
 | [Theme.BodyFont](src/Theme.cs#L61) | `public static readonly string` | `PickFont("Segoe UI", "Arial")` |
 | [Theme.HeadingFont](src/Theme.cs#L62) | `public static readonly string` | `BodyFont` |
 | [TitlePlacement.Choices](src/TitlePlacement.cs#L13) | `public static readonly string[]` | `["Sol", "Orta", "Sağ"]` |
@@ -2875,22 +2938,24 @@ Aşağıdaki bildirimler özellik değil alan/sabitlerdir. Değerler çalışma 
 | [StudioButton.WrapCaption](src/VisualControls.cs#L93) | `public bool` | `—` |
 | [StudioButton.LeadingIcon](src/VisualControls.cs#L94) | `public string?` | `—` |
 | [StudioButton.UppercaseCaption](src/VisualControls.cs#L95) | `public bool` | `—` |
-| [StudioCard.Borderless](src/VisualControls.cs#L253) | `public bool` | `—` |
-| [StudioCard.CornerRadius](src/VisualControls.cs#L254) | `public int` | `12` |
-| [StudioCard.Completed](src/VisualControls.cs#L256) | `public bool` | `—` |
-| [StudioCard.CurrentStep](src/VisualControls.cs#L257) | `public bool` | `—` |
-| [StudioHeader.PageName](src/VisualControls.cs#L287) | `public string` | `"Stüdyo"` |
-| [StudioHeader.Channel](src/VisualControls.cs#L289) | `public string` | `""` |
-| [StudioHeader.PublicationSummary](src/VisualControls.cs#L290) | `public string` | `""` |
-| [StudioHeader.PublicationSummaryShort](src/VisualControls.cs#L291) | `public string` | `""` |
-| [StudioHeader.Busy](src/VisualControls.cs#L293) | `public bool` | `—` |
+| [StudioButton.GlassAccent](src/VisualControls.cs#L96) | `public Color` | `Color.Empty` |
+| [StudioButton.NeonFill](src/VisualControls.cs#L97) | `public bool` | `—` |
+| [StudioCard.Borderless](src/VisualControls.cs#L268) | `public bool` | `—` |
+| [StudioCard.CornerRadius](src/VisualControls.cs#L269) | `public int` | `12` |
+| [StudioCard.Completed](src/VisualControls.cs#L271) | `public bool` | `—` |
+| [StudioCard.CurrentStep](src/VisualControls.cs#L272) | `public bool` | `—` |
+| [StudioHeader.PageName](src/VisualControls.cs#L305) | `public string` | `"Stüdyo"` |
+| [StudioHeader.Channel](src/VisualControls.cs#L307) | `public string` | `""` |
+| [StudioHeader.PublicationSummary](src/VisualControls.cs#L308) | `public string` | `""` |
+| [StudioHeader.PublicationSummaryShort](src/VisualControls.cs#L309) | `public string` | `""` |
+| [StudioHeader.Busy](src/VisualControls.cs#L311) | `public bool` | `—` |
 | [XttsTts.Help](src/XttsTts.cs#L9) | `public const string` | `Uzun sabit/ifade (1010 karakter); tam değer kaynak bağlantısında.` |
 | [YouTubeEditorial.Guidance](src/YouTubeEditorial.cs#L8) | `public const string` | `" İlk cümlede başlığın vaat ettiği konuyu somutlaştır; konuya uygun bir soru, sorun veya örnekle merak oluştur. Gereksiz kanal girişi ve başta abonelik çağrısı kullanma. Sahne geçişlerini birbirine bağlayan doğal cümleler yaz; her sahne tek fikri ilerletsin. Son bölüm açılışta verilen vaadi karşılasın ve en fazla bir çağrı içersin. Başlık ile kapak metni birbirini tamamlasın; aynı cümleyi tekrarlamasın. Kapak metni tercihen 2–4 sözcük olsun. Merak uğruna kaynak dışı sayı, kesin sonuç veya başarı garantisi uydurma. Kanalın hedef kitlesi ve istenen anlatım tarzını koru."` |
 
 <a id="metot-katalogu"></a>
 ## Ek C — Tür ve metot imzaları
 
-Bu başvuru **301 tür bildirimi** ve **1003 tip düzeyindeki metot bildirimini** kapsar. Kurucular, primary-constructor/record parametreleri ve kalıtım bilgisi ayrıca gösterilir. Partial türler dosyalarına göre tekrar görünür. Yerel fonksiyonlar, lambda gövdeleri, property getter gövdeleri ve otomatik derleyici çıktıları ayrı API öğesi sayılmamıştır; tam uygulama kaynak bağlantısındadır. Erişim niteleyicisi yazılmamış bildirimler C# dilinin varsayılan erişim kurallarını izler; bu katalogdaki her metot dışarı açık API değildir.
+Bu başvuru **311 tür bildirimi** ve **1039 tip düzeyindeki metot bildirimini** kapsar. Kurucular, primary-constructor/record parametreleri ve kalıtım bilgisi ayrıca gösterilir. Partial türler dosyalarına göre tekrar görünür. Yerel fonksiyonlar, lambda gövdeleri, property getter gövdeleri ve otomatik derleyici çıktıları ayrı API öğesi sayılmamıştır; tam uygulama kaynak bağlantısındadır. Erişim niteleyicisi yazılmamış bildirimler C# dilinin varsayılan erişim kurallarını izler; bu katalogdaki her metot dışarı açık API değildir.
 
 ### C. AiDesignDialog.cs
 
@@ -2962,16 +3027,17 @@ public AiTextActivity();
 Eski EXE yönlendirmesi, TubeFlow kısayolları ve simge yenilemesi. [Kaynak](src/AppBranding.cs).
 
 <details>
-<summary>AppBranding — 4 metot</summary>
+<summary>AppBranding — 5 metot</summary>
 
 Tür: `internal static class AppBranding`. [Bildirim](src/AppBranding.cs#L5).
 
 | Satır | Metot imzası |
 |---:|---|
-| [7](src/AppBranding.cs#L7) | `static extern void SHChangeNotify(uint events,uint flags,IntPtr item1,IntPtr item2)` |
-| [8](src/AppBranding.cs#L8) | `public static bool ForwardLegacy(string[] args)` |
-| [13](src/AppBranding.cs#L13) | `public static int RefreshShortcuts(string appFolder,IEnumerable<string> folders)` |
-| [23](src/AppBranding.cs#L23) | `public static void RefreshUserShortcuts()` |
+| [7](src/AppBranding.cs#L7) | `public static Image Logo()` |
+| [13](src/AppBranding.cs#L13) | `static extern void SHChangeNotify(uint events,uint flags,IntPtr item1,IntPtr item2)` |
+| [14](src/AppBranding.cs#L14) | `public static bool ForwardLegacy(string[] args)` |
+| [19](src/AppBranding.cs#L19) | `public static int RefreshShortcuts(string appFolder,IEnumerable<string> folders)` |
+| [29](src/AppBranding.cs#L29) | `public static void RefreshUserShortcuts()` |
 
 </details>
 
@@ -3109,28 +3175,30 @@ public ArchiveVideoPreview();
 Sohbetin izinli araç yürütücüsü; ayar değişimi, onarım, motor kontrolü, tekrar ve geri alma. [Kaynak](src/AssistantActions.cs).
 
 <details>
-<summary>AssistantActions — 16 metot</summary>
+<summary>AssistantActions — 18 metot</summary>
 
 Tür: `public sealed class AssistantActions(Store store,Engine engine,Func<Episode?> selected,Action<string> navigate)`. [Bildirim](src/AssistantActions.cs#L5).
 
 | Satır | Metot imzası |
 |---:|---|
 | [15](src/AssistantActions.cs#L15) | `public void SetAutoRepair(bool enabled)` |
-| [34](src/AssistantActions.cs#L34) | `Episode Project(string id)` |
-| [35](src/AssistantActions.cs#L35) | `static string Key(Episode e)` |
-| [36](src/AssistantActions.cs#L36) | `public static bool ProductionRequested(string request)` |
-| [41](src/AssistantActions.cs#L41) | `void RequireIdle()` |
-| [42](src/AssistantActions.cs#L42) | `void Record(Episode e,string summary)` |
-| [43](src/AssistantActions.cs#L43) | `void Change(Episode e,string summary,Action action)` |
-| [44](src/AssistantActions.cs#L44) | `static void Restore(Episode e,Episode saved)` |
-| [45](src/AssistantActions.cs#L45) | `static CreationFlow Flow(Episode e)` |
-| [46](src/AssistantActions.cs#L46) | `Settings Settings(Episode e)` |
-| [47](src/AssistantActions.cs#L47) | `static void SaveSettings(Episode e,Settings settings)` |
-| [48](src/AssistantActions.cs#L48) | `public string Inspect(Episode e,bool share)` |
-| [49](src/AssistantActions.cs#L49) | `static string Str(JsonElement args,string name)` |
-| [50](src/AssistantActions.cs#L50) | `public async Task<string> Execute(string name,JsonElement args,string projectId,bool share,string humanRequest,CancellationToken ct)` |
-| [98](src/AssistantActions.cs#L98) | `public string Repair(Episode e)` |
-| [107](src/AssistantActions.cs#L107) | `public void Observe()` |
+| [35](src/AssistantActions.cs#L35) | `Episode Project(string id)` |
+| [36](src/AssistantActions.cs#L36) | `static string Key(Episode e)` |
+| [37](src/AssistantActions.cs#L37) | `public static bool ProductionRequested(string request)` |
+| [42](src/AssistantActions.cs#L42) | `void RequireIdle()` |
+| [43](src/AssistantActions.cs#L43) | `void Record(Episode e,string summary)` |
+| [44](src/AssistantActions.cs#L44) | `void Change(Episode e,string summary,Action action)` |
+| [45](src/AssistantActions.cs#L45) | `static void Restore(Episode e,Episode saved)` |
+| [46](src/AssistantActions.cs#L46) | `static CreationFlow Flow(Episode e)` |
+| [47](src/AssistantActions.cs#L47) | `Settings Settings(Episode e)` |
+| [48](src/AssistantActions.cs#L48) | `static void SaveSettings(Episode e,Settings settings)` |
+| [49](src/AssistantActions.cs#L49) | `public string Inspect(Episode e,bool share)` |
+| [50](src/AssistantActions.cs#L50) | `static string Str(JsonElement args,string name)` |
+| [51](src/AssistantActions.cs#L51) | `public async Task<string> Execute(string name,JsonElement args,string projectId,bool share,string humanRequest,CancellationToken ct)` |
+| [101](src/AssistantActions.cs#L101) | `public string Repair(Episode e)` |
+| [110](src/AssistantActions.cs#L110) | `public string Diagnose(Episode e)` |
+| [125](src/AssistantActions.cs#L125) | `public void PreparationFailed(Episode e,Exception error)` |
+| [130](src/AssistantActions.cs#L130) | `public void Observe()` |
 
 </details>
 
@@ -3352,7 +3420,7 @@ Tür: `public sealed partial class StudioForm`. [Bildirim](src/ChannelStatistics
 Sohbet UI, rehber/bağlam, geçmiş, paylaşım, araç döngüsü ve iptal. [Kaynak](src/ChatAssistant.cs).
 
 <details>
-<summary>ChatAssistant — 7 metot</summary>
+<summary>ChatAssistant — 8 metot</summary>
 
 Tür: `public sealed class ChatAssistant : UserControl`. [Bildirim](src/ChatAssistant.cs#L9).
 
@@ -3365,12 +3433,13 @@ public ChatAssistant(Store store,Func<Episode?>? project=null,Func<string>? scre
 | Satır | Metot imzası |
 |---:|---|
 | [84](src/ChatAssistant.cs#L84) | `void Welcome()` |
-| [85](src/ChatAssistant.cs#L85) | `void AgentNotice(string text)` |
-| [86](src/ChatAssistant.cs#L86) | `async Task Undo()` |
-| [88](src/ChatAssistant.cs#L88) | `void Append(string who, string text)` |
-| [99](src/ChatAssistant.cs#L99) | `void LoadHistory()` |
-| [109](src/ChatAssistant.cs#L109) | `void SaveHistory()` |
-| [111](src/ChatAssistant.cs#L111) | `async Task Send()` |
+| [85](src/ChatAssistant.cs#L85) | `async Task LocalAction(string name)` |
+| [94](src/ChatAssistant.cs#L94) | `void AgentNotice(string text)` |
+| [95](src/ChatAssistant.cs#L95) | `async Task Undo()` |
+| [97](src/ChatAssistant.cs#L97) | `void Append(string who, string text)` |
+| [108](src/ChatAssistant.cs#L108) | `void LoadHistory()` |
+| [118](src/ChatAssistant.cs#L118) | `void SaveHistory()` |
+| [120](src/ChatAssistant.cs#L120) | `async Task Send()` |
 
 </details>
 
@@ -3479,9 +3548,9 @@ Tür: `public sealed partial class StudioForm`. [Bildirim](src/CompactCenter.cs#
 | [54](src/CompactCenter.cs#L54) | `void RemoteLibraryList()` |
 | [72](src/CompactCenter.cs#L72) | `internal static bool LibraryMatches(Episode episode,string filter)` |
 | [78](src/CompactCenter.cs#L78) | `void MediaHub()` |
-| [96](src/CompactCenter.cs#L96) | `string[] PhotoFiles()` |
-| [97](src/CompactCenter.cs#L97) | `void PhotoArchive()` |
-| [106](src/CompactCenter.cs#L106) | `void LocalVisualPanel(FlowLayoutPanel target)` |
+| [97](src/CompactCenter.cs#L97) | `string[] PhotoFiles()` |
+| [98](src/CompactCenter.cs#L98) | `void PhotoArchive()` |
+| [107](src/CompactCenter.cs#L107) | `void LocalVisualPanel(FlowLayoutPanel target)` |
 
 </details>
 
@@ -3632,7 +3701,7 @@ Tür: `public sealed class CoverFallback(Store store, Action<string> log, HttpCl
 | [13](src/CoverFallback.cs#L13) | `public static string[] ModelsFor(string provider, Settings settings)` |
 | [19](src/CoverFallback.cs#L19) | `bool Reserve(Settings settings)` |
 | [28](src/CoverFallback.cs#L28) | `void ReleaseRejectedRequest()` |
-| [32](src/CoverFallback.cs#L32) | `public async Task Create(string path, Settings settings, string topic, string title, bool vertical, CancellationToken ct, string? scenePrompt = null, string? referenceImage = null,int castCount=1,IReadOnlyList<int>? characterIds=null)` |
+| [32](src/CoverFallback.cs#L32) | `public async Task Create(string path, Settings settings, string topic, string title, bool vertical, CancellationToken ct, string? scenePrompt = null, string? referenceImage = null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool sceneStyleReference=false)` |
 | [143](src/CoverFallback.cs#L143) | `static StringContent Body(object body)` |
 
 </details>
@@ -3666,19 +3735,20 @@ Tür: `public static class CoverReference`. [Bildirim](src/CoverReference.cs#L2)
 Beş adımın veri/karar modeli, metin onayı, plan imzası ve eski proje geçişi. [Kaynak](src/CreationFlow.cs).
 
 <details>
-<summary>CreationFlow — 7 metot</summary>
+<summary>CreationFlow — 8 metot</summary>
 
 Tür: `public sealed class CreationFlow`. [Bildirim](src/CreationFlow.cs#L4).
 
 | Satır | Metot imzası |
 |---:|---|
 | [21](src/CreationFlow.cs#L21) | `public string RequestHash(Episode e)` |
-| [56](src/CreationFlow.cs#L56) | `public void ValidateSource(Episode e)` |
-| [64](src/CreationFlow.cs#L64) | `public void ValidateDesign()` |
-| [74](src/CreationFlow.cs#L74) | `public TextLayout Layout(Settings settings)` |
-| [80](src/CreationFlow.cs#L80) | `public void CommitText(Episode e)` |
-| [88](src/CreationFlow.cs#L88) | `public static T Copy<T>(T value)` |
-| [89](src/CreationFlow.cs#L89) | `public static CreationFlow Migrate(Episode e)` |
+| [49](src/CreationFlow.cs#L49) | `public void ChangeMode(string mode)` |
+| [64](src/CreationFlow.cs#L64) | `public void ValidateSource(Episode e)` |
+| [72](src/CreationFlow.cs#L72) | `public void ValidateDesign()` |
+| [82](src/CreationFlow.cs#L82) | `public TextLayout Layout(Settings settings)` |
+| [88](src/CreationFlow.cs#L88) | `public void CommitText(Episode e)` |
+| [96](src/CreationFlow.cs#L96) | `public static T Copy<T>(T value)` |
+| [97](src/CreationFlow.cs#L97) | `public static CreationFlow Migrate(Episode e)` |
 
 </details>
 
@@ -3971,13 +4041,13 @@ Tür: `public sealed class Engine(Store store, Action<string>? testFault = null)
 | [277](src/Engine.cs#L277) | `public async Task Plan(Episode e, bool resume = false)` |
 | [343](src/Engine.cs#L343) | `public async Task Produce(Episode e)` |
 | [514](src/Engine.cs#L514) | `async Task<AssetVideo> Render(Episode e, VideoScript script, string key, bool vertical, string folder, HashSet<long> used, Services services, CancellationToken ct, Action<double>? report = null)` |
-| [894](src/Engine.cs#L894) | `public static List<string> SplitText(string text, int length)` |
-| [906](src/Engine.cs#L906) | `static List<Caption> TimedText(string text, double duration)` |
-| [914](src/Engine.cs#L914) | `public static bool NeedsSchedule(AssetVideo asset)` |
-| [916](src/Engine.cs#L916) | `public static void VerifyChannel(string approved, string configured, string actual)` |
-| [918](src/Engine.cs#L918) | `public void Approve(Episode e, bool planned = false)` |
-| [948](src/Engine.cs#L948) | `public async Task Upload(Episode e, bool schedule, YouTube? remoteClient = null)` |
-| [1030](src/Engine.cs#L1030) | `public static ContentPlan DemoPlan(Episode e)` |
+| [895](src/Engine.cs#L895) | `public static List<string> SplitText(string text, int length)` |
+| [907](src/Engine.cs#L907) | `static List<Caption> TimedText(string text, double duration)` |
+| [915](src/Engine.cs#L915) | `public static bool NeedsSchedule(AssetVideo asset)` |
+| [917](src/Engine.cs#L917) | `public static void VerifyChannel(string approved, string configured, string actual)` |
+| [919](src/Engine.cs#L919) | `public void Approve(Episode e, bool planned = false)` |
+| [950](src/Engine.cs#L950) | `public async Task Upload(Episode e, bool schedule, YouTube? remoteClient = null)` |
+| [1032](src/Engine.cs#L1032) | `public static ContentPlan DemoPlan(Episode e)` |
 
 </details>
 
@@ -4066,6 +4136,46 @@ Tür: `public sealed partial class StudioForm`. [Bildirim](src/FirebaseKeyPairin
 | Satır | Metot imzası |
 |---:|---|
 | [89](src/FirebaseKeyPairing.cs#L89) | `void AndroidKeyTransfer()` |
+
+</details>
+
+### C. FreeMediaLibrary.cs
+
+Wikimedia, Pexels ve Pixabay arama; lisans kontrolü, önizleme, arşiv ve projeye ekleme. [Kaynak](src/FreeMediaLibrary.cs).
+
+<details>
+<summary>FreeMedia — 0 metot</summary>
+
+Tür: `public sealed record FreeMedia(string Name,string Kind,string Url,string Source,string Creator,string License,string LicenseUrl,string Attribution)`. [Bildirim](src/FreeMediaLibrary.cs#L6).
+
+Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
+
+</details>
+
+<details>
+<summary>FreeMediaLibrary — 6 metot</summary>
+
+Tür: `public sealed class FreeMediaLibrary(Store store,HttpClient? client=null)`. [Bildirim](src/FreeMediaLibrary.cs#L7).
+
+| Satır | Metot imzası |
+|---:|---|
+| [11](src/FreeMediaLibrary.cs#L11) | `static string Plain(string value)` |
+| [12](src/FreeMediaLibrary.cs#L12) | `public static bool DownloadHost(Uri uri)` |
+| [13](src/FreeMediaLibrary.cs#L13) | `public async Task<List<FreeMedia>> Search(string query,string kind,CancellationToken ct)` |
+| [31](src/FreeMediaLibrary.cs#L31) | `async Task<List<FreeMedia>> SearchStock(string provider,string key,string query,bool video,CancellationToken ct)` |
+| [45](src/FreeMediaLibrary.cs#L45) | `public static List<FreeMedia> ParseCommons(string json,string kind)` |
+| [61](src/FreeMediaLibrary.cs#L61) | `public async Task<string> Download(FreeMedia item,CancellationToken ct,bool archive=true)` |
+
+</details>
+
+<details>
+<summary>StudioForm — 1 metot</summary>
+
+Tür: `public sealed partial class StudioForm`. [Bildirim](src/FreeMediaLibrary.cs#L81).
+
+| Satır | Metot imzası |
+|---:|---|
+| [83](src/FreeMediaLibrary.cs#L83) | `void FreeMediaDialog(Func<string,string,Task>? add=null)` |
 
 </details>
 
@@ -4425,7 +4535,7 @@ Tür: `public static class LocalAudioAlignment`. [Bildirim](src/LocalAudioAlignm
 ComfyUI keşif/başlatma, workflow kontrolü, kalite parametreleri ve görsel üretimi. [Kaynak](src/LocalCoverEngine.cs).
 
 <details>
-<summary>LocalCoverEngine — 18 metot</summary>
+<summary>LocalCoverEngine — 20 metot</summary>
 
 Tür: `public static class LocalCoverEngine`. [Bildirim](src/LocalCoverEngine.cs#L7).
 
@@ -4440,15 +4550,33 @@ Tür: `public static class LocalCoverEngine`. [Bildirim](src/LocalCoverEngine.cs
 | [61](src/LocalCoverEngine.cs#L61) | `public static async Task Start(string workflow,Action<string> report,CancellationToken ct,string? logDirectory=null)` |
 | [93](src/LocalCoverEngine.cs#L93) | `static bool IsFlux(JsonObject graph)` |
 | [94](src/LocalCoverEngine.cs#L94) | `static (int W, int H) Size(JsonObject graph, bool square, bool vertical,string quality)` |
-| [100](src/LocalCoverEngine.cs#L100) | `static int? Steps(JsonObject graph,string quality)` |
-| [101](src/LocalCoverEngine.cs#L101) | `public static string Describe(string quality, string model)` |
-| [106](src/LocalCoverEngine.cs#L106) | `public static string ResolveWorkflow(string model, string current = "")` |
-| [114](src/LocalCoverEngine.cs#L114) | `static string Bundled(string name)` |
-| [115](src/LocalCoverEngine.cs#L115) | `public static string ModelOf(string workflow)` |
-| [116](src/LocalCoverEngine.cs#L116) | `public static JsonObject Prepare(string file, string prompt, bool vertical, bool square=false,string quality="Dengeli")` |
-| [141](src/LocalCoverEngine.cs#L141) | `public static JsonObject ApplyReference(JsonObject graph,string uploaded,long seed,int castCount=1,IReadOnlyList<int>? characterIds=null,int referenceWidth=768,bool styleReference=false)` |
-| [188](src/LocalCoverEngine.cs#L188) | `public static async Task CheckStorySupport(CancellationToken ct,string? workflow=null)` |
-| [201](src/LocalCoverEngine.cs#L201) | `public static async Task<byte[]> Generate(string file, string prompt, bool vertical, Action<string> log, CancellationToken ct, HttpClient? client = null, bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli")` |
+| [100](src/LocalCoverEngine.cs#L100) | `static bool IsSchnell(JsonObject graph)` |
+| [101](src/LocalCoverEngine.cs#L101) | `static int? Steps(JsonObject graph,string quality)` |
+| [102](src/LocalCoverEngine.cs#L102) | `public static string Describe(string quality, string model)` |
+| [107](src/LocalCoverEngine.cs#L107) | `public static string ResolveWorkflow(string model, string current = "")` |
+| [115](src/LocalCoverEngine.cs#L115) | `static string Bundled(string name)` |
+| [116](src/LocalCoverEngine.cs#L116) | `public static string ModelOf(string workflow)` |
+| [117](src/LocalCoverEngine.cs#L117) | `public static JsonObject Prepare(string file, string prompt, bool vertical, bool square=false,string quality="Dengeli")` |
+| [145](src/LocalCoverEngine.cs#L145) | `public static JsonObject ApplyReference(JsonObject graph,string uploaded,long seed,int castCount=1,IReadOnlyList<int>? characterIds=null,int referenceWidth=768,bool styleReference=false)` |
+| [215](src/LocalCoverEngine.cs#L215) | `public static async Task CheckStorySupport(CancellationToken ct,string? workflow=null)` |
+| [229](src/LocalCoverEngine.cs#L229) | `public static async Task<byte[]> Generate(string file,string prompt,bool vertical,Action<string> log,CancellationToken ct,HttpClient? client=null,bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli",string resolution="auto")` |
+| [246](src/LocalCoverEngine.cs#L246) | `static async Task<byte[]> GenerateCore(string file, string prompt, bool vertical, Action<string> log, CancellationToken ct, HttpClient? client = null, bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli",int width=0,int height=0)` |
+
+</details>
+
+### C. LocalImagePolicy.cs
+
+GPU boş belleğine ve en boy oranına göre güvenli piksel çözünürlüğü. [Kaynak](src/LocalImagePolicy.cs).
+
+<details>
+<summary>LocalImagePolicy — 2 metot</summary>
+
+Tür: `public static class LocalImagePolicy`. [Bildirim](src/LocalImagePolicy.cs#L4).
+
+| Satır | Metot imzası |
+|---:|---|
+| [6](src/LocalImagePolicy.cs#L6) | `public static (int W,int H) Resolve(string resolution,string quality,bool vertical,bool square,long? freeBytes=null)` |
+| [22](src/LocalImagePolicy.cs#L22) | `public static void Resize(JsonObject graph,int width,int height)` |
 
 </details>
 
@@ -4468,6 +4596,21 @@ Tür: `public sealed partial class StudioForm`. [Bildirim](src/MaintenanceUi.cs#
 | [31](src/MaintenanceUi.cs#L31) | `void PositionAssistant()` |
 | [47](src/MaintenanceUi.cs#L47) | `void Maintenance()` |
 | [109](src/MaintenanceUi.cs#L109) | `async Task ExportProject(Episode episode)` |
+
+</details>
+
+### C. ManualTimelineAssets.cs
+
+Manuel kurguda görsel/video ve müzik/SFX paleti; sürükleme, önizleme ve yerleştirme. [Kaynak](src/ManualTimelineAssets.cs).
+
+<details>
+<summary>StudioForm — 1 metot</summary>
+
+Tür: `public sealed partial class StudioForm`. [Bildirim](src/ManualTimelineAssets.cs#L3).
+
+| Satır | Metot imzası |
+|---:|---|
+| [5](src/ManualTimelineAssets.cs#L5) | `Control ManualTimelineAssets(Episode episode,CreationFlow flow,WorkflowTimeline timeline,int width,Action<int,string> assign,Action<string> selectMusic,Func<string,Task> selectEffect)` |
 
 </details>
 
@@ -4634,18 +4777,18 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>Episode — 1 metot</summary>
 
-Tür: `public class Episode`. [Bildirim](src/Models.cs#L356).
+Tür: `public class Episode`. [Bildirim](src/Models.cs#L361).
 
 | Satır | Metot imzası |
 |---:|---|
-| [499](src/Models.cs#L499) | `public void Log(string message)` |
+| [504](src/Models.cs#L504) | `public void Log(string message)` |
 
 </details>
 
 <details>
 <summary>SourceRef — 0 metot</summary>
 
-Tür: `public class SourceRef`. [Bildirim](src/Models.cs#L505).
+Tür: `public class SourceRef`. [Bildirim](src/Models.cs#L510).
 
 Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
 
@@ -4654,7 +4797,7 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>ContentPlan — 0 metot</summary>
 
-Tür: `public class ContentPlan`. [Bildirim](src/Models.cs#L515).
+Tür: `public class ContentPlan`. [Bildirim](src/Models.cs#L520).
 
 Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
 
@@ -4663,7 +4806,7 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>VideoScript — 0 metot</summary>
 
-Tür: `public class VideoScript`. [Bildirim](src/Models.cs#L535).
+Tür: `public class VideoScript`. [Bildirim](src/Models.cs#L540).
 
 Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
 
@@ -4672,7 +4815,7 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>Scene — 0 metot</summary>
 
-Tür: `public class Scene`. [Bildirim](src/Models.cs#L559).
+Tür: `public class Scene`. [Bildirim](src/Models.cs#L566).
 
 Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
 
@@ -4681,7 +4824,7 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>AssetVideo — 0 metot</summary>
 
-Tür: `public class AssetVideo`. [Bildirim](src/Models.cs#L613).
+Tür: `public class AssetVideo`. [Bildirim](src/Models.cs#L620).
 
 Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
 
@@ -4690,7 +4833,7 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>StoreSnapshot — 0 metot</summary>
 
-Tür: `public sealed class StoreSnapshot`. [Bildirim](src/Models.cs#L669).
+Tür: `public sealed class StoreSnapshot`. [Bildirim](src/Models.cs#L676).
 
 Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
 
@@ -4699,7 +4842,7 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>Store — 6 metot</summary>
 
-Tür: `public sealed class Store`. [Bildirim](src/Models.cs#L689).
+Tür: `public sealed class Store`. [Bildirim](src/Models.cs#L696).
 
 Kurucular:
 
@@ -4709,19 +4852,19 @@ public Store(string root);
 
 | Satır | Metot imzası |
 |---:|---|
-| [755](src/Models.cs#L755) | `StoreSnapshot ReadState(string path)` |
-| [797](src/Models.cs#L797) | `public void ApplySettings(Settings settings)` |
-| [801](src/Models.cs#L801) | `public void Save()` |
-| [809](src/Models.cs#L809) | `public string Folder(Episode episode)` |
-| [811](src/Models.cs#L811) | `public string Key(string name)` |
-| [815](src/Models.cs#L815) | `public void RecordProduction(Episode e)` |
+| [762](src/Models.cs#L762) | `StoreSnapshot ReadState(string path)` |
+| [804](src/Models.cs#L804) | `public void ApplySettings(Settings settings)` |
+| [808](src/Models.cs#L808) | `public void Save()` |
+| [816](src/Models.cs#L816) | `public string Folder(Episode episode)` |
+| [818](src/Models.cs#L818) | `public string Key(string name)` |
+| [822](src/Models.cs#L822) | `public void RecordProduction(Episode e)` |
 
 </details>
 
 <details>
 <summary>Vault — 9 metot</summary>
 
-Tür: `public sealed class Vault`. [Bildirim](src/Models.cs#L847).
+Tür: `public sealed class Vault`. [Bildirim](src/Models.cs#L854).
 
 Kurucular:
 
@@ -4731,22 +4874,22 @@ public Vault(string file, string? password = null);
 
 | Satır | Metot imzası |
 |---:|---|
-| [855](src/Models.cs#L855) | `static extern bool CryptProtectData(ref Blob input, string description, IntPtr entropy, IntPtr reserved, IntPtr prompt, int flags, out Blob output)` |
-| [857](src/Models.cs#L857) | `static extern bool CryptUnprotectData(ref Blob input, IntPtr description, IntPtr entropy, IntPtr reserved, IntPtr prompt, int flags, out Blob output)` |
-| [859](src/Models.cs#L859) | `static extern IntPtr LocalFree(IntPtr memory)` |
-| [901](src/Models.cs#L901) | `public string Get(string key)` |
-| [903](src/Models.cs#L903) | `public void Set(string key, string value)` |
-| [943](src/Models.cs#L943) | `public void EnablePassword(string password)` |
-| [953](src/Models.cs#L953) | `void Unlock(string password)` |
-| [973](src/Models.cs#L973) | `byte[] ProtectPassword(byte[] raw)` |
-| [985](src/Models.cs#L985) | `static byte[] Transform(byte[] bytes, bool encrypt)` |
+| [862](src/Models.cs#L862) | `static extern bool CryptProtectData(ref Blob input, string description, IntPtr entropy, IntPtr reserved, IntPtr prompt, int flags, out Blob output)` |
+| [864](src/Models.cs#L864) | `static extern bool CryptUnprotectData(ref Blob input, IntPtr description, IntPtr entropy, IntPtr reserved, IntPtr prompt, int flags, out Blob output)` |
+| [866](src/Models.cs#L866) | `static extern IntPtr LocalFree(IntPtr memory)` |
+| [908](src/Models.cs#L908) | `public string Get(string key)` |
+| [910](src/Models.cs#L910) | `public void Set(string key, string value)` |
+| [950](src/Models.cs#L950) | `public void EnablePassword(string password)` |
+| [960](src/Models.cs#L960) | `void Unlock(string password)` |
+| [980](src/Models.cs#L980) | `byte[] ProtectPassword(byte[] raw)` |
+| [992](src/Models.cs#L992) | `static byte[] Transform(byte[] bytes, bool encrypt)` |
 
 </details>
 
 <details>
 <summary>Vault.Blob — 0 metot</summary>
 
-Tür: `struct Vault.Blob`. [Bildirim](src/Models.cs#L853).
+Tür: `struct Vault.Blob`. [Bildirim](src/Models.cs#L860).
 
 Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
 
@@ -4755,27 +4898,27 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>Rules — 6 metot</summary>
 
-Tür: `public static class Rules`. [Bildirim](src/Models.cs#L1015).
+Tür: `public static class Rules`. [Bildirim](src/Models.cs#L1022).
 
 | Satır | Metot imzası |
 |---:|---|
-| [1019](src/Models.cs#L1019) | `public static void Validate(Episode e)` |
-| [1036](src/Models.cs#L1036) | `public static IEnumerable<(string Key, bool Short, VideoScript Script)> Scripts(Episode e)` |
-| [1048](src/Models.cs#L1048) | `public static void ValidatePlan(Episode e)` |
-| [1078](src/Models.cs#L1078) | `public static string HashPlan(Episode e)` |
-| [1080](src/Models.cs#L1080) | `public static DateTimeOffset? VideoDate(Episode e, bool shortVideo, int shortIndex)` |
-| [1082](src/Models.cs#L1082) | `public static string Stamp(double t)` |
+| [1026](src/Models.cs#L1026) | `public static void Validate(Episode e)` |
+| [1043](src/Models.cs#L1043) | `public static IEnumerable<(string Key, bool Short, VideoScript Script)> Scripts(Episode e)` |
+| [1055](src/Models.cs#L1055) | `public static void ValidatePlan(Episode e)` |
+| [1086](src/Models.cs#L1086) | `public static string HashPlan(Episode e)` |
+| [1088](src/Models.cs#L1088) | `public static DateTimeOffset? VideoDate(Episode e, bool shortVideo, int shortIndex)` |
+| [1090](src/Models.cs#L1090) | `public static string Stamp(double t)` |
 
 </details>
 
 <details>
 <summary>TopicProgram — 1 metot</summary>
 
-Tür: `public static class TopicProgram`. [Bildirim](src/Models.cs#L1088).
+Tür: `public static class TopicProgram`. [Bildirim](src/Models.cs#L1096).
 
 | Satır | Metot imzası |
 |---:|---|
-| [1092](src/Models.cs#L1092) | `public static List<Episode> Parse(string text, bool includeLong, int minutes, int shorts, int seconds)` |
+| [1100](src/Models.cs#L1100) | `public static List<Episode> Parse(string text, bool includeLong, int minutes, int shorts, int seconds)` |
 
 </details>
 
@@ -5650,7 +5793,7 @@ Tür: `public static class ReliabilityTests`. [Bildirim](src/ReliabilityTests.cs
 | [23](src/ReliabilityTests.cs#L23) | `static extern bool GetWindowRect(IntPtr window,out NativeRect rect)` |
 | [25](src/ReliabilityTests.cs#L25) | `static extern IntPtr SendHelpMessage(IntPtr hwnd,int msg,IntPtr wparam,IntPtr lparam)` |
 | [27](src/ReliabilityTests.cs#L27) | `public static int Run(string[] args)` |
-| [3332](src/ReliabilityTests.cs#L3332) | `static HttpResponseMessage Ok(string body)` |
+| [3396](src/ReliabilityTests.cs#L3396) | `static HttpResponseMessage Ok(string body)` |
 
 </details>
 
@@ -5675,22 +5818,22 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>ReliabilityTests.InlineProgress — 1 metot</summary>
 
-Tür: `sealed class ReliabilityTests.InlineProgress : IProgress<string>`. [Bildirim](src/ReliabilityTests.cs#L3330).
+Tür: `sealed class ReliabilityTests.InlineProgress : IProgress<string>`. [Bildirim](src/ReliabilityTests.cs#L3394).
 
 | Satır | Metot imzası |
 |---:|---|
-| [3330](src/ReliabilityTests.cs#L3330) | `public void Report(string value)` |
+| [3394](src/ReliabilityTests.cs#L3394) | `public void Report(string value)` |
 
 </details>
 
 <details>
 <summary>ReliabilityTests.Handler — 1 metot</summary>
 
-Tür: `sealed class ReliabilityTests.Handler(Func<HttpRequestMessage, Task<HttpResponseMessage>> action) : HttpMessageHandler`. [Bildirim](src/ReliabilityTests.cs#L3334).
+Tür: `sealed class ReliabilityTests.Handler(Func<HttpRequestMessage, Task<HttpResponseMessage>> action) : HttpMessageHandler`. [Bildirim](src/ReliabilityTests.cs#L3398).
 
 | Satır | Metot imzası |
 |---:|---|
-| [3338](src/ReliabilityTests.cs#L3338) | `protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)` |
+| [3402](src/ReliabilityTests.cs#L3402) | `protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)` |
 
 </details>
 
@@ -5755,30 +5898,50 @@ public WorkflowTimeline(VideoScript script,Store? store=null);
 
 | Satır | Metot imzası |
 |---:|---|
-| [21](src/SceneTimeline.cs#L21) | `public static string Clock(double seconds)` |
-| [22](src/SceneTimeline.cs#L22) | `double X(double t)` |
-| [23](src/SceneTimeline.cs#L23) | `public void SelectScene(int index)` |
-| [24](src/SceneTimeline.cs#L24) | `public static void ResizeBoundary(VideoScript script,int index,double change)` |
-| [28](src/SceneTimeline.cs#L28) | `protected override async void OnHandleCreated(EventArgs e)` |
-| [29](src/SceneTimeline.cs#L29) | `async Task LoadThumbnails()` |
-| [46](src/SceneTimeline.cs#L46) | `protected override void OnPaint(PaintEventArgs e)` |
-| [69](src/SceneTimeline.cs#L69) | `protected override void OnMouseDown(MouseEventArgs e)` |
-| [70](src/SceneTimeline.cs#L70) | `protected override void OnMouseMove(MouseEventArgs e)` |
-| [71](src/SceneTimeline.cs#L71) | `protected override void OnMouseUp(MouseEventArgs e)` |
-| [72](src/SceneTimeline.cs#L72) | `protected override void Dispose(bool disposing)` |
+| [27](src/SceneTimeline.cs#L27) | `public static string Clock(double seconds)` |
+| [28](src/SceneTimeline.cs#L28) | `double X(double t)` |
+| [29](src/SceneTimeline.cs#L29) | `public void SelectScene(int index)` |
+| [30](src/SceneTimeline.cs#L30) | `public static void ResizeBoundary(VideoScript script,int index,double change)` |
+| [34](src/SceneTimeline.cs#L34) | `protected override async void OnHandleCreated(EventArgs e)` |
+| [35](src/SceneTimeline.cs#L35) | `async Task LoadThumbnails()` |
+| [55](src/SceneTimeline.cs#L55) | `protected override void OnPaint(PaintEventArgs e)` |
+| [99](src/SceneTimeline.cs#L99) | `protected override void OnMouseDown(MouseEventArgs e)` |
+| [108](src/SceneTimeline.cs#L108) | `protected override void OnMouseMove(MouseEventArgs e)` |
+| [109](src/SceneTimeline.cs#L109) | `protected override void OnMouseUp(MouseEventArgs e)` |
+| [110](src/SceneTimeline.cs#L110) | `protected override void Dispose(bool disposing)` |
 
 </details>
 
 <details>
-<summary>TimelineEditing — 3 metot</summary>
+<summary>WorkflowTimelineViewport — 3 metot</summary>
 
-Tür: `public static class TimelineEditing`. [Bildirim](src/SceneTimeline.cs#L75).
+Tür: `public sealed class WorkflowTimelineViewport : Panel`. [Bildirim](src/SceneTimeline.cs#L115).
+
+Kurucular:
+
+```csharp
+public WorkflowTimelineViewport(WorkflowTimeline timeline,int contentWidth);
+```
 
 | Satır | Metot imzası |
 |---:|---|
-| [77](src/SceneTimeline.cs#L77) | `public static void Duration(VideoScript script,int index,double seconds)` |
-| [85](src/SceneTimeline.cs#L85) | `public static void Split(VideoScript script,int index,int word=-1)` |
-| [93](src/SceneTimeline.cs#L93) | `public static void Merge(VideoScript script,int index)` |
+| [127](src/SceneTimeline.cs#L127) | `public void SetContentWidth(int width)` |
+| [128](src/SceneTimeline.cs#L128) | `void RefreshRange()` |
+| [134](src/SceneTimeline.cs#L134) | `void EnsureSelectedVisible(int index)` |
+
+</details>
+
+<details>
+<summary>TimelineEditing — 4 metot</summary>
+
+Tür: `public static class TimelineEditing`. [Bildirim](src/SceneTimeline.cs#L143).
+
+| Satır | Metot imzası |
+|---:|---|
+| [145](src/SceneTimeline.cs#L145) | `public static void SwapVisuals(VideoScript script,int from,int to)` |
+| [153](src/SceneTimeline.cs#L153) | `public static void Duration(VideoScript script,int index,double seconds)` |
+| [161](src/SceneTimeline.cs#L161) | `public static void Split(VideoScript script,int index,int word=-1)` |
+| [169](src/SceneTimeline.cs#L169) | `public static void Merge(VideoScript script,int index)` |
 
 </details>
 
@@ -6516,21 +6679,23 @@ Tür: `public sealed partial class StudioForm`. [Bildirim](src/StoryImageReview.
 Karakter/sahne istemleri, kimlik/referans, kalite/hash ve AI görsel hazırlığı. [Kaynak](src/StoryImages.cs).
 
 <details>
-<summary>StoryImages — 9 metot</summary>
+<summary>StoryImages — 11 metot</summary>
 
 Tür: `public static class StoryImages`. [Bildirim](src/StoryImages.cs#L5).
 
 | Satır | Metot imzası |
 |---:|---|
 | [7](src/StoryImages.cs#L7) | `public static string Identity(Episode e)` |
-| [8](src/StoryImages.cs#L8) | `public static Settings LocalSettings(Episode e,Settings settings,Settings? defaults=null)` |
-| [17](src/StoryImages.cs#L17) | `public static void RequireReady(Store store,Settings settings)` |
-| [23](src/StoryImages.cs#L23) | `public static void Validate(Episode e)` |
-| [30](src/StoryImages.cs#L30) | `public static string Context(Episode e)` |
-| [34](src/StoryImages.cs#L34) | `public static async Task Plan(Store store,Episode e,Services services,CancellationToken ct,Action<string> log)` |
-| [69](src/StoryImages.cs#L69) | `public static string Prompt(Episode e,VideoScript script,Scene scene,bool vertical)` |
-| [83](src/StoryImages.cs#L83) | `public static string PhotoFilter(int width,int height,int fps,bool motion)` |
-| [88](src/StoryImages.cs#L88) | `public static async Task Prepare(Store store,Episode e,VideoScript script,Scene scene,bool vertical,Settings settings,CancellationToken ct,Action<string> log,HttpClient? client=null,Func<string,string,CancellationToken,Task<bool>>? review=null,bool automaticCloudAlternative=false)` |
+| [8](src/StoryImages.cs#L8) | `public static void SelectReference(Store store,Episode episode,CreationFlow flow,string file)` |
+| [15](src/StoryImages.cs#L15) | `public static void InvalidateReference(Episode episode)` |
+| [16](src/StoryImages.cs#L16) | `public static Settings LocalSettings(Episode e,Settings settings,Settings? defaults=null)` |
+| [25](src/StoryImages.cs#L25) | `public static void RequireReady(Store store,Settings settings)` |
+| [31](src/StoryImages.cs#L31) | `public static void Validate(Episode e)` |
+| [38](src/StoryImages.cs#L38) | `public static string Context(Episode e)` |
+| [42](src/StoryImages.cs#L42) | `public static async Task Plan(Store store,Episode e,Services services,CancellationToken ct,Action<string> log)` |
+| [77](src/StoryImages.cs#L77) | `public static string Prompt(Episode e,VideoScript script,Scene scene,bool vertical)` |
+| [91](src/StoryImages.cs#L91) | `public static string PhotoFilter(int width,int height,int fps,bool motion)` |
+| [96](src/StoryImages.cs#L96) | `public static async Task Prepare(Store store,Episode e,VideoScript script,Scene scene,bool vertical,Settings settings,CancellationToken ct,Action<string> log,HttpClient? client=null,Func<string,string,CancellationToken,Task<bool>>? review=null,bool automaticCloudAlternative=false)` |
 
 </details>
 
@@ -6642,15 +6807,32 @@ public StudioForm(Store store);
 | [1533](src/StudioForm.cs#L1533) | `void ShowConnectionHelp(string key)` |
 | [1551](src/StudioForm.cs#L1551) | `void PoolPage()` |
 | [1699](src/StudioForm.cs#L1699) | `void SettingsPage()` |
-| [2001](src/StudioForm.cs#L2001) | `void GitHubPage()` |
-| [2031](src/StudioForm.cs#L2031) | `void Logs()` |
-| [2049](src/StudioForm.cs#L2049) | `public void CaptureUploadStatus(string folder)` |
-| [2051](src/StudioForm.cs#L2051) | `void ShowUploadStatus()` |
-| [2053](src/StudioForm.cs#L2053) | `void ShowUploadStatus(string? screenshot)` |
-| [2126](src/StudioForm.cs#L2126) | `Task RefreshRemote()` |
-| [2127](src/StudioForm.cs#L2127) | `async Task RefreshRemote(bool fullScan)` |
-| [2159](src/StudioForm.cs#L2159) | `async Task Tick()` |
-| [2210](src/StudioForm.cs#L2210) | `public static DataGridView Grid()` |
+| [2005](src/StudioForm.cs#L2005) | `void GitHubPage()` |
+| [2035](src/StudioForm.cs#L2035) | `void Logs()` |
+| [2053](src/StudioForm.cs#L2053) | `public void CaptureUploadStatus(string folder)` |
+| [2055](src/StudioForm.cs#L2055) | `void ShowUploadStatus()` |
+| [2057](src/StudioForm.cs#L2057) | `void ShowUploadStatus(string? screenshot)` |
+| [2130](src/StudioForm.cs#L2130) | `Task RefreshRemote()` |
+| [2131](src/StudioForm.cs#L2131) | `async Task RefreshRemote(bool fullScan)` |
+| [2163](src/StudioForm.cs#L2163) | `async Task Tick()` |
+| [2214](src/StudioForm.cs#L2214) | `public static DataGridView Grid()` |
+
+</details>
+
+### C. StudioGlass.cs
+
+Ortak camsı panel, neon kenar ve timeline klip çizimi. [Kaynak](src/StudioGlass.cs).
+
+<details>
+<summary>StudioGlass — 3 metot</summary>
+
+Tür: `internal static class StudioGlass`. [Bildirim](src/StudioGlass.cs#L6).
+
+| Satır | Metot imzası |
+|---:|---|
+| [9](src/StudioGlass.cs#L9) | `public static Color Blend(Color a,Color b,double amount)` |
+| [10](src/StudioGlass.cs#L10) | `public static void Surface(Graphics g,Rectangle rect,Color surface,Color accent,int radius=10,bool active=false)` |
+| [22](src/StudioGlass.cs#L22) | `public static void Clip(Graphics g,Rectangle rect,Color accent,bool selected=false,bool handles=true)` |
 
 </details>
 
@@ -6861,20 +7043,20 @@ Tür: `public static class Theme`. [Bildirim](src/Theme.cs#L15).
 | [63](src/Theme.cs#L63) | `public static Font Font(float size = 10, bool bold = false)` |
 | [65](src/Theme.cs#L65) | `public static Label Label(string text, float size = 10, bool bold = false, Color? color = null, int width = 900, int height = 32)` |
 | [67](src/Theme.cs#L67) | `public static Button Button(string text, Action click, bool primary = false, int width = 150)` |
-| [83](src/Theme.cs#L83) | `public static TextBox Input(string value = "", bool multi = false, int width = 450)` |
-| [85](src/Theme.cs#L85) | `public static ComboBox Combo(string[] items, string current, int width = 450)` |
-| [97](src/Theme.cs#L97) | `public static NumericUpDown Number(decimal value, decimal min, decimal max, int width = 450, int decimals = 0)` |
-| [99](src/Theme.cs#L99) | `public static CheckBox Check(string text, bool value, int width = 700)` |
-| [101](src/Theme.cs#L101) | `public static FlowLayoutPanel Flow(int width = 1000)` |
-| [103](src/Theme.cs#L103) | `public static Panel Card(int width, int height)` |
-| [105](src/Theme.cs#L105) | `public static void Open(string path)` |
+| [87](src/Theme.cs#L87) | `public static TextBox Input(string value = "", bool multi = false, int width = 450)` |
+| [89](src/Theme.cs#L89) | `public static ComboBox Combo(string[] items, string current, int width = 450)` |
+| [101](src/Theme.cs#L101) | `public static NumericUpDown Number(decimal value, decimal min, decimal max, int width = 450, int decimals = 0)` |
+| [103](src/Theme.cs#L103) | `public static CheckBox Check(string text, bool value, int width = 700)` |
+| [105](src/Theme.cs#L105) | `public static FlowLayoutPanel Flow(int width = 1000)` |
+| [107](src/Theme.cs#L107) | `public static Panel Card(int width, int height)` |
+| [109](src/Theme.cs#L109) | `public static void Open(string path)` |
 
 </details>
 
 <details>
 <summary>Hero — 1 metot</summary>
 
-Tür: `public sealed class Hero : Control`. [Bildirim](src/Theme.cs#L111).
+Tür: `public sealed class Hero : Control`. [Bildirim](src/Theme.cs#L115).
 
 Kurucular:
 
@@ -6884,20 +7066,20 @@ public Hero();
 
 | Satır | Metot imzası |
 |---:|---|
-| [114](src/Theme.cs#L114) | `protected override void OnPaint(PaintEventArgs e)` |
+| [118](src/Theme.cs#L118) | `protected override void OnPaint(PaintEventArgs e)` |
 
 </details>
 
 <details>
 <summary>DarkComboBox — 3 metot</summary>
 
-Tür: `public sealed class DarkComboBox : ComboBox`. [Bildirim](src/Theme.cs#L140).
+Tür: `public sealed class DarkComboBox : ComboBox`. [Bildirim](src/Theme.cs#L144).
 
 | Satır | Metot imzası |
 |---:|---|
-| [143](src/Theme.cs#L143) | `protected override void OnDropDown(EventArgs e)` |
-| [151](src/Theme.cs#L151) | `void PaintFace(Graphics g)` |
-| [168](src/Theme.cs#L168) | `protected override void WndProc(ref System.Windows.Forms.Message m)` |
+| [147](src/Theme.cs#L147) | `protected override void OnDropDown(EventArgs e)` |
+| [155](src/Theme.cs#L155) | `void PaintFace(Graphics g)` |
+| [172](src/Theme.cs#L172) | `protected override void WndProc(ref System.Windows.Forms.Message m)` |
 
 </details>
 
@@ -6936,6 +7118,22 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 Tür: `public sealed class TimedNarration.TimingUnavailableException(string message) : InvalidOperationException(message)`. [Bildirim](src/TimedNarration.cs#L17).
 
 Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, özellikler veya diğer partial dosyalar kullanılır.
+
+</details>
+
+### C. TimelineEffects.cs
+
+Ses efektlerini başlangıç, süre, seviye ve geçişlerle son ses miksine ekleme. [Kaynak](src/TimelineEffects.cs).
+
+<details>
+<summary>TimelineEffects — 2 metot</summary>
+
+Tür: `public static class TimelineEffects`. [Bildirim](src/TimelineEffects.cs#L3).
+
+| Satır | Metot imzası |
+|---:|---|
+| [5](src/TimelineEffects.cs#L5) | `public static string Filter(IReadOnlyList<MusicTrack> effects,double duration)` |
+| [17](src/TimelineEffects.cs#L17) | `public static async Task Apply(Store store,VideoScript script,string output,double duration,CancellationToken ct)` |
 
 </details>
 
@@ -7027,10 +7225,10 @@ Tür: `public static class UploadedMediaMatch`. [Bildirim](src/UploadedMediaMatc
 | Satır | Metot imzası |
 |---:|---|
 | [16](src/UploadedMediaMatch.cs#L16) | `public static List<Choice> Parse(string raw,int count,IReadOnlyList<Item> catalog)` |
-| [27](src/UploadedMediaMatch.cs#L27) | `internal static async Task<List<Choice>> Resolve(string raw,IReadOnlyList<Scene> scenes,IReadOnlyList<Item> catalog, Func<string,string,CancellationToken,Task<string>> generate,Action<string> report,CancellationToken ct)` |
-| [57](src/UploadedMediaMatch.cs#L57) | `internal static async Task<string> Describe(Store store,string image,HttpClient? client,Action<string> log,CancellationToken ct)` |
-| [108](src/UploadedMediaMatch.cs#L108) | `public static async Task<List<Item>> Analyze(Store store,IReadOnlyList<string> files,Action<string> report,Action<string> log,CancellationToken ct,HttpClient? client=null)` |
-| [132](src/UploadedMediaMatch.cs#L132) | `public static async Task Apply(Store store,Episode episode,VideoScript script,Services services,Action<string> report,CancellationToken ct,HttpClient? client=null)` |
+| [27](src/UploadedMediaMatch.cs#L27) | `internal static async Task<List<Choice>> Resolve(string raw,IReadOnlyList<Scene> scenes,IReadOnlyList<Item> catalog, Func<string,string,CancellationToken,Task<string>> generate,Action<string> report,CancellationToken ct,ISet<int>? usedFiles=null)` |
+| [58](src/UploadedMediaMatch.cs#L58) | `internal static async Task<string> Describe(Store store,string image,HttpClient? client,Action<string> log,CancellationToken ct)` |
+| [109](src/UploadedMediaMatch.cs#L109) | `public static async Task<List<Item>> Analyze(Store store,IReadOnlyList<string> files,Action<string> report,Action<string> log,CancellationToken ct,HttpClient? client=null)` |
+| [133](src/UploadedMediaMatch.cs#L133) | `public static async Task Apply(Store store,Episode episode,VideoScript script,Services services,Action<string> report,CancellationToken ct,HttpClient? client=null)` |
 
 </details>
 
@@ -7393,26 +7591,26 @@ public StudioButton();
 
 | Satır | Metot imzası |
 |---:|---|
-| [113](src/VisualControls.cs#L113) | `protected override void OnPaintBackground(PaintEventArgs e)` |
-| [114](src/VisualControls.cs#L114) | `protected override void OnSizeChanged(EventArgs e)` |
-| [120](src/VisualControls.cs#L120) | `protected override void OnTextChanged(EventArgs e)` |
-| [122](src/VisualControls.cs#L122) | `protected override void Dispose(bool disposing)` |
-| [124](src/VisualControls.cs#L124) | `protected override void OnClick(EventArgs e)` |
-| [126](src/VisualControls.cs#L126) | `public void ShowHelp()` |
-| [128](src/VisualControls.cs#L128) | `protected override void OnMouseEnter(EventArgs e)` |
-| [130](src/VisualControls.cs#L130) | `protected override void OnMouseLeave(EventArgs e)` |
-| [132](src/VisualControls.cs#L132) | `protected override void OnMouseDown(MouseEventArgs e)` |
-| [134](src/VisualControls.cs#L134) | `protected override void OnMouseUp(MouseEventArgs e)` |
-| [144](src/VisualControls.cs#L144) | `protected override void OnKeyDown(KeyEventArgs e)` |
-| [146](src/VisualControls.cs#L146) | `protected override void OnKeyUp(KeyEventArgs e)` |
-| [148](src/VisualControls.cs#L148) | `protected override void OnPaint(PaintEventArgs e)` |
+| [115](src/VisualControls.cs#L115) | `protected override void OnPaintBackground(PaintEventArgs e)` |
+| [116](src/VisualControls.cs#L116) | `protected override void OnSizeChanged(EventArgs e)` |
+| [122](src/VisualControls.cs#L122) | `protected override void OnTextChanged(EventArgs e)` |
+| [124](src/VisualControls.cs#L124) | `protected override void Dispose(bool disposing)` |
+| [126](src/VisualControls.cs#L126) | `protected override void OnClick(EventArgs e)` |
+| [128](src/VisualControls.cs#L128) | `public void ShowHelp()` |
+| [130](src/VisualControls.cs#L130) | `protected override void OnMouseEnter(EventArgs e)` |
+| [132](src/VisualControls.cs#L132) | `protected override void OnMouseLeave(EventArgs e)` |
+| [134](src/VisualControls.cs#L134) | `protected override void OnMouseDown(MouseEventArgs e)` |
+| [136](src/VisualControls.cs#L136) | `protected override void OnMouseUp(MouseEventArgs e)` |
+| [146](src/VisualControls.cs#L146) | `protected override void OnKeyDown(KeyEventArgs e)` |
+| [148](src/VisualControls.cs#L148) | `protected override void OnKeyUp(KeyEventArgs e)` |
+| [150](src/VisualControls.cs#L150) | `protected override void OnPaint(PaintEventArgs e)` |
 
 </details>
 
 <details>
 <summary>StudioLabel — 2 metot</summary>
 
-Tür: `public sealed class StudioLabel : Label`. [Bildirim](src/VisualControls.cs#L227).
+Tür: `public sealed class StudioLabel : Label`. [Bildirim](src/VisualControls.cs#L242).
 
 Kurucular:
 
@@ -7422,15 +7620,15 @@ public StudioLabel();
 
 | Satır | Metot imzası |
 |---:|---|
-| [233](src/VisualControls.cs#L233) | `protected override void OnForeColorChanged(EventArgs e)` |
-| [235](src/VisualControls.cs#L235) | `protected override void OnPaint(PaintEventArgs e)` |
+| [248](src/VisualControls.cs#L248) | `protected override void OnForeColorChanged(EventArgs e)` |
+| [250](src/VisualControls.cs#L250) | `protected override void OnPaint(PaintEventArgs e)` |
 
 </details>
 
 <details>
 <summary>StudioGradientPanel — 1 metot</summary>
 
-Tür: `public sealed class StudioGradientPanel : Panel`. [Bildirim](src/VisualControls.cs#L239).
+Tür: `public sealed class StudioGradientPanel : Panel`. [Bildirim](src/VisualControls.cs#L254).
 
 Kurucular:
 
@@ -7440,14 +7638,14 @@ public StudioGradientPanel();
 
 | Satır | Metot imzası |
 |---:|---|
-| [242](src/VisualControls.cs#L242) | `protected override void OnPaintBackground(PaintEventArgs e)` |
+| [257](src/VisualControls.cs#L257) | `protected override void OnPaintBackground(PaintEventArgs e)` |
 
 </details>
 
 <details>
 <summary>StudioCard — 2 metot</summary>
 
-Tür: `public sealed class StudioCard : Panel`. [Bildirim](src/VisualControls.cs#L250).
+Tür: `public sealed class StudioCard : Panel`. [Bildirim](src/VisualControls.cs#L265).
 
 Kurucular:
 
@@ -7457,15 +7655,15 @@ public StudioCard();
 
 | Satır | Metot imzası |
 |---:|---|
-| [261](src/VisualControls.cs#L261) | `protected override void OnPaintBackground(PaintEventArgs e)` |
-| [266](src/VisualControls.cs#L266) | `protected override void OnPaint(PaintEventArgs e)` |
+| [276](src/VisualControls.cs#L276) | `protected override void OnPaintBackground(PaintEventArgs e)` |
+| [281](src/VisualControls.cs#L281) | `protected override void OnPaint(PaintEventArgs e)` |
 
 </details>
 
 <details>
 <summary>StudioHeader — 1 metot</summary>
 
-Tür: `public sealed class StudioHeader : Control`. [Bildirim](src/VisualControls.cs#L283).
+Tür: `public sealed class StudioHeader : Control`. [Bildirim](src/VisualControls.cs#L301).
 
 Kurucular:
 
@@ -7475,14 +7673,14 @@ public StudioHeader();
 
 | Satır | Metot imzası |
 |---:|---|
-| [297](src/VisualControls.cs#L297) | `protected override void OnPaint(PaintEventArgs e)` |
+| [315](src/VisualControls.cs#L315) | `protected override void OnPaint(PaintEventArgs e)` |
 
 </details>
 
 <details>
 <summary>Pipeline — 1 metot</summary>
 
-Tür: `public sealed class Pipeline : Control`. [Bildirim](src/VisualControls.cs#L322).
+Tür: `public sealed class Pipeline : Control`. [Bildirim](src/VisualControls.cs#L340).
 
 Kurucular:
 
@@ -7492,7 +7690,36 @@ public Pipeline();
 
 | Satır | Metot imzası |
 |---:|---|
-| [328](src/VisualControls.cs#L328) | `protected override void OnPaint(PaintEventArgs e)` |
+| [346](src/VisualControls.cs#L346) | `protected override void OnPaint(PaintEventArgs e)` |
+
+</details>
+
+### C. VoiceStudio.cs
+
+ElevenLabs ses klonlama ve zaman damgalı konuşmayı metne çevirme penceresi. [Kaynak](src/VoiceStudio.cs).
+
+<details>
+<summary>Services — 4 metot</summary>
+
+Tür: `public sealed partial class Services`. [Bildirim](src/VoiceStudio.cs#L4).
+
+| Satır | Metot imzası |
+|---:|---|
+| [6](src/VoiceStudio.cs#L6) | `void RequireVoiceAccount()` |
+| [7](src/VoiceStudio.cs#L7) | `public async Task<(string Id,bool Verify)> CloneVoice(string name,IReadOnlyList<string> files,bool consent,CancellationToken ct)` |
+| [17](src/VoiceStudio.cs#L17) | `public async Task<List<Caption>> TranscribeEleven(string file,CancellationToken ct)` |
+| [25](src/VoiceStudio.cs#L25) | `public static List<Caption> ParseTranscript(string json)` |
+
+</details>
+
+<details>
+<summary>StudioForm — 1 metot</summary>
+
+Tür: `public sealed partial class StudioForm`. [Bildirim](src/VoiceStudio.cs#L40).
+
+| Satır | Metot imzası |
+|---:|---|
+| [42](src/VoiceStudio.cs#L42) | `void VoiceStudio()` |
 
 </details>
 
@@ -7532,16 +7759,17 @@ Tür: `public sealed partial class StudioForm`. [Bildirim](src/WelcomeSetup.cs#L
 Kapak değişikliği hash, pending ve hazır sahne sayısı. [Kaynak](src/WorkflowArtwork.cs).
 
 <details>
-<summary>WorkflowArtwork — 4 metot</summary>
+<summary>WorkflowArtwork — 5 metot</summary>
 
 Tür: `public static class WorkflowArtwork`. [Bildirim](src/WorkflowArtwork.cs#L5).
 
 | Satır | Metot imzası |
 |---:|---|
-| [7](src/WorkflowArtwork.cs#L7) | `public static string Signature(Settings settings)` |
-| [11](src/WorkflowArtwork.cs#L11) | `static string CoverSignature(Settings settings)` |
-| [14](src/WorkflowArtwork.cs#L14) | `public static bool Apply(Episode episode, Settings settings, string choice, bool replaceScriptCovers = false)` |
-| [36](src/WorkflowArtwork.cs#L36) | `public static string ReadyText(Episode episode, Settings settings)` |
+| [7](src/WorkflowArtwork.cs#L7) | `public static void SelectCover(Episode episode,Settings settings,CreationFlow flow,string path)` |
+| [15](src/WorkflowArtwork.cs#L15) | `public static string Signature(Settings settings)` |
+| [19](src/WorkflowArtwork.cs#L19) | `static string CoverSignature(Settings settings)` |
+| [22](src/WorkflowArtwork.cs#L22) | `public static bool Apply(Episode episode, Settings settings, string choice, bool replaceScriptCovers = false)` |
+| [44](src/WorkflowArtwork.cs#L44) | `public static string ReadyText(Episode episode, Settings settings)` |
 
 </details>
 
@@ -7598,7 +7826,7 @@ Tür: `public static class WorkflowMusic`. [Bildirim](src/WorkflowMusic.cs#L3).
 Bölüm süre/sınır çizelgesi, oynatıcı ve bölüm kaldırma/geri alma UI. [Kaynak](src/WorkflowTimeline.cs).
 
 <details>
-<summary>WorkflowPlayer — 3 metot</summary>
+<summary>WorkflowPlayer — 5 metot</summary>
 
 Tür: `public sealed class WorkflowPlayer : AxHost`. [Bildirim](src/WorkflowTimeline.cs#L4).
 
@@ -7611,19 +7839,21 @@ public WorkflowPlayer();
 | Satır | Metot imzası |
 |---:|---|
 | [7](src/WorkflowTimeline.cs#L7) | `public void Open(string path)` |
-| [8](src/WorkflowTimeline.cs#L8) | `public void Seek(double seconds)` |
-| [9](src/WorkflowTimeline.cs#L9) | `protected override void Dispose(bool disposing)` |
+| [8](src/WorkflowTimeline.cs#L8) | `public void Play()` |
+| [9](src/WorkflowTimeline.cs#L9) | `public void Pause()` |
+| [11](src/WorkflowTimeline.cs#L11) | `public void Seek(double seconds)` |
+| [12](src/WorkflowTimeline.cs#L12) | `protected override void Dispose(bool disposing)` |
 
 </details>
 
 <details>
 <summary>StudioForm — 1 metot</summary>
 
-Tür: `public sealed partial class StudioForm`. [Bildirim](src/WorkflowTimeline.cs#L12).
+Tür: `public sealed partial class StudioForm`. [Bildirim](src/WorkflowTimeline.cs#L15).
 
 | Satır | Metot imzası |
 |---:|---|
-| [14](src/WorkflowTimeline.cs#L14) | `void WorkflowScenes(FlowLayoutPanel host,Episode e,bool review,CreationFlow? creation=null,string? scriptKey=null,bool readOnly=false)` |
+| [17](src/WorkflowTimeline.cs#L17) | `void WorkflowScenes(FlowLayoutPanel host,Episode e,bool review,CreationFlow? creation=null,string? scriptKey=null,bool readOnly=false,Settings? editSettings=null)` |
 
 </details>
 
@@ -7661,16 +7891,16 @@ Tür: `public sealed class YouTube(Store store, HttpClient? client = null, Func<
 | [99](src/YouTube.cs#L99) | `public async Task<string> Channel(CancellationToken ct)` |
 | [107](src/YouTube.cs#L107) | `public async Task<(string Id, string Title)> ChannelIdentity(CancellationToken ct)` |
 | [119](src/YouTube.cs#L119) | `public static string BuildDescription(VideoScript script, IEnumerable<SourceRef> sources, bool includeSources = true)` |
-| [143](src/YouTube.cs#L143) | `public async Task Upload(Episode e, AssetVideo asset, VideoScript script, CancellationToken ct, Action<long,long>? progress = null)` |
-| [233](src/YouTube.cs#L233) | `static long UploadedOffset(HttpResponseMessage res)` |
-| [235](src/YouTube.cs#L235) | `static async Task<string> ReadId(HttpResponseMessage res, CancellationToken ct)` |
-| [237](src/YouTube.cs#L237) | `public async Task Thumbnail(AssetVideo asset, CancellationToken ct)` |
-| [247](src/YouTube.cs#L247) | `public async Task UpdateDescription(AssetVideo asset, VideoScript script, CancellationToken ct)` |
-| [271](src/YouTube.cs#L271) | `async Task UpdateStatus(AssetVideo asset, bool schedule, CancellationToken ct, bool publishNow = false)` |
-| [309](src/YouTube.cs#L309) | `public async Task RefreshVideoStates(CancellationToken ct)` |
-| [363](src/YouTube.cs#L363) | `public async Task Schedule(AssetVideo asset, CancellationToken ct)` |
-| [373](src/YouTube.cs#L373) | `public Task PublishNow(AssetVideo asset, CancellationToken ct)` |
-| [375](src/YouTube.cs#L375) | `public async Task Unschedule(AssetVideo asset, CancellationToken ct)` |
+| [147](src/YouTube.cs#L147) | `public async Task Upload(Episode e, AssetVideo asset, VideoScript script, CancellationToken ct, Action<long,long>? progress = null)` |
+| [237](src/YouTube.cs#L237) | `static long UploadedOffset(HttpResponseMessage res)` |
+| [239](src/YouTube.cs#L239) | `static async Task<string> ReadId(HttpResponseMessage res, CancellationToken ct)` |
+| [241](src/YouTube.cs#L241) | `public async Task Thumbnail(AssetVideo asset, CancellationToken ct)` |
+| [251](src/YouTube.cs#L251) | `public async Task UpdateDescription(AssetVideo asset, VideoScript script, CancellationToken ct)` |
+| [275](src/YouTube.cs#L275) | `async Task UpdateStatus(AssetVideo asset, bool schedule, CancellationToken ct, bool publishNow = false)` |
+| [313](src/YouTube.cs#L313) | `public async Task RefreshVideoStates(CancellationToken ct)` |
+| [367](src/YouTube.cs#L367) | `public async Task Schedule(AssetVideo asset, CancellationToken ct)` |
+| [377](src/YouTube.cs#L377) | `public Task PublishNow(AssetVideo asset, CancellationToken ct)` |
+| [379](src/YouTube.cs#L379) | `public async Task Unschedule(AssetVideo asset, CancellationToken ct)` |
 
 </details>
 
@@ -7956,4 +8186,4 @@ Türkçe YouTube kanalları için normal video ve Shorts'u tek konu paketinden y
 
 ## Belge kapsamı ve üçüncü taraflar
 
-Bu README, kaynak sürümü 0.4.28 için hazırlanmıştır. Teknik katalog Roslyn sözdizim ağacından üretilmiş; kullanım/mimari açıklamaları ilgili kod yolları okunarak yazılmıştır. Bir metot imzasının listelenmesi uçtan uca canlı servis testinin yapıldığı anlamına gelmez. Üçüncü taraf bileşen koşulları için [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), stok ayrıntıları için [STOK-KAYNAKLARI.md](STOK-KAYNAKLARI.md), broker kurulum sınırları için [social-connection-service/README.md](social-connection-service/README.md) dosyalarına bak. Bu belge yeni bir yazılım lisansı tanımlamaz.
+Bu README, kaynak sürümü 0.4.29 için hazırlanmıştır. Teknik katalog Roslyn sözdizim ağacından üretilmiş; kullanım/mimari açıklamaları ilgili kod yolları okunarak yazılmıştır. Bir metot imzasının listelenmesi uçtan uca canlı servis testinin yapıldığı anlamına gelmez. Üçüncü taraf bileşen koşulları için [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), stok ayrıntıları için [STOK-KAYNAKLARI.md](STOK-KAYNAKLARI.md), broker kurulum sınırları için [social-connection-service/README.md](social-connection-service/README.md) dosyalarına bak. Bu belge yeni bir yazılım lisansı tanımlamaz.

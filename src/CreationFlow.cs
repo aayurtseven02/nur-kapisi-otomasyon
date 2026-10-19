@@ -31,6 +31,8 @@ public sealed class CreationFlow
     public string Voice {get;set;}="ai";
     public bool UseProjectVoice {get;set;}
     public string SceneImageQuality {get;set;}="";
+    public string SceneReferenceFile {get;set;}="";
+    public string SceneReferenceHash {get;set;}="";
     public string AudioFile {get;set;}="";
     public string AudioHash {get;set;}="";
     public string FrozenAudio {get;set;}="";
@@ -44,6 +46,12 @@ public sealed class CreationFlow
     public List<Caption> AudioCaptions {get;set;}=[];
     public string Mode {get;set;}="";
     public bool? Split {get;set;}
+    public void ChangeMode(string mode)
+    {
+        string previous=Signature,previousMode=Mode;Mode=mode;
+        // Editing method alone must not throw away an already prepared storyboard.
+        if((mode=="manual"||mode==previousMode)&&PlannedTextHash==previous)PlannedTextHash=Signature;
+    }
     public string OriginalSections {get;set;}="";
     public List<Scene> BeforeRender {get;set;}=[];
     public string CoverChoice {get;set;}="";

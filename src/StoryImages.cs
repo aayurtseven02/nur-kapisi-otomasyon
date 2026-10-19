@@ -4,7 +4,15 @@ namespace AnkaStudio;
 
 public static class StoryImages
 {
-    public static string Identity(Episode e)=>TimedNarration.TextHash(JsonSerializer.Serialize(new {Version="ipadapter-story-v1",e.Topic,e.AiStoryStyle,e.AiStoryCharacters}));
+    public static string Identity(Episode e)=>TimedNarration.TextHash(JsonSerializer.Serialize(new {Version="ipadapter-story-v1",e.Topic,e.AiStoryStyle,e.AiStoryCharacters})+(e.Creation?.SceneReferenceHash??""));
+    public static void SelectReference(Store store,Episode episode,CreationFlow flow,string file)
+    {
+        using(var image=Image.FromFile(file)){if(image.Width<256||image.Height<256||(long)image.Width*image.Height>40_000_000)throw new InvalidOperationException("Referans 256 × 256 piksel veya daha büyük ve en fazla 40 megapiksel olmalı.");}
+        string hash=Reliability.FileHash(file),folder=Path.Combine(store.Folder(episode),"input-references");Directory.CreateDirectory(folder);string path=Path.Combine(folder,hash+Path.GetExtension(file));if(!File.Exists(path))File.Copy(file,path);
+        if(flow.SceneReferenceHash!=hash)InvalidateReference(episode);
+        flow.SceneReferenceFile=path;flow.SceneReferenceHash=hash;episode.Creation=flow;episode.Approved=false;episode.ApprovalHash="";episode.TextDesignPending=episode.Videos.Count>0;
+    }
+    public static void InvalidateReference(Episode episode){foreach(var scene in Rules.Scripts(episode).SelectMany(x=>x.Script.Scenes).Where(x=>x.AiImageHash!="")){scene.StockFile="";scene.AiImageHash="";}episode.AiStoryPromptHash="";}
     public static Settings LocalSettings(Episode e,Settings settings,Settings? defaults=null)
     {
         var copy=JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(settings,Json.Options),Json.Options)!;
@@ -29,7 +37,7 @@ public static class StoryImages
     }
     public static string Context(Episode e) => JsonSerializer.Serialize(new {
         Version="story-reference-v2-regional", e.Topic, e.AiStoryStyle, e.AiStoryCharacters,
-        Story=Rules.Scripts(e).Select(x=>new {x.Key,Scenes=x.Script.Scenes.Select(s=>new {s.Narration,s.VisualQuery})})
+        Reference=e.Creation?.SceneReferenceHash??"",Story=Rules.Scripts(e).Select(x=>new {x.Key,Scenes=x.Script.Scenes.Select(s=>new {s.Narration,s.VisualQuery})})
     });
     public static async Task Plan(Store store,Episode e,Services services,CancellationToken ct,Action<string> log)
     {
@@ -94,6 +102,11 @@ public static class StoryImages
         if(settings.CoverLocalEnabled && client==null){await LocalCoverEngine.Start(settings.CoverLocalWorkflow,log,ct,Path.Combine(store.Root,"logs","local-engine"));await LocalCoverEngine.CheckStorySupport(ct,settings.CoverLocalWorkflow);}
         var folder=Path.Combine(store.Folder(e),"story-images",Identity(e));Directory.CreateDirectory(folder);
         var reference=Path.Combine(folder,"characters.png");
+        if(e.Creation is {SceneReferenceFile:not ""} flow){
+            if(!File.Exists(flow.SceneReferenceFile)||Reliability.FileHash(flow.SceneReferenceFile)!=flow.SceneReferenceHash)throw new InvalidOperationException("Seçilen sahne referansı eksik veya değişmiş; Tasarım adımında yeniden seç.");
+            if(!File.Exists(reference)||Reliability.FileHash(reference)!=flow.SceneReferenceHash){File.Copy(flow.SceneReferenceFile,reference,true);File.WriteAllText(reference+".sha",flow.SceneReferenceHash);}
+            log("Seçtiğin ortak referans, tüm sahnelerde görünüm tutarlılığı için kullanılıyor.");
+        }
         bool Valid(string path) {
             if(!File.Exists(path) || !File.Exists(path+".sha") || Reliability.FileHash(path)!=File.ReadAllText(path+".sha"))return false;
             try{using var input=File.OpenRead(path);using var img=Image.FromStream(input);return img.Width>=256 && img.Height>=256 && (long)img.Width*img.Height<=40_000_000;}catch{return false;}
@@ -131,13 +144,15 @@ public static class StoryImages
         if(!Valid(output)) {
             log($"Hikâye • sahne {script.Scenes.IndexOf(scene)+1}/{script.Scenes.Count}: aynı karakter referansıyla görsel üretiliyor…");
             var temp=Path.Combine(folder,hash+"-pending.png");
-            await generator.Create(temp,settings,e.Topic,"",vertical,ct,prompt,reference,e.AiStoryCastCount,scene.AiCharacterIds);
+            bool styleReference=!string.IsNullOrEmpty(e.Creation?.SceneReferenceFile)||scene.AiCharacterIds.Count==0;
+            await generator.Create(temp,settings,e.Topic,"",vertical,ct,prompt,reference,styleReference?1:e.AiStoryCastCount,styleReference?[0]:scene.AiCharacterIds,sceneStyleReference:styleReference);
             File.Move(temp,output,true);File.WriteAllText(output+".sha",Reliability.FileHash(output));
             Json.Write(output+".json",new {Prompt=prompt,Reference=reference,ReferenceHash=Reliability.FileHash(reference),Backend=e.AiStoryLocal?File.ReadAllText(settings.CoverLocalWorkflow).Contains("EmptyFlux2LatentImage")?"Local FLUX.2 Klein Base + native reference":"Local SDXL + IPAdapter Plus":"Configured Gemini / OpenAI image API",Created=DateTimeOffset.UtcNow});
         }else log("Hazır hikâye sahnesi tekrar kullanıldı; yeni görsel isteği gönderilmedi.");
         if(review!=null) await Review(output,$"Sahne {script.Scenes.IndexOf(scene)+1}/{script.Scenes.Count} • {scene.Narration}",async attempt=>{
             var temp=Path.Combine(folder,hash+"-review-pending.png");
-            await generator.Create(temp,settings,e.Topic,"",vertical,ct,prompt+". Create a new corrected composition, variation "+attempt+". Show intact bodies and heads. No blood or graphic injury.",reference,e.AiStoryCastCount,scene.AiCharacterIds);
+            bool styleReference=!string.IsNullOrEmpty(e.Creation?.SceneReferenceFile)||scene.AiCharacterIds.Count==0;
+            await generator.Create(temp,settings,e.Topic,"",vertical,ct,prompt+". Create a new corrected composition, variation "+attempt+". Show intact bodies and heads. No blood or graphic injury.",reference,styleReference?1:e.AiStoryCastCount,styleReference?[0]:scene.AiCharacterIds,sceneStyleReference:styleReference);
             File.Move(temp,output,true);File.WriteAllText(output+".sha",Reliability.FileHash(output));
         });
         bool keepRights=scene.StockFile==output && scene.AiImageHash==hash && scene.RightsConfirmed;

@@ -12,7 +12,7 @@ public sealed class SidebarButton : Button
     protected override void OnPaint(PaintEventArgs e)
     {
         e.Graphics.Clear(Parent?.BackColor??Theme.Panel);e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
-        if(hover||Active){using var shape=Shapes.Round(new Rectangle(1,1,Math.Max(1,Width-3),Math.Max(1,Height-3)),8);using var fill=new SolidBrush(Active?Theme.Selection:Theme.Hover);using var line=new Pen(Active?Theme.Selection:Theme.Hover);e.Graphics.FillPath(fill,shape);e.Graphics.DrawPath(line,shape);}
+        if(hover||Active){StudioGlass.Clip(e.Graphics,new Rectangle(1,1,Math.Max(1,Width-3),Math.Max(1,Height-3)),Active?StudioGlass.Indigo:Theme.Muted,Active,false);}
         if(Glyph=="warning"){
             float top=(Height-23)/2f;PointF[] triangle=[new(20.5f,top),new(9,top+23),new(32,top+23)];
             using var yellow=new SolidBrush(Color.FromArgb(255,211,31));using var edge=new Pen(Color.Black,1.7f){LineJoin=LineJoin.Round};e.Graphics.FillPolygon(yellow,triangle);e.Graphics.DrawPolygon(edge,triangle);
