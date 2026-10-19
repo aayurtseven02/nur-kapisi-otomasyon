@@ -610,7 +610,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-19-gun11-normal1-guzelahlak
-  status: pending
+  status: failed
   publish_at: '2026-10-19T09:00:00+03:00'
   format: long
   type: tema
@@ -621,6 +621,8 @@ videos:
   title_hint: '"Aranızda En Sevdiklerim": Güzel Ahlakın Fazileti'
   thumb_title: Güzel Ahlakın Fazileti
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-19-gun11-short1-emanet
   status: pending
   publish_at: '2026-10-19T12:00:00+03:00'
