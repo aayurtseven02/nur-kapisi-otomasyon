@@ -1,8 +1,8 @@
-# TubeFlow 0.4.26
+# TubeFlow 0.4.27
 
 **Windows üzerinde metinden, hazır sesten ve görsel arşivden video hazırlama, inceleme ve yayınlama uygulaması.**
 
-Bu README; son yayımlanan **0.4.26** kaynak kodunun kullanım kılavuzu, çalışma mekanikleri ve geliştirici başvurusudur. Belgeleme tarihi **18 Ekim 2026**. Uygulamanın mevcut davranışları anlatılır; bölümleme sonrası erken zaman çizelgesi, Cortex maskotu ve ücretsiz yerel görsel analizi bu sürümde uygulanmıştır. Model adları ve ayarların başlangıç değerleri kaynak kodundan alınır; ilgili hizmette her zaman kullanılabileceklerine veya ücretsiz olduklarına ilişkin bir taahhüt değildir.
+Bu README; son yayımlanan **0.4.27** kaynak kodunun kullanım kılavuzu, çalışma mekanikleri ve geliştirici başvurusudur. Belgeleme tarihi **19 Ekim 2026**. Uygulamanın mevcut davranışları anlatılır; bölümleme sonrası erken zaman çizelgesi, Cortex maskotu ve ücretsiz yerel görsel analizi bu sürümde uygulanmıştır. Model adları ve ayarların başlangıç değerleri kaynak kodundan alınır; ilgili hizmette her zaman kullanılabileceklerine veya ücretsiz olduklarına ilişkin bir taahhüt değildir.
 
 Ana çalıştırılabilir dosya **TubeFlow.exe**, proje dosyası **src/AnkaStudio.csproj**, C# ad alanı **AnkaStudio** olarak kalmıştır. Eski kurulumların veri ve güncelleme uyumluluğu için bazı dizin, dosya ve protokol adları hâlâ `AnkaStudio` / `anka` içerir. Bunlar ikinci bir ürün veya ilave dil desteği anlamına gelmez.
 
@@ -37,7 +37,7 @@ Ana çalıştırılabilir dosya **TubeFlow.exe**, proje dosyası **src/AnkaStudi
 27. [Komut satırı ve önizleme araçları](#komutlar)
 28. [Sorun giderme](#sorun-giderme)
 29. [Gerçek sınırlar ve önerilen geliştirme](#sinirlar)
-30. [0.4.26 doğrulama ve değişiklik özeti](#dogrulama)
+30. [0.4.27 doğrulama ve değişiklik özeti](#dogrulama)
 31. [Ek A — Kaynak dosyalarının tamamı](#kaynak-katalogu)
 32. [Ek B — Alanlar, türler ve başlangıç değerleri](#alan-katalogu)
 33. [Ek C — Tür ve metot imzaları](#metot-katalogu)
@@ -54,7 +54,7 @@ TubeFlow bir masaüstü üretim koordinatörüdür. Metin servisleri, seslendirm
 | Araştırma | Kaynak URL’leri, araştırma servisi, kaynak listesi, açıklamaya kaynak ekleme | Otomatik araştırma yolunda kaynak doğrulama vardır; doğruluk için insan incelemesi yine gerekir. |
 | Metin denetimi | Süre/kelime bütçesi, Türkçe yazım denetimi, eksik metni tamamlama, sahne başlıkları, seri başlıkları | Kullanıcı anlatımı yolunda otomatik tamamlama/yazım müdahalesi kısıtlanır. |
 | Sahneleme | AI görsellerinde 5–10 sahne, diğer bölümleme yolunda en fazla 50 grup, cümle temelli kurtarma | Bunlar farklı akışlardır; bütün videoların aynı sahne sayısı yoktur. |
-| Yüklenen medya | Fotoğraf/video içeriğini analiz etme, anlatıma göre dosya seçme, açıklama önbelleği | 0.4.26 anlamsal yol: otomatik mod + yalnız kendi görselleri. Karma kaynak akışının tümü bu davranışa dönüştürülmüş değildir. |
+| Yüklenen medya | Fotoğraf/video içeriğini analiz etme, anlatıma göre dosya seçme, açıklama önbelleği | 0.4.27 anlamsal yol: otomatik mod + yalnız kendi görselleri. Karma kaynak akışının tümü bu davranışa dönüştürülmüş değildir. |
 | AI görsel | Ayrı sahne görselleri, karakter tarifi, referans, yerel/bulut seçenekleri, kalite seçimi, tek sahne yenileme | Kurulu model ve izinli sağlayıcı gerekir. |
 | Kapak | Şablon, hazır PNG, AI arka plan, referans kapak, başlık/font/renk/logo, arşiv, kart editörü | Kapak değiştirmek mevcut MP4’ü anında yeniden kodlamaz; geçerlilik ve yeniden üretim akışı vardır. |
 | Ses | Windows, Piper, XTTS, Google Cloud TTS, ElevenLabs, hazır ses dosyası, ses örneği, telaffuz sözlüğü | Seçili sesin gerçekten bulunması gerekir; servis bazında yetenek değişir. |
@@ -127,7 +127,7 @@ Normal veri kökü `%LOCALAPPDATA%\AnkaStudio` konumudur. `--data` ile ayrı kö
 
 ### 3.1 Sol menü ve çalışma alanı
 
-Dar simge şeridi ve açılıp kapanabilen sol menü ana gezinmeyi sağlar. Çalışma alanında Stüdyo/Üret, Projelerim ve Merkez bulunur. Rehber uygulama içi açıklamalara eriştirir. Son proje bağlantıları seçili projeye dönmeyi kolaylaştırır. Sohbet düğmesi sol menünün altındadır; menü daralınca simge üzerinden erişilir.
+Dar simge şeridi ve açılıp kapanabilen sol menü ana gezinmeyi sağlar. Çalışma alanında Stüdyo • Üret, Projelerim, Merkez • Ayarlar ve Yüklenmesi gerekenler bulunur. Sonuncunun simgesi sarı üçgen içinde siyah ünlemdir. Rehber uygulama içi açıklamalara eriştirir. Son proje bağlantıları seçili projeye dönmeyi kolaylaştırır. Cortex düğmesi sol menünün altındadır; menü daralınca simge üzerinden erişilir. Dar pencerede sohbet çalışma alanının yerine açılır ve alttaki alan gizlenir; kapanınca geri gelir. Geniş pencerede sohbet için ayrı alan ayrılır. Sol menüden başka bölüme geçiş dar sohbeti kapatır.
 
 Üst bilgi satırı kanal adını, çalışma alanını ve üretim durumunu gösterir. Bağlı kanal başlığı kayıtlı kanal kimliği/bilgisiyle ilişkilidir; yalnız elle yazılmış kanal metni OAuth doğrulaması değildir.
 
@@ -225,7 +225,7 @@ flow.OwnVisuals && flow.Mode == "auto"
     && !flow.AiVisuals && !flow.StockVisuals
 ```
 
-Bu koşulda **“yalnız yüklediğim dosyaları otomatik kullan”** yolu devreye girer. Manuel mod ve AI/stok/kendi dosyaları birlikte işaretlenmiş karma kaynak yolları ayrı davranış taşır. 0.4.26’te tüm bu yolların tek bir anlamsal editöre dönüştüğü söylenemez.
+Bu koşulda **“yalnız yüklediğim dosyaları otomatik kullan”** yolu devreye girer. Manuel mod ve AI/stok/kendi dosyaları birlikte işaretlenmiş karma kaynak yolları ayrı davranış taşır. 0.4.27’te tüm bu yolların tek bir anlamsal editöre dönüştüğü söylenemez.
 
 ### 6.3 Dosyaların gerçek içeriğini okuma
 
@@ -379,6 +379,10 @@ Hazır stiller: **Sade beyaz**, **Sarı vurgulu**, **Kelime kelime renklenen**, 
 
 `LocalAudioAlignment`, Python betiği ve kurulu `model/model.bin` ile çalışır. Python alt işlemi çevrimdışı model kullanımını zorlar (`HF_HUB_OFFLINE=1`) ve telemetriyi kapatır. Yerel eşleme için 15 dakika süre sınırı vardır; iptalde alt işlem kapatılır. Model/runtime bulunmuyorsa yalnız betiğin bulunması yeterli değildir.
 
+0.4.27 ile `align.py` önce aynı ses/metin anahtarının ölçülmüş kelime önbelleğini sınar; uygun veri varsa sesi tekrar çözümlemez. Zamanlar sonlu, sıralı ve ses süresi içinde olmalıdır. Tam metin için en az %65 tam token eşleşmesi aranır; katı satır eşleştirmesi başarısızsa yalnız komşu satırlar gruplanabilir. Bir grup en fazla dört satır, 180 karakter ve 18 saniyedir; grup metni ile bu ses aralığındaki tanınan metnin karakter benzerliği en az 0,5 olmalıdır. Bütün kaynak satırlar sıralı `Id`–`LastId` aralıklarıyla kapsanır. Belirsiz sözcüklere tahmini zaman dağıtılmaz: ilgili metin birlikte, doğrulanmış ses aralığında gösterilir. Sınırlı aralık doğrulanamıyorsa yanlış altyazı başarı sayılmaz. Arama sonuçları en fazla 4096 durumluk önbellekle tekrarlı dallanmayı sınırlar.
+
+Üretilmiş konuşma blokları proje düzeyinde `audio-cache/blocks` altında, metin ve seçili ses/telaffuz kimliğiyle saklanır. Eski `r*-*/audio-cache/blocks` klasöründe aynı anahtar ve sağlam SHA bulunan dosya yeni düzenlemede tekrar kullanılabilir; ses değişirse anahtar değişir, bozuk dosya alınmaz. İlgili ölçülmüş altyazı/kelime önbelleği de korunur. Birleşik altyazı önbelleği `.bounded-lines-v1` ile işaretlenir; yalnız altyazı kapalıyken üretilen uzun tek parçalar sonradan açıldığında gerçek eşlemeye alınmaya devam eder. Çözülemeyen `TimingUnavailableException`, aynı ses/metin üzerinde geçici ağ hatası gibi otomatik tekrar döngüsüne sokulmaz.
+
 Uygun yolda Gemini ses analizi kullanılabilir. İnceleme için 16 kHz mono WAV kopyası oluşturulur; bu kopya özgün anlatımı filtrelemek, uzatmak veya hızlandırmak için kullanılmaz. Analiz bloğunun boyutu ve API süresi sınırlandırılır.
 
 ### 11.3 Aralık doğrulaması
@@ -468,7 +472,7 @@ Pixabay aramalarında istek aralığı/bütçe, sonuç önbelleği ve bekleme yo
 
 `MediaPool`; dosya, etiket, kategori, kullanım, hak ve kaynak bilgilerini saklar. Klasör tarama, sağlıklı dosya denetimi, puanlama, uygun aday seçimi ve tekrar kullanım aralığı bulunur. `PoolRepeatHours` aynı malzemeyi kısa aralıklarla tekrar kullanmayı sınırlar. Otomatik havuza kaydetme ve havuzu yedek kaynak olarak kullanma ayrı seçeneklerdir.
 
-Havuzdan seçim ile yüklenen dosyalara özel `UploadedMediaMatch` aynı mekanizma değildir. Havuzun etiket/metadata puanı, 0.4.26 yüklenen görsellerin gerçek içerik kataloğuna dayalı eşleştirmesi olarak sunulmamalıdır.
+Havuzdan seçim ile yüklenen dosyalara özel `UploadedMediaMatch` aynı mekanizma değildir. Havuzun etiket/metadata puanı, 0.4.27 yüklenen görsellerin gerçek içerik kataloğuna dayalı eşleştirmesi olarak sunulmamalıdır.
 
 ### 14.3 Haklar ve kaynak kayıtları
 
@@ -693,7 +697,7 @@ flowchart TD
 
 Store’da `OperationGate`/`OperationBusy`, Engine’de iptal kaynağı ve `Busy` bulunur. `OperationLease` aynı veri kökündeki çakışan ağır işlemleri engeller. Bu bir çok kiracılı sunucu iş kuyruğu değildir; masaüstü süreç içi koordinasyonudur.
 
-`async/await` HTTP ve alt süreç beklemelerinde UI’yı serbest bırakır. `Changed` olayı UI güncellemesine bağlanır; gerektiğinde UI thread’ine geçilir. 0.4.26 `External` işi başlamadan durum bildirir ve UI’ya çizim fırsatı verir. `ActivityName`, `BusySince` ve sabit gösterge görünür geri bildirimi destekler.
+`async/await` HTTP ve alt süreç beklemelerinde UI’yı serbest bırakır. `Changed` olayı UI güncellemesine bağlanır; gerektiğinde UI thread’ine geçilir. 0.4.27 `External` işi başlamadan durum bildirir ve UI’ya çizim fırsatı verir. `ActivityName`, `BusySince` ve sabit gösterge görünür geri bildirimi destekler.
 
 FFmpeg, Python hizalama ve ComfyUI ayrı alt süreçler olabilir. HTTP istemcileri bazı sınıflarda paylaşılan, testlerde enjekte edilebilir örneklerdir. İptal istekleri tokenlarla taşınır; alt süreç yaşam döngüsü ilgili adaptörde yönetilir.
 
@@ -795,7 +799,7 @@ Bu, `secrets.dat` dosyasını başka Windows kullanıcısına kopyalamakla aynı
 
 Yaygın durumlar Taslak, Araştırılıyor, Senaryo hazır, Üretiliyor, Denetim bekliyor, Kontrol gerekli, Onaylandı, Yükleniyor, Durduruldu ve Kesildi gibi metinlerle tutulur. Yayın grubu ayrıca platform durumundan hesaplanır. Tek bir durum etiketi bütün sürecin eksiksiz tek state machine tanımı değildir; modelde onay, resume aşaması ve dosya geçerliliği de vardır.
 
-0.4.26 sabit çalışma alanı; hareketli simge, işlem adı, geçen `hh:mm:ss`, dosya/sahne sayısı ve durdurma düğmesi gösterir. Ana tekrar başlatma ve çakışan alanlar işlem boyunca kapatılır. Tahmin edilen kalan süre ile geçen gerçek süre ayrıdır; geçmiş aşama süreleri tahmine yardımcı olabilir, kesin bitiş saati değildir.
+0.4.27 sabit çalışma alanı; hareketli simge, işlem adı, geçen `hh:mm:ss`, dosya/sahne sayısı ve durdurma düğmesi gösterir. Ana tekrar başlatma ve çakışan alanlar işlem boyunca kapatılır. Tahmin edilen kalan süre ile geçen gerçek süre ayrıdır; geçmiş aşama süreleri tahmine yardımcı olabilir, kesin bitiş saati değildir.
 
 `Engine.External` ile plan/analiz gibi dış işler de Busy durumuna bağlanır. `Notify` Store kaydını ve UI bildirimini tetikler. Üretim sırasında ilerleme yalnız model yanıtını değil ses, görsel, render ve çıktı kontrollerini kapsar.
 
@@ -959,7 +963,7 @@ Kod ayrıca wizard, koyu arayüz, laptop yerleşimi, arşiv, kanal bağlantılar
 
 | Belirti | Olası açıklama | Kontrol / doğru adım |
 |---|---|---|
-| “AI bölüm sınırları geçersiz” | Eski akış/bozuk model yanıtı | 0.4.26’te cümle sınırı kurtarması vardır; güncel sürüm ve onaylı metni kontrol et. |
+| “AI bölüm sınırları geçersiz” | Eski akış/bozuk model yanıtı | 0.4.27’te cümle sınırı kurtarması vardır; güncel sürüm ve onaylı metni kontrol et. |
 | Hazırlık uzun sürüyor | Metin modeli, çok sayıda görsel analiz veya başarısız adaylar | Sabit işlem adını/dosya sayısını/geçen süreyi izle; gerekirse durdur. İlerleme yüzdesi kesin süre değildir. |
 | “Başka işlem çalışıyor” | Aynı motor/veri kökünde iş sürüyor | Tekrar tekrar başlatma yerine mevcut işi bekle/durdur; çalışma göstergesini kontrol et. |
 | Görsel eşleşmiyor / uygun dosya yok | Katalog o konuyu kapsamıyor veya model okuyamıyor | Gerçek görüntü, görsel model bağlantısı ve eşleşme gerekçesini incele; rastgele seçim bekleme. |
@@ -998,7 +1002,7 @@ Kod ayrıca wizard, koyu arayüz, laptop yerleşimi, arşiv, kanal bağlantılar
 <a id="timeline-oneri"></a>
 ### 29.2 Uygulanan: bölümleme sonrası ayrıntılı zaman çizelgesi
 
-0.4.26 ile bölümleme sonucu `Engine.PreparingPlan` içinde derin kopyayla geçici olarak yayımlanır. Asıl proje, görsel eşleştirme tamamlanana kadar atomik biçimde korunur. İşlem sürerken çizelge incelenebilir; düzenlemeler kilitlidir. İptal veya hata sonunda geçici plan temizlenir.
+0.4.27 ile bölümleme sonucu `Engine.PreparingPlan` içinde derin kopyayla geçici olarak yayımlanır. Asıl proje, görsel eşleştirme tamamlanana kadar atomik biçimde korunur. İşlem sürerken çizelge incelenebilir; düzenlemeler kilitlidir. İptal veya hata sonunda geçici plan temizlenir.
 
 - Görüntü küçük resimleri, konuşma ve altyazı ayrı şeritlerde görünür. Fotoğraflar yerel dosyadan; video önizlemeleri sınırlı eşzamanlı FFmpeg işlemleriyle hazırlanır.
 - Bölüm tablosunda başlangıç, bitiş, süre, anlatım ve seçilen dosya gösterilir. Seçim, ayrıntı panelini ve varsa oynatıcı konumunu günceller.
@@ -1017,6 +1021,8 @@ Sol alt sohbet başlatıcısı **Cortex** robotuyla değiştirilmiştir; sohbet 
 
 ### 29.4 Yüklenmesi gerekenler: kurulum ve API kontrol listesi
 
+0.4.27 ile sol menü etiketi **Merkez • Ayarlar** olarak düzenlenmiştir. **Yüklenmesi gerekenler** düğmesinde hem geniş hem dar menüde sarı üçgen içinde siyah ünlem simgesi kullanılır.
+
 Sol menüdeki **Yüklenmesi gerekenler** sayfası açılınca tarama başlar. **Güncelle • yeniden tara** düğmesi kurulumları ve kayıtlı API bağlantılarını yeniden kontrol eder; sürerken ikinci tarama başlatılmaz. **Taramayı durdur** ve sayfadan ayrılma mevcut taramayı iptal eder. Son kontrol saati ve doğrulandı / eksik-hatalı / kontrol gerekli sayıları gösterilir. Sonuçlar yalnız o kontrol anına aittir; kişisel anahtar değerleri gösterilmez veya tarama raporuna yazılmaz.
 
 Program satırlarında amblem, durum, ayrıntı, resmî indirme/rehber ve kurulum/ayarlar düğmeleri bulunur. Yeşil **✓ Yüklü**, kırmızı **✕ Yüklü değil / hata**, sarı **◷ kontrol gerekli** kullanılır. Ollama kurulmuş ancak servis kapalıysa ‘yüklü değil’ denmez. Yerel modellerde seçili adın bulunması ve `completion` / `vision` yeteneği denetlenir; uzak Ollama modelleri ücretsiz yerel seçenek sayılmaz. FFmpeg sürüm komutuyla; ses eşleme Python/kütüphane/model dosyalarıyla; Windows sesleri gerçek Türkçe ses listesiyle; çalışma ortamı çalışan .NET sürümüyle denetlenir. ComfyUI motor/iş akışı varlığı ayrılır; servis açıkken düğüm ve model seçenekleri de kontrol edilir. Standart klasör dışında kurulumlarda ayarlardan bağlama gerekir. Bu kontrol tam render veya donanım stres testi değildir.
@@ -1026,11 +1032,11 @@ API listesi Gemini, NVIDIA, Groq, OpenRouter, OpenAI, Kimi, Tavily, Pexels, Pixa
 Kontroller yeni metin, görsel veya ses üretmez; video yüklemez; API açıp kapatmaz. Stok araması ve YouTube okuması küçük API kotası tüketebilir. Her hizmetin kurulması/anahtarının girilmesi şart değildir: yerel ve bulut seçenekleri alternatiflerdir. Sayfanın sonunda her bileşenin ne işe yaradığı, hangi işlev için gerektiği ve tam paketle gelen bileşenler açıklanır. Program amblemleri ilgili resmî sitelerden alınmıştır; bulunmayan hizmette açık ad kısaltması kullanılır, yanlış marka logosu gösterilmez.
 
 <a id="dogrulama"></a>
-## 30. 0.4.26 doğrulama ve değişiklik özeti
+## 30. 0.4.27 doğrulama ve değişiklik özeti
 
-0.4.26; ücretsiz yerel görsel okuma önceliği, geçici görsel API hatalarında sınırlı tekrar, erken ve düzenlenebilir sahne çizelgesi, Cortex maskotu ve kurulum/API kontrol listesini ekler. Önceki sürümün metne göre eşleştirme, gerçek ses süreleri ve yavaş fotoğraf hareketi mekanikleri korunur.
+0.4.27; ASR'nin ayırt edemediği kısa alıntılarda sınırları doğrulanmış komşu altyazı gruplaması, eski düzenlemelerden sağlam konuşma bloğu kurtarma ve deterministik hatalarda tekrar döngüsünü durdurma düzeltmelerini getirir. İşlem sırasında açılan sahne paneli bitince düzenlemeye açılır; pencere boyutu değişince içerik ve alt işlem düğmeleri yeniden yerleşir. Dar sohbet çalışma alanının üstüne binmez. Tek bölüm ve birden fazla dosya seçildiğinde tek görsel kullanılacağı açıkça belirtilir; metne göre sahnelere ayır düğmesi eklenmiştir. Merkez • Ayarlar etiketi ve sarı ünlem simgesi de bu sürümdedir.
 
-Yayın hazırlığında **279 güvenilirlik kontrolü + 73 temel test = 352 test** geçti. Güncel GitHub Windows derleme işi ve release işi başarılı oldu. İndirilen güncelleme ZIP’i manifest/SHA-256 üzerinden doğrulandı; indirilen EXE’nin sağlık kontrolü `Success=true`, `Version=0.4.26` verdi.
+Yayın hazırlığında **283 güvenilirlik kontrolü + 73 temel test = 356 test** geçti. Ek Python kontrollerinde yanlış metin ve geçersiz zamanlar reddedildi; gerçek hatalı parça yeniden üretildi ve özgün ses değiştirilmeden kurtarıldı. Elde bulunan 16 kelime önbelleği de doğrulandı. Güncel GitHub Windows derleme işi ve release işi başarılı oldu. İndirilen güncelleme ZIP’i manifest/SHA-256 üzerinden doğrulandı; indirilen EXE’nin sağlık kontrolü `Success=true`, `Version=0.4.27` verdi.
 
 Görsel API girdisi/önbellek/anlamsal dosya seçimi sahte yanıtlı bütünleşme testiyle; 18 saniyelik fotoğrafın iki yöndeki hareketi gerçek MP4 çıktısıyla; gerçek bir kullanıcı fotoğrafı ve video örnek karelerinin okunması yalnız yerel Qwen3-VL 4B Instruct ile, bulut kapalı ve ücretsiz öncelik açıkken kontrol edildi. Takılan 26. fotoğrafın doğrudan model testi yaklaşık 9,35 saniyede tamamlandı. Kurulum/API durumları sahte yanıtlı testlerle ve gerçek UI tarama iptaliyle kontrol edildi. Kullanıcının 69 dosyalı projesinin tamamı bu doğrulamada yeniden üretilip izlenmiş değildir. Dolayısıyla “her sahnede mükemmel semantik uyum kanıtlandı” sonucu çıkarılamaz.
 
@@ -1039,7 +1045,7 @@ Bu sürümde erken çizelge, Cortex ve yerel görsel analiz yolu geliştirilmiş
 <a id="kaynak-katalogu"></a>
 ## Ek A — Kaynak dosyalarının tamamı
 
-Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` çıktıları hariçtir. Katalog 0.4.26 kaynaklarına aittir. Dosya bağlantıları depo içinde görelidir; sürüme sabitlenmiş tam kaynak [yayın commit’inde](https://github.com/aayurtseven02/nur-kapisi-otomasyon/tree/v0.4.26/src) bulunur. UI önizleme ve test dosyaları üretim özelliği gibi gösterilmez.
+Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` çıktıları hariçtir. Katalog 0.4.27 kaynaklarına aittir. Dosya bağlantıları depo içinde görelidir; sürüme sabitlenmiş tam kaynak [yayın commit’inde](https://github.com/aayurtseven02/nur-kapisi-otomasyon/tree/v0.4.27/src) bulunur. UI önizleme ve test dosyaları üretim özelliği gibi gösterilmez.
 
 | Dosya | Satır | Sorumluluk |
 |---|---:|---|
@@ -1074,7 +1080,7 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [CoverFallback.cs](src/CoverFallback.cs) | 145 | Yerel/bulut AI kapak/sahne üretimi, referans desteği ve görsel istek kotası. |
 | [CoverReference.cs](src/CoverReference.cs) | 15 | Kapak stil referansını projeye güvenli içe alma. |
 | [CreationFlow.cs](src/CreationFlow.cs) | 95 | Beş adımın veri/karar modeli, metin onayı, plan imzası ve eski proje geçişi. |
-| [CreationWizard.cs](src/CreationWizard.cs) | 169 | Kaynak-Metin, Tasarım, Üretim, İzle-Düzelt ve Yayın ana akışı. |
+| [CreationWizard.cs](src/CreationWizard.cs) | 172 | Kaynak-Metin, Tasarım, Üretim, İzle-Düzelt ve Yayın ana akışı. |
 | [DarkReferencePreview.cs](src/DarkReferencePreview.cs) | 33 | Koyu arayüzün önizleme/test yakalaması. |
 | [DeviceMemory.cs](src/DeviceMemory.cs) | 9 | Windows bellek durumu ve kullanıcıya donanım notu. |
 | [DurationStandard.cs](src/DurationStandard.cs) | 47 | Süre/kelime bütçesi, tolerans ve genel sahne sayısı kuralları. |
@@ -1102,7 +1108,7 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [LocalAiSmokeTests.cs](src/LocalAiSmokeTests.cs) | 49 | Gerçek yerel AI bağlantısı ve şema smoke testi. |
 | [LocalAudioAlignment.cs](src/LocalAudioAlignment.cs) | 61 | Çevrimdışı Python/Whisper hizalama işlemi, önbellek, süre ve iptal yönetimi. |
 | [LocalCoverEngine.cs](src/LocalCoverEngine.cs) | 256 | ComfyUI keşif/başlatma, workflow kontrolü, kalite parametreleri ve görsel üretimi. |
-| [MaintenanceUi.cs](src/MaintenanceUi.cs) | 121 | Sohbet paneli yerleşimi, bakım ve taşınabilir proje dışa aktarımı. |
+| [MaintenanceUi.cs](src/MaintenanceUi.cs) | 123 | Sohbet paneli yerleşimi, bakım ve taşınabilir proje dışa aktarımı. |
 | [ManualVideos.cs](src/ManualVideos.cs) | 42 | Manuel dosya seçimi, normal/Shorts dosya ayrımı ve plan uygulaması. |
 | [MediaFormat.cs](src/MediaFormat.cs) | 45 | Görsel/video ölçü ve biçim doğrulaması. |
 | [MediaPool.cs](src/MediaPool.cs) | 331 | Kalıcı medya kayıtları, puan/etiket/kategori, hak, tekrar aralığı ve seçim. |
@@ -1136,7 +1142,7 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [PublicationHelp.cs](src/PublicationHelp.cs) | 73 | Yayın adımlarının açıklama ve önizleme pencereleri. |
 | [PublicationStatistics.cs](src/PublicationStatistics.cs) | 13 | Yayınlanan normal/Shorts/proje sayaçları. |
 | [Reliability.cs](src/Reliability.cs) | 247 | Plan/render/dosya hash, çıktı geçerliliği, sınırlı indirme ve OperationLease. |
-| [ReliabilityTests.cs](src/ReliabilityTests.cs) | 3324 | Geniş güvenilirlik ve hata tekrar testlerinin izole çalıştırıcısı. |
+| [ReliabilityTests.cs](src/ReliabilityTests.cs) | 3340 | Geniş güvenilirlik ve hata tekrar testlerinin izole çalıştırıcısı. |
 | [ReviewFlow.cs](src/ReviewFlow.cs) | 166 | Video izleme ve son onay akışı. |
 | [SceneHeadings.cs](src/SceneHeadings.cs) | 125 | AI sahne başlığı şeması, hash ve başlık hazırlama. |
 | [SceneTimeline.cs](src/SceneTimeline.cs) | 99 | Görsel, konuşma, altyazı çizelgesi; zamanlar, küçük resimler, bölme/birleştirme/süre düzenleme. |
@@ -1148,7 +1154,7 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [SettingsValidation.cs](src/SettingsValidation.cs) | 41 | Model, sağlayıcı, telaffuz, hız ve kota ayarlarının geçerliliği. |
 | [SetupChecklist.cs](src/SetupChecklist.cs) | 54 | Sol menü kurulum/API listesi, amblemler, yeniden tarama, iptal ve açıklamalar. |
 | [SetupChecks.cs](src/SetupChecks.cs) | 115 | Kurulum, yerel model yeteneği ve API kimlikleri için salt okunur durum kontrolleri. |
-| [SidebarButton.cs](src/SidebarButton.cs) | 21 | Özel sol menü düğmesi çizimi ve etkileşimi. |
+| [SidebarButton.cs](src/SidebarButton.cs) | 25 | Özel sol menü düğmesi çizimi ve etkileşimi. |
 | [SocialConnections.cs](src/SocialConnections.cs) | 57 | OAuth broker ile Instagram/Facebook/TikTok hesabı bağlama ve kasaya kayıt. |
 | [SocialPublishing.cs](src/SocialPublishing.cs) | 440 | Sosyal platform modelleri, token/HTTP, parça yükleme, yayın ve işleme durumu. |
 | [SocialUi.cs](src/SocialUi.cs) | 87 | Sosyal bağlantı/yayın pencereleri ve platform yardım metinleri. |
@@ -1167,7 +1173,7 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [StoryImages.cs](src/StoryImages.cs) | 150 | Karakter/sahne istemleri, kimlik/referans, kalite/hash ve AI görsel hazırlığı. |
 | [StudioCheck.cs](src/StudioCheck.cs) | 19 | Özel koyu tema onay kutusu çizimi. |
 | [StudioDisclosure.cs](src/StudioDisclosure.cs) | 37 | Açılır bölüm başlığı, genişlik ve içerik yerleşimi. |
-| [StudioForm.cs](src/StudioForm.cs) | 2215 | Ana pencere, gezinme, hesaplar, projeler, takvim, motor/ayar/log ekranları ve timer. |
+| [StudioForm.cs](src/StudioForm.cs) | 2216 | Ana pencere, gezinme, hesaplar, projeler, takvim, motor/ayar/log ekranları ve timer. |
 | [StudioNumber.cs](src/StudioNumber.cs) | 35 | Sayı alanı çerçevesi, oklar ve yerel alt denetim yerleşimi. |
 | [StudioTabs.cs](src/StudioTabs.cs) | 31 | Koyu tema sekmeler ve seçim çizimi. |
 | [StudioTextBox.cs](src/StudioTextBox.cs) | 27 | Metin alanı Win32 kenar/odak ve koyu tema çerçevesi. |
@@ -1175,7 +1181,7 @@ Bu tablo `src/` içindeki **157 C# dosyasının tamamını** kapsar; `bin/obj` �
 | [TextDesign.cs](src/TextDesign.cs) | 333 | TextLayout modeli, ASS yazı efektleri, animasyon ve önizleme. |
 | [TextEditor.cs](src/TextEditor.cs) | 976 | Yazı/müzik/video editörü, timeline, sahne başlıkları ve taslağı kaydetme. |
 | [Theme.cs](src/Theme.cs) | 184 | Ortak renk/font/form denetimi fabrikaları, uyarı penceresi ve combo çizimi. |
-| [TimedNarration.cs](src/TimedNarration.cs) | 307 | İşaretli/gerçek konuşma zamanları, altyazı metni eşleme ve doğal bloklar. |
+| [TimedNarration.cs](src/TimedNarration.cs) | 322 | İşaretli/gerçek konuşma zamanları, altyazı metni eşleme ve doğal bloklar. |
 | [TitlePlacement.cs](src/TitlePlacement.cs) | 99 | Güvenli sahne başlığı yerleşimi ve sığdırma. |
 | [TransferProgress.cs](src/TransferProgress.cs) | 47 | HTTP aktarım içeriği ve aktarım ilerleme çizimi. |
 | [UiSound.cs](src/UiSound.cs) | 49 | Yerel arayüz tıklama sesi dalga üretimi ve seviye ayarı. |
@@ -2878,7 +2884,7 @@ Aşağıdaki bildirimler özellik değil alan/sabitlerdir. Değerler çalışma 
 <a id="metot-katalogu"></a>
 ## Ek C — Tür ve metot imzaları
 
-Bu başvuru **301 tür bildirimi** ve **1000 tip düzeyindeki metot bildirimini** kapsar. Kurucular, primary-constructor/record parametreleri ve kalıtım bilgisi ayrıca gösterilir. Partial türler dosyalarına göre tekrar görünür. Yerel fonksiyonlar, lambda gövdeleri, property getter gövdeleri ve otomatik derleyici çıktıları ayrı API öğesi sayılmamıştır; tam uygulama kaynak bağlantısındadır. Erişim niteleyicisi yazılmamış bildirimler C# dilinin varsayılan erişim kurallarını izler; bu katalogdaki her metot dışarı açık API değildir.
+Bu başvuru **301 tür bildirimi** ve **1002 tip düzeyindeki metot bildirimini** kapsar. Kurucular, primary-constructor/record parametreleri ve kalıtım bilgisi ayrıca gösterilir. Partial türler dosyalarına göre tekrar görünür. Yerel fonksiyonlar, lambda gövdeleri, property getter gövdeleri ve otomatik derleyici çıktıları ayrı API öğesi sayılmamıştır; tam uygulama kaynak bağlantısındadır. Erişim niteleyicisi yazılmamış bildirimler C# dilinin varsayılan erişim kurallarını izler; bu katalogdaki her metot dışarı açık API değildir.
 
 ### C. AiDesignDialog.cs
 
@@ -4445,16 +4451,17 @@ Tür: `public static class LocalCoverEngine`. [Bildirim](src/LocalCoverEngine.cs
 Sohbet paneli yerleşimi, bakım ve taşınabilir proje dışa aktarımı. [Kaynak](src/MaintenanceUi.cs).
 
 <details>
-<summary>StudioForm — 4 metot</summary>
+<summary>StudioForm — 5 metot</summary>
 
 Tür: `public sealed partial class StudioForm`. [Bildirim](src/MaintenanceUi.cs#L5).
 
 | Satır | Metot imzası |
 |---:|---|
-| [13](src/MaintenanceUi.cs#L13) | `void ToggleAssistant()` |
-| [29](src/MaintenanceUi.cs#L29) | `void PositionAssistant()` |
-| [45](src/MaintenanceUi.cs#L45) | `void Maintenance()` |
-| [107](src/MaintenanceUi.cs#L107) | `async Task ExportProject(Episode episode)` |
+| [13](src/MaintenanceUi.cs#L13) | `void NavigateFromSidebar(string route)` |
+| [15](src/MaintenanceUi.cs#L15) | `void ToggleAssistant()` |
+| [31](src/MaintenanceUi.cs#L31) | `void PositionAssistant()` |
+| [47](src/MaintenanceUi.cs#L47) | `void Maintenance()` |
+| [109](src/MaintenanceUi.cs#L109) | `async Task ExportProject(Episode episode)` |
 
 </details>
 
@@ -5637,7 +5644,7 @@ Tür: `public static class ReliabilityTests`. [Bildirim](src/ReliabilityTests.cs
 | [23](src/ReliabilityTests.cs#L23) | `static extern bool GetWindowRect(IntPtr window,out NativeRect rect)` |
 | [25](src/ReliabilityTests.cs#L25) | `static extern IntPtr SendHelpMessage(IntPtr hwnd,int msg,IntPtr wparam,IntPtr lparam)` |
 | [27](src/ReliabilityTests.cs#L27) | `public static int Run(string[] args)` |
-| [3302](src/ReliabilityTests.cs#L3302) | `static HttpResponseMessage Ok(string body)` |
+| [3318](src/ReliabilityTests.cs#L3318) | `static HttpResponseMessage Ok(string body)` |
 
 </details>
 
@@ -5662,22 +5669,22 @@ Bu dosyadaki bildirimde tip düzeyinde metot yoktur; veri/record parametreleri, 
 <details>
 <summary>ReliabilityTests.InlineProgress — 1 metot</summary>
 
-Tür: `sealed class ReliabilityTests.InlineProgress : IProgress<string>`. [Bildirim](src/ReliabilityTests.cs#L3300).
+Tür: `sealed class ReliabilityTests.InlineProgress : IProgress<string>`. [Bildirim](src/ReliabilityTests.cs#L3316).
 
 | Satır | Metot imzası |
 |---:|---|
-| [3300](src/ReliabilityTests.cs#L3300) | `public void Report(string value)` |
+| [3316](src/ReliabilityTests.cs#L3316) | `public void Report(string value)` |
 
 </details>
 
 <details>
 <summary>ReliabilityTests.Handler — 1 metot</summary>
 
-Tür: `sealed class ReliabilityTests.Handler(Func<HttpRequestMessage, Task<HttpResponseMessage>> action) : HttpMessageHandler`. [Bildirim](src/ReliabilityTests.cs#L3304).
+Tür: `sealed class ReliabilityTests.Handler(Func<HttpRequestMessage, Task<HttpResponseMessage>> action) : HttpMessageHandler`. [Bildirim](src/ReliabilityTests.cs#L3320).
 
 | Satır | Metot imzası |
 |---:|---|
-| [3308](src/ReliabilityTests.cs#L3308) | `protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)` |
+| [3324](src/ReliabilityTests.cs#L3324) | `protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)` |
 
 </details>
 
@@ -6140,7 +6147,7 @@ public SidebarButton();
 | [10](src/SidebarButton.cs#L10) | `protected override void OnMouseEnter(EventArgs e)` |
 | [11](src/SidebarButton.cs#L11) | `protected override void OnMouseLeave(EventArgs e)` |
 | [12](src/SidebarButton.cs#L12) | `protected override void OnPaint(PaintEventArgs e)` |
-| [19](src/SidebarButton.cs#L19) | `protected override void OnClick(EventArgs e)` |
+| [23](src/SidebarButton.cs#L23) | `protected override void OnClick(EventArgs e)` |
 
 </details>
 
@@ -6584,60 +6591,60 @@ public StudioForm(Store store);
 |---:|---|
 | [31](src/StudioForm.cs#L31) | `static IEnumerable<Control> CardChildren(Control parent)` |
 | [33](src/StudioForm.cs#L33) | `string PackageShape()` |
-| [167](src/StudioForm.cs#L167) | `void RememberLayout(Control parent)` |
-| [175](src/StudioForm.cs#L175) | `void Reflow()` |
-| [234](src/StudioForm.cs#L234) | `void UpdateFooter()` |
-| [241](src/StudioForm.cs#L241) | `public static string ChannelHeading(Settings settings)` |
-| [251](src/StudioForm.cs#L251) | `void UpdateChannelHeading()` |
-| [261](src/StudioForm.cs#L261) | `async Task RefreshChannelName()` |
-| [285](src/StudioForm.cs#L285) | `void Navigate(string name)` |
-| [320](src/StudioForm.cs#L320) | `void RefreshCurrentPage()` |
-| [334](src/StudioForm.cs#L334) | `public void CaptureSceneEditor(string directory)` |
-| [346](src/StudioForm.cs#L346) | `public void CaptureConnections(string directory)` |
-| [384](src/StudioForm.cs#L384) | `public void CapturePages(string directory)` |
-| [410](src/StudioForm.cs#L410) | `public void CaptureStockSettings(string directory)` |
-| [440](src/StudioForm.cs#L440) | `public void CapturePackageLogs(string directory)` |
-| [502](src/StudioForm.cs#L502) | `public void CaptureAiSettings(string directory)` |
-| [552](src/StudioForm.cs#L552) | `void Title(string title, string description)` |
-| [560](src/StudioForm.cs#L560) | `FlowLayoutPanel Actions(params Button[] buttons)` |
-| [562](src/StudioForm.cs#L562) | `void Message(string message)` |
-| [564](src/StudioForm.cs#L564) | `async Task Safe(Func<Task> task)` |
-| [566](src/StudioForm.cs#L566) | `int ReadyPieces()` |
-| [568](src/StudioForm.cs#L568) | `void Dashboard()` |
-| [625](src/StudioForm.cs#L625) | `void Empty(string title, string description)` |
-| [633](src/StudioForm.cs#L633) | `void NewPackage()` |
-| [635](src/StudioForm.cs#L635) | `void DemoPackage()` |
-| [645](src/StudioForm.cs#L645) | `void Packages()` |
-| [711](src/StudioForm.cs#L711) | `void PlayArchivedPackage(Episode episode)` |
-| [729](src/StudioForm.cs#L729) | `void EpisodeCard(Episode e, bool expanded)` |
-| [908](src/StudioForm.cs#L908) | `void EditPackageCovers(Episode episode)` |
-| [922](src/StudioForm.cs#L922) | `void ImportTopics()` |
-| [950](src/StudioForm.cs#L950) | `void EditText(Episode episode)` |
-| [970](src/StudioForm.cs#L970) | `void Clone(Episode e)` |
-| [980](src/StudioForm.cs#L980) | `void EditPackage(Episode e)` |
-| [985](src/StudioForm.cs#L985) | `void Edit(Episode e)` |
-| [1007](src/StudioForm.cs#L1007) | `void ReviewLegacy(Episode e)` |
-| [1035](src/StudioForm.cs#L1035) | `public static Form Dialog(string title, int width = 850, int height = 730)` |
-| [1037](src/StudioForm.cs#L1037) | `void ScheduleDialog(Episode e, Action<Form>? preview = null)` |
-| [1161](src/StudioForm.cs#L1161) | `void Calendar()` |
-| [1195](src/StudioForm.cs#L1195) | `void AssetDateDialog(Episode episode, AssetVideo asset)` |
-| [1229](src/StudioForm.cs#L1229) | `async Task UploadPlannedStock()` |
-| [1259](src/StudioForm.cs#L1259) | `static void Field(FlowLayoutPanel f, string label, Control control)` |
-| [1267](src/StudioForm.cs#L1267) | `void Connections()` |
-| [1415](src/StudioForm.cs#L1415) | `Control VecteezyCard(int width)` |
-| [1504](src/StudioForm.cs#L1504) | `async Task TestConnection(string key)` |
-| [1532](src/StudioForm.cs#L1532) | `void ShowConnectionHelp(string key)` |
-| [1550](src/StudioForm.cs#L1550) | `void PoolPage()` |
-| [1698](src/StudioForm.cs#L1698) | `void SettingsPage()` |
-| [2000](src/StudioForm.cs#L2000) | `void GitHubPage()` |
-| [2030](src/StudioForm.cs#L2030) | `void Logs()` |
-| [2048](src/StudioForm.cs#L2048) | `public void CaptureUploadStatus(string folder)` |
-| [2050](src/StudioForm.cs#L2050) | `void ShowUploadStatus()` |
-| [2052](src/StudioForm.cs#L2052) | `void ShowUploadStatus(string? screenshot)` |
-| [2125](src/StudioForm.cs#L2125) | `Task RefreshRemote()` |
-| [2126](src/StudioForm.cs#L2126) | `async Task RefreshRemote(bool fullScan)` |
-| [2158](src/StudioForm.cs#L2158) | `async Task Tick()` |
-| [2209](src/StudioForm.cs#L2209) | `public static DataGridView Grid()` |
+| [168](src/StudioForm.cs#L168) | `void RememberLayout(Control parent)` |
+| [176](src/StudioForm.cs#L176) | `void Reflow()` |
+| [235](src/StudioForm.cs#L235) | `void UpdateFooter()` |
+| [242](src/StudioForm.cs#L242) | `public static string ChannelHeading(Settings settings)` |
+| [252](src/StudioForm.cs#L252) | `void UpdateChannelHeading()` |
+| [262](src/StudioForm.cs#L262) | `async Task RefreshChannelName()` |
+| [286](src/StudioForm.cs#L286) | `void Navigate(string name)` |
+| [321](src/StudioForm.cs#L321) | `void RefreshCurrentPage()` |
+| [335](src/StudioForm.cs#L335) | `public void CaptureSceneEditor(string directory)` |
+| [347](src/StudioForm.cs#L347) | `public void CaptureConnections(string directory)` |
+| [385](src/StudioForm.cs#L385) | `public void CapturePages(string directory)` |
+| [411](src/StudioForm.cs#L411) | `public void CaptureStockSettings(string directory)` |
+| [441](src/StudioForm.cs#L441) | `public void CapturePackageLogs(string directory)` |
+| [503](src/StudioForm.cs#L503) | `public void CaptureAiSettings(string directory)` |
+| [553](src/StudioForm.cs#L553) | `void Title(string title, string description)` |
+| [561](src/StudioForm.cs#L561) | `FlowLayoutPanel Actions(params Button[] buttons)` |
+| [563](src/StudioForm.cs#L563) | `void Message(string message)` |
+| [565](src/StudioForm.cs#L565) | `async Task Safe(Func<Task> task)` |
+| [567](src/StudioForm.cs#L567) | `int ReadyPieces()` |
+| [569](src/StudioForm.cs#L569) | `void Dashboard()` |
+| [626](src/StudioForm.cs#L626) | `void Empty(string title, string description)` |
+| [634](src/StudioForm.cs#L634) | `void NewPackage()` |
+| [636](src/StudioForm.cs#L636) | `void DemoPackage()` |
+| [646](src/StudioForm.cs#L646) | `void Packages()` |
+| [712](src/StudioForm.cs#L712) | `void PlayArchivedPackage(Episode episode)` |
+| [730](src/StudioForm.cs#L730) | `void EpisodeCard(Episode e, bool expanded)` |
+| [909](src/StudioForm.cs#L909) | `void EditPackageCovers(Episode episode)` |
+| [923](src/StudioForm.cs#L923) | `void ImportTopics()` |
+| [951](src/StudioForm.cs#L951) | `void EditText(Episode episode)` |
+| [971](src/StudioForm.cs#L971) | `void Clone(Episode e)` |
+| [981](src/StudioForm.cs#L981) | `void EditPackage(Episode e)` |
+| [986](src/StudioForm.cs#L986) | `void Edit(Episode e)` |
+| [1008](src/StudioForm.cs#L1008) | `void ReviewLegacy(Episode e)` |
+| [1036](src/StudioForm.cs#L1036) | `public static Form Dialog(string title, int width = 850, int height = 730)` |
+| [1038](src/StudioForm.cs#L1038) | `void ScheduleDialog(Episode e, Action<Form>? preview = null)` |
+| [1162](src/StudioForm.cs#L1162) | `void Calendar()` |
+| [1196](src/StudioForm.cs#L1196) | `void AssetDateDialog(Episode episode, AssetVideo asset)` |
+| [1230](src/StudioForm.cs#L1230) | `async Task UploadPlannedStock()` |
+| [1260](src/StudioForm.cs#L1260) | `static void Field(FlowLayoutPanel f, string label, Control control)` |
+| [1268](src/StudioForm.cs#L1268) | `void Connections()` |
+| [1416](src/StudioForm.cs#L1416) | `Control VecteezyCard(int width)` |
+| [1505](src/StudioForm.cs#L1505) | `async Task TestConnection(string key)` |
+| [1533](src/StudioForm.cs#L1533) | `void ShowConnectionHelp(string key)` |
+| [1551](src/StudioForm.cs#L1551) | `void PoolPage()` |
+| [1699](src/StudioForm.cs#L1699) | `void SettingsPage()` |
+| [2001](src/StudioForm.cs#L2001) | `void GitHubPage()` |
+| [2031](src/StudioForm.cs#L2031) | `void Logs()` |
+| [2049](src/StudioForm.cs#L2049) | `public void CaptureUploadStatus(string folder)` |
+| [2051](src/StudioForm.cs#L2051) | `void ShowUploadStatus()` |
+| [2053](src/StudioForm.cs#L2053) | `void ShowUploadStatus(string? screenshot)` |
+| [2126](src/StudioForm.cs#L2126) | `Task RefreshRemote()` |
+| [2127](src/StudioForm.cs#L2127) | `async Task RefreshRemote(bool fullScan)` |
+| [2159](src/StudioForm.cs#L2159) | `async Task Tick()` |
+| [2210](src/StudioForm.cs#L2210) | `public static DataGridView Grid()` |
 
 </details>
 
@@ -6893,17 +6900,18 @@ Tür: `public sealed class DarkComboBox : ComboBox`. [Bildirim](src/Theme.cs#L14
 İşaretli/gerçek konuşma zamanları, altyazı metni eşleme ve doğal bloklar. [Kaynak](src/TimedNarration.cs).
 
 <details>
-<summary>TimedNarration — 5 metot</summary>
+<summary>TimedNarration — 6 metot</summary>
 
 Tür: `public static class TimedNarration`. [Bildirim](src/TimedNarration.cs#L11).
 
 | Satır | Metot imzası |
 |---:|---|
 | [19](src/TimedNarration.cs#L19) | `public static string TextHash(string text)` |
-| [21](src/TimedNarration.cs#L21) | `public static List<Caption> MarkedCaptions(IReadOnlyList<string> text, IReadOnlyDictionary<string, double> marks, double duration, double speed)` |
-| [45](src/TimedNarration.cs#L45) | `public static List<Caption> Redisplay(IReadOnlyList<Caption> measured, string text)` |
-| [65](src/TimedNarration.cs#L65) | `public static async Task Prepare(Store store, Episode episode, VideoScript script, Settings settings, string folder, Services services, CancellationToken ct, Func<string, string, Settings, CancellationToken, Task>? testSpeech = null)` |
-| [277](src/TimedNarration.cs#L277) | `public static List<string> NaturalBlocks(string text, int maxBytes = 4300)` |
+| [21](src/TimedNarration.cs#L21) | `internal static string ReusableBlock(Store store,Episode episode,string key,string text)` |
+| [36](src/TimedNarration.cs#L36) | `public static List<Caption> MarkedCaptions(IReadOnlyList<string> text, IReadOnlyDictionary<string, double> marks, double duration, double speed)` |
+| [60](src/TimedNarration.cs#L60) | `public static List<Caption> Redisplay(IReadOnlyList<Caption> measured, string text)` |
+| [80](src/TimedNarration.cs#L80) | `public static async Task Prepare(Store store, Episode episode, VideoScript script, Settings settings, string folder, Services services, CancellationToken ct, Func<string, string, Settings, CancellationToken, Task>? testSpeech = null)` |
+| [292](src/TimedNarration.cs#L292) | `public static List<string> NaturalBlocks(string text, int maxBytes = 4300)` |
 
 </details>
 
@@ -7941,4 +7949,4 @@ Türkçe YouTube kanalları için normal video ve Shorts'u tek konu paketinden y
 
 ## Belge kapsamı ve üçüncü taraflar
 
-Bu README, kaynak sürümü 0.4.26 için hazırlanmıştır. Teknik katalog Roslyn sözdizim ağacından üretilmiş; kullanım/mimari açıklamaları ilgili kod yolları okunarak yazılmıştır. Bir metot imzasının listelenmesi uçtan uca canlı servis testinin yapıldığı anlamına gelmez. Üçüncü taraf bileşen koşulları için [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), stok ayrıntıları için [STOK-KAYNAKLARI.md](STOK-KAYNAKLARI.md), broker kurulum sınırları için [social-connection-service/README.md](social-connection-service/README.md) dosyalarına bak. Bu belge yeni bir yazılım lisansı tanımlamaz.
+Bu README, kaynak sürümü 0.4.27 için hazırlanmıştır. Teknik katalog Roslyn sözdizim ağacından üretilmiş; kullanım/mimari açıklamaları ilgili kod yolları okunarak yazılmıştır. Bir metot imzasının listelenmesi uçtan uca canlı servis testinin yapıldığı anlamına gelmez. Üçüncü taraf bileşen koşulları için [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), stok ayrıntıları için [STOK-KAYNAKLARI.md](STOK-KAYNAKLARI.md), broker kurulum sınırları için [social-connection-service/README.md](social-connection-service/README.md) dosyalarına bak. Bu belge yeni bir yazılım lisansı tanımlamaz.

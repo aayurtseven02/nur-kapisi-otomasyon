@@ -69,6 +69,7 @@ public sealed partial class StudioForm : Form
     ChatAssistant? assistant;
 
     readonly List<(Control Control, Rectangle Bounds, int ParentWidth)> responsive = [];
+    Action? reflowWizard;
 
     public StudioForm(Store store)
 
@@ -102,13 +103,13 @@ public sealed partial class StudioForm : Form
 
         var navigation = new StudioScrollPanel { Location = new(8, 132), Size = new(252, 254), Anchor = AnchorStyles.Top | AnchorStyles.Left, AutoScroll = true }; side.Controls.Add(navigation);
 
-        var items = new[] { (Route: "Video hazırla", Label: "Stüdyo • Üret"), (Route: "Videolarım", Label: "Projelerim"), (Route: "Ayarlar", Label: "Merkez"), (Route: "Yüklenmesi gerekenler", Label: "Yüklenmesi gerekenler") };
+        var items = new[] { (Route: "Video hazırla", Label: "Stüdyo • Üret"), (Route: "Videolarım", Label: "Projelerim"), (Route: "Ayarlar", Label: "Merkez • Ayarlar"), (Route: "Yüklenmesi gerekenler", Label: "Yüklenmesi gerekenler") };
 
         int y=0;
 
         foreach(var item in items) {
 
-            var button=new SidebarButton{Text=item.Label,Width=248,Glyph=item.Route=="Video hazırla"?"＋":item.Route=="Videolarım"?"◷":"⚙",Location=new Point(0,y),AccessibleName="Ana bölüm: "+item.Label};button.Click+=(_,_)=>Navigate(item.Route);navigation.Controls.Add(button);nav[item.Route]=button;y+=42;
+            var button=new SidebarButton{Text=item.Label,Width=248,Glyph=item.Route=="Yüklenmesi gerekenler"?"warning":item.Route=="Video hazırla"?"＋":item.Route=="Videolarım"?"◷":"⚙",Location=new Point(0,y),AccessibleName="Ana bölüm: "+item.Label};button.Click+=(_,_)=>NavigateFromSidebar(item.Route);navigation.Controls.Add(button);nav[item.Route]=button;y+=42;
 
         }
 
@@ -131,7 +132,7 @@ public sealed partial class StudioForm : Form
 
 bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.Top,AccessibleName="TubeFlow sohbet yardımcısını aç"};chat.Click+=(_,_)=>ToggleAssistant();sideFooter.Controls.Add(chat);sideFooter.BringToFront();hints.SetToolTip(chat,"Sohbeti aç / kapat");
         var scroll = new StudioScrollPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.Transparent }; page.Location = Point.Empty; scroll.Controls.Add(page); body.Controls.Add(scroll);
-        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);var rail=new Panel{Dock=DockStyle.Left,Width=56,BackColor=Theme.Shell,Padding=new Padding(4,12,4,8)};rail.Controls.Add(collapse);collapse.Location=new Point(5,8);collapse.Width=46;collapse.Height=42;collapse.BringToFront();int railY=66;foreach(var item in items){string route=item.Route;var shortcut=new SidebarButton{Glyph=route=="Video hazırla"?"⌂":route=="Videolarım"?"▤":"⚙",Location=new Point(5,railY),Width=46,Height=42,Tag="rail:"+route,AccessibleName="Hızlı bölüm: "+item.Label};shortcut.Click+=(_,_)=>Navigate(route);rail.Controls.Add(shortcut);railY+=54;}var railChat=new CortexButton{Dock=DockStyle.Bottom,Height=58,AccessibleName="Hızlı sohbet"};railChat.Click+=(_,_)=>ToggleAssistant();rail.Controls.Add(railChat);collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?0:268;brand.Visible=!compact;brandTitle.Visible=!compact;sectionLabel.Visible=!compact;sideFooter.Height=compact?70:124;subtitle.Visible=!compact;chat.Text=compact?"":"Cortex";navigation.Width=compact?56:252;foreach(var (route,b) in nav){b.Width=compact?46:248;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
+        var collapse=new SidebarButton{Text="",Glyph="☰",Width=36};collapse.AccessibleName="Yan menüyü aç veya kapat";collapse.Location=new Point(8,4);var rail=new Panel{Dock=DockStyle.Left,Width=56,BackColor=Theme.Shell,Padding=new Padding(4,12,4,8)};rail.Controls.Add(collapse);collapse.Location=new Point(5,8);collapse.Width=46;collapse.Height=42;collapse.BringToFront();int railY=66;foreach(var item in items){string route=item.Route;var shortcut=new SidebarButton{Glyph=route=="Yüklenmesi gerekenler"?"warning":route=="Video hazırla"?"⌂":route=="Videolarım"?"▤":"⚙",Location=new Point(5,railY),Width=46,Height=42,Tag="rail:"+route,AccessibleName="Hızlı bölüm: "+item.Label};shortcut.Click+=(_,_)=>NavigateFromSidebar(route);rail.Controls.Add(shortcut);railY+=54;}var railChat=new CortexButton{Dock=DockStyle.Bottom,Height=58,AccessibleName="Hızlı sohbet"};railChat.Click+=(_,_)=>ToggleAssistant();rail.Controls.Add(railChat);collapse.Click+=(_,_)=>{compact=!compact;side.Width=compact?0:268;brand.Visible=!compact;brandTitle.Visible=!compact;sectionLabel.Visible=!compact;sideFooter.Height=compact?70:124;subtitle.Visible=!compact;chat.Text=compact?"":"Cortex";navigation.Width=compact?56:252;foreach(var (route,b) in nav){b.Width=compact?46:248;b.Text=compact?(route=="Video hazırla"?"＋":route=="Videolarım"?"▤":"⚙"):items.First(i=>i.Route==route).Label;}guide.Visible=!compact;Navigate(current);};
         var sidebarDivider = new Panel { Dock = DockStyle.Left, Width = 1, BackColor = Theme.Border, AccessibleName = "Sol menü ayırıcı çizgisi" };
         var topDivider = new Panel { Dock = DockStyle.Top, Height = 1, BackColor = Theme.Border, AccessibleName = "Üst kenar çizgisi" };
         Controls.Add(body); Controls.Add(appHeader); Controls.Add(sidebarDivider); Controls.Add(side); Controls.Add(rail); Controls.Add(topDivider);
@@ -223,7 +224,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
         var compactHeaderTab=responsive.Select(x=>x.Control).OfType<Button>().FirstOrDefault(b=>!b.IsDisposed&&b.AccessibleName=="Bölüm: Hesaplar ve AI");
         if(compactHeaderTab!=null)foreach(var action in responsive.Select(x=>x.Control).OfType<StudioButton>().Where(b=>!b.IsDisposed&&Equals(b.Tag,"connection-action")&&b.Parent!=null)){action.Width=Math.Min(compactHeaderTab.Width,Math.Max(100,action.Parent!.ClientSize.Width-action.Parent.Padding.Horizontal));action.Height=48;}
         if(compactHeaderTab!=null)foreach(var section in responsive.Select(x=>x.Control).OfType<StudioDisclosure>().Where(x=>!x.IsDisposed))section.LimitHeadingWidth(compactHeaderTab.Width);
-        page.ResumeLayout(true);
+        page.ResumeLayout(true);reflowWizard?.Invoke();
 
         page.Height = page.Controls.Cast<Control>().Sum(c => c.Height + c.Margin.Vertical) + 24;
 

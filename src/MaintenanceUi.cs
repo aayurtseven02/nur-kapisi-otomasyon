@@ -10,6 +10,8 @@ public sealed partial class StudioForm
 
     int assistantWidth=460;
 
+    void NavigateFromSidebar(string route){if(assistantHost?.Visible==true&&ClientSize.Width<1720){assistantHost.Visible=false;PositionAssistant();}Navigate(route);}
+
     void ToggleAssistant()
 
     {
@@ -32,11 +34,11 @@ public sealed partial class StudioForm
 
         if(assistantHost==null)return;
 
-        if(!assistantHost.Visible){assistantHost.Dock=DockStyle.None;Reflow();return;}
+        if(!assistantHost.Visible){assistantHost.Dock=DockStyle.None;if(page.Parent!=null)page.Parent.Visible=true;Reflow();return;}
 
-        if(ClientSize.Width>=1720){assistantHost.Dock=DockStyle.None;assistantHost.Bounds=new Rectangle(ClientSize.Width-assistantWidth-10,appHeader.Bottom+4,assistantWidth,Math.Max(500,ClientSize.Height-appHeader.Bottom-70));}
+        if(ClientSize.Width>=1720){if(page.Parent!=null)page.Parent.Visible=true;assistantHost.Dock=DockStyle.None;assistantHost.Bounds=new Rectangle(ClientSize.Width-assistantWidth-10,body.Top+4,assistantWidth,Math.Max(1,body.Height-8));}
 
-        else {assistantHost.Dock=DockStyle.None;assistantHost.Bounds=new Rectangle(Math.Max(228,ClientSize.Width-assistantWidth-10),appHeader.Bottom+4,Math.Min(assistantWidth,ClientSize.Width-238),Math.Max(500,ClientSize.Height-appHeader.Bottom-70));}
+        else {if(page.Parent!=null)page.Parent.Visible=false;assistantHost.Dock=DockStyle.None;assistantHost.Bounds=new Rectangle(body.Left+8,body.Top+4,Math.Max(1,body.Width-16),Math.Max(1,body.Height-8));}
 
         assistantHost.BringToFront();Reflow();
 

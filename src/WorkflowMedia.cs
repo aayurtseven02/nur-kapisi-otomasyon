@@ -56,7 +56,7 @@ public static class WorkflowMedia
                 await UploadedMediaMatch.Apply(store,e,planned!,services,Report,ct);
         ct.ThrowIfCancellationRequested();f.CommitText(e);e.Plan=plan;f.SceneTimingMeasured=false;if(f.Normal==false&&priorShorts?.Count>1)e.ShortCount=plan.Shorts.Count;
         f.OriginalScripts=Rules.Scripts(e).ToDictionary(x=>x.Key,x=>JsonSerializer.Serialize(x.Script.Scenes,Json.Options));
-        f.OriginalSections=JsonSerializer.Serialize(script.Scenes,Json.Options);f.PlannedTextHash=f.Signature;e.AiStoryImages=false;e.PhotosOnly=false;e.AiStoryAutonomous=true;e.Revision++;e.Approved=false;e.ApprovalHash="";e.Status="Senaryo hazır";e.Progress=25;e.Error="";
+        f.OriginalSections=JsonSerializer.Serialize(script.Scenes,Json.Options);f.PlannedTextHash=f.Signature;e.AiStoryImages=false;e.PhotosOnly=false;e.AiStoryAutonomous=true;e.Revision++;e.Approved=false;e.ApprovalHash="";e.Status="Senaryo hazır";e.Progress=25;e.Error="";e.CurrentStage="Bölümler hazır • üretime devam edebilirsin";
         e.ProductionSettings??=VideoQueue.Snapshot(store.Settings);e.ProductionSettings.FramesPerSecond=30;
         if(f.CoverChoice=="none"){e.ProductionSettings.CoverAiEnabled=false;e.ProductionSettings.CoverMode="Şablon";}
         store.Save();

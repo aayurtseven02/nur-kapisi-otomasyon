@@ -218,7 +218,7 @@ public static class Reliability
 
         episode.ResumeStage = stage; episode.RetryAttempts++;
 
-        var permanent = error is AiUnavailableException ai ? !ai.Retryable : error is CloudUsage.LimitException || error.Message.Contains("HTTP 402") || error.Message.Contains("HTTP 401") || error.Message.Contains("HTTP 403") || error.Message.Contains("anahtarı") || error.Message.Contains("lisans") || error.Message.Contains("Günlük üretim sınırı");
+        var permanent = error is AiUnavailableException ai ? !ai.Retryable : error is TimedNarration.TimingUnavailableException || error is CloudUsage.LimitException || error.Message.Contains("HTTP 402") || error.Message.Contains("HTTP 401") || error.Message.Contains("HTTP 403") || error.Message.Contains("anahtarı") || error.Message.Contains("lisans") || error.Message.Contains("Günlük üretim sınırı");
 
         episode.RetryAt = permanent || episode.RetryAttempts > 5 ? null : DateTimeOffset.UtcNow.AddSeconds(Math.Min(900, 15 * Math.Pow(2, episode.RetryAttempts - 1)));
 

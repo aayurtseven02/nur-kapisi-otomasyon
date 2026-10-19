@@ -18,6 +18,21 @@ public static class TimedNarration
 
     public static string TextHash(string text) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text)));
 
+    internal static string ReusableBlock(Store store,Episode episode,string key,string text)
+    {
+        string project=store.Folder(episode),directory=Path.Combine(project,"audio-cache","blocks");Directory.CreateDirectory(directory);string target=Path.Combine(directory,key+".wav");
+        bool Valid(string file)=>File.Exists(file)&&File.Exists(file+".sha")&&Reliability.FileHash(file)==File.ReadAllText(file+".sha").Trim();
+        if(Valid(target))return target;
+        foreach(var revision in Directory.EnumerateDirectories(project,"r*-*")){
+            string old=Path.Combine(revision,"audio-cache","blocks",key+".wav");if(!Valid(old))continue;
+            File.Copy(old,target,true);File.WriteAllText(target+".sha",Reliability.FileHash(target));
+            string alignment="align-"+TextHash(Reliability.FileHash(target)+string.Join('\n',Engine.SplitText(text,48)))+".json";
+            foreach(string suffix in new[]{"",".words.json"}){string previous=Path.Combine(Path.GetDirectoryName(old)!,alignment+suffix);if(File.Exists(previous))File.Copy(previous,Path.Combine(directory,alignment+suffix),true);}
+            episode.Log("Hazır konuşma bloğu önceki düzenlemeden korundu; aynı ses yeniden üretilmedi.");break;
+        }
+        return target;
+    }
+
     public static List<Caption> MarkedCaptions(IReadOnlyList<string> text, IReadOnlyDictionary<string, double> marks, double duration, double speed)
 
     {
@@ -90,7 +105,7 @@ public static class TimedNarration
 
                 cues = candidate; if (cached != audio) File.Copy(cached, audio, true);
 
-                if (script.TextLayout?.SubtitleEnabled != false && candidate.Any(c => Engine.SplitText(c.Text,48).Count>1)) { cues=null; episode.Log("Altyazı açıldı; mevcut doğal ses yeniden üretilmeden zamanları eşlenecek."); }
+                if (script.TextLayout?.SubtitleEnabled != false && !File.Exists(timing+".bounded-lines-v1") && candidate.Any(c => Engine.SplitText(c.Text,48).Count>1)) { cues=null; episode.Log("Altyazı açıldı; mevcut doğal ses yeniden üretilmeden zamanları eşlenecek."); }
 
             } catch (Exception ex) when (ex is not OperationCanceledException) { episode.Log("Ses / altyazı önbelleği geçersiz; ölçülen zamanlar yeniden hazırlanıyor."); }
 
@@ -112,7 +127,7 @@ public static class TimedNarration
 
                 async Task Segment(string text, int scene, int index) {
 
-                    string key = TextHash("natural-block-v2" + text + NarrationFlow.Fingerprint(new VideoScript{Scenes=[new Scene{Narration=text}]}, voice));var blockCache=Path.Combine(Path.GetDirectoryName(cache)!,"blocks");Directory.CreateDirectory(blockCache);string part = Path.Combine(blockCache, key + ".wav");
+                    string key = TextHash("natural-block-v2" + text + NarrationFlow.Fingerprint(new VideoScript{Scenes=[new Scene{Narration=text}]}, voice));string part=ReusableBlock(store,episode,key,text);
 
                     if (!File.Exists(part) || !File.Exists(part + ".sha") || Reliability.FileHash(part) != File.ReadAllText(part + ".sha")) {
 
@@ -247,7 +262,7 @@ public static class TimedNarration
 
             }
 
-            if (!localFallback) { File.Copy(audio, cached, true); File.WriteAllText(cached + ".sha", Reliability.FileHash(cached)); Json.Write(timing, cues); File.WriteAllText(timing + ".sha", Reliability.FileHash(timing)); if (!services.InjectedClient) File.WriteAllText(timing + ".local-word-v1","1"); }
+            if (!localFallback) { File.Copy(audio, cached, true); File.WriteAllText(cached + ".sha", Reliability.FileHash(cached)); Json.Write(timing, cues); File.WriteAllText(timing + ".sha", Reliability.FileHash(timing)); if (!services.InjectedClient) {File.WriteAllText(timing + ".local-word-v1","1");if(script.TextLayout?.SubtitleEnabled!=false)File.WriteAllText(timing+".bounded-lines-v1","1");else if(File.Exists(timing+".bounded-lines-v1"))File.Delete(timing+".bounded-lines-v1");} }
 
         }
 

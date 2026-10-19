@@ -42,7 +42,7 @@ public sealed class ChatAssistant : UserControl
 
     {
 
-        this.store = store; this.project=project??(()=>null); this.screen=screen??(()=>"Program");this.agent=agent;this.serviceFactory=serviceFactory; Text = "TubeFlow • Uygulama asistanı"; Size = new(520, 660); MinimumSize = new(440, 500);
+        this.store = store; this.project=project??(()=>null); this.screen=screen??(()=>"Program");this.agent=agent;this.serviceFactory=serviceFactory; Text = "TubeFlow • Uygulama asistanı"; Size = new(520, 660); MinimumSize = new(360, 380);
 
         BackColor = Theme.Bg; ForeColor = Theme.Text; 
 
