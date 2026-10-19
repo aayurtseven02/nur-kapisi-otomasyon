@@ -638,7 +638,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-19-gun11-normal2-hucuratahlak
-  status: pending
+  status: failed
   publish_at: '2026-10-19T15:00:00+03:00'
   format: long
   type: tema
@@ -649,6 +649,8 @@ videos:
   title_hint: 'Alay Etmeyin, Gıybet Etmeyin: Hucurat Suresi''nin Mesajı'
   thumb_title: Hucurat'ın Mesajı
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-19-gun11-short2-yalansoylememe
   status: pending
   publish_at: '2026-10-19T19:00:00+03:00'
