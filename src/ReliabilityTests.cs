@@ -272,6 +272,20 @@ public static class ReliabilityTests
             Reject(()=>UploadedMediaMatch.Parse("{\"Matches\":[{\"Scene\":0,\"File\":0,\"Confidence\":0.2,\"Reason\":\"Zayıf\"}]}",1,catalog));
             var flow=new CreationFlow{Mode="auto",OwnVisuals=true,Files=["a.jpg"]};string hash=flow.Signature;flow.Files.Add("b.jpg");Check(flow.Signature!=hash,"Yeni dosya eski eşleşmeyi geçersiz kılmadı.");
         });
+        Test("UPLOAD-BEST-AVAILABLE", "Eksik ve düşük güvenli eşleşmeler mevcut katalog karşılaştırılarak tamamlanır",()=>{
+            var catalog=new List<UploadedMediaMatch.Item>{new(){Id=4,File="book.jpg",Description="Karlı dağ"},new(){Id=9,File="mountain.jpg",Description="Açık kitap"}};
+            var scenes=new List<Scene>{new(){Narration="Dağ",Duration=18},new(){Narration="Bilgi",Duration=7},new(){Narration="Tefekkür",Duration=12}};int calls=0;
+            var result=UploadedMediaMatch.Resolve("{\"Matches\":[{\"Scene\":0,\"File\":4,\"Confidence\":0.95,\"Reason\":\"Dağ\"},{\"Scene\":1,\"File\":-1,\"Confidence\":0,\"Reason\":\"Soyut\"}]}",scenes,catalog,(system,prompt,ct)=>{
+                calls++;Check(system.Contains("BEST AVAILABLE")&&prompt.Contains("Catalog")&&prompt.Contains("PreviousFile"),"Göreli seçim veya bağlam yok.");
+                return Task.FromResult("{\"Matches\":[{\"Scene\":0,\"File\":"+(calls==1?9:4)+",\"Confidence\":0.3,\"Reason\":\"Mevcutlar içinde en yakın sembolik görüntü\"}]}");
+            },_=>{},CancellationToken.None).GetAwaiter().GetResult();
+            Check(calls==2&&result.Select(x=>x.File).SequenceEqual(new[]{4,9,4}),"İyi seçim korumadı veya eksikler tamamlanmadı.");Check(scenes.Select(x=>x.Duration).SequenceEqual(new[]{18d,7d,12d}),"Konuşma süreleri değişti.");
+        });
+        Test("UPLOAD-BEST-AVAILABLE-VALIDATION", "Katalog dışı dosya ve bozuk yanıt rastgele seçimle gizlenmez; iptal korunur",()=>{
+            var catalog=new List<UploadedMediaMatch.Item>{new(){Id=2,File="a.jpg",Description="Dağ"}};var scenes=new List<Scene>{new(){Narration="Dağ"}};int calls=0;
+            Reject(()=>UploadedMediaMatch.Resolve("{}",scenes,catalog,(_,_,_)=>{calls++;return Task.FromResult("{\"Matches\":[{\"Scene\":0,\"File\":99,\"Confidence\":0.9,\"Reason\":\"Yok\"}]}");},_=>{},CancellationToken.None).GetAwaiter().GetResult());Check(calls==2,"Düzeltme denemesi sınırsız veya eksik.");
+            using var stop=new CancellationTokenSource();stop.Cancel();bool cancelled=false;try{UploadedMediaMatch.Resolve("{}",scenes,catalog,(_,_,_)=>throw new Exception("Çağrılmamalı"),_=>{},stop.Token).GetAwaiter().GetResult();}catch(OperationCanceledException){cancelled=true;}Check(cancelled,"İptal yutuldu.");
+        });
         Test("UPLOAD-VISION-INTEGRATION", "Gerçek dosyalar görsel API girdisiyle incelenir, metne eşleşir ve önbellek kullanılır",()=>{
             var st=New("upload-vision");st.Settings.EnabledCloudProviders="Gemini,OpenRouter";st.Settings.ProviderOrder="OpenRouter";st.Settings.FreeOnly=false;st.Vault.Set("GEMINI_API_KEY","fixture-vision");st.Vault.Set("OPENROUTER_API_KEY","fixture-text");
             string first=Path.Combine(st.Root,"mountain.png"),second=Path.Combine(st.Root,"book.png");using(var image=new Bitmap(64,64)){using var g=Graphics.FromImage(image);g.Clear(Color.Red);image.Save(first);g.Clear(Color.Blue);image.Save(second);}
