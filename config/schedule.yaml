@@ -708,7 +708,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-20-gun12-short2-anababahakki
-  status: pending
+  status: failed
   publish_at: '2026-10-20T19:00:00+03:00'
   format: short
   type: tema
@@ -719,6 +719,8 @@ videos:
   title_hint: 'Ana Babaya "Öf" Bile Dememek: İsra Suresi''nin Öğüdü'
   thumb_title: Ana Baba Hakkı
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-21-gun13-normal1-hastalikduasi
   status: pending
   publish_at: '2026-10-21T09:00:00+03:00'
