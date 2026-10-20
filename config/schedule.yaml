@@ -680,7 +680,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-20-gun12-short1-zikirkorunma
-  status: pending
+  status: failed
   publish_at: '2026-10-20T12:00:00+03:00'
   format: short
   type: tema
@@ -691,6 +691,8 @@ videos:
   title_hint: Sabah Akşam Okunursa Hiçbir Şeyin Zarar Veremediği Zikir
   thumb_title: Zararsız Kılan Zikir
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-20-gun12-normal2-nurayeti
   status: pending
   publish_at: '2026-10-20T15:00:00+03:00'
