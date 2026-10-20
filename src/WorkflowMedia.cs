@@ -43,13 +43,18 @@ public static class WorkflowMedia
 
         var script=new VideoScript{Title=e.Topic[..Math.Min(100,e.Topic.Length)],Description=e.Topic,ThumbnailText=e.Topic[..Math.Min(100,e.Topic.Length)],TextLayout=f.Layout(VideoSettings.For(store.Settings,e))};int start=0;
         foreach(int end in ends){int from=matches[start].Index;int to=end<matches.Count?matches[end].Index:f.Text.Length;string text=f.Text[from..to];script.Scenes.Add(new Scene{Narration=text,VisualQuery=StockSearch.Normalize(StockSearch.Translate(e.Topic)),Duration=Math.Max(.5,ScriptLength.Count(text)/2.2),RightsConfirmed=false});start=end;}
-        var plan=new ContentPlan{Long=f.Normal==true?script:null,Shorts=f.Normal==true?[]:[script],Sources=f.Sources,Research=f.TextMode=="ai"?"AI metni kullanıcı tarafından incelendi ve onaylandı.":"Kullanıcının onaylı metni korunuyor."};
+        var plan=new ContentPlan{Long=f.Normal==true?script:null,Shorts=f.Normal==true?[]:[script],Sources=f.Sources,Research=f.TextMode=="ai"?(f.Job.Mode=="full"?"Başlangıç talimatıyla otonom hazırlanmış AI metni.":"AI metni kullanıcı tarafından incelendi ve onaylandı."):"Kullanıcının onaylı metni korunuyor."};
         if(f.Normal==false&&priorShorts?.Count>1)plan.Shorts.AddRange(priorShorts.Skip(1));
         if(f.Normal==true&&f.ExtraShortCount>0){var shortFlow=CreationFlow.Copy(f);shortFlow.Normal=false;foreach(var (text,i) in f.ExtraShortTexts.Select((t,i)=>(t,i)))plan.Shorts.Add(new VideoScript{Title=(e.Topic+" • Shorts "+(i+1))[..Math.Min(100,(e.Topic+" • Shorts "+(i+1)).Length)],Description=e.Topic,ThumbnailText=script.ThumbnailText,TextLayout=shortFlow.Layout(VideoSettings.For(store.Settings,e)),Scenes=[new Scene{Narration=text,Duration=Math.Max(.5,ScriptLength.Count(text)/2.2),VisualQuery=StockSearch.Normalize(StockSearch.Translate(e.Topic))}]});}
         if(f.AutomaticStoryboard)foreach(var extra in plan.Shorts.Where(x=>x!=script)){
             string text=string.Concat(extra.Scenes.Select(x=>x.Narration));var words=Regex.Matches(text,@"\S+");var extraEnds=await StoryboardSections.Plan(text,(system,prompt,token)=>services.Generate(system,prompt,token),ct,e.Log);int first=0;extra.Scenes=[];
             foreach(int end in extraEnds){int from=words[first].Index,to=end<words.Count?words[end].Index:text.Length;string narration=text[from..to];extra.Scenes.Add(new Scene{Narration=narration,Duration=Math.Max(.5,ScriptLength.Count(narration)/2.2),VisualQuery=StockSearch.Normalize(StockSearch.Translate(e.Topic))});first=end;}
         }
+        if(f.Job.Mode is "full" or "review" && f.StockVisuals){
+            Report("Otonom üretim • her anlatım bölümüne uygun görsel araması planlanıyor");
+            foreach(var planned in new[]{plan.Long}.Where(x=>x!=null).Concat(plan.Shorts))await AutonomousProduction.VisualQueries(planned!,services,ct);
+        }
+        if(SceneComposition.Enabled(e)){Report("AI kompozisyon • resim ve kısa video sahneleri seçiliyor");await SceneComposition.Plan(e,plan,services,ct);}
         preview?.Invoke(plan);
         if(f.OwnVisuals&&f.Mode=="auto"&&!f.AiVisuals&&!f.StockVisuals)
             foreach(var planned in new[]{plan.Long}.Where(x=>x!=null).Concat(plan.Shorts))
@@ -73,16 +78,22 @@ public static class WorkflowMedia
     }
     public static async Task PrepareVisuals(Store store,Episode e,Services services,CancellationToken ct,Action notify)
     {
-        var f=e.Creation!;if(f.CoverChoice=="legacy")return;int index=0;var used=new HashSet<long>();var problems=new List<int>();var causes=new List<string>();Episode? story=null;Exception? storyFailure=null;
+        var f=e.Creation!;if(f.CoverChoice=="legacy")return;int index=0;var used=new HashSet<long>();var usedHashes=Rules.Scripts(e).SelectMany(x=>x.Script.Scenes).Where(s=>File.Exists(s.StockFile)).Select(s=>Reliability.FileHash(s.StockFile)).ToHashSet();var problems=new List<int>();var causes=new List<string>();Episode? story=null;Exception? storyFailure=null;
+        async Task Stock(Scene scene,bool vertical){bool fallback=false;
+            if(SceneComposition.Enabled(e)&&scene.VisualKind=="image")await services.StockPhoto(scene,vertical,store.Folder(e),used,ct);
+            else try{await services.Stock(scene,vertical,store.Folder(e),used,ct);}catch(Exception ex)when(ex is not OperationCanceledException){fallback=await AutonomousStock.Try(store,e,scene,services,usedHashes,ct);if(!fallback)throw;}
+            if(f.Job.Mode is "full" or "review"){string hash=Reliability.FileHash(scene.StockFile);if(!fallback&&usedHashes.Contains(hash))throw new InvalidOperationException("Aynı stok görüntü ikinci kez seçildi; farklı aday gerekli.");usedHashes.Add(hash);}}
         var allowed=new List<string>();if(f.OwnVisuals&&f.Files.Count>0)allowed.Add("own");if(f.AiVisuals)allowed.Add("ai");if(f.StockVisuals)allowed.Add("stock");
         if(f.OwnVisuals&&f.Mode=="auto"&&!f.AiVisuals&&!f.StockVisuals)
             foreach(var (_,_,planned) in Rules.Scripts(e))
                 if(planned.Scenes.Any(s=>!VisualReady(e,s,store.Settings)))
                     await UploadedMediaMatch.Apply(store,e,planned,services,message=>{e.CurrentStage=message;e.Log(message);notify();},ct);
+        var firstGeneratedVideo=SceneComposition.Enabled(e)?Rules.Scripts(e).SelectMany(s=>s.Script.Scenes).FirstOrDefault(s=>s.VisualKind=="video"):null;
         foreach(var (_,vertical,script) in Rules.Scripts(e))foreach(var scene in script.Scenes){ct.ThrowIfCancellationRequested();index++;if(VisualReady(e,scene,store.Settings)){notify();continue;}
             e.CurrentStage=$"Görseller • sahne {index}";e.Log(e.CurrentStage);notify();string selected=allowed.Count==0?"":allowed[(index-1)%allowed.Count];
+            if(ReferenceEquals(scene,firstGeneratedVideo)&&f.AiVisuals)selected="ai";
             try{
-                if(selected=="own"&&(f.Mode!="manual"||f.Files.Count==1&&Rules.Scripts(e).Sum(x=>x.Script.Scenes.Count)==1)){scene.StockFile=f.Files[(index-1)%f.Files.Count];if(!File.Exists(scene.StockFile))throw new InvalidOperationException("Eklenen dosya bulunamadı.");scene.AiImageHash="";scene.AiImageQuality="";scene.UserLocal=true;scene.RightsConfirmed=false;scene.Attribution="Kullanıcı dosyası";continue;}
+                if(selected=="own"&&(f.Mode!="manual"||f.Files.Count==1&&Rules.Scripts(e).Sum(x=>x.Script.Scenes.Count)==1)){scene.StockFile=f.Files[(index-1)%f.Files.Count];if(!File.Exists(scene.StockFile))throw new InvalidOperationException("Eklenen dosya bulunamadı.");scene.AiImageHash="";scene.AiImageQuality="";scene.UserLocal=true;scene.RightsConfirmed=(f.Job.Mode is "full" or "review")&&f.Job.OwnMediaConsent;scene.Attribution="Kullanıcı dosyası";continue;}
                 if(f.Mode=="manual")throw new InvalidOperationException("Görsel seç veya bu bölüm için AI yardımını kullan.");
                 async Task Ai(){
                     if(storyFailure!=null)throw new InvalidOperationException("AI görsel bağlantısı hazırlanamadı.",storyFailure);
@@ -95,10 +106,10 @@ public static class WorkflowMedia
                             e.Log("Yerel AI motorları tamamlanamadı; izin verilmiş Gemini/OpenAI görsel bağlantısı deneniyor. "+ex.Message);story.AiStoryLocal=false;await StoryImages.Prepare(store,story,targetScript,row,vertical,visualSettings,ct,e.Log,automaticCloudAlternative:true);
                         }
                     }finally{KeepVisualPlan(story,e);store.Save();}
-                    scene.StockFile=row.StockFile;scene.AiImageHash=row.AiImageHash;scene.AiImageQuality=row.AiImageQuality;scene.AiImagePrompt=row.AiImagePrompt;scene.AiCharacterIds=row.AiCharacterIds;scene.UserLocal=true;scene.RightsConfirmed=false;scene.Creator=row.Creator;scene.StockMetadata=row.StockMetadata;
+                    scene.StockFile=row.StockFile;scene.AiImageHash=row.AiImageHash;scene.AiImageQuality=row.AiImageQuality;scene.AiImagePrompt=row.AiImagePrompt;scene.AiCharacterIds=row.AiCharacterIds;scene.UserLocal=true;scene.RightsConfirmed=(f.Job.Mode is "full" or "review")&&f.Job.Pending&&f.Job.Authorization!=""&&File.Exists(row.StockFile+".json")&&File.Exists(row.StockFile+".sha")&&File.ReadAllText(row.StockFile+".sha").Trim()==Reliability.FileHash(row.StockFile);scene.Creator=row.Creator;scene.StockMetadata=row.StockMetadata;
                 }
-                if(selected=="stock"){try{await services.Stock(scene,vertical,store.Folder(e),used,ct);}catch(Exception ex)when(ex is not OperationCanceledException && f.AiVisuals){e.Log("Stok bulunamadı; seçili AI kaynağı deneniyor. "+ex.Message);await Ai();}}
-                else if(f.AiVisuals){try{await Ai();}catch(Exception ex)when(ex is not OperationCanceledException && f.StockVisuals){e.Log("AI görsel hazırlanamadı; seçili stok kaynağı deneniyor. "+ex.Message);await services.Stock(scene,vertical,store.Folder(e),used,ct);}}
+                if(selected=="stock"){try{await Stock(scene,vertical);}catch(Exception ex)when(ex is not OperationCanceledException && f.AiVisuals){e.Log("Stok bulunamadı; seçili AI kaynağı deneniyor. "+ex.Message);await Ai();}}
+                else if(f.AiVisuals){try{await Ai();}catch(Exception ex)when(ex is not OperationCanceledException && f.StockVisuals){e.Log("AI görsel hazırlanamadı; seçili stok kaynağı deneniyor. "+ex.Message);await Stock(scene,vertical);}}
                 else throw new InvalidOperationException("Görsel kaynağı seçilmedi.");
             }catch(Exception ex)when(ex is not OperationCanceledException){problems.Add(index);causes.Add("Bölüm "+index+": "+ex.Message);e.Log("Bölüm "+index+" görsel sorunu: "+ex.Message);}
             finally{notify();store.Save();}

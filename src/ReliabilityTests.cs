@@ -49,6 +49,135 @@ public static class ReliabilityTests
 
         void Test(string id, string name, Action action) { if(Program.Arg(args,"--only-test") is string only && id!=only)return; try { action(); rows.Add(new { Id = id, Name = name, Outcome = "PASS" }); } catch (Exception ex) { failed++; rows.Add(new { Id = id, Name = name, Outcome = "FAIL", Error = ex.ToString() }); } Json.Write(Path.Combine(root, "reliability-test-report.json"), new { Passed = rows.Count - failed, Failed = failed, Tests = rows }); }
 
+        Test("COMFY-DESKTOP-ENGINE", "Comfy Desktop venv/standalone ve taşınabilir motor aynı keşif mekanizmasını kullanır",()=>{
+            string directory=Path.Combine(root,"desktop-engine");string python=Path.Combine(directory,"ComfyUI",".venv","Scripts","python.exe");Directory.CreateDirectory(Path.GetDirectoryName(python)!);File.WriteAllText(python,"");File.WriteAllText(Path.Combine(directory,"ComfyUI","main.py"),"");
+            Check(EngineHardware.Python(directory)==python&&LocalCoverEngine.FindEngine(directory)==directory,"Desktop motoru bulunamadı");
+            File.Delete(python);string standalone=Path.Combine(directory,"standalone-env","python.exe");Directory.CreateDirectory(Path.GetDirectoryName(standalone)!);File.WriteAllText(standalone,"");Check(EngineHardware.Python(directory)==standalone,"Bağımsız Desktop Python ortamı bulunamadı");
+        });
+        Test("LTX-GRAPH", "LTX görsel referansı, düşük çözünürlük, 5–6 saniye ve sessiz video çıkışı doğru bağlanır",()=>{
+            foreach(int seconds in new[]{5,6})foreach(bool vertical in new[]{true,false}){
+                var graph=LocalLtxVideo.Graph("ltx-model","t5","ref.png","Water flows naturally in front of the seated man.",seconds,vertical,12);
+                Check(graph["reference"]!["inputs"]!["length"]!.GetValue<int>()==seconds*24+1&&graph["reference"]!["inputs"]!["image"]![0]!.GetValue<string>()=="image","Süre veya referans kopuk");
+                Check(graph["text"]!["inputs"]!["device"]!.GetValue<string>()=="cpu"&&graph["sample"]!["inputs"]!["cfg"]!.GetValue<double>()==1,"Distilled veya bellek ayarı yanlış");
+                Check(graph["reference"]!["inputs"]!["width"]!.GetValue<int>()==(vertical?288:512)&&!graph.ToJsonString().Contains("http"),"Yanlış oran veya bulut düğümü");
+            }
+            Reject(()=>LocalLtxVideo.Graph("m","t","r","Valid motion instruction",7,false,12));
+        });
+        Test("SCENE-COMPOSITION", "AI kompozisyonu metni korur, resim/video karışımı üretir ve bozuk planı reddeder",()=>{
+            var st=New("composition");st.Settings.ProviderOrder="Pollinations";st.Settings.EnabledCloudProviders="Pollinations";
+            string response="{\"Scenes\":[{\"Id\":0,\"Kind\":\"video\",\"Motion\":\"The man stays seated while the fountain water flows naturally.\"},{\"Id\":1,\"Kind\":\"image\",\"Motion\":\"\"}]}";
+            using var http=new HttpClient(new Handler(_=>Task.FromResult(Ok(JsonSerializer.Serialize(new{choices=new[]{new{message=new{content=response},finish_reason="stop"}}})))));
+            var first=new Scene{Narration="Adam çeşmenin önünde oturuyor."};var second=new Scene{Narration="Taş duvarlarda geçmişin izleri var."};var plan=new ContentPlan{Long=new VideoScript{Scenes=[first,second]}};var e=new Episode{Topic="Çeşmenin hikâyesi",Creation=new CreationFlow{AiVisuals=true,Mode="auto",CoverChoice="none",MixedSceneVideos=true}};
+            SceneComposition.Plan(e,plan,new Services(st,_=>{},http),CancellationToken.None).GetAwaiter().GetResult();
+            Check(first.VisualKind=="video"&&second.VisualKind=="image"&&first.Narration=="Adam çeşmenin önünde oturuyor.","Kompozisyon metni bozdu veya video seçmedi");
+            Reject(()=>SceneComposition.Read(response.Replace("\"Kind\":\"image\"","\"Kind\":\"video\"").Replace("\"Motion\":\"\"","\"Motion\":\"A slow view of the same stone wall.\""),2));
+            e.Creation.MixedSceneVideos=false;Check(!SceneComposition.Enabled(e),"Kapalı tercih aşıldı");
+        });
+        Test("LTX-MEASURED-CUT", "18 saniyelik anlatım üç ayrı kliple dolar; önbellek korunur, video döngüsü kullanılmaz",()=>{
+            var st=New("ltx-cut");var e=new Episode();var scene=new Scene{VideoMotionPrompt="Water flows softly in the fountain while the same man remains seated."};string reference=Path.Combine(st.Root,"reference.png");using(var bitmap=new Bitmap(64,64))bitmap.Save(reference);
+            int calls=0;var seeds=new HashSet<long>();
+            async Task Generate(string image,string prompt,string path,int seconds,bool vertical,long seed,CancellationToken ct){calls++;Check(image==reference&&seconds==6&&seeds.Add(seed),"Referans, süre veya ayrı üretim tohumu yanlış");await Media.Exec(st.Ffmpeg,["-y","-f","lavfi","-i","color=c="+(calls==1?"red":calls==2?"green":"blue")+":s=128x72:r=24","-t",seconds.ToString(),"-an","-c:v","libx264","-preset","ultrafast",path],st.Root,ct);}
+            string output=SceneMotion.Prepare(st,e,scene,reference,18,false,CancellationToken.None,_=>{},Generate).GetAwaiter().GetResult();Check(calls==3&&Math.Abs(Media.Duration(st,output,CancellationToken.None).GetAwaiter().GetResult()-18)<.1,"Anlatım süresi karşılanmadı");
+            SceneMotion.Prepare(st,e,scene,reference,18,false,CancellationToken.None,_=>{},Generate).GetAwaiter().GetResult();Check(calls==3,"Hazır video yeniden üretildi");Check(SceneMotion.ShotCount(6)==1&&SceneMotion.ShotCount(18)==3,"Parça sayısı yanlış");Reject(()=>SceneMotion.ShotCount(73));
+        });
+        Test("LTX-CANCEL-OWN-JOB", "LTX durdurma yalnız kendi işini kuyruktan siler; başka çalışan işi kesmez",()=>{
+            var st=New("ltx-cancel");string image=Path.Combine(st.Root,"ref.png");File.WriteAllBytes(image,[1,2,3]);using var stop=new CancellationTokenSource();bool removed=false,interrupted=false;
+            using var http=new HttpClient(new Handler(async request=>{
+                string path=request.RequestUri!.AbsolutePath;
+                if(path=="/object_info/CheckpointLoaderSimple")return Ok("{\"CheckpointLoaderSimple\":{\"input\":{\"required\":{\"ckpt_name\":[[\"ltxv-2b-0.9.8-distilled-fp8.safetensors\"]]}}}}");
+                if(path=="/object_info/CLIPLoader")return Ok("{\"CLIPLoader\":{\"input\":{\"required\":{\"clip_name\":[[\"t5xxl_fp8_e4m3fn.safetensors\"]]}}}}");
+                if(path.StartsWith("/object_info/"))return Ok("{\""+path.Split('/')[^1]+"\":{}}");
+                if(path=="/upload/image")return Ok("{\"name\":\"ref.png\"}");
+                if(path=="/prompt")return Ok("{\"prompt_id\":\"owned-ltx-job\"}");
+                if(path.StartsWith("/history/")){stop.Cancel();return Ok("{}");}
+                if(path=="/queue"&&request.Method==HttpMethod.Post){string body=await request.Content!.ReadAsStringAsync();removed=body.Contains("owned-ltx-job");return Ok("{}");}
+                if(path=="/queue")return Ok("{\"queue_running\":[[0,\"another-users-job\"]]}");
+                if(path=="/interrupt"){interrupted=true;return Ok("{}");}
+                throw new Exception("Beklenmeyen bağlantı: "+path);
+            }));
+            bool canceled=false;try{LocalLtxVideo.Generate(image,"A slow natural movement at the fountain.",Path.Combine(st.Root,"scene.mp4"),5,false,1,_=>{},stop.Token,http).GetAwaiter().GetResult();}catch(OperationCanceledException){canceled=true;}
+            Check(canceled&&removed&&!interrupted,"İptal başka işe müdahale etti veya kendi işi silinmedi");
+        });
+        Test("LTX-EDIT-INVALIDATION", "LTX planı yayın yetkisi ve çıktı kaydına dahildir; manuel dosya eski LTX bağını temizler",()=>{
+            var scene=new Scene{VisualKind="video",VideoMotionPrompt="The water flows in the same fountain.",AiVideoFile="old.mp4",AiVideoHash="old"};var f=new CreationFlow{AiVisuals=true,Mode="auto",CoverChoice="none",MixedSceneVideos=true};var e=new Episode{Creation=f,Plan=new ContentPlan{Long=new VideoScript{Scenes=[scene]}}};string before=Reliability.MediaPlanHash(e);scene.VideoMotionPrompt+=" Gentle movement.";Check(before!=Reliability.MediaPlanHash(e),"Hareket değişimi eski çıktıyı geçerli saydı");SceneVideoChoice.Apply(scene,"manual.png",null);Check(scene.VisualKind=="image"&&scene.AiVideoFile==""&&scene.VideoMotionPrompt=="","Manuel görüntü eski LTX planını kullanıyor");ProductionStages.Observe(e,"LTX • parça 2/3");Check(e.CurrentStage.Contains("2/3"),"Arka plan işlemi görünmüyor");
+        });
+        Test("AUTO-PROFILE-UI", "Yerel resim stüdyosunda profil seçimi yok; yalnız otomatik cihaz bilgisi gösterilir",()=>{
+            using var dialog=new AiDesignDialog(New("automatic-profile-ui"),false,"Örnek konu");
+            IEnumerable<Control> All(Control c)=>c.Controls.Cast<Control>().SelectMany(x=>new[]{x}.Concat(All(x)));
+            Check(!All(dialog).OfType<Button>().Any(x=>LocalImageProfiles.Labels.Contains(x.Text.Trim('✓',' '))),"Manuel profil düğmeleri kaldırılmadı");
+            Check(All(dialog).Any(x=>x.AccessibleName=="Cihaza önerilen görsel profili"),"Otomatik cihaz bilgisi görünmüyor");
+            using var image=new Bitmap(dialog.Width,dialog.Height);dialog.DrawToBitmap(image,new Rectangle(Point.Empty,image.Size));image.Save(Path.Combine(root,"automatic-image-studio.png"),System.Drawing.Imaging.ImageFormat.Png);
+        });
+        Test("IMAGE-DEVICE-PROFILES", "Üç profil cihaza göre kısıtlanır; örnekleme ve yüz işleme yükü birlikte değişir",()=>{
+            Check(LocalImageProfiles.ForMemory("Yüksek",2L*1024*1024*1024)=="Hafif"&&LocalImageProfiles.ForMemory("Yüksek",6L*1024*1024*1024)=="Orta"&&LocalImageProfiles.ForMemory("Yüksek",10L*1024*1024*1024)=="Yüksek","Bellek profili yanlış");
+            Check(LocalImageProfiles.ForMemory("Hafif",12L*1024*1024*1024)=="Hafif"&&LocalImageProfiles.ForMemory("Yüksek",null)=="Hafif","Seçilen üst sınır veya bilinmeyen cihaz koruması yok");
+            System.Text.Json.Nodes.JsonObject Device(string type,int total,int free)=>new(){["type"]=type,["vram_total"]=total*1024L*1024*1024,["vram_free"]=free*1024L*1024*1024};
+            Check(LocalImageProfiles.DeviceProfile(Device("cpu",64,32))=="Hafif"&&LocalImageProfiles.DeviceProfile(Device("cuda",8,8))=="Orta"&&LocalImageProfiles.DeviceProfile(Device("cuda",12,10))=="Yüksek"&&LocalImageProfiles.DeviceProfile(Device("cuda",12,2))=="Hafif","Cihaz kapasitesi veya CPU koruması uygulanmadı");
+            string file=Path.Combine(AppContext.BaseDirectory,"tools","workflows",ImportedFluxWorkflow.FileName);int prior=0;
+            foreach(string quality in LocalImageProfiles.Labels){var graph=LocalCoverEngine.Prepare(file,"test",false);LocalImageProfiles.ApplyImported(graph,quality,LocalImageProfiles.Edge(quality),432);int steps=graph["5"]!["inputs"]!["steps"]!.GetValue<int>();Check(steps>prior,"Profiller aynı örnekleme ayarını kullanıyor");prior=steps;Check(graph["13"]!["inputs"]!["provider"]!.GetValue<string>()=="CPU"&&graph["16"]!["inputs"]!["tiled_decode"]!.GetValue<bool>(),"Güvenli yüz işleme uygulanmadı");}
+        });
+        Test("IMPORTED-FLUX-CLEAN", "İçe aktarılan FLUX boş şablondur; yüz detayı ve ayarlanmış adımlar korunur",()=>{
+            string file=Path.Combine(AppContext.BaseDirectory,"tools","workflows",ImportedFluxWorkflow.FileName);
+            var graph=LocalCoverEngine.Prepare(file,"A mountain at sunrise",false,quality:"Hızlı");
+            Check(graph["14"]!["inputs"]!["text"]!.GetValue<string>()=="A mountain at sunrise","Prompt aktarılmadı");
+            Check(graph["10"]!["inputs"]!["image"]!.GetValue<string>()=="{{ANKA_REFERENCE}}","Şablonda eski resim var");
+            Check(graph["5"]!["inputs"]!["steps"]!.GetValue<int>()==25&&graph["16"]!["inputs"]!["steps"]!.GetValue<int>()==25,"Kullanıcının örnekleme ayarları kayboldu");
+            ImportedFluxWorkflow.WithoutReference(graph);
+            Check(!graph.Any(x=>x.Value?["class_type"]?.GetValue<string>() is "LoadImage" or "ApplyPulidFlux"),"Referanssız üretim eski görseli arıyor");
+            Check(graph["16"]?["class_type"]?.GetValue<string>()=="FaceDetailer"&&graph["7"]!["inputs"]!["images"]![0]!.GetValue<string>()=="16","Yüz iyileştirme zinciri kayboldu");
+            Check(graph["5"]!["inputs"]!["model"]![0]!.GetValue<string>()=="1"&&graph["16"]!["inputs"]!["model"]![0]!.GetValue<string>()=="1","Referanssız model bağlantısı kopuk");
+        });
+        Test("IMPORTED-FLUX-REFERENCE", "Yeni PuLID referansı örnek fotoğrafı değiştirir; tüm yüz zinciri aynı kimliği kullanır",()=>{
+            string file=Path.Combine(AppContext.BaseDirectory,"tools","workflows",ImportedFluxWorkflow.FileName);
+            foreach(int count in new[]{1,2}){
+                var graph=LocalCoverEngine.Prepare(file,"Portrait",false);
+                LocalCoverEngine.ApplyReference(graph,"new-reference.png",123,count,referenceWidth:1024);
+                Check(graph["10"]!["inputs"]!["image"]!.GetValue<string>()=="new-reference.png","Yeni referans bağlanmadı");
+                Check(graph.Count(x=>x.Value?["class_type"]?.GetValue<string>()=="ApplyPulidFlux")==count,"Kimlik zinciri kopyalandı veya eksik");
+                Check(graph["5"]!["inputs"]!["model"]!.ToJsonString()==graph["16"]!["inputs"]!["model"]!.ToJsonString(),"Yüz detayı farklı modeli kullanıyor");
+                Check(graph["tf_user_pulid_0"]!["inputs"]!["weight"]!.GetValue<double>()==1&&graph["16"]!["inputs"]!["denoise"]!.GetValue<double>()==.4,"Gelişmiş ayarlar değiştirildi");
+            }
+        });
+        Test("AUTONOMOUS-DRAFT-CHECKPOINT", "Yarı otonom senaryoda bekler; tam otonom kaynakları saklar ve hazır metni tekrar üretmez",()=>{
+            foreach(bool review in new[]{true,false}){
+                var st=New("autonomy-draft-"+review);st.Settings.SourceUrls="";st.Settings.ProviderOrder="Pollinations";st.Settings.EnabledCloudProviders="Pollinations";int calls=0;
+                using var http=new HttpClient(new Handler(req=>{calls++;if(req.Method==HttpMethod.Get)return Task.FromResult(Ok(JsonSerializer.Serialize(new{query=new{pages=new Dictionary<string,object>{["1"]=new{title="Musa",fullurl="https://tr.wikipedia.org/wiki/Musa",extract=new string('a',200)},["2"]=new{title="Mısır",fullurl="https://tr.wikipedia.org/wiki/Mısır",extract=new string('b',200)}}}})));return Task.FromResult(Ok(JsonSerializer.Serialize(new{choices=new[]{new{finish_reason="stop",message=new{content="{\"Text\":\"Bu konu bize düşünme fırsatı verir. Bu konu bize düşünme fırsatı verir. Bu konu bize düşünme fırsatı verir. Bu konu bize düşünme fırsatı verir. Bu konu bize düşünme fırsatı verir.\"}"}}}})));}));
+                var flow=new CreationFlow{Normal=false};var e=new Episode{Topic="Musa",IncludeLong=false,ShortCount=1,ShortSeconds=15,Creation=flow};int checkpoints=0;
+                bool ready=AutonomousProduction.Prepare(e,flow,new Services(st,_=>{},http),review,CancellationToken.None,()=>checkpoints++).GetAwaiter().GetResult();Check(ready==!review&&flow.TextApproved==!review&&flow.Sources.Count==2&&checkpoints>=2,"Onay sınırı veya kaynak kaydı hatalı");int prior=calls;
+                flow.ApprovedHash=TimedNarration.TextHash(flow.Text);Check(AutonomousProduction.Prepare(e,flow,new Services(st,_=>{},http),false,CancellationToken.None,()=>{}).GetAwaiter().GetResult()&&calls==prior,"Hazır senaryo gereksiz yeniden istendi");
+            }
+        });
+        Test("AUTONOMOUS-PUBLISH-AUTHORITY", "Başlangıç yetkisi kanal, konu, ses ve takvim değişince geçersizleşir",()=>{
+            var e=new Episode{Topic="Dağlar",PublishAt=DateTimeOffset.UtcNow.AddDays(1),Creation=new CreationFlow{Job=new ProductionJob{Mode="full",PublishMode="scheduled"},Normal=true}};var f=e.Creation;var settings=new Settings();f.Job.Channel="channel";f.Job.Authorization=AutonomousProduction.Authorization(e,settings,"channel");AutonomousProduction.ValidatePublication(e,settings,"channel");
+            Reject(()=>AutonomousProduction.ValidatePublication(e,settings,"different"));settings.WindowsVoice="changed";Reject(()=>AutonomousProduction.ValidatePublication(e,settings,"channel"));settings.WindowsVoice="";e.Topic="Başka konu";Reject(()=>AutonomousProduction.ValidatePublication(e,settings,"channel"));e.Topic="Dağlar";e.PublishAt=DateTimeOffset.UtcNow.AddMinutes(-1);Reject(()=>AutonomousProduction.ValidatePublication(e,settings,"channel",starting:true));
+        });
+        Test("AUTONOMOUS-OWN-TEXT-VOICE", "Hazır metin aynen korunur; yerel görsel ayarı ses seçimini değiştirmez",()=>{
+            var st=New("autonomy-own");var flow=new CreationFlow{Normal=false,TextMode="own",OwnText="Hazır metin.\nDağlar ve ışık, bize düşünmek için bir fırsat verir.",StockVisuals=true,CoverChoice="none",Job=new ProductionJob{PublishMode="review"}};var e=new Episode{Topic="Dağlar",IncludeLong=false,ShortCount=1,Creation=flow};string before=flow.OwnText;using var http=new HttpClient(new Handler(_=>throw new Exception("Hazır metin için AI çağrıldı")));Check(AutonomousProduction.Prepare(e,flow,new Services(st,_=>{},http),false,CancellationToken.None,()=>{}).GetAwaiter().GetResult()&&flow.OwnText==before,"Hazır metin değişti");
+            var settings=new Settings{VoiceProvider="Google Cloud TTS",GoogleTtsVoice="tr-TR-Standard-B"};AutonomousMediaPolicy.Configure(e,settings);Check(settings.VoiceProvider=="Google Cloud TTS"&&settings.GoogleTtsVoice=="tr-TR-Standard-B","Ses tercihi değişti");
+        });
+        Test("AUTONOMOUS-TEXT-GUARDS", "İngilizce veya yarım AI anlatımı üretime verilmez; Türkçe özel isimleri korunur",()=>{
+            Reject(()=>AutonomousProduction.ReadDraft("{\"Text\":\"Bu cümle yarım kaldı\"}"));Reject(()=>AutonomousProduction.ReadDraft("{\"Text\":\"What if the world was different and the people were there with their friends and they would have the chance to change the world with you.\"}"));Check(AutonomousProduction.ReadDraft("{\"Text\":\"Musa ve onun hayatı, insan için sabır ve sorumluluk üzerine düşünme fırsatıdır.\"}").StartsWith("Musa"),"Türkçe metin reddedildi");
+        });
+        Test("AUTONOMOUS-SETUP-UI", "Otonom başlangıç seçimleri tek panelde; yayın ve referans seçenekleri doğru bölümdedir",()=>{
+            var st=New("autonomy-ui");using var form=new StudioForm(st){Width=1280,Height=900};var flow=new CreationFlow{Job=new ProductionJob{Mode="full",PublishMode="scheduled"},AiVisuals=true,StockVisuals=true};var e=new Episode{Topic="Dağlar",Creation=flow};var control=(Control)typeof(StudioForm).GetMethod("AutonomousSetup",BindingFlags.Instance|BindingFlags.NonPublic)!.Invoke(form,[e,flow,st.Settings,900,(Action)(()=>{}),(Action)(()=>{})])!;form.Controls.Clear();control.Dock=DockStyle.Fill;form.Controls.Add(control);form.Show();Application.DoEvents();
+            IEnumerable<Control> All(Control c)=>c.Controls.Cast<Control>().SelectMany(x=>new[]{x}.Concat(All(x)));Check(All(form).OfType<DateTimePicker>().Single().Visible&&All(form).OfType<CheckBox>().Any(x=>x.Text.Contains("Yerel motorda")),"Başlangıç planı eksik");using var shot=new Bitmap(form.Width,form.Height);form.DrawToBitmap(shot,form.ClientRectangle);shot.Save(Path.Combine(root,"autonomous-setup-live.png"));form.Close();
+        });
+        Test("POLLINATIONS-LAST-RESORT", "Anahtarsız yedek en son denenir; kimlik bilgisi göndermez ve izinleri korur",()=>{
+            var st=New("pollinations-fallback");st.Settings.FreeOnly=true;st.Settings.EnabledCloudProviders="Groq,Pollinations";st.Settings.ProviderOrder="Pollinations,Groq";st.Vault.Set("GROQ_API_KEY","fixture-key");
+            Check(Services.ProviderSequence(st.Settings,null,"").SequenceEqual(new[]{"Groq","Pollinations"}),"Anahtarsız yedek sona taşınmadı");int calls=0;
+            using var http=new HttpClient(new Handler(req=>{calls++;if(calls==1){Check(req.RequestUri!.Host=="api.groq.com","Önce mevcut sağlayıcı denenmedi");return Task.FromResult(new HttpResponseMessage(HttpStatusCode.ServiceUnavailable){Content=new StringContent("{}")});}
+                Check(req.RequestUri!.AbsoluteUri=="https://text.pollinations.ai/openai"&&req.Headers.Authorization==null,"Yedeğe anahtar gönderildi veya ücretli adres kullanıldı");return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK){Content=new StringContent(JsonSerializer.Serialize(new{choices=new[]{new{finish_reason="stop",message=new{content="{\"Text\":\"Türkçe tam metin.\"}"}}}}))});}));
+            var result=new Services(st,_=>{},http).Generate("Yalnız JSON","Deneme",CancellationToken.None).GetAwaiter().GetResult();Check(calls==2&&result.Contains("Türkçe tam metin"),"Yedek sonucu alınamadı");
+            st.Settings.CloudAiEnabled=false;Reject(()=>new Services(st,_=>{},http).Generate("JSON","Deneme",CancellationToken.None,onlyProvider:"Pollinations").GetAwaiter().GetResult());Check(calls==2,"Kapalı bulut izni aşıldı");
+            st.Settings.CloudAiEnabled=true;st.Settings.EnabledCloudProviders="Groq";Reject(()=>new Services(st,_=>{},http).Generate("JSON","Deneme",CancellationToken.None,onlyProvider:"Pollinations").GetAwaiter().GetResult());Check(calls==2,"Sağlayıcı izni aşıldı");SettingsValidation.Check(st.Settings);
+        });
+        Test("POLLINATIONS-INCOMPLETE", "Anahtarsız yedek yarım veya boş yanıtı kabul etmez; başarısızsa ücretli adrese geçmez",()=>{
+            foreach(string content in new[]{"", "{\"Text\":\"yarım"}){
+                var st=New("pollinations-invalid-"+content.Length);st.Settings.ProviderOrder="Pollinations";st.Settings.EnabledCloudProviders="Pollinations";int calls=0;
+                using var http=new HttpClient(new Handler(req=>{calls++;return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK){Content=new StringContent(JsonSerializer.Serialize(new{choices=new[]{new{finish_reason="stop",message=new{content}}}}))});}));
+                Reject(()=>new Services(st,_=>{},http).Generate("JSON","Deneme",CancellationToken.None).GetAwaiter().GetResult());Check(calls==1,"Eksik yanıt kabul edildi veya yeni servis çağrıldı");
+            }
+        });
         Test("TIMELINE-SFX-REAL-RENDER", "Efektler gerçek videoya doğru zamanla karışır; görüntü yeniden kodlanmaz ve süre korunur",()=>{
             var st=New("timeline-sfx-render");string movie=Path.Combine(st.Root,"video.mp4"),sound=Path.Combine(st.Root,"effect.wav");
             Media.Exec(ffmpeg,["-y","-f","lavfi","-i","color=c=navy:s=320x180:r=25:d=2","-f","lavfi","-i","sine=frequency=300:duration=2","-c:v","libx264","-pix_fmt","yuv420p","-c:a","aac","-shortest",movie],st.Root,CancellationToken.None).GetAwaiter().GetResult();Media.Exec(ffmpeg,["-y","-f","lavfi","-i","sine=frequency=900:duration=0.5",sound],st.Root,CancellationToken.None).GetAwaiter().GetResult();string Hash()=>Media.Exec(ffmpeg,["-v","error","-i",movie,"-map","0:v","-c","copy","-f","hash","-"],st.Root,CancellationToken.None).GetAwaiter().GetResult();string before=Hash();var script=new VideoScript{SoundEffects=[new MusicTrack{Enabled=true,File=sound,Start=.8,End=1.3,Volume=.5,FadeIn=0,FadeOut=.05,RightsConfirmed=true,Attribution="Fixture effect credit"}]};TimelineEffects.Apply(st,script,movie,2,CancellationToken.None).GetAwaiter().GetResult();Check(before==Hash(),"Efekt görüntüyü yeniden kodladı");Check(Math.Abs(Media.Duration(st,movie,CancellationToken.None).GetAwaiter().GetResult()-2)<.1,"Efekt video süresini bozdu");Check(YouTube.BuildDescription(script,[]).Contains("Fixture effect credit"),"Efekt kaynak bilgisi kayboldu");
@@ -161,7 +290,7 @@ public static class ReliabilityTests
             var st=New("music-project");string song=Path.Combine(st.Root,"selected.wav");File.WriteAllText(song,"fixture");st.Settings.MusicPath="";new AudioLibrary(st).Save([new AudioItem{File=song,Name="Seçtiğim parça",License="CC0",RightsConfirmed=true}]);var settings=VideoQueue.Snapshot(st.Settings);settings.MusicPath=song;settings.MusicVolume=.23;var e=new Episode{Music=true,IncludeLong=true,ProductionSettings=settings,Plan=new ContentPlan{Long=new VideoScript()}};WorkflowMusic.Validate(e,settings);WorkflowMusic.Apply(st,e,settings);Check(e.Plan.Long!.MusicTrack!.File==song&&Math.Abs(e.Plan.Long.MusicTrack.Volume-.23)<.001,"Seçim sahne müziğine geçmedi.");st.Episodes.Add(e);st.Save();Check(GlobalMusic.Resolve(st,false,VideoSettings.For(st.Settings,e)).File==song&&st.Settings.MusicPath=="","Üretim genel ayardaki boş müziğe döndü.");Check(WorkflowMusic.Caption(st,settings).Contains("Seçtiğim parça"),"Seçili parça adı görünmüyor.");e.Music=false;WorkflowMusic.Apply(st,e,settings);Check(!e.Plan.Long.MusicTrack.Enabled,"Müziği kapatınca önceki parça çalmaya devam ediyor.");e.Music=true;settings.MusicPath="";Reject(()=>WorkflowMusic.Validate(e,settings));
         });
         Test("DESIGN-MODEL-QUALITY-CHOICES", "Üç hazır kapak motoru ve üç kalite seçimi gerçek iş akışına uygulanır",()=>{
-            var st=New("design-model-choices");using var dialog=new AiDesignDialog(st,false,"Test kapağı");IEnumerable<Control> All(Control c)=>c.Controls.Cast<Control>().SelectMany(x=>new[]{x}.Concat(All(x)));var model=All(dialog).OfType<ComboBox>().Single(x=>x.AccessibleName=="Kapak hazır motoru");var quality=All(dialog).OfType<ComboBox>().Single(x=>x.AccessibleName=="Kapak üretim kalitesi");Check(model.Items.Count==3&&quality.Items.Count==3,"Motor/kalite listesi eksik.");foreach(string engineName in model.Items){model.SelectedItem=engineName;var workflow=LocalCoverEngine.ResolveWorkflow(engineName);Check(LocalCoverEngine.ModelOf(workflow)==engineName,"Motor yanlış iş akışını seçti.");int last=0;foreach(string label in quality.Items){quality.SelectedItem=label;var graph=LocalCoverEngine.Prepare(workflow,"test",false,quality:AiDesignDialog.EngineQuality(label));var node=graph.First(x=>x.Value?["class_type"]?.ToString() is "KSampler" or "Flux2Scheduler");int steps=node.Value!["inputs"]!["steps"]!.GetValue<int>();Check(steps>last,"Kalite artınca işlem adımları artmıyor.");last=steps;}}
+            var st=New("design-model-choices");using var dialog=new AiDesignDialog(st,false,"Test kapağı");IEnumerable<Control> All(Control c)=>c.Controls.Cast<Control>().SelectMany(x=>new[]{x}.Concat(All(x)));var model=All(dialog).OfType<ComboBox>().Single(x=>x.AccessibleName=="Kapak hazır motoru");var quality=All(dialog).OfType<ComboBox>().Single(x=>x.AccessibleName=="Kapak üretim kalitesi");Check(model.Items.Count==LocalCoverEngine.Models.Length-1&&quality.Items.Count==3,"Motor/kalite listesi eksik.");foreach(string engineName in model.Items){model.SelectedItem=engineName;var workflow=LocalCoverEngine.ResolveWorkflow(engineName);Check(LocalCoverEngine.ModelOf(workflow)==engineName,"Motor yanlış iş akışını seçti.");int last=0;foreach(string label in quality.Items){quality.SelectedItem=label;var graph=LocalCoverEngine.Prepare(workflow,"test",false,quality:AiDesignDialog.EngineQuality(label));var node=graph.First(x=>x.Value?["class_type"]?.ToString() is "KSampler" or "Flux2Scheduler");if(engineName==ImportedFluxWorkflow.Model)LocalImageProfiles.ApplyImported(graph,label,1024,576);int steps=node.Value!["inputs"]!["steps"]!.GetValue<int>();Check(steps>last,"Kalite artınca işlem adımları artmıyor.");last=steps;}}
         });
         Test("EMBEDDED-VOICE-PREVIEW", "Ses örneği dış program açmadan gömülü oynatılır, duraklatılır ve durdurulur",()=>{
             var file=Path.Combine(root,"silent-preview.wav");using(var writer=new BinaryWriter(File.Create(file))){writer.Write(Encoding.ASCII.GetBytes("RIFF"));writer.Write(36+16000*2*5);writer.Write(Encoding.ASCII.GetBytes("WAVEfmt "));writer.Write(16);writer.Write((short)1);writer.Write((short)1);writer.Write(16000);writer.Write(32000);writer.Write((short)2);writer.Write((short)16);writer.Write(Encoding.ASCII.GetBytes("data"));writer.Write(16000*2*5);writer.Write(new byte[16000*2*5]);}

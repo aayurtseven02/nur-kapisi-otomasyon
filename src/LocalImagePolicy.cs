@@ -5,7 +5,7 @@ public static class LocalImagePolicy
 {
     public static (int W,int H) Resolve(string resolution,string quality,bool vertical,bool square,long? freeBytes=null)
     {
-        int width=quality=="Hızlı"?1024:quality=="Dengeli"?1280:1536,height=width*9/16;
+        int width=LocalImageProfiles.Labels.Contains(quality)?LocalImageProfiles.Edge(quality):quality=="Hızlı"?1024:quality=="Dengeli"?1280:1536,height=width*9/16;
         if(square){width=height=768;}
         else if(vertical){(width,height)=(height,width);}
         if(resolution!="auto"&&!string.IsNullOrWhiteSpace(resolution)){

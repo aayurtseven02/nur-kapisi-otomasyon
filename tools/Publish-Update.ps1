@@ -8,6 +8,8 @@ $taskOut=[IO.Path]::GetFullPath($OutputDirectory);$taskBuildId=[Guid]::NewGuid()
 New-Item -ItemType Directory -Force -Path $taskOut | Out-Null
 dotnet publish $taskProject -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:DebugType=None -p:DebugSymbols=false -o $taskBuild
 if($LASTEXITCODE -ne 0){throw 'Program paketi derlenemedi.'}
+& (Join-Path $PSScriptRoot 'Build-EdgeTts.ps1') -OutputDirectory (Join-Path $taskBuild 'tools/edge-tts')
+if($LASTEXITCODE -ne 0){throw 'Edge ses paketi hazirlanamadi.'}
 & dotnet (Join-Path $taskBuild 'TubeFlow.dll') --source-safety-test --source ([IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..')))
 if($LASTEXITCODE -ne 0){throw 'Kaynak güvenlik kontrolü başarısız; güncelleme ZIP dosyası oluşturulmadı.'}
 Copy-Item -LiteralPath (Join-Path $taskBuild 'TubeFlow.exe') -Destination (Join-Path $taskBuild 'AnkaStudio.exe')
@@ -15,7 +17,7 @@ Copy-Item -LiteralPath (Join-Path $taskBuild 'TubeFlow.dll') -Destination (Join-
 New-Item -ItemType Directory -Force -Path $taskPayload | Out-Null
 foreach($taskFile in Get-ChildItem -LiteralPath $taskBuild -Recurse -File){
     $taskRelative=$taskFile.FullName.Substring($taskBuild.Length+1).Replace('\','/')
-    $taskAllowed=$taskRelative -match '^[^/]+\.dll$|^(TubeFlow|AnkaStudio)\.exe$|^TubeFlow\.(deps|runtimeconfig)\.json$|^Update-Install\.ps1$|^[a-zA-Z-]+/[^/]+\.resources\.dll$|^runtimes/.+\.dll$|^tools/workflows/anka-(sdxl|flux2)\.json$|^tools/audio-alignment/align\.py$|^ChannelPackages/NurKapisi/nur-kapisi-[^/]+\.png$'
+    $taskAllowed=$taskRelative -match '^[^/]+\.dll$|^(TubeFlow|AnkaStudio)\.exe$|^TubeFlow\.(deps|runtimeconfig)\.json$|^Update-Install\.ps1$|^[a-zA-Z-]+/[^/]+\.resources\.dll$|^runtimes/.+\.dll$|^tools/workflows/anka-(sdxl|flux2|flux-schnell|flux-pulid-detailer)\.json$|^tools/audio-alignment/align\.py$|^tools/edge-tts/.+$|^ChannelPackages/NurKapisi/nur-kapisi-[^/]+\.png$'
     if($taskAllowed){$taskDestination=Join-Path $taskPayload $taskRelative;New-Item -ItemType Directory -Force -Path (Split-Path $taskDestination) | Out-Null;Copy-Item -LiteralPath $taskFile.FullName -Destination $taskDestination}
 }
 @{FeedUrl="https://api.github.com/repos/$Repository/releases/latest"} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $taskPayload 'anka-update-source.json') -Encoding utf8

@@ -135,7 +135,7 @@ public sealed partial class StudioForm
 
         var checks = new Dictionary<string, CheckBox>();
 
-        foreach (var (name, note) in new[] { ("OpenRouter", "Ücretsiz modellerde de API anahtarı ve kota gerekir"), ("NVIDIA", "API anahtarı gerekir; kota ve ücret koşulları NVIDIA hesabına bağlıdır"), ("Groq", "Ücretsiz kota hesabına bağlıdır; ücretli hesap ücret doğurabilir"), ("Gemini", "API bakiyesi/kotası ayrıdır; uygulama aboneliği yeterli olmayabilir"), ("OpenAI", "Ücretli API; ChatGPT aboneliği API bakiyesi değildir"), ("Kimi", "Moonshot API; bakiye ve ücretli kullanım izni gerekir") }) {
+        foreach (var (name, note) in new[] { ("OpenRouter", "Ücretsiz modellerde de API anahtarı ve kota gerekir"), ("NVIDIA", "API anahtarı gerekir; kota ve ücret koşulları NVIDIA hesabına bağlıdır"), ("Groq", "Ücretsiz kota hesabına bağlıdır; ücretli hesap ücret doğurabilir"), ("Gemini", "API bakiyesi/kotası ayrıdır; uygulama aboneliği yeterli olmayabilir"), ("OpenAI", "Ücretli API; ChatGPT aboneliği API bakiyesi değildir"), ("Kimi", "Moonshot API; bakiye ve ücretli kullanım izni gerekir"), ("Pollinations", "Anahtarsız son yedek • konu/metin bu servise gönderilir; ücretsiz erişim kesilebilir") }) {
 
             var check = Theme.Check(name + " • " + note, settings.CloudAiEnabled && selected.Contains(name), 760); checks.Add(name, check); target.Controls.Add(check);
 

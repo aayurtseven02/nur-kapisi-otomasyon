@@ -12,7 +12,7 @@ public static class VideoSettings
     }
     public static void CopyVoice(Settings source,Settings target)
     {
-        foreach(var name in "VoiceProvider,GoogleTtsVoice,GoogleTtsFallback,WindowsVoice,PiperPath,PiperModel,XttsUrl,XttsSpeaker,VoiceId,VoiceModel,VoiceSpeed,ElevenStability,ElevenSimilarity,ElevenStyle,ElevenSpeakerBoost,PronunciationDictionary,ShortVoiceOverride,ShortVoiceProvider,ShortVoiceId,ShortVoiceSpeed".Split(',')){
+        foreach(var name in "VoiceProvider,EdgeTtsVoice,EdgeTtsPython,GoogleTtsVoice,GoogleTtsFallback,WindowsVoice,PiperPath,PiperModel,XttsUrl,XttsSpeaker,VoiceId,VoiceModel,VoiceSpeed,ElevenStability,ElevenSimilarity,ElevenStyle,ElevenSpeakerBoost,PronunciationDictionary,ShortVoiceOverride,ShortVoiceProvider,ShortVoiceId,ShortVoiceSpeed".Split(',')){
             var property=typeof(Settings).GetProperty(name)!;property.SetValue(target,property.GetValue(source));
         }
     }

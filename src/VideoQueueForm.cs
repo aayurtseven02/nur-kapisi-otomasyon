@@ -419,8 +419,9 @@ public sealed partial class StudioForm
         musicPage.Controls.Add(Theme.Label("Seslendirme açıkken altyazı konuşmaya eşlenir. Yalnız altyazı seçilirse satırlar müzik süresine eşit bölünür; şarkı sözü otomatik tanınmaz. Seslendirme müzikten uzun olursa üretim durur, ses hızlandırılmaz.",10,width:760,height:90));
         var clipCredits = Theme.Check("Parça bilgilerini videonun alt bölümünde göster", clipOptions.ShowCredits); musicPage.Controls.Add(clipCredits);
 
-        var provider = Theme.Combo(["Windows / ücretsiz", "Piper / ücretsiz", "XTTS v2 / harici", "Google Cloud TTS", "ElevenLabs / isteğe bağlı"], settings.VoiceProvider, 760); Field(voice, "Ses sağlayıcısı", provider);
+        var provider = Theme.Combo(VoiceProviders.Choices(settings.VoiceProvider), settings.VoiceProvider, 760); Field(voice, "Ses sağlayıcısı", provider);
 
+        var edgeVoice=Theme.Combo(EdgeTts.TurkishVoices.Select(x=>x.Id).ToArray(),settings.EdgeTtsVoice,760);Field(voice,"Edge Türkçe sesi",edgeVoice);
         var speed = Theme.Number((decimal)settings.VoiceSpeed, .5m, 2, 760); speed.DecimalPlaces = 2; speed.Increment = .05m; Field(voice, "Konuşma hızı", speed);
 
         var google = Theme.Combo(new[] { settings.GoogleTtsVoice, "tr-TR-Standard-A", "tr-TR-Standard-B", "tr-TR-Wavenet-A", "tr-TR-Wavenet-B", "tr-TR-Wavenet-C", "tr-TR-Wavenet-D", "tr-TR-Wavenet-E" }.Distinct().ToArray(), settings.GoogleTtsVoice, 760); Field(voice, "Google TTS sesi", google);
@@ -574,7 +575,7 @@ public sealed partial class StudioForm
 
                 episode.PublishAt = new DateTimeOffset(DateTime.SpecifyKind(date.Value.Date.AddHours(time.Value.Hour).AddMinutes(time.Value.Minute), DateTimeKind.Unspecified), TimeSpan.FromHours(3)); episode.MadeForKids = kids.Checked; episode.DiscloseSynthetic = synthetic.Checked; episode.Music = music.Checked;
 
-                settings.XttsUrl = xttsUrl.Text.Trim(); settings.XttsSpeaker = xttsSpeaker.Text.Trim(); settings.VoiceId = elevenVoice.Text.Trim(); settings.PiperPath = piperPath.Text.Trim(); settings.PiperModel = piperModel.Text.Trim(); settings.VoiceProvider = provider.Text; settings.VoiceSpeed = (double)speed.Value; settings.GoogleTtsVoice = google.Text; settings.WindowsVoice = windows.FirstOrDefault(v => v.Name == local.Text).Id ?? "";
+                settings.XttsUrl = xttsUrl.Text.Trim(); settings.XttsSpeaker = xttsSpeaker.Text.Trim(); settings.VoiceId = elevenVoice.Text.Trim(); settings.PiperPath = piperPath.Text.Trim(); settings.PiperModel = piperModel.Text.Trim(); settings.VoiceProvider = provider.Text; settings.EdgeTtsVoice=edgeVoice.Text; settings.VoiceSpeed = (double)speed.Value; settings.GoogleTtsVoice = google.Text; settings.WindowsVoice = windows.FirstOrDefault(v => v.Name == local.Text).Id ?? "";
 
                 settings.CoverAiEnabled = aiCover.Checked; settings.CoverMode = coverMode.Text; settings.CoverStyle = coverStyle.Text; settings.CoverAutoStyle = autoCover.Checked; settings.CoverPng = cover.Text; settings.CoverBackground = background.Text; settings.CoverLogo = coverLogo.Text;
 
@@ -622,7 +623,7 @@ public sealed partial class StudioForm
 
         var save = Theme.Button(initialKind!=null ? "Kaydet ve Düzenlemeye Geç" : original == null ? "Ekle • sonraki sıraya al" : "Değişiklikleri kaydet", Save, true, 300); save.Dock = DockStyle.Bottom; save.Height = 48; dialog.Controls.Add(save); save.SendToBack();
 
-        var providerFields = new[] { (google,"Google"), (local,"Windows"), (elevenVoice as Control,"ElevenLabs"), (xttsUrl as Control,"XTTS"), (xttsSpeaker as Control,"XTTS"), (piperPath as Control,"Piper"), (piperModel as Control,"Piper") };
+        var providerFields = new[] { (google,"Google"), (edgeVoice,"Edge"), (local,"Windows"), (elevenVoice as Control,"ElevenLabs"), (xttsUrl as Control,"XTTS"), (xttsSpeaker as Control,"XTTS"), (piperPath as Control,"Piper"), (piperModel as Control,"Piper") };
         var providerControls=providerFields.Select(pair=>(Field:pair.Item1!,Label:CompactUi.LabelFor(voice,pair.Item1!),Provider:pair.Item2)).ToArray();
         var providerButtons=voice.Controls.OfType<Button>().Where(b=>b.Text.Contains("Piper")||b.Text.Contains("XTTS")||b.Text.StartsWith("Google TTS",StringComparison.Ordinal)).ToArray();
         void ShowProvider() {

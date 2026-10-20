@@ -86,7 +86,7 @@ public static class StoryImages
             "Depict injuries gently: every bird and person must have an intact head and body. No blood, exposed wounds, severed parts, decapitation or graphic violence. An injured bird is alive with a drooping wing, resting safely. Style: "+e.AiStoryStyle+". Locked character descriptions: "+e.AiStoryCharacters+". Story: "+Context(e)+
             ". CURRENT SCENE "+(index+1)+": "+scene.Narration+". Visual direction: "+scene.VisualQuery+
             ". Previous scene: "+(index>0?script.Scenes[index-1].Narration:"Opening")+
-            ". Preserve visual continuity. Frame the subjects clearly; keep the lower area uncluttered for subtitles added later.";
+            ". Preserve visual continuity. Frame the subjects clearly; keep the lower area uncluttered for subtitles added later. Full-frame edge-to-edge image, no black borders or letterboxing.";
     }
     public static string PhotoFilter(int width,int height,int fps,bool motion)
     {
@@ -144,14 +144,14 @@ public static class StoryImages
         if(!Valid(output)) {
             log($"Hikâye • sahne {script.Scenes.IndexOf(scene)+1}/{script.Scenes.Count}: aynı karakter referansıyla görsel üretiliyor…");
             var temp=Path.Combine(folder,hash+"-pending.png");
-            bool styleReference=!string.IsNullOrEmpty(e.Creation?.SceneReferenceFile)||scene.AiCharacterIds.Count==0;
+            bool styleReference=scene.AiCharacterIds.Count==0;
             await generator.Create(temp,settings,e.Topic,"",vertical,ct,prompt,reference,styleReference?1:e.AiStoryCastCount,styleReference?[0]:scene.AiCharacterIds,sceneStyleReference:styleReference);
             File.Move(temp,output,true);File.WriteAllText(output+".sha",Reliability.FileHash(output));
-            Json.Write(output+".json",new {Prompt=prompt,Reference=reference,ReferenceHash=Reliability.FileHash(reference),Backend=e.AiStoryLocal?File.ReadAllText(settings.CoverLocalWorkflow).Contains("EmptyFlux2LatentImage")?"Local FLUX.2 Klein Base + native reference":"Local SDXL + IPAdapter Plus":"Configured Gemini / OpenAI image API",Created=DateTimeOffset.UtcNow});
+            Json.Write(output+".json",new {Prompt=prompt,Reference=reference,ReferenceHash=Reliability.FileHash(reference),Backend=e.AiStoryLocal?File.ReadAllText(settings.CoverLocalWorkflow).Contains("EmptyFlux2LatentImage")?"Local FLUX.2 Klein Base + native reference":LocalCoverEngine.ModelOf(settings.CoverLocalWorkflow)+" + identity reference":"Configured Gemini / OpenAI image API",Created=DateTimeOffset.UtcNow});
         }else log("Hazır hikâye sahnesi tekrar kullanıldı; yeni görsel isteği gönderilmedi.");
         if(review!=null) await Review(output,$"Sahne {script.Scenes.IndexOf(scene)+1}/{script.Scenes.Count} • {scene.Narration}",async attempt=>{
             var temp=Path.Combine(folder,hash+"-review-pending.png");
-            bool styleReference=!string.IsNullOrEmpty(e.Creation?.SceneReferenceFile)||scene.AiCharacterIds.Count==0;
+            bool styleReference=scene.AiCharacterIds.Count==0;
             await generator.Create(temp,settings,e.Topic,"",vertical,ct,prompt+". Create a new corrected composition, variation "+attempt+". Show intact bodies and heads. No blood or graphic injury.",reference,styleReference?1:e.AiStoryCastCount,styleReference?[0]:scene.AiCharacterIds,sceneStyleReference:styleReference);
             File.Move(temp,output,true);File.WriteAllText(output+".sha",Reliability.FileHash(output));
         });

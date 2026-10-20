@@ -121,6 +121,8 @@ public static class LocalVoice
 
     {
 
+        if(settings.VoiceProvider==EdgeTts.Provider){await EdgeTts.Speak(text,path,settings,ct);return;}
+
         if (settings.VoiceProvider.StartsWith("XTTS")) {
             var raw = path + ".xtts.wav";
             try {
@@ -517,13 +519,13 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
         var renderSettings = VideoSettings.For(store.Settings,e,script);
 
-        if (vertical && renderSettings.ShortVoiceOverride && renderSettings.ShortVoiceProvider != "Normal videoyla aynı") { renderSettings.VoiceProvider = renderSettings.ShortVoiceProvider; renderSettings.VoiceId = renderSettings.ShortVoiceId; renderSettings.VoiceSpeed = renderSettings.ShortVoiceSpeed; renderSettings.MusicVolume = renderSettings.ShortMusicVolume; }
+        if (vertical && renderSettings.ShortVoiceOverride && renderSettings.ShortVoiceProvider != "Normal videoyla aynı") { renderSettings.VoiceProvider = renderSettings.ShortVoiceProvider; renderSettings.VoiceId = renderSettings.ShortVoiceId; if(renderSettings.VoiceProvider==EdgeTts.Provider&&renderSettings.ShortVoiceId!="")renderSettings.EdgeTtsVoice=renderSettings.ShortVoiceId; renderSettings.VoiceSpeed = renderSettings.ShortVoiceSpeed; renderSettings.MusicVolume = renderSettings.ShortMusicVolume; }
 
         bool musicClip = e.MusicClip != null;
 
         Log(e, musicClip ? "Müzik klibi: seçilen parça ana ses; seslendirme "+(e.MusicClip!.NarrationEnabled?"açık":"kapalı")+", altyazı "+(e.MusicClip.SubtitlesEnabled?"açık":"kapalı")+"." : $"{(vertical ? "Shorts" : "Normal video")} ses sağlayıcısı: {renderSettings.VoiceProvider}.");
 
-        if(e.Creation is {Voice:"ai"})e.Log("Seçili anlatıcı: "+(renderSettings.VoiceProvider.StartsWith("Google")?renderSettings.GoogleTtsVoice:renderSettings.VoiceProvider.StartsWith("ElevenLabs")?renderSettings.VoiceId:renderSettings.VoiceProvider.StartsWith("Piper")?Path.GetFileName(renderSettings.PiperModel):renderSettings.WindowsVoice));
+        if(e.Creation is {Voice:"ai"})e.Log("Seçili anlatıcı: "+(renderSettings.VoiceProvider.StartsWith("Piper")?Path.GetFileName(renderSettings.PiperModel):VoiceProviders.Id(renderSettings)));
         var w = vertical ? 1080 : 1920; var h = vertical ? 1920 : 1080;
 
         var clips = new List<string>(); var captions = new List<Caption>(); double offset = 0;
@@ -680,11 +682,18 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
                     await services.StockPhoto(scene,vertical,folder,used,ct);source=scene.StockFile;Notify();
                 }
                 using(var input=File.OpenRead(source))using(var image=System.Drawing.Image.FromStream(input))if((long)image.Width*image.Height>40_000_000)throw new InvalidOperationException("Sahne fotoğrafı çok büyük.");
+                bool motionReady=false;
+                if(SceneComposition.Enabled(e)&&scene.VisualKind=="video"&&scene.AiImageHash!=""){
+                    try{source=await SceneMotion.Prepare(store,e,scene,source,duration,vertical,ct,s=>Log(e,s));motionReady=true;store.Save();Notify();}
+                    catch(Exception error)when(error is not OperationCanceledException){scene.VideoFailure=SupportPrivacy.Clean(store,error.Message);scene.AiVideoFile="";scene.AiVideoHash="";Log(e,"LTX sahnesi tamamlanamadı • referans fotoğraf yavaş kamera hareketiyle korunuyor. "+scene.VideoFailure);store.Save();Notify();}
+                }
+                if(!motionReady){
                 var photoClip=Path.Combine(folder,$"photo-scene-{n}.mp4");
-                if((e.AiStoryImages || e.Creation is {CoverChoice:not "legacy",PhotoMotion:true}&&scene.AiImageHash!="") && e.AiStoryMotion && e.AiStoryCinematic)
+                if(!SceneComposition.Enabled(e)&&(e.AiStoryImages || e.Creation is {CoverChoice:not "legacy",PhotoMotion:true}&&scene.AiImageHash!="") && e.AiStoryMotion && e.AiStoryCinematic)
                     photoClip=await StoryCinema.Render(store,source,scene,w,h,duration,renderSettings,folder,ct,s=>Log(e,s),segmentCaptions);
                 else await Media.Exec(store.Ffmpeg,["-y","-loop","1","-i",source,"-t",Media.Num(duration),"-vf",e.Creation is {CoverChoice:not "legacy"} layout ? WorkflowMedia.PhotoFilter(w,h,renderSettings.FramesPerSecond,layout,n%2==0,duration) : StoryImages.PhotoFilter(w,h,renderSettings.FramesPerSecond,e.AiStoryImages && e.AiStoryMotion),"-an","-c:v","libx264","-preset",renderSettings.EncodingPreset,"-crf",renderSettings.Crf.ToString(),"-pix_fmt","yuv420p",photoClip],folder,ct);
                 source=photoClip;
+                }
             }
             else if (ManualVideos.Active(e)) {
 

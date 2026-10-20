@@ -27,6 +27,7 @@ public static class Reliability
             scenes = item.Script.Scenes.Select(s => new { s.Narration, s.SubtitleText, s.VisualQuery, s.OnScreen, s.TitlePlacement, s.TitleStart, s.TitleDuration, s.StockFile, s.Duration, s.AiImageHash, s.AiImagePrompt, s.AiCharacterIds }) });
 
         var raw = JsonSerializer.Serialize(scripts, Json.Options);
+        if(SceneComposition.Enabled(episode))raw+=JsonSerializer.Serialize(Rules.Scripts(episode).Where(x=>key==null||x.Key==key).SelectMany(x=>x.Script.Scenes).Select(s=>new{s.VisualKind,s.VideoMotionPrompt,s.AiVideoHash,VideoHash=FileHash(s.AiVideoFile)}),Json.Options);
         if(episode.PhotosOnly)raw += "|stock-photos-v1";
         if(episode.AiStoryImages)raw += JsonSerializer.Serialize(new { episode.AiStoryImages, episode.AiStoryStyle, episode.AiStoryCharacters, episode.AiStoryMotion, episode.AiStoryCinematic, CinemaVersion=StoryCinema.Version, episode.AiStoryLocal });
 
@@ -78,7 +79,7 @@ public static class Reliability
 
             background = FileHash(settings.CoverBackground), referenceCover=FileHash(settings.CoverReferenceImage), logo = FileHash(settings.CoverLogo), overlay = FileHash(settings.CoverPng),
 
-            media = script.Scenes.Select(s => FileHash(s.StockFile)).ToArray() };
+            media = script.Scenes.Select(s => FileHash(s.StockFile)).ToArray(), generatedVideo=SceneComposition.Enabled(episode)?script.Scenes.Select(s=>FileHash(s.AiVideoFile)).ToArray():Array.Empty<string>() };
 
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(pipelineVersion + JsonSerializer.Serialize(design, Json.Options)+(episode.Creation is {CoverChoice:not "legacy"} flow?JsonSerializer.Serialize(new{flow.CoverChoice,flow.Voice,AudioHash=FileHash(flow.AudioFile),flow.Fit}):""))));
 

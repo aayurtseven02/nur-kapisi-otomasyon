@@ -6,6 +6,7 @@ public static class EngineHardware
 {
     public sealed record Capability(string Backend,string Device);
     public sealed record Candidate(string Folder,string Backend,string Device);
+    public static string? Python(string folder)=>new[]{Path.Combine(folder,"ComfyUI",".venv","Scripts","python.exe"),Path.Combine(folder,"python_embeded","python.exe"),Path.Combine(folder,"standalone-env","python.exe")}.FirstOrDefault(File.Exists);
     public static Candidate[] Order(IEnumerable<(string Folder,Capability[] Devices)> engines)
         =>engines.SelectMany(x=>x.Devices.Select(d=>new Candidate(x.Folder,d.Backend,d.Device)))
             .OrderBy(x=>x.Backend=="CUDA"||x.Backend=="ROCm"?0:x.Backend=="XPU"?1:x.Backend=="DirectML"?2:3).ToArray();
@@ -37,7 +38,7 @@ try:
 except Exception: pass
 print('TUBEFLOW_HARDWARE='+json.dumps(result))
 """;
-        var info=new ProcessStartInfo(Path.Combine(folder,"python_embeded","python.exe")){WorkingDirectory=folder,UseShellExecute=false,CreateNoWindow=true,WindowStyle=ProcessWindowStyle.Hidden,RedirectStandardOutput=true,RedirectStandardError=true};foreach(string arg in new[]{"-s","-u","-c",script})info.ArgumentList.Add(arg);
+        var info=new ProcessStartInfo(Python(folder)??throw new InvalidOperationException("Yerel motorun Python ortamı bulunamadı.")){WorkingDirectory=folder,UseShellExecute=false,CreateNoWindow=true,WindowStyle=ProcessWindowStyle.Hidden,RedirectStandardOutput=true,RedirectStandardError=true};foreach(string arg in new[]{"-s","-u","-c",script})info.ArgumentList.Add(arg);
         using var timeout=CancellationTokenSource.CreateLinkedTokenSource(ct);timeout.CancelAfter(TimeSpan.FromSeconds(35));using var process=Process.Start(info)??throw new InvalidOperationException("Donanım denetimi başlatılamadı.");
         var stdout=process.StandardOutput.ReadToEndAsync(timeout.Token);var stderr=process.StandardError.ReadToEndAsync(timeout.Token);
         try{await process.WaitForExitAsync(timeout.Token);string output=await stdout;await stderr;string? line=output.Split('\n').LastOrDefault(x=>x.StartsWith("TUBEFLOW_HARDWARE="));return line==null?[]:JsonSerializer.Deserialize<Capability[]>(line[18..].Trim())??[];}

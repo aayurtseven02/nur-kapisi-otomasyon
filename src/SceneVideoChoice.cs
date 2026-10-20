@@ -21,6 +21,7 @@ public static class SceneVideoChoice
     {
 
         scene.StockFile = file; scene.UserLocal = true; scene.StockSelectionVersion = StockSearch.SelectionVersion;scene.AiImageHash="";scene.AiImageQuality="";
+        scene.VisualKind="image";scene.VideoMotionPrompt="";scene.AiVideoFile="";scene.AiVideoHash="";scene.VideoFailure="";
 
         scene.RightsConfirmed = item?.RightsConfirmed ?? false; scene.StockUrl = item?.Source ?? "Kullanıcının yerel arşivi";
 

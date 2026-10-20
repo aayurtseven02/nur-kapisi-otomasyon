@@ -226,6 +226,8 @@ public class Settings
     public string OllamaVisionModel {get;set;}="qwen3-vl:4b-instruct";
 
     public string VoiceProvider { get; set; } = "Windows / ücretsiz";
+    public string EdgeTtsVoice {get;set;}="tr-TR-AhmetNeural";
+    public string EdgeTtsPython {get;set;}="";
 
     public bool GoogleTtsEnabled { get; set; } = true;
 
@@ -571,6 +573,11 @@ public class Scene
     public string AiImageHash {get;set;} = "";
     public string AiImageQuality {get;set;} = "";
     public string AiImagePrompt {get;set;} = "";
+    public string VisualKind {get;set;} = "image";
+    public string VideoMotionPrompt {get;set;} = "";
+    public string AiVideoFile {get;set;} = "";
+    public string AiVideoHash {get;set;} = "";
+    public string VideoFailure {get;set;} = "";
     [System.Text.Json.Serialization.JsonIgnore(Condition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
     public string? AiPromptSourceHash {get;set;}
     public List<int> AiCharacterIds {get;set;} = [];

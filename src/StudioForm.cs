@@ -1821,7 +1821,8 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
         
         });
 
-        AddSection("Ses / müzik", voice=>{ Combo(voice, "Ses sağlayıcısı", s.VoiceProvider, ["Windows / ücretsiz", "Piper / ücretsiz", "XTTS v2 / harici", "Google Cloud TTS", "ElevenLabs / isteğe bağlı"], v => s.VoiceProvider = v);
+        AddSection("Ses / müzik", voice=>{ Combo(voice, "Ses sağlayıcısı", s.VoiceProvider, VoiceProviders.Choices(s.VoiceProvider), v => s.VoiceProvider = v);
+        Combo(voice,"Edge Türkçe sesi",s.EdgeTtsVoice,EdgeTts.TurkishVoices.Select(x=>x.Id).ToArray(),v=>s.EdgeTtsVoice=v);
         var xttsUrl = Theme.Input(s.XttsUrl, width: 760); Field(voice, "XTTS v2 sunucu adresi", xttsUrl); saves.Add(() => s.XttsUrl = xttsUrl.Text.Trim());
         var xttsSpeaker = Theme.Input(s.XttsSpeaker, width: 760); Field(voice, "XTTS konuşmacı adı / sunucudaki referans WAV yolu", xttsSpeaker); saves.Add(() => s.XttsSpeaker = xttsSpeaker.Text.Trim());
         voice.Controls.Add(Theme.Button("XTTS v2 Kurulum Bilgisi (i)", () => Theme.Alert(this, XttsTts.Help, "Harici XTTS v2"), false, 320));
@@ -1903,7 +1904,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         Check(voice, "Shorts için ayrı ses ayarlarını kullan", s.ShortVoiceOverride, v => s.ShortVoiceOverride = v);
 
-        Combo(voice, "Shorts ses sağlayıcısı", s.ShortVoiceProvider, ["Normal videoyla aynı", "Windows / ücretsiz", "Piper / ücretsiz", "XTTS v2 / harici", "Google Cloud TTS", "ElevenLabs / isteğe bağlı"], v => s.ShortVoiceProvider = v);
+        Combo(voice, "Shorts ses sağlayıcısı", s.ShortVoiceProvider, new[]{"Normal videoyla aynı"}.Concat(VoiceProviders.Choices(s.ShortVoiceProvider)).Distinct().ToArray(), v => s.ShortVoiceProvider = v);
 
         TextSetting(voice, "Shorts ElevenLabs ses kimliği • ayrı ses seçilebilir", s.ShortVoiceId, v => s.ShortVoiceId = v);
 
@@ -2169,7 +2170,10 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         if (VideoQueue.Items(store).Any(e => e.QueueAuthorized && e.QueueState != "Planlandı") && !engine.Busy && !autoRunning && !remoteRefreshing && !Application.OpenForms.Cast<Form>().Any(f => f != this && f.Modal)) { await RunQueue(); return; }
 
-        if (remoteRefreshing || engine.Busy || autoRunning || poolImportBusy || deletingPackage || Application.OpenForms.Cast<Form>().Any(f => f != this && f.Modal)) return;
+        if (remoteRefreshing || engine.Busy || autoRunning || autonomousRunner?.IsRunning==true || poolImportBusy || deletingPackage || Application.OpenForms.Cast<Form>().Any(f => f != this && f.Modal)) return;
+
+        var autonomous=store.Episodes.FirstOrDefault(e=>e.Creation is {Job:{Pending:true,Mode:"full" or "review"}}&&e.Status!="Durduruldu"&&(e.RetryAt==null||e.RetryAt<=DateTimeOffset.UtcNow));
+        if(autonomous!=null){try{autonomousRunner??=new AutonomousRunner(store,engine);await autonomousRunner.Run(autonomous,false,resume:true);}catch(Exception ex){autonomous.Log("Otonom yeniden devam: "+SupportPrivacy.Clean(store,ex.Message));store.Save();}return;}
 
         autoRunning = true;
 

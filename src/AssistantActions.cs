@@ -17,12 +17,12 @@ public sealed class AssistantActions(Store store,Engine engine,Func<Episode?> se
 Available application tools, one per response, JSON {"answer":"short Turkish explanation","tool":{"name":"...","args":{...}}}. Omit tool when finished.
 inspect: selected project's status/settings/error, no args.
 diagnose: local error diagnosis with concrete recovery options, no args. Does not change settings or start production.
-list_voices: args provider exactly 'Google Cloud TTS', 'ElevenLabs', 'Windows / ücretsiz' or 'Piper / ücretsiz'. Returns valid IDs; never invent a voice or infer gender from its name.
+list_voices: args provider exactly 'Google Cloud TTS', 'ElevenLabs', 'Windows / ücretsiz', 'Microsoft Edge / anahtarsız' or 'Piper / ücretsiz'. Returns valid IDs; never invent a voice or infer gender from its name.
 list_music: locally available music IDs/names, no args.
 set_voice: args provider and id copied EXACTLY from list_voices. Changes selected project only.
 use_default_voice: use the latest general voice selection, no args.
 set_storyboard: automatic AI visuals with 5–10 scenes; no args. Does not generate images yet.
-set_visual_quality: args quality exactly Hızlı, Dengeli, Ultra sinematik or empty string for general preset. Controls local AI scene generation only; existing images regenerate on next production.
+set_visual_quality: args quality exactly Hafif, Orta, Yüksek or empty string for general preset. Legacy compatibility only; current local engine determines its device profile automatically and may override this maximum.
 set_subtitles: args enabled boolean and style one of Sade beyaz, Sarı vurgulu, Kelime kelime renklenen, Koyu kutulu, Sinematik altın.
 set_music: args enabled boolean, optional id from list_music, optional volume integer 0–100. Never choose a random song.
 repair_settings: fix known recoverable settings issues and report unresolved errors; no args.
@@ -46,7 +46,7 @@ No other tools exist. Cannot read/write software code, run commands, change API 
     static CreationFlow Flow(Episode e)=>e.Creation??throw new InvalidOperationException("Bu proje yeni üretim akışında değil. Stüdyo ekranında açıp ayarlarını kontrol et.");
     Settings Settings(Episode e)=>CreationFlow.Copy(VideoSettings.For(store.Settings,e));
     static void SaveSettings(Episode e,Settings settings){e.ProductionSettings=settings;if(e.QueueSettings!=null)e.QueueSettings=VideoQueue.Snapshot(settings);}
-    public string Inspect(Episode e,bool share){var settings=Settings(e);return JsonSerializer.Serialize(new{e.Id,Topic=share?e.Topic:"Proje başlığı paylaşılmadı",e.Status,e.Progress,Error=share?SupportPrivacy.Clean(store,e.Error):e.Error==""?"":"Hata var; ayrıntı paylaşımı kapalı",Scenes=Rules.Scripts(e).Sum(x=>x.Script.Scenes.Count),Text=share?e.Creation?.Text:null,TextApproved=e.Creation?.TextApproved,Mode=e.Creation?.Mode,Voice=settings.VoiceProvider,VoiceId=settings.VoiceProvider.StartsWith("Google")?settings.GoogleTtsVoice:settings.VoiceProvider.StartsWith("ElevenLabs")?settings.VoiceId:settings.WindowsVoice,ProjectVoice=e.Creation?.UseProjectVoice,Music=e.Music,MusicFile=Path.GetFileName(settings.MusicPath),settings.MusicVolume,Subtitles=e.Creation?.Subtitles,settings.CoverLocalEnabled,settings.FreeOnly,settings.CoverPaidAllowed,ToolsReady=File.Exists(store.Probe),Busy=engine.Busy});}
+    public string Inspect(Episode e,bool share){var settings=Settings(e);return JsonSerializer.Serialize(new{e.Id,Topic=share?e.Topic:"Proje başlığı paylaşılmadı",e.Status,e.Progress,Error=share?SupportPrivacy.Clean(store,e.Error):e.Error==""?"":"Hata var; ayrıntı paylaşımı kapalı",Scenes=Rules.Scripts(e).Sum(x=>x.Script.Scenes.Count),Text=share?e.Creation?.Text:null,TextApproved=e.Creation?.TextApproved,Mode=e.Creation?.Mode,Voice=settings.VoiceProvider,VoiceId=VoiceProviders.Id(settings),ProjectVoice=e.Creation?.UseProjectVoice,Music=e.Music,MusicFile=Path.GetFileName(settings.MusicPath),settings.MusicVolume,Subtitles=e.Creation?.Subtitles,settings.CoverLocalEnabled,settings.FreeOnly,settings.CoverPaidAllowed,ToolsReady=File.Exists(store.Probe),Busy=engine.Busy});}
     static string Str(JsonElement args,string name)=>args.TryGetProperty(name,out var value)&&value.ValueKind==JsonValueKind.String?value.GetString()??"":"";
     public async Task<string> Execute(string name,JsonElement args,string projectId,bool share,string humanRequest,CancellationToken ct)
     {
@@ -60,6 +60,7 @@ No other tools exist. Cannot read/write software code, run commands, change API 
             string provider=Str(args,"provider");List<(string Id,string Name)> voices=provider switch{
                 "Google Cloud TTS"=>(await new GoogleTts(store).VoiceDetails(ct)).Select(x=>(x.Id,x.Id+" • "+(x.Gender=="MALE"?"Erkek":x.Gender=="FEMALE"?"Kadın":"Cinsiyet belirtilmedi"))).ToList(),
                 "ElevenLabs"=>await new Services(store,_=>{}).Voices(ct),
+                EdgeTts.Provider=>EdgeTts.TurkishVoices.ToList(),
                 "Windows / ücretsiz"=>LocalVoice.List(),
                 "Piper / ücretsiz"=>File.Exists(store.Settings.PiperPath)&&File.Exists(store.Settings.PiperModel)?[("configured-piper",Path.GetFileName(store.Settings.PiperModel))]:[],
                 _=>throw new InvalidOperationException("Desteklenen ses sağlayıcısını seç.")};
@@ -84,7 +85,7 @@ No other tools exist. Cannot read/write software code, run commands, change API 
             case "use_default_voice":Change(e,"Genel ayarlardaki seçili ses bu projeye uygulandı.",()=>{flow.UseProjectVoice=false;VideoSettings.CopyVoice(store.Settings,settings);SaveSettings(e,settings);});break;
             case "set_voice":
                 string provider=Str(args,"provider"),id=Str(args,"id");if(!voiceIds.TryGetValue(provider,out var available)||!available.Contains(id))throw new InvalidOperationException("Önce ses listesinden geçerli bir ses seçilmeli.");
-                Change(e,"Proje sesi seçildi: "+provider+" • "+id,()=>{flow.UseProjectVoice=true;settings.VoiceProvider=provider;settings.ShortVoiceOverride=false;if(provider.StartsWith("Google"))settings.GoogleTtsVoice=id;else if(provider=="ElevenLabs")settings.VoiceId=id;else if(provider.StartsWith("Windows"))settings.WindowsVoice=id;else{settings.PiperPath=store.Settings.PiperPath;settings.PiperModel=store.Settings.PiperModel;}SaveSettings(e,settings);});break;
+                Change(e,"Proje sesi seçildi: "+provider+" • "+id,()=>{flow.UseProjectVoice=true;settings.VoiceProvider=provider;settings.ShortVoiceOverride=false;if(provider==EdgeTts.Provider)settings.EdgeTtsVoice=id;else if(provider.StartsWith("Google"))settings.GoogleTtsVoice=id;else if(provider=="ElevenLabs")settings.VoiceId=id;else if(provider.StartsWith("Windows"))settings.WindowsVoice=id;else{settings.PiperPath=store.Settings.PiperPath;settings.PiperModel=store.Settings.PiperModel;}SaveSettings(e,settings);});break;
             case "set_storyboard":Change(e,"AI görselleri için 5–10 sahneli otomatik kurgu seçildi.",()=>{flow.Mode="auto";flow.Split=true;flow.AiVisuals=true;flow.StockVisuals=false;flow.OwnVisuals=false;flow.PlannedTextHash="";});break;
             case "set_visual_quality":string quality=Str(args,"quality");if(quality!=""&&!LocalCoverEngine.Qualities.Contains(quality))throw new InvalidOperationException("Geçerli kaliteyi seç.");Change(e,"Sahne görsel kalitesi: "+(quality==""?"genel ayar":quality),()=>WorkflowMedia.ChangeImageQuality(e,quality));break;
             case "set_subtitles":

@@ -130,6 +130,10 @@ public sealed partial class Services(Store store, Action<string> log, HttpClient
 
         var providers = settings.ProviderOrder.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
 
+        // The anonymous service is a last resort, including when added to an older configuration.
+        bool pollinations = providers.Remove("Pollinations") || settings.EnabledCloudProviders.Split(',', StringSplitOptions.TrimEntries).Contains("Pollinations");
+        if (pollinations) providers.Add("Pollinations");
+
         if (settings.LocalAiFirst && settings.UseOllama && providers.Contains("Ollama")) { providers.Remove("Ollama"); providers.Insert(0, "Ollama"); return providers; }
 
         return providers;
@@ -186,6 +190,8 @@ public sealed partial class Services(Store store, Action<string> log, HttpClient
 
                 "OpenAI" => ("https://api.openai.com/v1/chat/completions", s.Model, store.Key("OPENAI_API_KEY")),
 
+                "Pollinations" => ("https://text.pollinations.ai/openai", "openai", "anonymous"),
+
                 _ => ("", "", "")
 
             };
@@ -232,7 +238,7 @@ public sealed partial class Services(Store store, Action<string> log, HttpClient
 
                 using var req = new HttpRequestMessage(HttpMethod.Post, url);
 
-                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", key);
+                if (provider != "Pollinations") req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", key);
 
                 var payload = new Dictionary<string, object> { ["model"] = model, ["messages"] = new[] { new { role = "system", content = provider == "NVIDIA" ? system + "\nReturn exactly one valid JSON object with the requested fields and types. No commentary, Markdown, or reasoning. Complete every required field." + (responseSchema == null ? "" : "\nRequired JSON schema: " + JsonSerializer.Serialize(responseSchema)) : system }, new { role = "user", content = attempt == 0 ? prompt : prompt + "\nÖnceki yanıt doğrulanamadı: " + repairReason + "\nİstenen JSON şemasını ve alan adlarını aynen izle; doğrulama hatasını düzelt. Eksiksiz yeni JSON döndür." } } };
 
@@ -339,6 +345,11 @@ public sealed partial class Services(Store store, Action<string> log, HttpClient
                 using var doc = JsonDocument.Parse(onPartial==null ? await Reliability.ReadText(res, 64_000_000, timeout.Token) : await AssistantStreaming.Read(res,provider=="Ollama",onPartial,timeout.Token));
 
                 var root = doc.RootElement;
+
+                if (provider == "Pollinations" && root.ValueKind == JsonValueKind.Object && root.TryGetProperty("model", out var actualModel) && actualModel.ValueKind == JsonValueKind.String) {
+                    string modelName = Regex.Replace(actualModel.GetString() ?? "", @"[^a-zA-Z0-9._:/-]", "");
+                    log("Pollinations yanıt modeli: " + modelName[..Math.Min(150, modelName.Length)]);
+                }
 
                 if (root.ValueKind == JsonValueKind.Array && root.GetArrayLength() == 1) root = root[0];
 
@@ -565,6 +576,10 @@ public sealed partial class Services(Store store, Action<string> log, HttpClient
 
         }
 
+        if(sources.Count<2 && episode.Creation?.Job.Mode is "full" or "review"){
+            log("Otonom araştırma: anahtarsız ansiklopedi kaynakları aranıyor. Kaynak bulunması iddiaların bağımsız doğrulandığı anlamına gelmez.");
+            foreach(var row in await KeylessResearch.Collect(http,episode.Topic,ct)){sources.Add(row.Source);excerpts.Add(row);}
+        }
         sources = sources.DistinctBy(x => x.Url).ToList();
 
         if (sources.Count < 2) throw new InvalidOperationException("Araştırma için en az iki okunabilir kaynak gerekiyor. Tavily ücretsiz anahtarını ekle veya Bağlantılar'a konuya uygun kaynak adresleri gir.");

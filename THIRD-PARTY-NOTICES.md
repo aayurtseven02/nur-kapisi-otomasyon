@@ -32,3 +32,11 @@ Marka simgeleri yalnız ilgili ürünü tanıtmak ve resmî kurulum sayfasını 
 - vecteezy: https://www.vecteezy.com/favicon.png
 - elevenlabs: https://elevenlabs.io/favicon.ico?9c55860cee08706b
 - github: https://github.com/fluidicon.png
+
+## Microsoft Edge speech adapter
+TubeFlow includes edge-tts 7.3.1 (LGPL-3.0); its srt_composer component is MIT licensed. The packaged Python dependency directories retain their license metadata and source files. Python is distributed under the Python Software Foundation License. edge-tts is a third-party client, not an official Microsoft SDK; online service availability can change.
+Project: https://github.com/rany2/edge-tts
+
+
+## Local LTX inference
+TubeFlow's adapter builds its own ComfyUI graph and calls the local server. ComfyUI, VideoHelperSuite and LTX model weights are installed separately and retain their upstream licenses. No model weights are bundled in the TubeFlow update ZIP. LTX project: https://github.com/Lightricks/LTX-Video ; ComfyUI: https://github.com/Comfy-Org/ComfyUI ; VideoHelperSuite: https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite .

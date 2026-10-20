@@ -81,7 +81,7 @@ public sealed class WorkflowTimeline : Control
         }
         for(int i=0;i<Script.Scenes.Count;i++){
             var scene=Script.Scenes[i];double end=t+Math.Max(.1,scene.Duration);
-            Block(t,end,35,compact?48:61,StudioGlass.Emerald,$"{i+1} • "+(string.IsNullOrWhiteSpace(scene.VisualQuery)?scene.Narration:scene.VisualQuery),i==Selected,thumbnails.GetValueOrDefault(scene.StockFile));
+            Block(t,end,35,compact?48:61,StudioGlass.Emerald,$"{i+1} • "+(scene.VisualKind=="video"?(scene.VideoFailure==""?"LTX video • ":"Fotoğraf yedeği • "):"")+(string.IsNullOrWhiteSpace(scene.VisualQuery)?scene.Narration:scene.VisualQuery),i==Selected,thumbnails.GetValueOrDefault(scene.StockFile));
             if(SubtitlesEnabled){
                 if(scene.SpeechCaptions.Count>0)foreach(var caption in scene.SpeechCaptions)Block(t+Math.Clamp(caption.Start,0,scene.Duration),t+Math.Clamp(caption.End,0,scene.Duration),compact?89:105,compact?40:47,StudioGlass.Amber,caption.Text,i==Selected);
                 else Block(t,end,compact?89:105,compact?40:47,StudioGlass.Amber,scene.SubtitleText!=""?scene.SubtitleText:scene.Narration,i==Selected);
@@ -146,7 +146,7 @@ public static class TimelineEditing
     {
         if(from<0||to<0||from>=script.Scenes.Count||to>=script.Scenes.Count)throw new InvalidOperationException("Sahne bulunamadı.");
         if(from==to)return;
-        foreach(string name in "StockFile,StockUrl,StockMetadata,StockSelectionVersion,StockReviewQuery,StockReviewTheme,Attribution,LicenseUrl,Creator,UserLocal,RightsConfirmed,AiImageHash,AiImageQuality,AiImagePrompt,AiPromptSourceHash,AiCharacterIds".Split(',')){
+        foreach(string name in "StockFile,StockUrl,StockMetadata,StockSelectionVersion,StockReviewQuery,StockReviewTheme,Attribution,LicenseUrl,Creator,UserLocal,RightsConfirmed,AiImageHash,AiImageQuality,AiImagePrompt,AiPromptSourceHash,AiCharacterIds,VisualKind,VideoMotionPrompt,AiVideoFile,AiVideoHash,VideoFailure".Split(',')){
             var property=typeof(Scene).GetProperty(name)!;var value=property.GetValue(script.Scenes[from]);property.SetValue(script.Scenes[from],property.GetValue(script.Scenes[to]));property.SetValue(script.Scenes[to],value);
         }
     }

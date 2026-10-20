@@ -1,8 +1,8 @@
-# TubeFlow 0.4.29
+# TubeFlow 0.4.31
 
 **Windows üzerinde metinden, hazır sesten ve görsel arşivden video hazırlama, inceleme ve yayınlama uygulaması.**
 
-Bu README; son yayımlanan **0.4.29** kaynak kodunun kullanım kılavuzu, çalışma mekanikleri ve geliştirici başvurusudur. Belgeleme tarihi **19 Ekim 2026**. Uygulamanın mevcut davranışları anlatılır; bölümleme sonrası erken zaman çizelgesi, Cortex maskotu ve ücretsiz yerel görsel analizi bu sürümde uygulanmıştır. Model adları ve ayarların başlangıç değerleri kaynak kodundan alınır; ilgili hizmette her zaman kullanılabileceklerine veya ücretsiz olduklarına ilişkin bir taahhüt değildir.
+Bu README; **0.4.31** kaynak kodunun kullanım kılavuzu, çalışma mekanikleri ve geliştirici başvurusudur. Belgeleme tarihi **20 Ekim 2026**. Uygulamanın mevcut davranışları anlatılır; bölümleme sonrası erken zaman çizelgesi, Cortex maskotu ve ücretsiz yerel görsel analizi bu sürümde uygulanmıştır. Model adları ve ayarların başlangıç değerleri kaynak kodundan alınır; ilgili hizmette her zaman kullanılabileceklerine veya ücretsiz olduklarına ilişkin bir taahhüt değildir.
 
 Ana çalıştırılabilir dosya **TubeFlow.exe**, proje dosyası **src/AnkaStudio.csproj**, C# ad alanı **AnkaStudio** olarak kalmıştır. Eski kurulumların veri ve güncelleme uyumluluğu için bazı dizin, dosya ve protokol adları hâlâ `AnkaStudio` / `anka` içerir. Bunlar ikinci bir ürün veya ilave dil desteği anlamına gelmez.
 
@@ -8187,3 +8187,37 @@ Türkçe YouTube kanalları için normal video ve Shorts'u tek konu paketinden y
 ## Belge kapsamı ve üçüncü taraflar
 
 Bu README, kaynak sürümü 0.4.29 için hazırlanmıştır. Teknik katalog Roslyn sözdizim ağacından üretilmiş; kullanım/mimari açıklamaları ilgili kod yolları okunarak yazılmıştır. Bir metot imzasının listelenmesi uçtan uca canlı servis testinin yapıldığı anlamına gelmez. Üçüncü taraf bileşen koşulları için [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), stok ayrıntıları için [STOK-KAYNAKLARI.md](STOK-KAYNAKLARI.md), broker kurulum sınırları için [social-connection-service/README.md](social-connection-service/README.md) dosyalarına bak. Bu belge yeni bir yazılım lisansı tanımlamaz.
+
+### 0.4.30 — Gelişmiş yerel FLUX ve cihaz profilleri
+
+Nur Kapısı PuLID + FLUX Schnell + FaceDetailer iş akışı API biçimine çevrilmiştir. Paket şablonunda kişisel prompt veya fotoğraf adı bulunmaz. Prompt her istekte yenilenir; referans seçilmezse PuLID kolu devreden çıkar ve yüz iyileştirme korunur. Referans seçilirse aynı kimlik hem ana üretime hem yüz iyileştirme modeline bağlanır.
+
+Cihaz profilleri: Hafif (768 × 432, 8 üretim / 4 yüz adımı), Orta (1024 × 576, 16 / 8), Yüksek (1280 × 720, 25 / 12). Dikeyde ölçüler ters çevrilir. Boş GPU belleği 4 GB altındaysa Hafif, 4–8 GB arası en fazla Orta, 8 GB ve üstünde en fazla Yüksek uygulanır; toplam ekran kartı belleği de üst sınırı belirler. Profil seçme menüsü yoktur; ayar her üretimden önce otomatik belirlenir. Bu sınırlar bellek taşması riskini azaltır, her donanımda aynı süre veya hatasızlık garantisi değildir. PuLID yüz analizi CPU'da, FLUX üretimi GPU'da çalışır; VAE işlemi bölünerek yürütülür. Bellek taşmasında çözünürlük düşürülerek sınırlı sayıda yeniden denenir.
+
+Microsoft Edge TTS seçeneği de eklenmiştir; internet gerektirir. Türkçe Ahmet ve Emel ayrı seçimlerdir; hizmet seçilen ses için ses verisi döndürmezse başka anlatıcıya otomatik geçilmez.
+
+### 0.4.31 — Metne bağlı resim + yerel LTX video kompozisyonu
+
+Görseller bölümündeki tek `AI kompozisyon • resim + kısa video (yerel LTX)` tercihi mevcut üretim hattına bağlanır; ayrı stüdyo veya kalite menüsü açılmaz. Tam/yarı otonom işlerde AI görselleri etkinse kompozisyon varsayılan olarak açıktır; eski rehberli projeler bu seçeneği açıkça seçmedikçe değiştirilmez. Resim/video kararı onaylı metni değiştirmez. Yönetici, her sahne için `VisualKind` ve `VideoMotionPrompt` hazırlar; birden fazla sahnede hem resim hem video zorunludur. Akan su, yürüyüş, doğal küçük hareketler videoya; düşünsel/detay sahneleri fotoğrafa ayrılır. Yerel AI video için ilk uygun sahne AI kaynağına ayrılır; seçili stok kaynakları diğer uygun sahnelerde kullanılabilir. Fotoğraf sahnesine video stok yerleştirilmez.
+
+Mimari sınırlar:
+
+| Modül | Sorumluluk |
+| --- | --- |
+| `SceneComposition` | Anlatımdan resim/video seçimi ve İngilizce hareket planı; JSON kimlik ve karışım doğrulaması. Konuyu ve anlatımı yeniden yazmaz. |
+| `LocalLtxVideo` | Yalnız yerel ComfyUI adaptörü. Model/düğüm denetimi, referans yükleme, sabit API grafiği, kuyruk, kısıtlı dosya indirme, zaman aşımı ve işe özel iptal. Ses veya yayın kararı vermez. |
+| `SceneMotion` | Gerçek konuşma süresine göre bağımsız 5–6 saniyelik üretimler, kesme/birleştirme, bütünlük kontrollü önbellek. Aynı klibi döngüye alarak süre doldurmaz. |
+| `WorkflowMedia` / `Engine` | Mevcut üretim akışında görsel hazırlama ve konuşma ölçümünden sonra kısa video montajı. Anlatıcı ve altyazı korunur. |
+| `EngineHardware` / `LocalCoverEngine` | Taşınabilir ve Comfy Desktop Python ortamını bulma; aktif GPU seçimi ve mevcut motora bağlanma. |
+
+Gerekli modeller: `ltxv-2b-0.9.8-distilled-fp8.safetensors` ve `t5xxl_fp8_e4m3fn.safetensors`. Gerekli ComfyUI düğümleri: LTXVImgToVideo, LTXVConditioning, ManualSigmas, SamplerCustom, VAEDecodeTiled, VHS_VideoCombine ve çekirdek yükleyiciler. Kurulum listesi model ve düğüm varlığını doğrular; bu durum tam üretim testi yerine geçmez. Modeller güncelleme ZIP'ine dahil değildir. T5 FP8 resmî Comfy kaynağı: https://huggingface.co/comfyanonymous/flux_text_encoders (doğrulanan dosya SHA256: `7d330da4816157540d6bb7838bf63a0f02f573fc48ca4d8de34bb0cbfd514f09`).
+
+İlk sürümün video üretimi düşük çözünürlüktedir: yatay 512 × 288, dikey 288 × 512; bellek hatasında bir kez 384 × 224 / 224 × 384 denenir. Model 24 fps ve `24 × saniye + 1` kare üretir, CFG 1 ve 8 adımlı distilled sigma dizisi kullanılır. VAE bölünerek çözülür; T5 kodlayıcı CPU'da çalışır. Son çıktı proje çözünürlüğüne ölçeklenir; bu işlem temel LTX ayrıntısını HD'ye dönüştürmez.
+
+Örnek: gerçek anlatım 18 saniyeyse üç ayrı kısa video üretilip tam 18 saniyeye kurgulanır. Son parça gerektiğinde 5 saniyeden kısa kesilebilir. 72 saniyeyi aşan tek bölüm için bölümleme gerekir; dev bir klip veya sonsuz üretim döngüsü başlatılmaz. Başarısız LTX sahnesi referans fotoğrafla ve yavaş zoom hareketiyle sürdürülür; sebep logda ve seçili sahne ayrıntısında görünür. Fotoğraflarda yavaş, süreye yayılmış yakınlaşma/uzaklaşma vardır. LTX sahnesine ikinci bir fotoğraf zoom'u eklenmez.
+
+İnsanlı sahnelerde sabit orta/geniş kadraj, başın kadrajda kalması, kıyafet/yüz sürekliliği ve konuşmayan ağız talimatı kullanılır. Referans benzerliği artırır; kusursuz kimlik veya anatomiyi garanti etmez. Her kısa video aynı sahnenin referansını alır. Ortak karakter referansı sonraki FLUX sahnelerinde PuLID ile korunur; manzara sahnelerinde stil referansı uygulanır.
+
+Önbellek anahtarı motor sürümü, referans dosyasının SHA256 değeri, hareket talimatı, konuşma süresi ve video oranından oluşur. Ham klip ve birleşik sahne SHA256 ile doğrulanır. Metin, görsel, süre veya hareket değişince eski kurgu yeniden kullanılmaz. Durdurma yalnız ilgili prompt_id'yi siler/keser; başka ComfyUI işi durdurulmaz. Üretim sırasında LTX aşaması, parça sayısı ve geçen süre mevcut durum satırında görünür. Timeline sahnesinde LTX/video veya fotoğraf yedeği bilgisi bulunur; seçili sahnenin üretilmiş videosu aynı ayrıntı alanından izlenebilir. Manuel görsel seçimi eski AI video bağını temizler.
+
+Doğrulama örneği: RTX 3060 12 GB üzerinde FLUX referanslı 5 saniyelik LTX videoları ve gerçek konuşma hizalamasıyla 19,2 saniyelik resim + video + anlatım + altyazı denemesi üretildi. Üretim denemesi YouTube'a yayımlanmadı. Testte Emel sesi yalnız izole test verisinde seçildi; kullanıcının ses tercihi değiştirilmedi. Uzak sunucuda 7/24 çalıştırma bu değişiklikle dağıtılmış değildir.

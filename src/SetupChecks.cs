@@ -9,6 +9,8 @@ public sealed record SetupResult(bool? Good,string Status,string Detail);
 public static class SetupChecks
 {
     public static readonly SetupCheck[] Programs=[
+        new("ltx","LTX • yerel kısa video motoru","comfy","https://github.com/Lightricks/LTX-Video","FLUX referansından konuya uygun 5–6 saniyelik sessiz görüntüler üretir. LTX 2B 0.9.8 Distilled FP8, T5 FP8 ve ComfyUI video düğümleri gerekir.","local"),
+        new("edge-tts","Microsoft Edge ses motoru","windows","https://github.com/rany2/edge-tts","Anahtarsız Türkçe Ahmet/Emel anlatımı. Tam güncelleme paketi Python ve kütüphaneleri içerir; internet gerekir."),
         new("ffmpeg","FFmpeg","ffmpeg","https://ffmpeg.org/download.html","Video birleştirme, ses işleme ve görsel süreleri için gerekli. Güncel TubeFlow paketinin tools klasöründe gelir."),
         new("ollama","Ollama","ollama","https://ollama.com/download/windows","Ücretsiz yerel metin ve görsel modellerini çalıştırır. Kurulu olması ve servisinin açık olması ayrı ayrı kontrol edilir.","local"),
         new("text","Seçili yerel metin modeli","qwen","https://ollama.com/library/qwen3","Metni bölümleme, sohbet ve analiz edilmiş görüntüleri anlatımla eşleştirme için kullanılır. Bulut alternatifi varsa isteğe bağlıdır.","local"),
@@ -52,6 +54,8 @@ public static class SetupChecks
     }
     public static async Task<SetupResult> Program(Store store,string id,CancellationToken ct,HttpClient? client=null)
     {
+        if(id=="ltx"){try{var models=await LocalLtxVideo.Models(ct,client);return new(true,"Yüklü • modeller doğrulandı",models.Model+" • "+models.Encoder+" • tam video üretimi ayrıca sınanır.");}catch(InvalidOperationException error){return new(false,"Eksik / uygun değil",error.Message);}catch(HttpRequestException){return new(null,"Motor kapalı / erişilemiyor","ComfyUI'yi başlatıp Güncelle'ye bas.");}}
+        if(id=="edge-tts"){try{string python=await EdgeTts.Python(store.Settings,ct);return new(true,"Yüklü • adaptör hazır",python+" • İnternet üzerinden ses üretimi ayrıca doğrulanır.");}catch(InvalidOperationException ex){return new(false,"Yüklü değil / eksik",ex.Message);}}
         var local=new LocalAi(store,client);
         if(id=="runtime")return new(true,"Yüklü",System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription+" • çalışan uygulama doğrulandı");
         if(id=="ffmpeg"){var exe=Resolve(store.Settings.FfmpegPath,"ffmpeg.exe");return exe==null?new(false,"Yüklü değil","FFmpeg bulunamadı; tam paketi çıkar veya ayarlardan dosyasını seç."):await Run(exe,["-version"],ct)?new(true,"Yüklü",exe):new(false,"Kurulu, çalışmıyor","FFmpeg sürüm kontrolü başarısız.");}

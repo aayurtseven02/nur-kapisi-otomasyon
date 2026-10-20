@@ -8,7 +8,14 @@ public static class LocalCoverEngine
 {
     static Uri LocalUrl(string path)=>new(new Uri("http://127.0.0.1:8188/"),path);
     static readonly HttpClient Http = new() { BaseAddress = new Uri("http://127.0.0.1:8188/"), Timeout = TimeSpan.FromSeconds(30) };
+    public static async Task<string> RecommendedProfile(CancellationToken ct)
+    {
+        using var timeout=CancellationTokenSource.CreateLinkedTokenSource(ct);timeout.CancelAfter(TimeSpan.FromSeconds(5));
+        try{using var response=await Http.GetAsync("system_stats",timeout.Token);response.EnsureSuccessStatusCode();var stats=JsonNode.Parse(await response.Content.ReadAsStringAsync(timeout.Token));return LocalImageProfiles.DeviceProfile(stats?["devices"]?.AsArray().FirstOrDefault());}
+        catch(Exception error)when(error is HttpRequestException or System.Text.Json.JsonException or OperationCanceledException){ct.ThrowIfCancellationRequested();return "Hafif";}
+    }
     public static string[] StandardRoots() => [
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Comfy-Desktop","ComfyUI-Installs","Comfy"),
         Path.Combine(AppContext.BaseDirectory,"tools","local-cover-engine"),
         Path.Combine(AppLock.DefaultDataRoot(),"local-cover-engine"),
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"AnkaStudio","local-cover-engine"),
@@ -21,7 +28,7 @@ public static class LocalCoverEngine
         var candidates=new List<string>();
         try{var binding=Path.Combine(root,"engine-folder.txt");if(File.Exists(binding)){var linked=File.ReadAllText(binding).Trim();if(Path.IsPathFullyQualified(linked))candidates.Add(linked);}}catch(IOException){}
         candidates.AddRange([Path.Combine(root,"NVIDIA","ComfyUI_windows_portable"),Path.Combine(root,"NVIDIA-Eski","ComfyUI_windows_portable"),Path.Combine(root,"AMD","ComfyUI_windows_portable"),Path.Combine(root,"Intel","ComfyUI_windows_portable"),Path.Combine(root,"ComfyUI_windows_portable"),root]);
-        return candidates.Distinct(StringComparer.OrdinalIgnoreCase).Where(p=>File.Exists(Path.Combine(p,"python_embeded","python.exe"))&&File.Exists(Path.Combine(p,"ComfyUI","main.py"))).ToArray();
+        return candidates.Distinct(StringComparer.OrdinalIgnoreCase).Where(p=>EngineHardware.Python(p)!=null&&File.Exists(Path.Combine(p,"ComfyUI","main.py"))).ToArray();
     }
     public static string? FindEngine(string root)=>FindEngines(root).FirstOrDefault();
     public static string FindInstalledWorkflow(IEnumerable<string>? codexRoots=null,IEnumerable<string>? engineRoots=null)
@@ -39,7 +46,7 @@ public static class LocalCoverEngine
         }
         foreach(var root in roots.Distinct(StringComparer.OrdinalIgnoreCase)) {
             if(FindEngine(root)==null)continue;
-            foreach(var name in new[]{"connected-workflow.json","anka-flux2.json","anka-sdxl.json"}){var path=Path.Combine(root,name);if(File.Exists(path))return path;}
+            foreach(var name in new[]{ImportedFluxWorkflow.FileName,"connected-workflow.json","anka-flux2.json","anka-sdxl.json"}){var path=Path.Combine(root,name);if(File.Exists(path))return path;}
         }
         return "";
     }
@@ -53,6 +60,7 @@ public static class LocalCoverEngine
             if(available[type] is not JsonObject node)throw new InvalidOperationException("Motor bu düğümü desteklemiyor: "+type);
             foreach(var input in entry.Value!["inputs"]!.AsObject()){
                 var choices=node["input"]?["required"]?[input.Key]?[0] as JsonArray;
+                if(type=="LoadImage"&&input.Value?.ToString()=="{{ANKA_REFERENCE}}")continue;
                 if(choices!=null&&input.Value is JsonValue value&&value.TryGetValue<string>(out var text)&&!choices.Any(x=>x?.ToString()==text))throw new InvalidOperationException("Motorda bulunamayan model/seçenek: "+text+". İş akışını kurulu modellerine göre seç.");
             }
         }
@@ -72,8 +80,8 @@ public static class LocalCoverEngine
         foreach(var candidate in EngineHardware.Order(detected)){
             string engine=candidate.Folder;ct.ThrowIfCancellationRequested();string backend=candidate.Backend+" • "+candidate.Device;
             string log=Path.Combine(logDirectory,DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N")[..6]+".log");
-            var info=new System.Diagnostics.ProcessStartInfo(Path.Combine(engine,"python_embeded","python.exe")){WorkingDirectory=engine,UseShellExecute=false,CreateNoWindow=true,WindowStyle=System.Diagnostics.ProcessWindowStyle.Hidden};
-            foreach(var arg in new[]{"-s","-u","-c","import sys,runpy; log=open(sys.argv.pop(1),'a',buffering=1,encoding='utf-8'); sys.stdout=log; sys.stderr=log; sys.argv[0]='ComfyUI/main.py'; runpy.run_path(sys.argv[0],run_name='__main__')",log,"--windows-standalone-build","--listen","127.0.0.1","--port","8188","--preview-method","none"}.Concat(EngineHardware.Arguments(candidate.Backend)))info.ArgumentList.Add(arg);
+            var info=new System.Diagnostics.ProcessStartInfo(EngineHardware.Python(engine)!){WorkingDirectory=engine,UseShellExecute=false,CreateNoWindow=true,WindowStyle=System.Diagnostics.ProcessWindowStyle.Hidden};
+            foreach(var arg in new[]{"-s","-u","-c","import sys,runpy; log=open(sys.argv.pop(1),'a',buffering=1,encoding='utf-8'); sys.stdout=log; sys.stderr=log; sys.path.insert(0,'ComfyUI'); sys.argv[0]='ComfyUI/main.py'; runpy.run_path(sys.argv[0],run_name='__main__')",log,"--windows-standalone-build","--listen","127.0.0.1","--port","8188","--preview-method","none"}.Concat(EngineHardware.Arguments(candidate.Backend)))info.ArgumentList.Add(arg);
             report(backend+" görsel motoru başlatılıyor • bağlantı otomatik kontrol ediliyor…");
             System.Diagnostics.Process? process=null;bool ready=false;
             try{
@@ -87,8 +95,8 @@ public static class LocalCoverEngine
         throw new InvalidOperationException("Kurulu AI motorlarının tamamı denendi. "+string.Join(" | ",failures)+" Kayıtlar: "+logDirectory);
     }
     // Kolay menü: kullanıcı JSON düzenlemez; kalite ve model seçimi burada iş akışına uygulanır.
-    public static readonly string[] Qualities = ["Hızlı", "Dengeli", "Ultra sinematik"];
-    public static readonly string[] Models = ["Otomatik", "FLUX Schnell", "FLUX.2", "Stable Diffusion XL"];
+    public static readonly string[] Qualities = ["Hızlı", "Dengeli", "Ultra sinematik", "Hafif", "Orta", "Yüksek", "Otomatik"];
+    public static readonly string[] Models = ["Otomatik", ImportedFluxWorkflow.Model, "FLUX Schnell", "FLUX.2", "Stable Diffusion XL"];
 
     static bool IsFlux(JsonObject graph) => graph.Any(x => x.Value?["class_type"]?.GetValue<string>() == "EmptyFlux2LatentImage");
     static (int W, int H) Size(JsonObject graph, bool square, bool vertical,string quality)
@@ -98,24 +106,25 @@ public static class LocalCoverEngine
         return quality switch { "Hızlı" => (1024, 576), "Dengeli" => (1280, 720), _ => (1536, 864) };
     }
     static bool IsSchnell(JsonObject graph)=>graph.ToJsonString().Contains("schnell",StringComparison.OrdinalIgnoreCase);
-    static int? Steps(JsonObject graph,string quality) => IsSchnell(graph)?quality switch{"Hızlı"=>4,"Dengeli"=>6,_=>8}:quality switch { "Hızlı" => IsFlux(graph) ? 16 : 20, "Dengeli" => IsFlux(graph) ? 26 : 28, _ => IsFlux(graph) ? 36 : 38 };
-    public static string Describe(string quality, string model) => quality switch {
-        "Hızlı" => "Hızlı • 1024×576 • daha az işlem",
-        "Dengeli" => "Dengeli • 1280×720 • iyi kalite",
-        _ => "Ultra sinematik • 1536×864 • daha fazla bellek ve süre" };
+    static int? Steps(JsonObject graph,string quality) => IsSchnell(graph)?LocalImageProfiles.Legacy(quality) switch{"Hızlı"=>4,"Dengeli"=>6,_=>8}:LocalImageProfiles.Legacy(quality) switch { "Hızlı" => IsFlux(graph) ? 16 : 20, "Dengeli" => IsFlux(graph) ? 26 : 28, _ => IsFlux(graph) ? 36 : 38 };
+    public static string Describe(string quality, string model) => LocalImageProfiles.Rank(quality) switch {
+        0 => "Hafif • 768 × 432 piksel • düşük bellek yükü",
+        1 => "Orta • 1024 × 576 piksel • dengeli üretim",
+        _ => "Yüksek • 1280 × 720 piksel • daha fazla bellek ve süre" };
     // Motor klasörünü ve modele uygun iş akışını kendisi bulur; bulunamazsa paketle gelen hazır iş akışına döner.
     public static string ResolveWorkflow(string model, string current = "")
     {
-        string wanted = model=="FLUX Schnell"?"anka-flux-schnell.json":model.StartsWith("FLUX") ? "anka-flux2.json" : model.StartsWith("Stable") ? "anka-sdxl.json" : "";
+        string wanted = model==ImportedFluxWorkflow.Model?ImportedFluxWorkflow.FileName:model=="FLUX Schnell"?"anka-flux-schnell.json":model.StartsWith("FLUX") ? "anka-flux2.json" : model.StartsWith("Stable") ? "anka-sdxl.json" : "";
         string found = File.Exists(current) ? current : FindInstalledWorkflow();
         if (wanted == "") return found != "" ? found : Bundled("anka-flux2.json");
         if (found != "") { var sibling = Path.Combine(Path.GetDirectoryName(found)!, wanted); if (File.Exists(sibling)) return sibling; }
         return Bundled(wanted);
     }
     static string Bundled(string name) { var path = Path.Combine(AppContext.BaseDirectory, "tools", "workflows", name); return File.Exists(path) ? path : ""; }
-    public static string ModelOf(string workflow) { try {if(!File.Exists(workflow))return "Stable Diffusion XL";string text=File.ReadAllText(workflow);return text.Contains("schnell",StringComparison.OrdinalIgnoreCase)?"FLUX Schnell":text.Contains("EmptyFlux2LatentImage")?"FLUX.2":"Stable Diffusion XL";}catch(IOException){return "Stable Diffusion XL";} }
+    public static string ModelOf(string workflow) { try {if(!File.Exists(workflow))return "Stable Diffusion XL";string text=File.ReadAllText(workflow);return text.Contains("tubeflow_user_reference",StringComparison.Ordinal)?ImportedFluxWorkflow.Model:text.Contains("schnell",StringComparison.OrdinalIgnoreCase)?"FLUX Schnell":text.Contains("EmptyFlux2LatentImage")?"FLUX.2":"Stable Diffusion XL";}catch(IOException){return "Stable Diffusion XL";} }
     public static JsonObject Prepare(string file, string prompt, bool vertical, bool square=false,string quality="Dengeli")
     {
+        quality=LocalImageProfiles.Legacy(quality);
         if (!File.Exists(file)) throw new InvalidOperationException("Yerel motor için ComfyUI API iş akışı dosyasını seç.");
         if (new FileInfo(file).Length > 2_000_000) throw new InvalidOperationException("İş akışı dosyası çok büyük.");
         var graph = JsonNode.Parse(File.ReadAllText(file)) as JsonObject ?? throw new InvalidOperationException("Geçersiz API iş akışı.");
@@ -125,7 +134,7 @@ public static class LocalCoverEngine
             if (entry.Value is not JsonObject node || node["inputs"] is not JsonObject inputs) continue;
             var type = node["class_type"]?.GetValue<string>() ?? "";
             if (type == "VAEDecodeTiled") { inputs["temporal_size"] ??= 64; inputs["temporal_overlap"] ??= 8; }
-            string[] localTypes = ["CheckpointLoaderSimple", "CLIPTextEncode", "EmptyLatentImage", "EmptySD3LatentImage", "KSampler", "KSamplerAdvanced", "VAEDecode", "VAEDecodeTiled", "SaveImage", "PreviewImage", "UNETLoader", "CLIPLoader", "DualCLIPLoader", "VAELoader", "ModelSamplingAuraFlow", "ModelSamplingFlux", "FluxGuidance", "ConditioningZeroOut", "CLIPSetLastLayer", "LoraLoader", "ModelSamplingDiscrete","PulidFluxModelLoader","PulidFluxInsightFaceLoader","PulidFluxEvaClipLoader","ApplyPulidFlux","FixPulidFluxPatch","PulidFluxOptions","LoadImage","ImageCrop","ImageScale","VAEEncode"];
+            string[] localTypes = ["CheckpointLoaderSimple", "CLIPTextEncode", "EmptyLatentImage", "EmptySD3LatentImage", "KSampler", "KSamplerAdvanced", "VAEDecode", "VAEDecodeTiled", "SaveImage", "PreviewImage", "UNETLoader", "CLIPLoader", "DualCLIPLoader", "VAELoader", "ModelSamplingAuraFlow", "ModelSamplingFlux", "FluxGuidance", "ConditioningZeroOut", "CLIPSetLastLayer", "LoraLoader", "ModelSamplingDiscrete","PulidFluxModelLoader","PulidFluxInsightFaceLoader","PulidFluxEvaClipLoader","ApplyPulidFlux","FixPulidFluxPatch","PulidFluxOptions","LoadImage","ImageCrop","ImageScale","VAEEncode","FaceDetailer","UltralyticsDetectorProvider"];
             if (!localTypes.Contains(type) && !new[]{"EmptyFlux2LatentImage","Flux2Scheduler","CFGGuider","KSamplerSelect","SamplerCustomAdvanced","RandomNoise","ReferenceLatent"}.Contains(type)) throw new InvalidOperationException("Bu iş akışı desteklenmeyen veya bulut bağlantılı bir düğüm içeriyor: " + type + ". Yerel kapak iş akışını kullan.");
             foreach (var input in inputs.ToArray())
                 if (input.Value is JsonValue v && v.TryGetValue<string>(out var value) && value.Contains("{{ANKA_PROMPT}}"))
@@ -134,7 +143,7 @@ public static class LocalCoverEngine
             if (inputs["noise_seed"] is JsonValue) inputs["noise_seed"] = Random.Shared.NextInt64(0, long.MaxValue);
             if (node["class_type"]?.GetValue<string>() is "EmptyLatentImage" or "EmptySD3LatentImage" or "EmptyFlux2LatentImage" or "Flux2Scheduler")
             { var (w,h)=Size(graph,square,vertical,quality); inputs["width"] = w; inputs["height"] = h; if(type!="Flux2Scheduler")inputs["batch_size"] = 1; }
-            if (type is "KSampler" or "Flux2Scheduler" && inputs["steps"] is JsonValue && Steps(graph,quality) is int steps) inputs["steps"] = steps;
+            if (type is "KSampler" or "Flux2Scheduler" && node["_meta"]?["tubeflow_preserve_steps"]?.GetValue<bool>()!=true && inputs["steps"] is JsonValue && Steps(graph,quality) is int steps) inputs["steps"] = steps;
         }
         if(!found)foreach(var sampler in graph.Where(x=>x.Value?["class_type"]?.GetValue<string>() is "KSampler" or "KSamplerAdvanced")){
             if(sampler.Value?["inputs"]?["positive"] is JsonArray link&&link[0]?.GetValue<string>() is string id&&graph[id]?["class_type"]?.GetValue<string>()=="CLIPTextEncode"){graph[id]!["inputs"]!["text"]=prompt;found=true;}
@@ -144,6 +153,7 @@ public static class LocalCoverEngine
     }
     public static JsonObject ApplyReference(JsonObject graph,string uploaded,long seed,int castCount=1,IReadOnlyList<int>? characterIds=null,int referenceWidth=768,bool styleReference=false)
     {
+        if(ImportedFluxWorkflow.Bind(graph,uploaded,seed,castCount,characterIds,referenceWidth,styleReference))return graph;
         if(graph.Any(x=>x.Value?["class_type"]?.GetValue<string>()=="EmptyFlux2LatentImage")) {
             var vae=graph.First(x=>x.Value?["class_type"]?.GetValue<string>()=="VAELoader");
             graph["anka_reference"]=new JsonObject{["class_type"]="LoadImage",["inputs"]=new JsonObject{["image"]=uploaded}};
@@ -214,7 +224,7 @@ public static class LocalCoverEngine
     }
     public static async Task CheckStorySupport(CancellationToken ct,string? workflow=null)
     {
-        if(workflow!=null&&File.Exists(workflow)&&ModelOf(workflow)=="FLUX Schnell"){await Check(workflow,ct);return;}
+        if(workflow!=null&&File.Exists(workflow)&&ModelOf(workflow).StartsWith("FLUX Schnell",StringComparison.Ordinal)){await Check(workflow,ct);return;}
         if(workflow!=null&&File.Exists(workflow)&&File.ReadAllText(workflow).Contains("EmptyFlux2LatentImage")) {
             using var response=await Http.GetAsync("object_info/ReferenceLatent",ct);response.EnsureSuccessStatusCode();
             var info=JsonNode.Parse(await response.Content.ReadAsStringAsync(ct));if(info?["ReferenceLatent"]==null)throw new InvalidOperationException("FLUX.2 yerel referans desteği bulunamadı. NVIDIA motorunu güncelle.");return;
@@ -228,13 +238,15 @@ public static class LocalCoverEngine
     }
     public static async Task<byte[]> Generate(string file,string prompt,bool vertical,Action<string> log,CancellationToken ct,HttpClient? client=null,bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli",string resolution="auto")
     {
-        long? free=null;
+        long? free=null;string deviceProfile="Hafif";
         if(client==null){
             using var check=CancellationTokenSource.CreateLinkedTokenSource(ct);check.CancelAfter(TimeSpan.FromSeconds(5));
-            try{using var response=await Http.GetAsync("system_stats",check.Token);response.EnsureSuccessStatusCode();var stats=JsonNode.Parse(await response.Content.ReadAsStringAsync(check.Token));var device=stats?["devices"]?.AsArray().FirstOrDefault();free=device?["vram_free"]?.GetValue<long>();log("Yerel donanım: "+(device?["name"]?.GetValue<string>()??"bilinmiyor")+(free is long bytes?$" • boş bellek {bytes/1073741824d:0.0} GB":""));}
+            try{using var response=await Http.GetAsync("system_stats",check.Token);response.EnsureSuccessStatusCode();var stats=JsonNode.Parse(await response.Content.ReadAsStringAsync(check.Token));var device=stats?["devices"]?.AsArray().FirstOrDefault();free=device?["vram_free"]?.GetValue<long>();deviceProfile=LocalImageProfiles.DeviceProfile(device);log("Yerel donanım: "+(device?["name"]?.GetValue<string>()??"bilinmiyor")+(free is long bytes?$" • boş bellek {bytes/1073741824d:0.0} GB":""));}
             catch(Exception ex)when(ex is HttpRequestException or System.Text.Json.JsonException or OperationCanceledException){ct.ThrowIfCancellationRequested();log("Boş bellek okunamadı; korumalı çözünürlük kullanılıyor.");free=3L*1024*1024*1024;}
         }
+        if(client==null){quality=deviceProfile;log("Otomatik cihaz ayarı: "+quality+" • ekran kartı ve boş belleğe göre belirlendi.");}
         var size=LocalImagePolicy.Resolve(resolution,quality,vertical,square,free);
+        if(ModelOf(file)==ImportedFluxWorkflow.Model&&resolution=="auto"&&Math.Max(size.W,size.H)>LocalImageProfiles.Edge(quality)){int edge=LocalImageProfiles.Edge(quality);size=square?(edge,edge):vertical?(edge*9/16,edge):(edge,edge*9/16);log("Gelişmiş FLUX • "+LocalImageProfiles.Label(quality)+" profili çözünürlük sınırı uygulandı.");}
         for(int attempt=0;;attempt++){
             ct.ThrowIfCancellationRequested();log($"Yerel görsel: {size.W} × {size.H} piksel • {quality}");
             try{return await GenerateCore(file,prompt,vertical,log,ct,client,square,referenceImage,castCount,characterIds,styleReference,quality,size.W,size.H);}
@@ -246,7 +258,8 @@ public static class LocalCoverEngine
     static async Task<byte[]> GenerateCore(string file, string prompt, bool vertical, Action<string> log, CancellationToken ct, HttpClient? client = null, bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli",int width=0,int height=0)
     {
         var transport = client ?? Http;
-        var graph = Prepare(file, prompt, vertical,square,quality);if(width>0&&height>0)LocalImagePolicy.Resize(graph,width,height);
+        var graph = Prepare(file, prompt, vertical,square,quality);bool imported=graph.Any(x=>x.Value?["_meta"]?["tubeflow_user_reference"]?.GetValue<bool>()==true);if(referenceImage==null&&imported)ImportedFluxWorkflow.WithoutReference(graph);if(width>0&&height>0)LocalImagePolicy.Resize(graph,width,height);
+        if(imported){LocalImageProfiles.ApplyImported(graph,quality,width,height);log("Gelişmiş FLUX kararlı profil • yüz iyileştirme belleği sınırlı, VAE parçalara bölünerek işleniyor.");}
         using var budget = CancellationTokenSource.CreateLinkedTokenSource(ct); budget.CancelAfter(TimeSpan.FromMinutes(15));
         var token = budget.Token;
         if(referenceImage!=null) {
@@ -274,7 +287,7 @@ public static class LocalCoverEngine
             var history = JsonNode.Parse(await response.Content.ReadAsStringAsync(token))?[id];
             if(history?["status"]?["status_str"]?.GetValue<string>()=="error"){string details=history["status"]!.ToJsonString();if(details.Contains("out of memory",StringComparison.OrdinalIgnoreCase)||details.Contains("OutOfMemory",StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException("GPU_MEMORY: Ekran kartı belleği yetersiz.");throw new InvalidOperationException("Yerel model üretim hatası; ComfyUI işlem kaydını kontrol et.");}
             if (history?["outputs"] is JsonObject outputs)
-                foreach (var output in outputs)
+                foreach (var output in outputs.OrderByDescending(x=>graph[x.Key]?["class_type"]?.GetValue<string>()=="SaveImage"))
                     if (output.Value?["images"] is JsonArray images && images.FirstOrDefault() is JsonObject image)
                     {
                         string Part(string name) => Uri.EscapeDataString(image[name]?.GetValue<string>() ?? "");

@@ -179,6 +179,9 @@ public static class ButtonHelp
         Add("Yenile|Durumu yenile","Bu ekranın listesini veya bağlı yerel hizmet/sağlayıcı durumunu yeniden kontrol edip günceller.");
         Add("Dene","Bu ekranda ayarlanan bağlantıyı veya özelliği deneme isteğiyle kontrol eder. Sağlayıcının kota veya ücret şartları geçerli olabilir.");
         Add("Önceki 20|Sonraki 20","Listedeki önceki veya sonraki 20 kaydı gösterir.");
+        Add("Üretime başla • seçtiğim yayın planını uygula","Başlangıç panelindeki üretim ve yayın kararını bu proje için yetkilendirir. Tam otonom iş, kalite denetimleri sonrası seçilen takvimle yayınlar; yarı otonom senaryoda onay bekler.");
+        Add("Senaryoyu hazırla • sonra onaylayayım|Senaryoyu onayla • üretime devam","Yarı otonom akışta önce senaryoyu hazırlar, ardından onaylanan metinle üretime devam eder. Hazır metin tekrar yazılmaz.");
+        Add("Ortak referans görseli seç","Karakter yüzü, kıyafet ve görsel tarz için ortak referansı proje içine alır. Yerel motordaki bütün sahneler bu referansı kullanır.");
         return map;
     }
     public static string Explain(string text)

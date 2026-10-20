@@ -8,7 +8,7 @@
     <AssemblyName>TubeFlow</AssemblyName>
     <RootNamespace>AnkaStudio</RootNamespace>
     <ApplicationIcon>Assets\anka-studio.ico</ApplicationIcon>
-    <Version>0.4.29</Version>
+    <Version>0.4.31</Version>
     <Product>TubeFlow</Product>
     <Company>TubeFlow</Company>
     <Title>TubeFlow</Title>
@@ -28,6 +28,7 @@
   <ItemGroup><Content Include="Assets\nur-kapisi-kanal-logo.png" Link="ChannelPackages\NurKapisi\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="Assets\pairing-firebase.json" /></ItemGroup>
   <ItemGroup><Content Include="..\tools\audio-alignment\align.py" Link="tools\audio-alignment\align.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Content Include="..\tools\edge-tts\bridge.py" Link="tools\edge-tts\bridge.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Content Include="..\tools\workflows\*.json" Link="tools\workflows\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <Target Name="LegacyUpdateCompatibility" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)TubeFlow.dll" DestinationFiles="$(TargetDir)AnkaStudio.dll" />
