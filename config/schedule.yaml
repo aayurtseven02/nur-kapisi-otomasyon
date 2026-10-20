@@ -694,7 +694,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-20-gun12-normal2-nurayeti
-  status: pending
+  status: failed
   publish_at: '2026-10-20T15:00:00+03:00'
   format: long
   type: tema
@@ -705,6 +705,8 @@ videos:
   title_hint: 'Nur Ayeti: Allah''ın Nurunu Anlatan En Derin Tasvir'
   thumb_title: Nur Ayeti'nin Sırrı
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-20-gun12-short2-anababahakki
   status: pending
   publish_at: '2026-10-20T19:00:00+03:00'
