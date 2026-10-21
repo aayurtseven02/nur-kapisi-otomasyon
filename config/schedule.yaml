@@ -751,7 +751,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-21-gun13-normal2-sabahaksamzikri
-  status: pending
+  status: failed
   publish_at: '2026-10-21T15:00:00+03:00'
   format: long
   type: tema
@@ -762,6 +762,8 @@ videos:
   title_hint: Sabah Akşam Zikirlerinin Gün Boyu Koruyucu Etkisi
   thumb_title: Sabah Akşam Zikirleri
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-21-gun13-short2-borcduasi
   status: pending
   publish_at: '2026-10-21T19:00:00+03:00'
