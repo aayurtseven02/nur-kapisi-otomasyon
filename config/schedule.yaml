@@ -722,7 +722,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-21-gun13-normal1-hastalikduasi
-  status: pending
+  status: failed
   publish_at: '2026-10-21T09:00:00+03:00'
   format: long
   type: tema
@@ -734,6 +734,8 @@ videos:
   title_hint: Hasta Ziyaretinin Fazileti ve Okunacak Dua
   thumb_title: Hasta Ziyaretinin Fazileti
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-21-gun13-short1-yemekduasi
   status: pending
   publish_at: '2026-10-21T12:00:00+03:00'
