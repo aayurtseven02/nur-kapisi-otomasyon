@@ -765,7 +765,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-21-gun13-short2-borcduasi
-  status: pending
+  status: failed
   publish_at: '2026-10-21T19:00:00+03:00'
   format: short
   type: tema
@@ -776,6 +776,8 @@ videos:
   title_hint: Borç ve Maddi Sıkıntı İçin Okunan Dua
   thumb_title: Borç Sıkıntısına Dua
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-22-gun14-normal1-namazinonemi
   status: pending
   publish_at: '2026-10-22T09:00:00+03:00'
