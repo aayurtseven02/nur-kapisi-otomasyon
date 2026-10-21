@@ -737,7 +737,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-21-gun13-short1-yemekduasi
-  status: pending
+  status: failed
   publish_at: '2026-10-21T12:00:00+03:00'
   format: short
   type: tema
@@ -748,6 +748,8 @@ videos:
   title_hint: Yemekten Önce ve Sonra Okunan Dualar
   thumb_title: Yemek Duaları
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-21-gun13-normal2-sabahaksamzikri
   status: pending
   publish_at: '2026-10-21T15:00:00+03:00'
