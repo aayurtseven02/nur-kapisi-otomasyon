@@ -821,7 +821,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-22-gun14-short2-teyemmum
-  status: pending
+  status: failed
   publish_at: '2026-10-22T19:00:00+03:00'
   format: short
   type: tema
@@ -832,6 +832,8 @@ videos:
   title_hint: Su Bulunmadığında Namaz Nasıl Kılınır? Teyemmüm
   thumb_title: Teyemmüm Nasıl Yapılır?
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-23-gun15-normal1-musafiravun
   status: pending
   publish_at: '2026-10-23T09:00:00+03:00'
