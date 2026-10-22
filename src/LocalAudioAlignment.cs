@@ -36,6 +36,7 @@ public static class LocalAudioAlignment
         start.ArgumentList.Add(script);start.ArgumentList.Add(request);start.ArgumentList.Add(cache);
 
         start.Environment["PYTHONIOENCODING"]="utf-8";start.Environment["PYTHONUTF8"]="1";
+        start.Environment.Remove("SSLKEYLOGFILE");
 
         start.Environment["HF_HUB_OFFLINE"]="1";start.Environment["HF_HUB_DISABLE_TELEMETRY"]="1";
         start.Environment["ANKA_ALIGNMENT_MODEL"]=Path.Combine(RuntimeFolder,"model");

@@ -56,11 +56,11 @@ public static class Theme
     public static Color Bg = Color.FromArgb(11,18,34), Panel = Color.FromArgb(17,28,51), Elevated = Color.FromArgb(30,41,59), Text = Color.FromArgb(241,245,249), Muted = Color.FromArgb(148,163,184), Teal = Color.FromArgb(34,211,238), Orange = Color.FromArgb(251,191,36), Border = Color.FromArgb(40,55,78);
     public static readonly Color Success = Color.FromArgb(52,211,153), SuccessSurface = Color.FromArgb(6,78,59);
 
-    static readonly HashSet<string> InstalledFonts = FontFamily.Families.Select(f => f.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
-    static string PickFont(params string[] names) => names.FirstOrDefault(InstalledFonts.Contains) ?? "Segoe UI";
-    public static readonly string BodyFont = PickFont("Segoe UI", "Arial");
+    public const string PreferredFont = "Inter";
+    public static readonly string BodyFont = UiFonts.Family.Name;
+    public static bool PreferredFontAvailable => BodyFont == PreferredFont;
     public static readonly string HeadingFont = BodyFont;
-    public static Font Font(float size = 10, bool bold = false) => new(BodyFont, size, bold ? FontStyle.Bold : FontStyle.Regular);
+    public static Font Font(float size = 10, bool bold = false) => new(UiFonts.Family, size, bold ? FontStyle.Bold : FontStyle.Regular);
 
     public static Label Label(string text, float size = 10, bool bold = false, Color? color = null, int width = 900, int height = 32) => new StudioLabel() { Text = text, Font = Font(size, bold), ForeColor = color ?? Text, AutoSize = false, Width = width, Height = height, TextAlign = ContentAlignment.MiddleLeft, BackColor = Color.Transparent, Margin = Padding.Empty };
 
@@ -68,7 +68,7 @@ public static class Theme
 
     {
 
-        var b = new StudioButton { Text = text, AutoSize=false, Width = width, Height = 46, FlatStyle = FlatStyle.Flat, Font = Font(10, false), BackColor = primary ? Teal : Elevated, ForeColor = Text, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 10, 0) };
+        var b = new StudioButton { Text = text, AutoSize=false, Width = width, Height = 36, FlatStyle = FlatStyle.Flat, Font = Font(10, false), BackColor = primary ? Teal : Elevated, ForeColor = Text, Cursor = Cursors.Hand, Margin = new Padding(0, 0, 10, 0) };
         string name = text.ToLower(CultureInfo.GetCultureInfo("tr-TR"));
         if(name.Contains("sil")||name.StartsWith("durdur"))b.GlassAccent=StudioGlass.Rose;
         else if(name.Contains("kapak")||name.Contains("tasarla")||name.Contains("resim stüdyosu"))b.GlassAccent=StudioGlass.Purple;
@@ -182,6 +182,7 @@ public sealed class DarkComboBox : ComboBox
     }
 
 }
+
 
 
 

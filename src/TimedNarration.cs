@@ -138,7 +138,7 @@ public static class TimedNarration
                         else if (voice.VoiceProvider.StartsWith("Google")) await new GoogleTts(store, services.Http).Speak(spoken, raw, voice, ct);
 
                         else if(voice.VoiceProvider.StartsWith("ElevenLabs")){var speech=await services.Speech(spoken,ct,voice);await File.WriteAllBytesAsync(raw,speech.Audio,ct);}
-                        else await LocalVoice.SpeakWithFallback(spoken, raw, voice, ct);
+                        else await LocalVoice.SpeakWithFallback(spoken, raw, voice, ct,message=>{episode.Log(message);store.Save();});
 
                         await Media.Exec(store.Ffmpeg, ["-y", "-i", raw, "-ar", "44100", "-ac", "1", "-c:a", "pcm_s16le", part], folder, ct);
 

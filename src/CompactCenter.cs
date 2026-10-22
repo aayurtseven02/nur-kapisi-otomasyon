@@ -39,13 +39,13 @@ public sealed partial class StudioForm
     }
     static void FitFormFields(Control parent,int width)
     {
-        width=Math.Max(220,width);
+        width=Math.Max(100,width);
         foreach(Control child in parent.Controls){
-            if(child is StudioDisclosure disclosure){disclosure.FitWidth(width);if(disclosure.Expanded)FitFormFields(disclosure.Content,width-20);continue;}
-            if(child is FlowLayoutPanel flow){flow.Width=width;flow.MaximumSize=new Size(width,0);FitFormFields(flow,width-flow.Padding.Horizontal-12);}
+            if(child is StudioDisclosure disclosure){disclosure.FitWidth(width);if(disclosure.Expanded)FitFormFields(disclosure.Content,width-12);continue;}
+            if(child is FlowLayoutPanel flow){if(flow.FlowDirection is FlowDirection.LeftToRight or FlowDirection.RightToLeft)flow.WrapContents=true;flow.MaximumSize=new Size(width,0);flow.Width=width;if(!flow.WrapContents){flow.AutoSize=true;}else {flow.AutoSize=true;flow.AutoSizeMode=AutoSizeMode.GrowAndShrink;}FitFormFields(flow,width-flow.Padding.Horizontal-12);}
             else if(child is TextBox or ComboBox or CheckBox or Label){child.Width=Math.Min(650,width);if(child is Label or CheckBox){int measured=TextRenderer.MeasureText(child.Text,child.Font,new Size(Math.Max(100,child.Width-28),int.MaxValue),TextFormatFlags.WordBreak).Height;child.Height=Math.Max(child is CheckBox?34:26,measured+10);}}
             else if(child is NumericUpDown)child.Width=Math.Min(450,width);
-            else if(child is Button)child.Width=Math.Min(320,width);
+            else if(child is Button)child.Width=Math.Min(400,width);
         }
     }
     string remoteProgress="";
@@ -78,7 +78,9 @@ public sealed partial class StudioForm
     void MediaHub()
     {
         page.Controls.Add(Theme.Button("Ücretsiz medya • resim, video, müzik ve SFX ara",()=>FreeMediaDialog(),true,600));
-        page.Controls.Add(Actions(new[]{"Tümü","Video","Fotoğraf","Müzik","Ses efekti","Seslendirme","Kapak","Kart","Logo"}.Select(kind=>Theme.Button(kind,()=>{mediaKind=kind;audioOffset=0;Navigate("Medya arşivleri");},mediaKind==kind,130)).ToArray()));
+        var audioItems=new AudioLibrary(store).List(refresh:true).Where(x=>File.Exists(x.File)).ToList();
+        int Count(string kind)=>kind switch{"Video"=>new MediaPool(store).List().Count,"Fotoğraf"=>PhotoFiles().Length,"Müzik" or "Ses efekti" or "Seslendirme"=>audioItems.Count(x=>x.Kind==kind),"Kapak"=>CoverArchive.Files(store,false).Length,"Kart"=>Directory.Exists(Path.Combine(store.Root,"card-assets"))?Directory.GetFiles(Path.Combine(store.Root,"card-assets"),"*.png").Length:0,"Logo"=>AiDesignDialog.LogoFiles(store).Length,_=>0};
+        page.Controls.Add(Actions(new[]{"Tümü","Video","Fotoğraf","Müzik","Ses efekti","Seslendirme","Kapak","Kart","Logo"}.Select(kind=>{var button=(StudioButton)Theme.Button(kind,()=>{mediaKind=kind;audioOffset=0;Navigate("Medya arşivleri");},mediaKind==kind,130);button.GlassAccent=Count(kind)>0?StudioGlass.Purple:Color.Empty;button.CurrentStep=mediaKind==kind;button.AccessibleDescription=Count(kind)+" kayıt";return button;}).ToArray()));
         switch(mediaKind){
             case "Video":PoolPage();break;
             case "Müzik":case "Ses efekti":case "Seslendirme":audioKind=mediaKind;AudioPage();break;
@@ -86,7 +88,7 @@ public sealed partial class StudioForm
             case "Fotoğraf":PhotoArchive();break;
             default:
                 Title("Medya havuzu","Türünü seç; dosyaların kendi arşiv klasöründe saklanır. Kaynak ve kullanım bilgileri korunur.");
-                var audio=new AudioLibrary(store).List(refresh:true);
+                var audio=audioItems;
                 foreach(var item in new[]{("Video",new MediaPool(store).List().Count), ("Fotoğraf",PhotoFiles().Length),("Müzik",audio.Count(x=>x.Kind=="Müzik")),("Ses efekti",audio.Count(x=>x.Kind=="Ses efekti")),("Seslendirme",audio.Count(x=>x.Kind=="Seslendirme")),("Kapak",CoverArchive.Files(store,false).Length),("Kart",Directory.Exists(Path.Combine(store.Root,"card-assets"))?Directory.GetFiles(Path.Combine(store.Root,"card-assets"),"*.png").Length:0),("Logo",AiDesignDialog.LogoFiles(store).Length)}){
                     var selected=item.Item1;page.Controls.Add(Theme.Button(selected+" • "+item.Item2+" dosya",()=>{mediaKind=selected;Navigate("Medya arşivleri");},false,page.Width));
                 }
@@ -110,13 +112,14 @@ public sealed partial class StudioForm
         var flow=box.Content;
         flow.Controls.Add(Theme.Label("Motoru ve kaliteyi seç; başlat düğmesi kurulumu bulup kontrol eder. Teknik dosyalar Gelişmiş bölümündedir.",10,width:650,height:65));
         var model=Theme.Combo(LocalCoverEngine.Models,store.Settings.CoverLocalModel??"Otomatik",650);Field(flow,"Görsel motoru",model);
-        var quality=Theme.Combo(LocalImageProfiles.Labels,LocalImageProfiles.Label(store.Settings.CoverLocalQuality),650);quality.Visible=false;flow.Controls.Add(quality);flow.Controls.Add(Theme.Label("Kalite ve çözünürlük cihazdan otomatik belirlenir. Ekran kartı belleğine göre Hafif, Orta veya Yüksek ayar uygulanır; seçim yapman gerekmez.",9,width:650,height:65));
+        var quality=Theme.Combo(new[]{"Otomatik","Hafif","Orta","Yüksek"},store.Settings.CoverLocalQuality??"Otomatik",650);quality.Visible=true;quality.AccessibleName="Yerel görsel kalitesi";flow.Controls.Add(quality);flow.Controls.Add(Theme.Label("Otomatik cihaz belleğine göre seçer. Hafif, Orta veya Yüksek seçerek karşılaştırabilirsin. Manuel seçim belleğe sığmazsa daha düşük kalite seçmen istenir.",9,width:650,height:65));
+        var videoModel=Theme.Combo(ImportedLtx23.Choices,store.Settings.LocalVideoModel,650);videoModel.AccessibleName="Yerel video motoru";Field(flow,"Video motoru • ilk tercih",videoModel);
         var titleStyle=Theme.Combo(["3D Telkari Altın","3D Metalik Altın","Yazısız"],store.Settings.CoverTitleStyle??"3D Metalik Altın",650);Field(flow,"Kapak başlık ve çerçeve stili",titleStyle);
         var enabled=Theme.Check("Yerel görsel motorunu kullan",store.Settings.CoverLocalEnabled,650);flow.Controls.Add(enabled);
         var status=Theme.Label("Henüz denetlenmedi • Başlat ve dene ile motoru kontrol et.",11,true,Theme.Text,width:650,height:75);status.AccessibleName="Görsel motor durumu";flow.Controls.Add(status);
         var advanced=new StudioDisclosure("Gelişmiş • motor bağlantısı",650);
         var path=Theme.Input(File.Exists(store.Settings.CoverLocalWorkflow)?store.Settings.CoverLocalWorkflow:LocalCoverEngine.FindInstalledWorkflow(),width:620);path.AccessibleName="Yerel görsel iş akışı";Field(advanced.Content,"İş akışı",path);
-        void Save(){if(engine.Busy)throw new InvalidOperationException("Üretimin bitmesini bekle.");var resolved=LocalCoverEngine.ResolveWorkflow(model.Text,path.Text.Trim());if(enabled.Checked)LocalCoverEngine.Prepare(resolved,"test",false,quality:quality.Text);path.Text=resolved;store.Settings.CoverLocalModel=model.Text;store.Settings.CoverLocalQuality="Otomatik";store.Settings.CoverTitleStyle=titleStyle.Text;store.Settings.CoverLocalWorkflow=resolved;store.Settings.CoverLocalEnabled=enabled.Checked;store.Save();}
+        void Save(){if(engine.Busy)throw new InvalidOperationException("Üretimin bitmesini bekle.");var resolved=LocalCoverEngine.ResolveWorkflow(model.Text,path.Text.Trim());if(enabled.Checked)LocalCoverEngine.Prepare(resolved,"test",false,quality:quality.Text);path.Text=resolved;store.Settings.LocalVideoModel=videoModel.Text;store.Settings.CoverLocalModel=model.Text;store.Settings.CoverLocalQuality=quality.Text;store.Settings.CoverTitleStyle=titleStyle.Text;store.Settings.CoverLocalWorkflow=resolved;store.Settings.CoverLocalEnabled=enabled.Checked;store.Save();}
         advanced.Content.Controls.Add(Actions(Theme.Button("Motor klasörünü bağla",()=>_=Safe(()=>{
             using var folder=new FolderBrowserDialog{Description="ComfyUI portable motor klasörü"};if(folder.ShowDialog(this)!=DialogResult.OK)return Task.CompletedTask;
             var found=LocalCoverEngine.FindEngine(folder.SelectedPath)??throw new InvalidOperationException("Bu klasörde ComfyUI ve taşınabilir Python bulunamadı.");
@@ -131,3 +134,4 @@ public sealed partial class StudioForm
         flow.Controls.Add(advanced);target.Controls.Add(box);
     }
 }
+

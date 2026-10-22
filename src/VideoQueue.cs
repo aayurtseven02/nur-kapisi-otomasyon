@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace AnkaStudio;
 
@@ -27,7 +27,7 @@ public static class VideoQueue
 
 
 
-    static readonly string[] Fields = "ChannelName,VoiceProvider,EdgeTtsVoice,EdgeTtsPython,GoogleTtsVoice,GoogleTtsFallback,WindowsVoice,PiperPath,PiperModel,XttsUrl,XttsSpeaker,VoiceId,VoiceModel,VoiceSpeed,ShortVoiceOverride,ShortVoiceProvider,ShortVoiceId,ShortVoiceSpeed,MusicPath,LibraryMusic,MusicVolume,ShortMusicVolume,MusicStyle,CoverReferenceImage,CoverAiEnabled,CoverPaidAllowed,CoverProviderOrder,CoverNvidiaModel,CoverGeminiModel,CoverOpenAiModel,CoverMonthlyRequests,CoverStyle,CoverAutoStyle,CoverMode,CoverPng,CoverBackground,CoverLogo,CoverFont,CoverLogoPosition,CoverAccent,OpeningCardEnabled,OpeningCardFile,OpeningCardSeconds,ClosingCardEnabled,ClosingCardFile,ClosingCardSeconds,VideoLogoEnabled,VideoLogo,VideoLogoPosition,VideoLogoWidthPercent,SubtitleColor,LongFontSize,ShortFontSize,EncodingPreset,Crf,FramesPerSecond,PronunciationDictionary".Split(',');
+    static readonly string[] Fields = "CoverLocalEnabled,CoverLocalWorkflow,CoverLocalModel,CoverLocalQuality,CoverLocalResolution,LocalVideoModel,ChannelName,VoiceProvider,EdgeTtsVoice,EdgeTtsPython,GoogleTtsVoice,GoogleTtsFallback,WindowsVoice,PiperPath,PiperModel,XttsUrl,XttsSpeaker,VoiceId,VoiceModel,VoiceSpeed,ShortVoiceOverride,ShortVoiceProvider,ShortVoiceId,ShortVoiceSpeed,MusicPath,LibraryMusic,MusicVolume,ShortMusicVolume,MusicStyle,CoverReferenceImage,CoverAiEnabled,CoverPaidAllowed,CoverProviderOrder,CoverNvidiaModel,CoverGeminiModel,CoverOpenAiModel,CoverMonthlyRequests,CoverStyle,CoverAutoStyle,CoverMode,CoverPng,CoverBackground,CoverLogo,CoverFont,CoverLogoPosition,CoverAccent,OpeningCardEnabled,OpeningCardFile,OpeningCardSeconds,ClosingCardEnabled,ClosingCardFile,ClosingCardSeconds,VideoLogoEnabled,VideoLogo,VideoLogoPosition,VideoLogoWidthPercent,SubtitleColor,LongFontSize,ShortFontSize,EncodingPreset,Crf,FramesPerSecond,PronunciationDictionary".Split(',');
 
     public static Settings Effective(Settings current, Settings? saved)
 

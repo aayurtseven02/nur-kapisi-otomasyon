@@ -11,6 +11,8 @@ namespace AnkaStudio;
 public static class LocalAiSchema
 
 {
+    public static object ForRequest(string system,string prompt,bool repair,int? shorts,bool? longVideo,object? schema=null)
+        =>schema??(repair&&(system.Contains("Changes")||shorts!=null||longVideo!=null)?Build(system.Contains("Changes"),prompt,shorts,longVideo):(object)"json");
 
     public static JsonNode Build(bool spelling, string prompt, int? expectedShorts = null, bool? expectedLong = null)
 

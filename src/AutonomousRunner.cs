@@ -19,7 +19,7 @@ public sealed class AutonomousRunner(Store store,Engine engine)
             AutonomousProduction.ValidatePublication(e,settings,store.Settings.YouTubeChannelId);
             bool ready=false;
             await engine.External(async ct=>{
-                var service=new Services(store,e.Log);
+                var service=new Services(store,message=>{e.Log(message);store.Save();engine.ReportActivity(message);});
                 ready=await AutonomousProduction.Prepare(e,f,service,reviewText,ct,()=>{store.Save();engine.ReportActivity(e.CurrentStage);});
                 if(!ready)return;
                 WorkflowMusic.Apply(store,e,settings);WorkflowArtwork.Apply(e,settings,f.CoverChoice);

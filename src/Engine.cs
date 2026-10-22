@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 using System.Drawing.Drawing2D;
 
@@ -29,6 +29,7 @@ public static class Media
     {
 
         var info = new ProcessStartInfo(file) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardError = true, RedirectStandardOutput = true };
+        info.Environment.Remove("SSLKEYLOGFILE");
 
         if (cwd != null) info.WorkingDirectory = cwd;
 
@@ -117,11 +118,11 @@ public static class LocalVoice
         return voices.Any(v=>v.Id==requested)?requested:throw new InvalidOperationException("Seçtiğin Windows sesi bu bilgisayarda kurulu değil. Ses listesinden yeniden seç; başka bir anlatıcı otomatik seçilmedi.");
     }
 
-    public static async Task SpeakWithFallback(string text, string path, Settings settings, CancellationToken ct)
+    public static async Task SpeakWithFallback(string text, string path, Settings settings, CancellationToken ct,Action<string>? log=null)
 
     {
 
-        if(settings.VoiceProvider==EdgeTts.Provider){await EdgeTts.Speak(text,path,settings,ct);return;}
+        if(settings.VoiceProvider==EdgeTts.Provider){await EdgeTts.Speak(text,path,settings,ct,log);return;}
 
         if (settings.VoiceProvider.StartsWith("XTTS")) {
             var raw = path + ".xtts.wav";
@@ -689,7 +690,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
                 }
                 if(!motionReady){
                 var photoClip=Path.Combine(folder,$"photo-scene-{n}.mp4");
-                if(!SceneComposition.Enabled(e)&&(e.AiStoryImages || e.Creation is {CoverChoice:not "legacy",PhotoMotion:true}&&scene.AiImageHash!="") && e.AiStoryMotion && e.AiStoryCinematic)
+                if(SceneComposition.Enabled(e)&&(e.AiStoryImages || e.Creation is {CoverChoice:not "legacy",PhotoMotion:true}&&scene.AiImageHash!="") && e.AiStoryMotion && e.AiStoryCinematic)
                     photoClip=await StoryCinema.Render(store,source,scene,w,h,duration,renderSettings,folder,ct,s=>Log(e,s),segmentCaptions);
                 else await Media.Exec(store.Ffmpeg,["-y","-loop","1","-i",source,"-t",Media.Num(duration),"-vf",e.Creation is {CoverChoice:not "legacy"} layout ? WorkflowMedia.PhotoFilter(w,h,renderSettings.FramesPerSecond,layout,n%2==0,duration) : StoryImages.PhotoFilter(w,h,renderSettings.FramesPerSecond,e.AiStoryImages && e.AiStoryMotion),"-an","-c:v","libx264","-preset",renderSettings.EncodingPreset,"-crf",renderSettings.Crf.ToString(),"-pix_fmt","yuv420p",photoClip],folder,ct);
                 source=photoClip;
@@ -803,6 +804,7 @@ public sealed class Engine(Store store, Action<string>? testFault = null)
 
         await Media.Exec(store.Ffmpeg, finalArgs, folder, ct); report?.Invoke(.82);
         await TimelineEffects.Apply(store,script,output,offset,ct);
+        await TimelineLayers.Apply(store,script,output,offset,w,h,renderSettings,ct);
 
         if (renderSettings.VideoLogoEnabled) {
 

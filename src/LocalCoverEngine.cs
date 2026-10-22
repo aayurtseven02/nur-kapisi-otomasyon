@@ -81,6 +81,8 @@ public static class LocalCoverEngine
             string engine=candidate.Folder;ct.ThrowIfCancellationRequested();string backend=candidate.Backend+" • "+candidate.Device;
             string log=Path.Combine(logDirectory,DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N")[..6]+".log");
             var info=new System.Diagnostics.ProcessStartInfo(EngineHardware.Python(engine)!){WorkingDirectory=engine,UseShellExecute=false,CreateNoWindow=true,WindowStyle=System.Diagnostics.ProcessWindowStyle.Hidden};
+            // uv Python/OpenSSL on Windows crashes when an inherited TLS key-log file is opened. Certificate verification remains enabled.
+            info.Environment.Remove("SSLKEYLOGFILE");
             foreach(var arg in new[]{"-s","-u","-c","import sys,runpy; log=open(sys.argv.pop(1),'a',buffering=1,encoding='utf-8'); sys.stdout=log; sys.stderr=log; sys.path.insert(0,'ComfyUI'); sys.argv[0]='ComfyUI/main.py'; runpy.run_path(sys.argv[0],run_name='__main__')",log,"--windows-standalone-build","--listen","127.0.0.1","--port","8188","--preview-method","none"}.Concat(EngineHardware.Arguments(candidate.Backend)))info.ArgumentList.Add(arg);
             report(backend+" görsel motoru başlatılıyor • bağlantı otomatik kontrol ediliyor…");
             System.Diagnostics.Process? process=null;bool ready=false;
@@ -151,13 +153,22 @@ public static class LocalCoverEngine
         if(!found)throw new InvalidOperationException("ComfyUI API iş akışının olumlu talimat düğümü bulunamadı. Hazır motor seç veya API biçiminde dışa aktar.");
         return graph;
     }
-    public static JsonObject ApplyReference(JsonObject graph,string uploaded,long seed,int castCount=1,IReadOnlyList<int>? characterIds=null,int referenceWidth=768,bool styleReference=false)
+    public static JsonObject ApplyReference(JsonObject graph,string uploaded,long seed,int castCount=1,IReadOnlyList<int>? characterIds=null,int referenceWidth=768,bool styleReference=false,int referenceHeight=0)
     {
         if(ImportedFluxWorkflow.Bind(graph,uploaded,seed,castCount,characterIds,referenceWidth,styleReference))return graph;
         if(graph.Any(x=>x.Value?["class_type"]?.GetValue<string>()=="EmptyFlux2LatentImage")) {
             var vae=graph.First(x=>x.Value?["class_type"]?.GetValue<string>()=="VAELoader");
             graph["anka_reference"]=new JsonObject{["class_type"]="LoadImage",["inputs"]=new JsonObject{["image"]=uploaded}};
-            graph["anka_reference_scale"]=new JsonObject{["class_type"]="ImageScaleToTotalPixels",["inputs"]=new JsonObject{["image"]=new JsonArray("anka_reference",0),["upscale_method"]="lanczos",["megapixels"]=.6,["resolution_steps"]=1}};
+            string referenceNode="anka_reference";
+            if(!styleReference&&castCount>1&&characterIds is {Count:>0} selectedIds&&selectedIds.Count<castCount){
+                int slot=referenceWidth/castCount,referenceCanvasHeight=referenceHeight>0?referenceHeight:referenceWidth;if(selectedIds.Any(id=>id<0||id>=castCount)||selectedIds.Distinct().Count()!=selectedIds.Count||slot<1)throw new InvalidOperationException("Referans karakter kimliği geçersiz.");
+                if(selectedIds.Count==1){referenceNode="anka_reference_subject";graph[referenceNode]=new JsonObject{["class_type"]="ImageCrop",["inputs"]=new JsonObject{["image"]=new JsonArray("anka_reference",0),["width"]=slot,["height"]=referenceCanvasHeight,["x"]=selectedIds[0]*slot,["y"]=0}};}
+                else{
+                    referenceNode="anka_selected_background";graph[referenceNode]=new JsonObject{["class_type"]="EmptyImage",["inputs"]=new JsonObject{["width"]=slot*selectedIds.Count,["height"]=referenceCanvasHeight,["batch_size"]=1,["color"]=0}};
+                    for(int i=0;i<selectedIds.Count;i++){string crop="anka_selected_"+i,merged="anka_selected_merge_"+i;graph[crop]=new JsonObject{["class_type"]="ImageCrop",["inputs"]=new JsonObject{["image"]=new JsonArray("anka_reference",0),["width"]=slot,["height"]=referenceCanvasHeight,["x"]=selectedIds[i]*slot,["y"]=0}};graph[merged]=new JsonObject{["class_type"]="ImageCompositeMasked",["inputs"]=new JsonObject{["destination"]=new JsonArray(referenceNode,0),["source"]=new JsonArray(crop,0),["x"]=i*slot,["y"]=0,["resize_source"]=false}};referenceNode=merged;}
+                }
+            }
+            graph["anka_reference_scale"]=new JsonObject{["class_type"]="ImageScaleToTotalPixels",["inputs"]=new JsonObject{["image"]=new JsonArray(referenceNode,0),["upscale_method"]="lanczos",["megapixels"]=.6,["resolution_steps"]=1}};
             graph["anka_reference_latent"]=new JsonObject{["class_type"]="VAEEncode",["inputs"]=new JsonObject{["pixels"]=new JsonArray("anka_reference_scale",0),["vae"]=new JsonArray(vae.Key,0)}};
             foreach(var entry in graph.Where(x=>x.Value?["class_type"]?.GetValue<string>()=="CFGGuider").ToArray()) {
                 var inputs=entry.Value!["inputs"]!.AsObject();
@@ -238,19 +249,21 @@ public static class LocalCoverEngine
     }
     public static async Task<byte[]> Generate(string file,string prompt,bool vertical,Action<string> log,CancellationToken ct,HttpClient? client=null,bool square=false,string? referenceImage=null,int castCount=1,IReadOnlyList<int>? characterIds=null,bool styleReference=false,string quality="Dengeli",string resolution="auto")
     {
-        long? free=null;string deviceProfile="Hafif";
+        bool automatic=quality=="Otomatik";long? free=null;string deviceProfile="Hafif";
         if(client==null){
             using var check=CancellationTokenSource.CreateLinkedTokenSource(ct);check.CancelAfter(TimeSpan.FromSeconds(5));
             try{using var response=await Http.GetAsync("system_stats",check.Token);response.EnsureSuccessStatusCode();var stats=JsonNode.Parse(await response.Content.ReadAsStringAsync(check.Token));var device=stats?["devices"]?.AsArray().FirstOrDefault();free=device?["vram_free"]?.GetValue<long>();deviceProfile=LocalImageProfiles.DeviceProfile(device);log("Yerel donanım: "+(device?["name"]?.GetValue<string>()??"bilinmiyor")+(free is long bytes?$" • boş bellek {bytes/1073741824d:0.0} GB":""));}
             catch(Exception ex)when(ex is HttpRequestException or System.Text.Json.JsonException or OperationCanceledException){ct.ThrowIfCancellationRequested();log("Boş bellek okunamadı; korumalı çözünürlük kullanılıyor.");free=3L*1024*1024*1024;}
         }
-        if(client==null){quality=deviceProfile;log("Otomatik cihaz ayarı: "+quality+" • ekran kartı ve boş belleğe göre belirlendi.");}
-        var size=LocalImagePolicy.Resolve(resolution,quality,vertical,square,free);
+        if(client==null && quality=="Otomatik"){quality=deviceProfile;log("Otomatik cihaz ayarı: "+quality+" • ekran kartı ve boş belleğe göre belirlendi.");}
+        if(client==null && quality!="Otomatik" && LocalImageProfiles.Rank(quality)>LocalImageProfiles.Rank(deviceProfile))log("Seçilen "+quality+" kalite deneniyor; boş bellek az. Bellek hatasında daha düşük kalite seçmen istenir.");
+        var size=LocalImagePolicy.Resolve(resolution,quality,vertical,square,automatic?free:null);
         if(ModelOf(file)==ImportedFluxWorkflow.Model&&resolution=="auto"&&Math.Max(size.W,size.H)>LocalImageProfiles.Edge(quality)){int edge=LocalImageProfiles.Edge(quality);size=square?(edge,edge):vertical?(edge*9/16,edge):(edge,edge*9/16);log("Gelişmiş FLUX • "+LocalImageProfiles.Label(quality)+" profili çözünürlük sınırı uygulandı.");}
         for(int attempt=0;;attempt++){
             ct.ThrowIfCancellationRequested();log($"Yerel görsel: {size.W} × {size.H} piksel • {quality}");
             try{return await GenerateCore(file,prompt,vertical,log,ct,client,square,referenceImage,castCount,characterIds,styleReference,quality,size.W,size.H);}
             catch(InvalidOperationException ex)when(attempt<2&&ex.Message.Contains("GPU_MEMORY",StringComparison.Ordinal)){
+                if(!automatic)throw new InvalidOperationException("Seçilen "+quality+" kalite ekran kartı belleğine sığmadı. Kaliteyi Hafif veya Otomatik seçerek yeniden dene; seçimin sessizce düşürülmedi.",ex);
                 int edge=Math.Max(size.W,size.H);edge=edge>1024?1024:edge>768?768:512;size=square?(edge,edge):vertical?(edge*9/16,edge):(edge,edge*9/16);log($"Ekran kartı belleği yetmedi; {size.W} × {size.H} piksel ile yeniden deneniyor.");
             }
         }
@@ -270,7 +283,7 @@ public static class LocalCoverEngine
             if(uploaded.Contains('/')||uploaded.Contains('\\')||uploaded.Contains(".."))throw new InvalidOperationException("Geçersiz yerel referans adı.");
             long seed=BitConverter.ToInt64(Convert.FromHexString(TimedNarration.TextHash(Reliability.FileHash(referenceImage)+prompt)),0)&long.MaxValue;
             using var referenceStream=File.OpenRead(referenceImage);using var referenceBitmap=Image.FromStream(referenceStream);
-            ApplyReference(graph,uploaded,seed,castCount,characterIds,referenceBitmap.Width,styleReference);log(styleReference?"YEREL MOTOR • Önceki kapak tasarım tarzı referans alınıyor.":"YEREL MOTOR • Karakter kimlikleri ayrı referans ve alanlarla sahneye bağlanıyor.");
+            ApplyReference(graph,uploaded,seed,castCount,characterIds,referenceBitmap.Width,styleReference,referenceBitmap.Height);log(styleReference?"YEREL MOTOR • Önceki kapak tasarım tarzı referans alınıyor.":"YEREL MOTOR • Karakter kimlikleri ayrı referans ve alanlarla sahneye bağlanıyor.");
         }
         log("YEREL MOTOR • ComfyUI bağlantısı kontrol ediliyor…");
         using var body = new StringContent(new JsonObject { ["prompt"] = graph, ["client_id"] = Guid.NewGuid().ToString("N") }.ToJsonString(), Encoding.UTF8, "application/json");

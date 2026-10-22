@@ -19,10 +19,19 @@ public sealed class WorkflowTimeline : Control
     [System.ComponentModel.DefaultValue(0)] public int ContentWidth {get;set;}
     [System.ComponentModel.DefaultValue(0)] public int ViewOffset {get;set;}
     int DrawingWidth=>Math.Max(Width,ContentWidth);
-    public WorkflowTimeline(VideoScript script,Store? store=null){Script=script;this.store=store;DoubleBuffered=true;Width=1100;Height=310;BackColor=Theme.Panel;Cursor=Cursors.Hand;AccessibleName="Sahne zaman çizelgesi";}
-    public int MusicRowTop=>Height<290?181:217;
-    public int EffectsRowTop=>Height<290?210:249;
-    int VisualRowBottom=>Height<290?83:96;
+    public WorkflowTimeline(VideoScript script,Store? store=null){Script=script;this.store=store;DoubleBuffered=true;Width=1100;Height=354;BackColor=Theme.Panel;Cursor=Cursors.Hand;AccessibleName="Sahne zaman çizelgesi";}
+    public event Action? AddTrackRequested;
+    public event Action<int,int>? ExtraClipRequested;
+    public event Action<int,string>? ExtraFileDropped;
+    public void DropExtraFile(int row,string file)=>ExtraFileDropped?.Invoke(row,file);
+    public void EditExtraTrack(int row)=>ExtraClipRequested?.Invoke(row,-1);
+    public int RequiredHeight=>354+(Script.ExtraTracks?.Count??0)*72;
+    public int ExtraTrackAtY(int y)=>y>=323&&(y-323)/72<(Script.ExtraTracks?.Count??0)?(y-323)/72:-1;
+    public int MusicRowTop=>251;
+    public int EffectsRowTop=>285;
+    int VisualRowBottom=>96;
+    TimelineClip? dragClip;double clipStart,clipDuration;int clipEdge;
+
     public double Total=>Math.Max(.1,Script.Scenes.Sum(s=>Math.Max(.1,s.Duration)));
     public static string Clock(double seconds)=>TimeSpan.FromSeconds(Math.Max(0,seconds)).ToString(@"hh\:mm\:ss\.ff");
     double X(double t)=>164+t/Total*Math.Max(1,DrawingWidth-178)-ViewOffset;
@@ -58,12 +67,14 @@ public sealed class WorkflowTimeline : Control
         g.Clear(Color.FromArgb(11,19,36));using var font=Theme.Font(9,true);using var small=Theme.Font(8);using var grid=new Pen(Color.FromArgb(24,148,163,184));
         using(var labels=new SolidBrush(Theme.Sidebar))g.FillRectangle(labels,0,0,160,Height);
         string[] names=["V1 • Video & Sahne","T1 • Alt Yazı","A1 • Konuşma & Ses","A2 • Müzik & Efekt"];
-        Color[] colors=[StudioGlass.Emerald,StudioGlass.Amber,StudioGlass.Cyan,StudioGlass.Purple];bool compact=Height<290;int[] ys=compact?[39,93,139,185]:[39,109,165,221];
+        Color[] colors=[StudioGlass.Emerald,StudioGlass.Amber,StudioGlass.Cyan,StudioGlass.Purple];bool compact=false;int[] ys=[39,111,183,255];
         for(int row=0;row<4;row++){
             TextRenderer.DrawText(g,names[row],font,new Rectangle(10,ys[row]+4,145,24),colors[row],TextFormatFlags.VerticalCenter|TextFormatFlags.EndEllipsis);
             TextRenderer.DrawText(g,row==3?"Fon müziği":"Bölümü seç • Süreyi düzenle",small,new Rectangle(10,ys[row]+30,145,20),Theme.Muted,TextFormatFlags.EndEllipsis);
             g.DrawLine(grid,160,ys[row]+(compact?43:52),Width,ys[row]+(compact?43:52));
         }
+        TextRenderer.DrawText(g,"+",font,new Rectangle(124,2,30,28),Theme.Teal,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter);
+        for(int i=0;i<(Script.ExtraTracks?.Count??0);i++){int y=323+i*72;var track=Script.ExtraTracks![i];TextRenderer.DrawText(g,track.Name,font,new Rectangle(10,y+6,112,25),track.Enabled?Theme.Text:Theme.Muted,TextFormatFlags.EndEllipsis);TextRenderer.DrawText(g,"+",font,new Rectangle(124,y+4,30,28),Theme.Teal,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter);TextRenderer.DrawText(g,track.Kind,small,new Rectangle(10,y+34,145,22),Theme.Muted);g.DrawLine(grid,160,y+68,Width,y+68);}
         var saved=g.Save();g.SetClip(new Rectangle(164,0,Math.Max(1,Width-164),Height));
         double pixels=Math.Max(1,DrawingWidth-178)/Total,ideal=85/pixels;
         double tick=new[]{1d,2,5,10,15,30,60,120,300,600}.FirstOrDefault(x=>x>=ideal);if(tick==0)tick=600;
@@ -83,20 +94,24 @@ public sealed class WorkflowTimeline : Control
             var scene=Script.Scenes[i];double end=t+Math.Max(.1,scene.Duration);
             Block(t,end,35,compact?48:61,StudioGlass.Emerald,$"{i+1} • "+(scene.VisualKind=="video"?(scene.VideoFailure==""?"LTX video • ":"Fotoğraf yedeği • "):"")+(string.IsNullOrWhiteSpace(scene.VisualQuery)?scene.Narration:scene.VisualQuery),i==Selected,thumbnails.GetValueOrDefault(scene.StockFile));
             if(SubtitlesEnabled){
-                if(scene.SpeechCaptions.Count>0)foreach(var caption in scene.SpeechCaptions)Block(t+Math.Clamp(caption.Start,0,scene.Duration),t+Math.Clamp(caption.End,0,scene.Duration),compact?89:105,compact?40:47,StudioGlass.Amber,caption.Text,i==Selected);
-                else Block(t,end,compact?89:105,compact?40:47,StudioGlass.Amber,scene.SubtitleText!=""?scene.SubtitleText:scene.Narration,i==Selected);
+                if(scene.SpeechCaptions.Count>0)foreach(var caption in scene.SpeechCaptions)Block(t+Math.Clamp(caption.Start,0,scene.Duration),t+Math.Clamp(caption.End,0,scene.Duration),107,compact?40:47,StudioGlass.Amber,caption.Text,i==Selected);
+                else Block(t,end,107,compact?40:47,StudioGlass.Amber,scene.SubtitleText!=""?scene.SubtitleText:scene.Narration,i==Selected);
             }
-            Block(t,end,compact?135:161,compact?40:47,StudioGlass.Cyan,scene.Narration,i==Selected);t=end;
+            Block(t,end,179,compact?40:47,StudioGlass.Cyan,scene.Narration,i==Selected);t=end;
         }
         if(MusicLabel!=""){double musicStart=Math.Clamp(Script.MusicTrack?.Start??0,0,Total),musicEnd=Script.MusicTrack?.End is >0?Math.Min(Total,Script.MusicTrack.End):Total;if(musicEnd>musicStart)Block(musicStart,musicEnd,MusicRowTop,Script.SoundEffects?.Any(x=>x.Enabled)==true?28:compact?40:49,StudioGlass.Purple,"♫ "+MusicLabel);}
         else TextRenderer.DrawText(g,"Fon müziği seçilmedi",small,new Rectangle(176,MusicRowTop+12,Math.Max(1,Width-180),22),Theme.Muted,TextFormatFlags.EndEllipsis);
         foreach(var effect in Script.SoundEffects??[])if(effect.Enabled)Block(effect.Start,Math.Min(Total,effect.End>0?effect.End:Total),EffectsRowTop,25,StudioGlass.Rose,"✦ "+Path.GetFileName(effect.File));
+        for(int i=0;i<(Script.ExtraTracks?.Count??0);i++){var track=Script.ExtraTracks![i];foreach(var clip in track.Clips)Block(clip.Start,Math.Min(Total,clip.Start+clip.Duration),327+i*72,58,track.Kind=="Ses"?StudioGlass.Cyan:track.Kind=="Altyazı"?StudioGlass.Amber:StudioGlass.Emerald,(track.Enabled?"":"○ ")+(track.Kind=="Altyazı"?clip.Text:Path.GetFileName(clip.File)));}
         float play=(float)X(Math.Clamp(PlayheadSeconds,0,Total));using(var marker=new Pen(StudioGlass.Rose,2))g.DrawLine(marker,play,0,play,Height-34);
         using(var brush=new SolidBrush(StudioGlass.Rose))g.FillPolygon(brush,[new PointF(play,0),new PointF(play+9,7),new PointF(play,14)]);
         g.Restore(saved);
         TextRenderer.DrawText(g,(Estimated?"Tahmini süreler":"Gerçek konuşma süreleri")+" • Toplam "+Clock(Total)+(AllowEditing?" • Sınırları sürükle":" • Hazırlık sürüyor"),small,new Rectangle(164,Height-30,Math.Max(1,Width-178),24),Theme.Muted,TextFormatFlags.EndEllipsis);
     }
-    protected override void OnMouseDown(MouseEventArgs e){base.OnMouseDown(e);if(e.Button!=MouseButtons.Left||e.X<164)return;if(AllowEditing&&e.Y>=MusicRowTop&&e.Y<=Height-35){
+    protected override void OnMouseDown(MouseEventArgs e){base.OnMouseDown(e);if(e.Button!=MouseButtons.Left)return;
+        if(e.X<164){if(!AllowEditing)return;if(e.Y<30){AddTrackRequested?.Invoke();return;}int row=ExtraTrackAtY(e.Y);if(row>=0)ExtraClipRequested?.Invoke(row,-1);return;}
+        int extra=ExtraTrackAtY(e.Y);if(extra>=0){if(!AllowEditing)return;var clips=Script.ExtraTracks![extra].Clips;double at=(e.X+ViewOffset-164)/Math.Max(1,DrawingWidth-178)*Total;var clip=clips.LastOrDefault(c=>at>=c.Start&&at<c.Start+c.Duration);if(clip!=null){if(e.Clicks>1){ExtraClipRequested?.Invoke(extra,clips.IndexOf(clip));return;}BeforeEdit?.Invoke();dragClip=clip;clipStart=clip.Start;clipDuration=clip.Duration;originX=e.X;clipEdge=Math.Abs(e.X-X(clip.Start))<10?-1:Math.Abs(e.X-X(clip.Start+clip.Duration))<10?1:0;changed=false;Capture=true;}else ExtraClipRequested?.Invoke(extra,-1);return;}
+        if(AllowEditing&&e.Y>=MusicRowTop&&e.Y<=Height-35){
             double time=(e.X+ViewOffset-164)/Math.Max(1,DrawingWidth-178)*Total;
             var track=e.Y>=EffectsRowTop?Script.SoundEffects?.LastOrDefault(x=>x.Enabled&&time>=x.Start&&time<=(x.End>0?x.End:Total)):null;
             track??=Script.MusicTrack?.Enabled==true?Script.MusicTrack:null;
@@ -105,9 +120,9 @@ public sealed class WorkflowTimeline : Control
             }
         }
         if(e.Y<28){PlayheadSeconds=Math.Clamp((e.X+ViewOffset-164)/Math.Max(1,DrawingWidth-178)*Total,0,Total);Seek?.Invoke(PlayheadSeconds);Invalidate();return;}double t=0;boundary=-1;for(int i=0;i<Script.Scenes.Count;i++){t+=Script.Scenes[i].Duration;if(AllowEditing&&e.Y>=35&&e.Y<=VisualRowBottom&&i<Script.Scenes.Count-1&&Math.Abs(e.X-X(t))<9){boundary=i;originalLeft=Script.Scenes[i].Duration;originalRight=Script.Scenes[i+1].Duration;originX=e.X;changed=false;BeforeEdit?.Invoke();Capture=true;return;}if(e.X<=X(t)){SelectScene(i);if(e.Y>=35&&e.Y<=VisualRowBottom){dragScene=i;dragOrigin=e.Location;}return;}}}
-    protected override void OnMouseMove(MouseEventArgs e){base.OnMouseMove(e);if(dragAudio!=null&&AllowEditing){double delta=(e.X-originX)/Math.Max(1,DrawingWidth-178)*Total;if(audioEdge<0)dragAudio.Start=Math.Clamp(audioStart+delta,0,audioEnd-.1);else if(audioEdge>0)dragAudio.End=Math.Clamp(audioEnd+delta,audioStart+.1,Math.Min(Total,1800));else{double duration=audioEnd-audioStart;dragAudio.Start=Math.Clamp(audioStart+delta,0,Math.Max(0,Math.Min(Total,1800)-duration));dragAudio.End=dragAudio.Start+duration;}changed=true;Invalidate();return;}if(dragScene>=0&&AllowEditing&&e.Button==MouseButtons.Left&&(Math.Abs(e.X-dragOrigin.X)>6||Math.Abs(e.Y-dragOrigin.Y)>6)){int source=dragScene;dragScene=-1;var data=new DataObject();data.SetData("TubeFlow.SceneIndex",source);DoDragDrop(data,DragDropEffects.Move);return;}if(boundary<0||!AllowEditing)return;Script.Scenes[boundary].Duration=originalLeft;Script.Scenes[boundary+1].Duration=originalRight;ResizeBoundary(Script,boundary,(e.X-originX)/Math.Max(1,DrawingWidth-178)*Total);changed=true;Invalidate();}
-    protected override void OnMouseUp(MouseEventArgs e){base.OnMouseUp(e);dragScene=-1;if(dragAudio!=null){dragAudio=null;Capture=false;if(changed)Edited?.Invoke();return;}if(boundary<0)return;boundary=-1;Capture=false;if(changed)Edited?.Invoke();}
-    protected override void Dispose(bool disposing){if(disposing){stop.Cancel();foreach(var image in thumbnails.Values)image.Dispose();thumbnails.Clear();}base.Dispose(disposing);}
+    protected override void OnMouseMove(MouseEventArgs e){base.OnMouseMove(e);if(dragClip!=null&&AllowEditing){double delta=(e.X-originX)/Math.Max(1,DrawingWidth-178)*Total;if(clipEdge<0){dragClip.Start=Math.Clamp(clipStart+delta,0,clipStart+clipDuration-.1);dragClip.Duration=clipStart+clipDuration-dragClip.Start;}else if(clipEdge>0)dragClip.Duration=Math.Clamp(clipDuration+delta,.1,Total-clipStart);else dragClip.Start=Math.Clamp(clipStart+delta,0,Math.Max(0,Total-clipDuration));changed=true;Invalidate();return;}if(dragAudio!=null&&AllowEditing){double delta=(e.X-originX)/Math.Max(1,DrawingWidth-178)*Total;if(audioEdge<0)dragAudio.Start=Math.Clamp(audioStart+delta,0,audioEnd-.1);else if(audioEdge>0)dragAudio.End=Math.Clamp(audioEnd+delta,audioStart+.1,Math.Min(Total,1800));else{double duration=audioEnd-audioStart;dragAudio.Start=Math.Clamp(audioStart+delta,0,Math.Max(0,Math.Min(Total,1800)-duration));dragAudio.End=dragAudio.Start+duration;}changed=true;Invalidate();return;}if(dragScene>=0&&AllowEditing&&e.Button==MouseButtons.Left&&(Math.Abs(e.X-dragOrigin.X)>6||Math.Abs(e.Y-dragOrigin.Y)>6)){int source=dragScene;dragScene=-1;var data=new DataObject();data.SetData("TubeFlow.SceneIndex",source);DoDragDrop(data,DragDropEffects.Move);return;}if(boundary<0||!AllowEditing)return;Script.Scenes[boundary].Duration=originalLeft;Script.Scenes[boundary+1].Duration=originalRight;ResizeBoundary(Script,boundary,(e.X-originX)/Math.Max(1,DrawingWidth-178)*Total);changed=true;Invalidate();}
+    protected override void OnMouseUp(MouseEventArgs e){base.OnMouseUp(e);if(dragClip!=null){dragClip=null;Capture=false;if(changed)Edited?.Invoke();return;}dragScene=-1;if(dragAudio!=null){dragAudio=null;Capture=false;if(changed)Edited?.Invoke();return;}if(boundary<0)return;boundary=-1;Capture=false;if(changed)Edited?.Invoke();}
+    protected override void Dispose(bool disposing){if(disposing&&!IsDisposed){stop.Cancel();foreach(var image in thumbnails.Values)image.Dispose();thumbnails.Clear();}base.Dispose(disposing);}
 }
 
 // Keep the painted control within the viewport. Moving a many-thousand-pixel

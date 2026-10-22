@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 using System.Drawing.Drawing2D;
 
@@ -93,7 +93,7 @@ public sealed partial class StudioForm : Form
 
         var side = new Panel { Dock = DockStyle.Left, Width = 268, BackColor = Theme.Sidebar, Padding = new Padding(0, 20, 0, 8) };
 
-        using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-dark.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=AppBranding.Logo(),Location=new(14,10),Size=new(235,70),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);var brandTitle=Theme.Label("TubeFlow",17,true,width:170,height:48);brandTitle.Location=new(78,15);brandTitle.Visible=false;side.Controls.Add(brandTitle);var sectionLabel=Theme.Label("Çalışma alanı",10,true,Theme.Muted,240,32);sectionLabel.Location=new(16,92);side.Controls.Add(sectionLabel);FormClosed+=(_,_)=>brand.Image?.Dispose();
+        using var logoStream=typeof(StudioForm).Assembly.GetManifestResourceStream("AnkaStudio.Assets.tubeflow-dark.png");using var logoSource=Image.FromStream(logoStream!);var brand=new PictureBox{Image=AppBranding.Logo(),Location=new(14,10),Size=new(235,70),SizeMode=PictureBoxSizeMode.Zoom,AccessibleName="TubeFlow logosu"};side.Controls.Add(brand);var brandTitle=Theme.Label("TubeFlow",17,true,width:170,height:48);brandTitle.Location=new(78,15);brandTitle.Visible=false;side.Controls.Add(brandTitle);var sectionLabel=Theme.Label("Çalışma alanı",10,true,Theme.Muted,240,32);sectionLabel.Text="ÇALIŞMA ALANI";sectionLabel.Font=Theme.Font(10,true);sectionLabel.Location=new(16,92);side.Controls.Add(sectionLabel);FormClosed+=(_,_)=>brand.Image?.Dispose();
 
         channelHeading.Location = new(20, 6); channelHeading.AutoEllipsis = true; channelHeading.Visible = false;
 
@@ -109,23 +109,23 @@ public sealed partial class StudioForm : Form
 
         foreach(var item in items) {
 
-            var button=new SidebarButton{Text=item.Label,Width=248,Glyph=item.Route=="Yüklenmesi gerekenler"?"warning":item.Route=="Video hazırla"?"＋":item.Route=="Videolarım"?"◷":"⚙",Location=new Point(0,y),AccessibleName="Ana bölüm: "+item.Label};button.Click+=(_,_)=>NavigateFromSidebar(item.Route);navigation.Controls.Add(button);nav[item.Route]=button;y+=42;
+            var button=new SidebarButton{Text=item.Label,Width=248,Glyph=item.Route=="Yüklenmesi gerekenler"?"warning":item.Route=="Video hazırla"?"＋":item.Route=="Videolarım"?"◷":"⚙",Location=new Point(0,y),AccessibleName="Ana bölüm: "+item.Label};button.Click+=(_,_)=>NavigateFromSidebar(item.Route);if(TextRenderer.MeasureText(item.Label.ToUpper(CultureInfo.GetCultureInfo("tr-TR")),button.Font).Width>button.Width-44)button.Height=54;navigation.Controls.Add(button);nav[item.Route]=button;y+=button.Height+6;
 
         }
 
-        var guide=new SidebarButton{Text="Rehber",Glyph="?",Width=248};guide.Click+=(_,_)=>UserGuide.Show(this);guide.Location=new(0,y+12);navigation.Controls.Add(guide);
+        var guide=new SidebarButton{Text="Rehber",Glyph="?",Width=248};guide.Click+=(_,_)=>UserGuide.Show(this);guide.Location=new(0,y+12);navigation.Controls.Add(guide);navigation.Height=Math.Max(navigation.Height,guide.Bottom+8);
 
-        var recent=new StudioScrollPanel { Location=new Point(8,380), Width=252, Height=180, AutoScroll=true, BackColor=Theme.Sidebar, AccessibleName="Son projeler" };side.Controls.Add(recent);
+        var recent=new StudioScrollPanel { Location=new Point(8,Math.Max(380,navigation.Bottom+12)), Width=252, Height=180, AutoScroll=true, BackColor=Theme.Sidebar, AccessibleName="Son projeler" };side.Controls.Add(recent);
         refreshRecent=()=>{
             foreach(Control child in recent.Controls.Cast<Control>().ToArray()) child.Dispose();
-            var heading=Theme.Label("Son projeler",10,true,Theme.Muted,240,30);heading.Location=new Point(8,0);recent.Controls.Add(heading);
+            var heading=Theme.Label("Son projeler",10,true,Theme.Muted,240,30);heading.Text="SON PROJELER";heading.Font=Theme.Font(10,true);heading.Location=new Point(8,0);recent.Controls.Add(heading);
             int row=38;foreach(var episode in store.Episodes.TakeLast(6).Reverse()) {
                 var target=episode;var link=new SidebarButton {Text=episode.Topic,Glyph="",Location=new Point(0,row),Width=248,Height=36,Active=selectedWorkspaceId==episode.Id,AccessibleName="Projeyi aç: "+episode.Topic};
                 link.Click+=(_,_)=>{selectedWorkspaceId=target.Id;wizardDraft=null;Navigate("Video hazırla");};recent.Controls.Add(link);row+=38;
             }
             if(row==38){var empty=Theme.Label("Henüz proje yok",10,color:Theme.Muted,width:240,height:30);empty.Location=new Point(8,row);recent.Controls.Add(empty);}
         };
-        side.SizeChanged+=(_,_)=>{recent.Height=Math.Max(0,side.ClientSize.Height-500);recent.Visible=side.Width>70&&recent.Height>60;};
+        side.SizeChanged+=(_,_)=>{recent.Height=Math.Max(0,side.ClientSize.Height-recent.Top-136);recent.Visible=side.Width>70&&recent.Height>60;};
 
         var sideFooter = new Panel { Dock = DockStyle.Bottom, Height = 124, BackColor = side.BackColor, Padding=new Padding(8,4,8,4) };
         footer.Visible=false; sideFooter.Controls.Add(subtitle); side.Controls.Add(sideFooter);
@@ -173,6 +173,13 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
     }
 
+    bool FixedWizardPage=>current is "Video hazırla" or "Klasik çalışma alanı";
+    int WorkspacePageWidth()=>Math.Max(FixedWizardPage||current=="Yönetim ayarları"?280:620,body.ClientSize.Width-(FixedWizardPage?body.Padding.Horizontal:90)-(assistantHost?.Visible==true&&ClientSize.Width>=1720?assistantWidth:0));
+    void FitOuterViewport(){
+        page.AutoSize=false;
+        if(page.Parent is ScrollableControl outer){outer.AutoScroll=!FixedWizardPage;if(FixedWizardPage){outer.AutoScrollMinSize=Size.Empty;outer.AutoScrollPosition=Point.Empty;page.Height=Math.Max(1,outer.ClientSize.Height);return;}}
+        page.Height=page.Controls.Cast<Control>().Where(c=>c.Visible).Sum(c=>c.Height+c.Margin.Vertical)+24;
+    }
     void Reflow()
 
     {
@@ -181,7 +188,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         page.SuspendLayout();
 
-        page.Width = Math.Max(620, body.ClientSize.Width - 90 - (assistantHost?.Visible==true && ClientSize.Width>=1720 ? assistantWidth : 0));
+        page.Width = WorkspacePageWidth();
 
         foreach (var item in responsive)
 
@@ -189,7 +196,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
             var control = item.Control; if (control.IsDisposed || control.Parent == null) continue;
 
-            if (control.Dock == DockStyle.None && control.Parent is not TableLayoutPanel)
+            if (control.Dock == DockStyle.None && control is not Button && control.Parent is not TableLayoutPanel)
 
             {
 
@@ -201,12 +208,14 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
             }
 
+            if(Equals(control.Tag,"compact-action-row")&&control.Parent!=null){control.MaximumSize=new Size(Math.Max(100,control.Parent.ClientSize.Width-12),0);control.Width=control.MaximumSize.Width;}
             if(Equals(control.Tag,"settings-container"))control.Height=Math.Max(180,body.ClientSize.Height-body.Padding.Vertical-page.Controls.Cast<Control>().Where(c=>c!=control).Sum(c=>c.Height+c.Margin.Vertical)-36);
 
             if(Equals(control.Tag,"package-tool") && control.Parent!=null)control.Width=Math.Max(170,(control.Parent.Width-12*control.Parent.Controls.Count)/control.Parent.Controls.Count);
 
             if(Equals(control.Tag,"package-action")) {control.Width=300;control.Height=46;}
 
+            if(Equals(control.Tag,"connection-action")){control.Width=Math.Min(240,Math.Max(100,control.Parent!.ClientSize.Width-control.Margin.Horizontal));control.Height=36;}
             control.Invalidate();
 
         }
@@ -222,11 +231,11 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
         }
 
         var compactHeaderTab=responsive.Select(x=>x.Control).OfType<Button>().FirstOrDefault(b=>!b.IsDisposed&&b.AccessibleName=="Bölüm: Hesaplar ve AI");
-        if(compactHeaderTab!=null)foreach(var action in responsive.Select(x=>x.Control).OfType<StudioButton>().Where(b=>!b.IsDisposed&&Equals(b.Tag,"connection-action")&&b.Parent!=null)){action.Width=Math.Min(compactHeaderTab.Width,Math.Max(100,action.Parent!.ClientSize.Width-action.Parent.Padding.Horizontal));action.Height=48;}
+        if(compactHeaderTab!=null)foreach(var action in responsive.Select(x=>x.Control).OfType<StudioButton>().Where(b=>!b.IsDisposed&&Equals(b.Tag,"connection-action")&&b.Parent!=null)){action.Width=Math.Min(240,Math.Max(100,action.Parent!.ClientSize.Width-action.Parent.Padding.Horizontal));action.Height=36;}
         if(compactHeaderTab!=null)foreach(var section in responsive.Select(x=>x.Control).OfType<StudioDisclosure>().Where(x=>!x.IsDisposed))section.LimitHeadingWidth(compactHeaderTab.Width);
         page.ResumeLayout(true);reflowWizard?.Invoke();
 
-        page.Height = page.Controls.Cast<Control>().Sum(c => c.Height + c.Margin.Vertical) + 24;
+        FitOuterViewport();
 
         appHeader.Invalidate(); body.Invalidate(true);
 
@@ -292,13 +301,14 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
         if(name=="Ses arşivi"){mediaKind=audioKind;name="Medya arşivleri";}
         if(name=="Kapak tasarımları"){if(mediaKind is not ("Kapak" or "Kart" or "Logo"))mediaKind="Kapak";name="Medya arşivleri";}
         using var redraw = new StudioRedrawScope(body);
+        page.AutoSize=false;
         page.SuspendLayout();
         try {
 
         packageUpdates.Clear();
 
         refreshRecent?.Invoke();
-        current = name; appHeader.PageName = SectionHeading(PageCaption(name)); UpdateChannelHeading(); appHeader.Busy = engine.Busy; appHeader.Invalidate(); SuspendLayout(); foreach (var old in page.Controls.Cast<Control>().ToArray()) old.Dispose(); page.Controls.Clear(); page.Width = Math.Max(620, body.ClientSize.Width - 90 - (assistantHost?.Visible==true && ClientSize.Width>=1720 ? assistantWidth : 0));
+        current = name; appHeader.PageName = SectionHeading(PageCaption(name)); UpdateChannelHeading(); appHeader.Busy = engine.Busy; appHeader.Invalidate(); SuspendLayout(); foreach (var old in page.Controls.Cast<Control>().ToArray()) old.Dispose(); page.Controls.Clear(); page.Width = WorkspacePageWidth();
 
         foreach (var (key, button) in nav) { if(button is SidebarButton entry)entry.Active=key==NavigationRoot(name);button.Invalidate(); }
 
@@ -309,7 +319,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         switch (name) { case "Yüklenmesi gerekenler": SetupChecklist(); break; case "Video hazırla": ProductionWizard(); break; case "Klasik çalışma alanı": ProductionWizard(); break; case "Videolarım": VideoLibrary(); break; case "Ayarlar": Connections(); break; case "Gelişmiş": AdvancedPage(); break; case "Medya arşivleri": MediaHome(); break; case "Stüdyo": Dashboard(); break; case "İçerik paketleri": Packages(); break; case "Üretim ve yayın planı": QueuePage(); break; case "Yayın takvimi": Calendar(); break; case "Bağlantı Merkezi": Connections(); break; case "Program kaynakları": GitHubPage(); break; case "Stok havuzu": PoolPage(); break; case "Ses arşivi": AudioPage(); break; case "Kapak tasarımları": CoverPage(); break; case "Yönetim ayarları": SettingsPage(); break; case "İşlem kayıtları": Logs(); break; }
 
-        page.Height = page.Controls.Cast<Control>().Sum(c => c.Height + c.Margin.Vertical) + 24;
+        FitOuterViewport();
 
         page.ResumeLayout(true); ResumeLayout(true);
 
@@ -1033,7 +1043,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
     }
 
-    public static Form Dialog(string title, int width = 850, int height = 730) { var dialog=new Form { Text = title, Width = width, Height = height, StartPosition = FormStartPosition.CenterParent, BackColor = Theme.Bg, ForeColor = Theme.Text, Font = Theme.Font(), Padding = new Padding(24), MinimizeBox = false, MaximizeBox = false }; ModernScrollbars.Apply(dialog); return dialog; }
+    public static Form Dialog(string title, int width = 850, int height = 730) { var area=Screen.FromPoint(Cursor.Position).WorkingArea; var dialog=new Form { Text = title, Width = Math.Min(width,area.Width-24), Height = Math.Min(height,area.Height-24), StartPosition = FormStartPosition.CenterParent, BackColor = Theme.Bg, ForeColor = Theme.Text, Font = Theme.Font(), Padding = new Padding(24), MinimizeBox = false, MaximizeBox = true, AutoScroll=true }; dialog.Shown+=(_,_)=>{foreach(var flow in dialog.Controls.OfType<FlowLayoutPanel>().Where(f=>f.Dock==DockStyle.Fill)){flow.AutoSize=false;flow.AutoScroll=true;FitFormFields(flow,Math.Max(100,flow.ClientSize.Width-24));flow.SizeChanged+=(_,_)=>FitFormFields(flow,Math.Max(100,flow.ClientSize.Width-24));}}; ModernScrollbars.Apply(dialog); return dialog; }
 
     void ScheduleDialog(Episode e, Action<Form>? preview = null)
 
@@ -1261,7 +1271,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
     {
 
-        f.Controls.Add(Theme.Label(label, 9, true, Theme.Muted, Math.Max(450, f.Width - 30), 30)); control.Margin = new Padding(0, 0, 0, 12); f.Controls.Add(control);
+        f.Controls.Add(Theme.Label(label, 9, true, Theme.Muted, Math.Max(100, Math.Min(650, f.Width - 30)), 30)); control.Margin = new Padding(0, 0, 0, 12); f.Controls.Add(control);
 
     }
 
@@ -1408,7 +1418,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
         int headerWidth=CardChildren(page).OfType<Button>().First(b=>b.AccessibleName=="Bölüm: Hesaplar ve AI").Width;
         foreach(var section in CardChildren(page).OfType<StudioDisclosure>())section.LimitHeadingWidth(headerWidth);
         foreach(var action in CardChildren(page).OfType<StudioButton>().Where(b=>b.Parent is FlowLayoutPanel flow && flow is not StudioDisclosure && !Equals(flow.Tag,"equal-tabs") && b.Text is not ("i" or "ⓘ"))) {
-            action.Tag="connection-action";action.Width=Math.Min(headerWidth,Math.Max(100,action.Parent!.Width-action.Parent.Padding.Horizontal));action.Height=48;action.Margin=new Padding(0,0,12,8);action.TextAlign=ContentAlignment.MiddleLeft;
+            action.Tag="connection-action";action.MaximumSize=new Size(240,36);action.Width=Math.Min(240,Math.Max(100,action.Parent!.Width-action.Parent.Padding.Horizontal));action.Height=36;action.Margin=new Padding(0,0,8,8);action.TextAlign=ContentAlignment.MiddleLeft;
         }
 
     }
@@ -1707,7 +1717,8 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         var bar = Actions(Theme.Button("Tüm ayarları kaydet", () => { if (engine.Busy) { Message("Çalışan üretimi durdurduktan sonra ayarları değiştir."); return; } var before = JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(s, Json.Options), Json.Options)!; try { foreach (var save in saves) save(); SettingsValidation.Check(s); store.Save(); _ = NvidiaModels.Start(store); store.ProviderBlocked.Clear(); store.PreferredProvider = ""; Message("Ayarlar kaydedildi."); UpdateFooter(); } catch (Exception ex) { foreach (var property in typeof(Settings).GetProperties().Where(p => p.CanWrite)) property.SetValue(s, property.GetValue(before)); Message("Ayarlar kaydedilmedi: " + ex.Message); } }, true, 230)); page.Controls.Add(bar);
 
-        var tabs=Theme.Flow(page.Width);tabs.Tag="wide";tabs.SuspendLayout();
+        var tabs=Theme.Flow(page.Width);tabs.Tag="wide";tabs.AutoSize=false;tabs.AutoScroll=false;tabs.SuspendLayout();
+        var category=Theme.Combo([],"",300);category.AccessibleName="Ayar bölümü";tabs.Controls.Add(category);
         var settingGroups=new Dictionary<string,StudioDisclosure>();
         var builders=new Dictionary<StudioDisclosure,Action<FlowLayoutPanel>>();
         var loaded=new HashSet<StudioDisclosure>();
@@ -1764,7 +1775,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         security.Controls.Add(Theme.Label("Açılışta uygulama şifresi zorunludur. Şifre PBKDF2 ile doğrulanır; düz metin saklanmaz. API anahtarları ayrı şifreli kasada tutulur. Bu yerel uygulama kilididir; e-posta doğrulaması veya Windows hesabı güvenliği değildir.", 10, color: Theme.Muted, width: 760, height: 100));
 
-        security.Controls.Add(Theme.Button("Açılış şifresini değiştir", () => AppLock.Change(store.Root), true, 290));
+        security.Controls.Add(Theme.Button("Açılış şifresini değiştir", () => AppLock.Change(store.Root), false, 400));
 
         
         });
@@ -1865,13 +1876,8 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
                 using var dialog = Dialog("Google TTS • Türkçe ses seç", 780, 560);
 
-                var picker = new ListBox { Dock = DockStyle.Fill, BackColor = Theme.Elevated, ForeColor = Theme.Text, Font = Theme.Font(12), IntegralHeight = false };
-
-                picker.Items.AddRange(list); picker.SelectedItem = googleVoice.SelectedItem;
-
-                var select = Theme.Button("Seçili sesi kullan", () => { if (picker.SelectedItem is string name) { googleVoice.SelectedItem = name; googleVoice.Invalidate(); s.GoogleTtsVoice = name; store.Save(); googleStatus.Text = "Seçildi ve kaydedildi: " + name; dialog.DialogResult = DialogResult.OK; } }, true, 230); select.Dock = DockStyle.Bottom;
-
-                dialog.Controls.Add(picker); dialog.Controls.Add(select); picker.DoubleClick += (_, _) => select.PerformClick(); dialog.ShowDialog(this);
+                using var picker=new VoiceSelectionList(store,s,list,name=>{googleVoice.SelectedItem=name;googleVoice.Invalidate();s.GoogleTtsVoice=name;store.Save();googleStatus.Text="Seçildi ve kaydedildi: "+name;},()=>engine.Busy){Dock=DockStyle.Fill};
+                dialog.Controls.Add(picker);dialog.ShowDialog(this);
 
             }
 
@@ -1883,7 +1889,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
 
         voice.Controls.Add(Actions(Theme.Button("Google Cloud kullanım paneli", () => Theme.Open("https://console.cloud.google.com/apis/api/texttospeech.googleapis.com/metrics"), false, 310), Theme.Button("Google Cloud fatura raporu", () => Theme.Open("https://console.cloud.google.com/billing"), false, 280)));
 
-        voice.Controls.Add(Actions(fetchGoogle, Theme.Button("Seçili Google sesini dinle", () => _ = Safe(async () => { if (engine.Busy) throw new InvalidOperationException("Üretimin bitmesini bekle."); var settings = JsonSerializer.Deserialize<Settings>(JsonSerializer.Serialize(s, Json.Options), Json.Options)!; settings.GoogleTtsVoice = googleVoice.Text; var path = Path.Combine(store.Root, "google-tts-preview.wav"); await google.Speak("Merhaba. Nur Kapısı kanalına hoş geldiniz. Bu, Türkçe seslendirme örneğidir.", path, settings, CancellationToken.None); Theme.Open(path); }), false, 260)));
+        voice.Controls.Add(fetchGoogle);
 
         var voiceList = LocalVoice.List(); var voiceCombo = Theme.Combo(voiceList.Count == 0 ? ["Türkçe ses kurulu değil"] : voiceList.Select(v => v.Name).ToArray(), voiceList.FirstOrDefault(v => v.Id == s.WindowsVoice).Name ?? voiceList.FirstOrDefault().Name ?? "Türkçe ses kurulu değil", 650); Field(voice, "Windows Türkçe sesi", voiceCombo); saves.Add(() => s.WindowsVoice = voiceList.FirstOrDefault(v => v.Name == voiceCombo.Text).Id ?? "");
 
@@ -1925,7 +1931,7 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
         Combo(voice, "Müzik kitaplığı etiketi • seçilen dosyayı sınıflandırır", s.MusicStyle, ["Sakin / ambient", "Sinematik", "Belgesel", "Elektronik", "Lo-fi", "Gerilim"], v => s.MusicStyle = v); Numeric(voice, "Müzik seviyesi • konuşmada otomatik kısılır", (decimal)s.MusicVolume, 0, .5m, v => s.MusicVolume = (double)v, 2);
 
         
-        var googleLast=voice.Controls.OfType<FlowLayoutPanel>().First(p=>p.Controls.Contains(fetchGoogle));
+        Control googleLast=fetchGoogle;
         CompactUi.Group(voice,"Google sesleri ve kullanım",CompactUi.LabelFor(voice,googleVoice),googleLast,s.VoiceProvider.Contains("Google"));
         var piperLast=voice.Controls.OfType<Label>().First(l=>l.Text.StartsWith("Piper modeli ayrı indirilir",StringComparison.Ordinal));
         CompactUi.Group(voice,"Piper kurulumu",CompactUi.LabelFor(voice,piperExe),piperLast,s.VoiceProvider.Contains("Piper"));
@@ -1992,14 +1998,21 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
             if(fittingSettings)return;fittingSettings=true;
             try{foreach(var section in settingGroups.Values){
                 int width=page.Width-12;
-                if(section.Width!=width)section.FitWidth(width);
+                section.LimitHeadingWidth(280);section.FitWidth(width);
                 if(!section.Expanded||!loaded.Contains(section)||fittedWidths.GetValueOrDefault(section)==width)continue;
                 fittedWidths[section]=width;section.Content.SuspendLayout();
-                try{FitFormFields(section.Content,page.Width-36);}finally{section.Content.ResumeLayout(true);}
+                try{FitFormFields(section.Content,page.Width-36);section.AutoSize=false;section.Controls[0].Visible=false;section.Height=Math.Max(120,tabs.Height-54);CompactFieldPages.Fit(section.Content,Math.Max(120,page.Width-36),section.Height-8);}finally{section.Content.ResumeLayout(true);}
             }}finally{fittingSettings=false;}
         }
         tabs.SizeChanged+=(_,_)=>FitSettings();
-        var first=settingGroups.Values.First();first.SetExpanded(true);BuildSection(first);FitSettings();tabs.ResumeLayout(true);
+        foreach(var group in settingGroups.Values)group.Visible=false;
+        category.Items.AddRange(settingGroups.Keys.ToArray());
+        void SelectCategory(){if(category.SelectedItem is not string name)return;tabs.SuspendLayout();foreach(var item in settingGroups){bool active=item.Key==name;item.Value.Visible=active;item.Value.SetExpanded(active);}var selected=settingGroups[name];BuildSection(selected);fittedWidths.Remove(selected);FitSettings();tabs.ResumeLayout(true);}
+        category.SelectedIndexChanged+=(_,_)=>SelectCategory();
+        foreach(var heading in page.Controls.OfType<Label>()){if(heading.Font.Size>18)heading.Font=Theme.Font(18,true);heading.Height=Math.Min(heading.Height,34);}
+        foreach(var row in page.Controls.OfType<FlowLayoutPanel>().Where(x=>x!=tabs&&x.FlowDirection==FlowDirection.LeftToRight)){foreach(var button in row.Controls.OfType<Button>()){button.Width=Math.Min(165,button.Width);button.Height=34;button.Font=Theme.Font(9);}row.Height=row.Controls.Count>3?80:40;}
+        void FitFixed(){tabs.Width=page.Width-12;tabs.Height=Math.Max(160,body.ClientSize.Height-body.Padding.Vertical-page.Controls.Cast<Control>().Where(c=>c!=tabs&&c.Visible).Sum(c=>c.Height+c.Margin.Vertical)-64);fittedWidths.Clear();FitSettings();}
+        body.SizeChanged+=(_,_)=>{if(!tabs.IsDisposed)FitFixed();};category.SelectedIndex=0;FitFixed();tabs.ResumeLayout(true);
 
     }
 
@@ -2218,6 +2231,9 @@ bool compact=false;var chat=new CortexButton{Width=248,Height=78,Dock=DockStyle.
     public static DataGridView Grid() => new() { BackgroundColor = Theme.Panel, BorderStyle = BorderStyle.None, GridColor = Theme.Border, ForeColor = Theme.Text, Font = Theme.Font(), RowHeadersVisible = false, AllowUserToAddRows = false, AllowUserToDeleteRows = false, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill, SelectionMode = DataGridViewSelectionMode.FullRowSelect, MultiSelect = false, EnableHeadersVisualStyles = false, ColumnHeadersDefaultCellStyle = new() { BackColor = Theme.Elevated, ForeColor = Theme.Text, Font = Theme.Font(10, true), Padding = new Padding(8) }, DefaultCellStyle = new() { BackColor = Theme.Panel, ForeColor = Theme.Text, SelectionBackColor = Theme.Elevated, SelectionForeColor = Theme.Text, Padding = new Padding(6), WrapMode = DataGridViewTriState.True }, RowTemplate = { Height = 55 } };
 
 }
+
+
+
 
 
 

@@ -10,7 +10,7 @@ public sealed class StudioNumber : NumericUpDown
         foreach(Control child in Controls){
             bool arrows=child.GetType().Name.Contains("UpDownButtons");
             var old=child.Region;
-            child.Region=new Region(new Rectangle(arrows?0:1,2,Math.Max(1,child.Width-(arrows?3:1)),Math.Max(1,child.Height-4)));old?.Dispose();
+            child.Region=null;old?.Dispose();
         }
     }
     protected override void OnLayout(LayoutEventArgs e){base.OnLayout(e);InsetChildren();}

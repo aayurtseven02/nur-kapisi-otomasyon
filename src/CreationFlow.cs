@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 namespace AnkaStudio;
 
 public sealed class CreationFlow
@@ -7,7 +7,7 @@ public sealed class CreationFlow
     public ProductionJob Job {get;set;}=new();
     public string PlannedTextHash {get;set;}="";
     public bool AutomaticStoryboard=>AiVisuals&&Mode=="auto"&&CoverChoice!="legacy";
-    public string Signature=>TimedNarration.TextHash(Text+Normal+Split+(AiVisuals&&Mode=="auto"&&CoverChoice!="legacy"&&(MixedSceneVideos??(Job.Mode is "full" or "review"))?"ltx-composition-v1":"")+ExtraShortCount+string.Join("|",ExtraShortTexts)+(AutomaticStoryboard?"storyboard-5-10-v1":"")+(OwnVisuals&&Mode=="auto"&&!AiVisuals&&!StockVisuals?"semantic-upload-v1|"+string.Join("|",Files):""));
+    public string Signature=>TimedNarration.TextHash(Text+Normal+Split+(AiVisuals&&Mode=="auto"&&CoverChoice!="legacy"&&(MixedSceneVideos??false)?"ltx-composition-v2|"+SceneVideoModel+(SceneVideoModel==AnimationVideo.Model?"|"+FilmMotionPolicy.Version:""):"")+ExtraShortCount+string.Join("|",ExtraShortTexts)+(AutomaticStoryboard?"storyboard-sentences-v2":"")+(OwnVisuals&&Mode=="auto"&&!AiVisuals&&!StockVisuals?"semantic-upload-v1|"+string.Join("|",Files):""));
     public int ExtraShortCount {get;set;}
     public List<string> ExtraShortTexts {get;set;}=[];
     public string ExtraApprovalHash {get;set;}="";
@@ -27,6 +27,8 @@ public sealed class CreationFlow
     public string SubtitleStyle {get;set;}="";
     public bool AiVisuals {get;set;}
     public bool? MixedSceneVideos {get;set;}
+    public string SceneVideoModel {get;set;}="";
+    public string SceneReferenceCatalogId {get;set;}="";
     public bool StockVisuals {get;set;}
     public bool OwnVisuals {get;set;}
     public List<string> Files {get;set;}=[];

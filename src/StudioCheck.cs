@@ -7,7 +7,7 @@ public sealed class StudioCheck : CheckBox
     public StudioCheck() { SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true); }
     protected override void OnPaint(PaintEventArgs e)
     {
-        var g = e.Graphics; g.Clear(BackColor == Color.Transparent ? Theme.Panel : BackColor); g.SmoothingMode = SmoothingMode.AntiAlias;
+        var g = e.Graphics; var surface=BackColor;for(Control? parent=Parent;surface.A!=255&&parent!=null;parent=parent.Parent)surface=parent.BackColor;g.Clear(surface.A==255?surface:Theme.Bg); g.SmoothingMode = SmoothingMode.AntiAlias;
         var box = new Rectangle(1, Math.Max(1, (Height - 17) / 2), 17, 17);
         using var shape = Shapes.Round(box, 5); using var fill = new SolidBrush(Checked ? (Enabled ? Theme.Teal : Theme.Selection) : Theme.Elevated); using var border = new Pen(Checked ? Theme.Teal : Theme.Muted,1);
         g.FillPath(fill, shape); g.DrawPath(border, shape);

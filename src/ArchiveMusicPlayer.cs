@@ -4,14 +4,15 @@ internal sealed class ArchiveMusicPlayer : FlowLayoutPanel
 {
     readonly Label title=new(){Width=640,Height=24,Text="Listeden müzik seç ve Oynat düğmesine bas."};
     readonly Label clock=new(){Width=110,Height=25,Text="00:00 / 00:00"};
-    readonly TrackBar seek=new(){Width=240,Height=35,Minimum=0,Maximum=1,TickStyle=TickStyle.None};
+    readonly TrackBar seek=new StudioSlider(){Width=240,Height=35,Minimum=0,Maximum=1,TickStyle=TickStyle.None};
     readonly System.Windows.Forms.Timer timer=new(){Interval=300};
     dynamic? player;
     static WeakReference<ArchiveMusicPlayer>? active;
     void StartPlayback(){if(active!=null&&active.TryGetTarget(out var previous)&&previous!=this&&!previous.IsDisposed)previous.Safe(()=>{if(previous.loaded)previous.player!.controls.stop();});active=new(this);player!.controls.play();}
     bool loaded;
     internal bool IsLoaded=>loaded;
-    internal int PlaybackState=>player==null?0:(int)player.playState;
+    internal void StopPlayback()=>Safe(()=>{if(loaded)player!.controls.stop();});
+    internal int PlaybackState{get{try{return player==null?0:(int)player.playState;}catch{return 0;}}}
     public ArchiveMusicPlayer(bool compact=false)
     {
         Dock=compact?DockStyle.None:DockStyle.Bottom;Height=compact?130:94;Padding=new Padding(8);
@@ -51,3 +52,4 @@ internal sealed class ArchiveMusicPlayer : FlowLayoutPanel
         base.Dispose(disposing);
     }
 }
+

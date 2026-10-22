@@ -21,10 +21,10 @@ public static class LocalLtxVideo
         foreach(string type in new[]{"LTXVImgToVideo","LTXVConditioning","ManualSigmas","SamplerCustom","VAEDecodeTiled","VHS_VideoCombine"})if((await Read(http,"object_info/"+type,budget.Token))[type]==null)throw new InvalidOperationException("LTX iş akışı düğümü eksik: "+type);
         return(model,encoder);
     }
-    public static JsonObject Graph(string model,string encoder,string image,string prompt,int seconds,bool vertical,long seed,bool smaller=false)
+    public static JsonObject Graph(string model,string encoder,string image,string prompt,int seconds,bool vertical,long seed,bool smaller=false,string quality="Hafif")
     {
         if(seconds is <5 or >6||prompt.Length<10||prompt.Length>2400||seed<0)throw new InvalidOperationException("LTX sahnesi 5–6 saniye ve geçerli hareket talimatı gerektirir.");
-        int width=smaller?384:512,height=smaller?224:288;if(vertical)(width,height)=(height,width);
+        int rank=LocalImageProfiles.Rank(quality);int width=smaller?384:new[]{512,640,768}[rank],height=smaller?224:new[]{288,352,448}[rank];if(vertical)(width,height)=(height,width);
         JsonObject Node(string type,object inputs)=>new(){["class_type"]=type,["inputs"]=System.Text.Json.JsonSerializer.SerializeToNode(inputs)};
         return new JsonObject{
             ["model"]=Node("CheckpointLoaderSimple",new{ckpt_name=model}),
@@ -41,15 +41,20 @@ public static class LocalLtxVideo
             ["save"]=Node("VHS_VideoCombine",new{images=new object[]{"decode",0},frame_rate=24,loop_count=0,filename_prefix="TubeFlow/LTX",format="video/h264-mp4",pingpong=false,save_output=true,pix_fmt="yuv420p",crf=20,save_metadata=false,trim_to_audio=false})
         };
     }
-    public static async Task Generate(string reference,string prompt,string output,int seconds,bool vertical,long seed,Action<string> log,CancellationToken ct,HttpClient? client=null,bool smaller=false)
+    public static async Task Generate(string reference,string prompt,string output,int seconds,bool vertical,long seed,Action<string> log,CancellationToken ct,HttpClient? client=null,bool smaller=false,string quality="Hafif",string engine=ImportedLtx23.Legacy)
     {
-        var http=client??Http;var models=await Models(ct,http);
-        using var budget=CancellationTokenSource.CreateLinkedTokenSource(ct);budget.CancelAfter(TimeSpan.FromMinutes(12));var token=budget.Token;
+        try{await GenerateCore(reference,prompt,output,seconds,vertical,seed,log,ct,client,smaller,quality,engine);}
+        catch(OperationCanceledException ex)when(!ct.IsCancellationRequested){throw new InvalidOperationException("LTX yerel üretim zaman aşımı; tamamlanan sahneler korundu.",ex);}
+    }
+    static async Task GenerateCore(string reference,string prompt,string output,int seconds,bool vertical,long seed,Action<string> log,CancellationToken ct,HttpClient? client=null,bool smaller=false,string quality="Hafif",string engine=ImportedLtx23.Legacy)
+    {
+        var http=client??Http;bool modern=ImportedLtx23.IsModern(engine); (string Model,string Encoder) models=("","");if(modern)await ImportedLtx23.Check(http,ct);else models=await Models(ct,http);
+        using var budget=CancellationTokenSource.CreateLinkedTokenSource(ct);budget.CancelAfter(TimeSpan.FromMinutes(modern?45:12));var token=budget.Token;
         using var upload=new MultipartFormDataContent();upload.Add(new ByteArrayContent(await File.ReadAllBytesAsync(reference,token)),"image","tubeflow-ltx-"+Reliability.FileHash(reference)[..16]+".png");upload.Add(new StringContent("input"),"type");upload.Add(new StringContent("true"),"overwrite");
         using var uploaded=await http.PostAsync(Url("upload/image"),upload,token);uploaded.EnsureSuccessStatusCode();
         string image=JsonNode.Parse(await uploaded.Content.ReadAsStringAsync(token))?["name"]?.GetValue<string>()??throw new InvalidOperationException("LTX referansı yüklenemedi.");
         if(image.Contains('/')||image.Contains('\\')||image.Contains(".."))throw new InvalidOperationException("Geçersiz LTX referans adı.");
-        var graph=Graph(models.Model,models.Encoder,image,prompt,seconds,vertical,seed,smaller);
+        var graph=modern?ImportedLtx23.Graph(image,prompt,seed,engine==ImportedLtx23.Model480?736:768,engine==ImportedLtx23.Model480?480:512):Graph(models.Model,models.Encoder,image,prompt,seconds,vertical,seed,smaller,quality);
         using var body=new StringContent(new JsonObject{["prompt"]=graph,["client_id"]=Guid.NewGuid().ToString("N")}.ToJsonString(),Encoding.UTF8,"application/json");
         using var queued=await http.PostAsync(Url("prompt"),body,token);
         if(!queued.IsSuccessStatusCode)throw new InvalidOperationException("LTX iş akışı motor tarafından kabul edilmedi: "+(int)queued.StatusCode+". Yerel motor düğümlerini kontrol et.");
@@ -64,7 +69,9 @@ public static class LocalLtxVideo
                     string details=history["status"]!.ToJsonString();
                     throw new InvalidOperationException(details.Contains("out of memory",StringComparison.OrdinalIgnoreCase)||details.Contains("OutOfMemory",StringComparison.OrdinalIgnoreCase)?"GPU_MEMORY: LTX için ekran kartı belleği yetmedi.":"LTX sahnesi üretilemedi; yerel motor işlem kaydını kontrol et.");
                 }
-                if(history?["outputs"]?["save"]?["gifs"] is JsonArray videos&&videos.FirstOrDefault() is JsonObject video){
+                var outputNode=history?["outputs"]?[modern?"4852":"save"];
+                var videos=outputNode?["gifs"] as JsonArray??outputNode?["images"] as JsonArray??outputNode?["videos"] as JsonArray;
+                if(videos?.FirstOrDefault() is JsonObject video){
                     string Part(string field)=>Uri.EscapeDataString(video[field]?.GetValue<string>()??"");
                     using var response=await http.GetAsync(Url("view?filename="+Part("filename")+"&subfolder="+Part("subfolder")+"&type="+Part("type")),HttpCompletionOption.ResponseHeadersRead,token);response.EnsureSuccessStatusCode();
                     Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(output))!);

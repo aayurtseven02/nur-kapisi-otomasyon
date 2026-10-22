@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.RegularExpressions;
 namespace AnkaStudio;
 
@@ -70,25 +70,42 @@ public static class WorkflowMedia
     public static bool CloudAlternativeAllowed(Store store,Settings settings)=>!settings.FreeOnly&&settings.CoverPaidAllowed&&(store.Key("GEMINI_API_KEY")!=""||store.Key("OPENAI_API_KEY")!="");
     public static void KeepVisualPlan(Episode source,Episode target)
     {
+        if(source.Creation is {SceneReferenceCatalogId:not ""} selected&&target.Creation is {SceneReferenceHash:""} destination){destination.SceneReferenceCatalogId=selected.SceneReferenceCatalogId;destination.SceneReferenceFile=selected.SceneReferenceFile;destination.SceneReferenceHash=selected.SceneReferenceHash;}
         var from=Rules.Scripts(source).SelectMany(x=>x.Script.Scenes).ToArray();var to=Rules.Scripts(target).SelectMany(x=>x.Script.Scenes).ToArray();
-        if(source.Id!=target.Id||StoryImages.Identity(source)!=StoryImages.Identity(target)||from.Length!=to.Length)throw new InvalidOperationException("Görsel planı farklı projeye aktarılamaz.");
+        if(source.Id!=target.Id||StoryImages.UserIdentity(source)!=StoryImages.UserIdentity(target)||from.Length!=to.Length)throw new InvalidOperationException("Görsel planı farklı projeye aktarılamaz.");
         target.AiStoryCastPrompt=source.AiStoryCastPrompt;target.AiStoryPromptHash=source.AiStoryPromptHash;target.AiStoryIdentityHash=source.AiStoryIdentityHash;target.AiStoryCastCount=source.AiStoryCastCount;
         target.AiStoryReferenceFile=source.AiStoryReferenceFile;target.AiStoryReferenceHash=source.AiStoryReferenceHash;target.AiStoryReferenceIdentityHash=source.AiStoryReferenceIdentityHash;
-        for(int i=0;i<from.Length;i++){to[i].AiImagePrompt=from[i].AiImagePrompt;to[i].AiPromptSourceHash=from[i].AiPromptSourceHash;to[i].AiCharacterIds=from[i].AiCharacterIds.ToList();}
+        for(int i=0;i<from.Length;i++){if(to[i].AiImageHash!=""&&to[i].AiPromptSourceHash!=from[i].AiPromptSourceHash){to[i].StockFile="";to[i].AiImageHash="";to[i].AiImageQuality="";to[i].AiVideoFile="";to[i].AiVideoHash="";to[i].RightsConfirmed=false;to[i].UserLocal=false;}to[i].AiImagePrompt=from[i].AiImagePrompt;to[i].AiPromptSourceHash=from[i].AiPromptSourceHash;to[i].AiCharacterIds=from[i].AiCharacterIds.ToList();}
+    }
+    public static void UniqueSceneVisuals(Episode e,bool repair=false){
+        if(e.Creation is not {Mode:"auto"})return;
+        foreach(var (_,_,script) in Rules.Scripts(e)){
+            var seen=new HashSet<string>();
+            foreach(var scene in script.Scenes){
+                if(!File.Exists(scene.StockFile))continue;
+                if(seen.Add(Reliability.FileHash(scene.StockFile)))continue;
+                if(!repair||e.Creation.AiVisuals!=true)throw new InvalidOperationException("Her sahnede ayrı görsel gerekli; aynı dosya birden fazla sahneye yerleştirilemez.");
+                scene.StockFile="";scene.AiImageHash="";scene.AiImageQuality="";scene.AiVideoFile="";scene.AiVideoHash="";scene.UserLocal=false;scene.RightsConfirmed=false;
+                e.Log("Tekrarlanan sahne görüntüsü kaldırıldı; anlatıma özel yeni AI görseli hazırlanacak.");
+            }
+        }
     }
     public static async Task PrepareVisuals(Store store,Episode e,Services services,CancellationToken ct,Action notify)
     {
-        var f=e.Creation!;if(f.CoverChoice=="legacy")return;int index=0;var used=new HashSet<long>();var usedHashes=Rules.Scripts(e).SelectMany(x=>x.Script.Scenes).Where(s=>File.Exists(s.StockFile)).Select(s=>Reliability.FileHash(s.StockFile)).ToHashSet();var problems=new List<int>();var causes=new List<string>();Episode? story=null;Exception? storyFailure=null;
+        var f=e.Creation!;if(f.CoverChoice=="legacy")return;UniqueSceneVisuals(e,true);int index=0;var used=new HashSet<long>();var usedHashes=Rules.Scripts(e).SelectMany(x=>x.Script.Scenes).Where(s=>File.Exists(s.StockFile)).Select(s=>Reliability.FileHash(s.StockFile)).ToHashSet();var problems=new List<int>();var causes=new List<string>();Episode? story=null;Exception? storyFailure=null;
+        void VisualProgress(string message){e.CurrentStage=message;e.Log(message);store.Save();notify();}
+        async Task PrepareStory(){if(story!=null)return;story=CreationFlow.Copy(e);story.AiStoryImages=true;story.PhotosOnly=false;if(story.UserNarration!=null)story.UserNarration.ManualVisuals=false;await StoryImages.Plan(store,story,services,ct,VisualProgress);KeepVisualPlan(story!,e);store.Save();}
         async Task Stock(Scene scene,bool vertical){bool fallback=false;
             if(SceneComposition.Enabled(e)&&scene.VisualKind=="image")await services.StockPhoto(scene,vertical,store.Folder(e),used,ct);
             else try{await services.Stock(scene,vertical,store.Folder(e),used,ct);}catch(Exception ex)when(ex is not OperationCanceledException){fallback=await AutonomousStock.Try(store,e,scene,services,usedHashes,ct);if(!fallback)throw;}
             if(f.Job.Mode is "full" or "review"){string hash=Reliability.FileHash(scene.StockFile);if(!fallback&&usedHashes.Contains(hash))throw new InvalidOperationException("Aynı stok görüntü ikinci kez seçildi; farklı aday gerekli.");usedHashes.Add(hash);}}
-        var allowed=new List<string>();if(f.OwnVisuals&&f.Files.Count>0)allowed.Add("own");if(f.AiVisuals)allowed.Add("ai");if(f.StockVisuals)allowed.Add("stock");
+        var allowed=new List<string>();if(f.OwnVisuals&&f.Files.Count>0&&(f.Mode=="manual"||!f.AiVisuals&&!f.StockVisuals))allowed.Add("own");if(f.AiVisuals)allowed.Add("ai");if(f.StockVisuals)allowed.Add("stock");
         if(f.OwnVisuals&&f.Mode=="auto"&&!f.AiVisuals&&!f.StockVisuals)
             foreach(var (_,_,planned) in Rules.Scripts(e))
                 if(planned.Scenes.Any(s=>!VisualReady(e,s,store.Settings)))
                     await UploadedMediaMatch.Apply(store,e,planned,services,message=>{e.CurrentStage=message;e.Log(message);notify();},ct);
         var firstGeneratedVideo=SceneComposition.Enabled(e)?Rules.Scripts(e).SelectMany(s=>s.Script.Scenes).FirstOrDefault(s=>s.VisualKind=="video"):null;
+        if(f.AiVisuals&&!f.StockVisuals&&!f.OwnVisuals&&f.Job.Mode is "full" or "review")await PrepareStory();
         foreach(var (_,vertical,script) in Rules.Scripts(e))foreach(var scene in script.Scenes){ct.ThrowIfCancellationRequested();index++;if(VisualReady(e,scene,store.Settings)){notify();continue;}
             e.CurrentStage=$"Görseller • sahne {index}";e.Log(e.CurrentStage);notify();string selected=allowed.Count==0?"":allowed[(index-1)%allowed.Count];
             if(ReferenceEquals(scene,firstGeneratedVideo)&&f.AiVisuals)selected="ai";
@@ -97,15 +114,15 @@ public static class WorkflowMedia
                 if(f.Mode=="manual")throw new InvalidOperationException("Görsel seç veya bu bölüm için AI yardımını kullan.");
                 async Task Ai(){
                     if(storyFailure!=null)throw new InvalidOperationException("AI görsel bağlantısı hazırlanamadı.",storyFailure);
-                    if(story==null){try{story=CreationFlow.Copy(e);story.AiStoryImages=true;story.PhotosOnly=false;if(story.UserNarration!=null)story.UserNarration.ManualVisuals=false;await StoryImages.Plan(store,story,services,ct,e.Log);KeepVisualPlan(story,e);store.Save();}catch(Exception ex)when(ex is not OperationCanceledException){storyFailure=ex;throw;}}
-                    var row=Rules.Scripts(story).SelectMany(x=>x.Script.Scenes).ElementAt(index-1);var targetScript=Rules.Scripts(story).First(x=>x.Script.Scenes.Contains(row)).Script;
+                    if(story==null){try{await PrepareStory();}catch(Exception ex)when(ex is not OperationCanceledException){storyFailure=ex;throw;}}
+                    var row=Rules.Scripts(story!).SelectMany(x=>x.Script.Scenes).ElementAt(index-1);var targetScript=Rules.Scripts(story!).First(x=>x.Script.Scenes.Contains(row)).Script;
                     var visualSettings=VideoSettings.For(store.Settings,e,script);
                     try{
-                        try{await StoryImages.Prepare(store,story,targetScript,row,vertical,visualSettings,ct,e.Log,automaticCloudAlternative:!story.AiStoryLocal&&e.AiStoryLocal);}
-                        catch(Exception ex)when(ex is not OperationCanceledException&&story.AiStoryLocal&&CloudAlternativeAllowed(store,visualSettings)){
-                            e.Log("Yerel AI motorları tamamlanamadı; izin verilmiş Gemini/OpenAI görsel bağlantısı deneniyor. "+ex.Message);story.AiStoryLocal=false;await StoryImages.Prepare(store,story,targetScript,row,vertical,visualSettings,ct,e.Log,automaticCloudAlternative:true);
+                        try{await StoryImages.Prepare(store,story!,targetScript,row,vertical,visualSettings,ct,VisualProgress,automaticCloudAlternative:!story!.AiStoryLocal&&e.AiStoryLocal);}
+                        catch(Exception ex)when(ex is not OperationCanceledException&&story!.AiStoryLocal&&CloudAlternativeAllowed(store,visualSettings)){
+                            e.Log("Yerel AI motorları tamamlanamadı; izin verilmiş Gemini/OpenAI görsel bağlantısı deneniyor. "+ex.Message);story!.AiStoryLocal=false;await StoryImages.Prepare(store,story,targetScript,row,vertical,visualSettings,ct,e.Log,automaticCloudAlternative:true);
                         }
-                    }finally{KeepVisualPlan(story,e);store.Save();}
+                    }finally{KeepVisualPlan(story!,e);store.Save();}
                     scene.StockFile=row.StockFile;scene.AiImageHash=row.AiImageHash;scene.AiImageQuality=row.AiImageQuality;scene.AiImagePrompt=row.AiImagePrompt;scene.AiCharacterIds=row.AiCharacterIds;scene.UserLocal=true;scene.RightsConfirmed=(f.Job.Mode is "full" or "review")&&f.Job.Pending&&f.Job.Authorization!=""&&File.Exists(row.StockFile+".json")&&File.Exists(row.StockFile+".sha")&&File.ReadAllText(row.StockFile+".sha").Trim()==Reliability.FileHash(row.StockFile);scene.Creator=row.Creator;scene.StockMetadata=row.StockMetadata;
                 }
                 if(selected=="stock"){try{await Stock(scene,vertical);}catch(Exception ex)when(ex is not OperationCanceledException && f.AiVisuals){e.Log("Stok bulunamadı; seçili AI kaynağı deneniyor. "+ex.Message);await Ai();}}
@@ -114,6 +131,7 @@ public static class WorkflowMedia
             }catch(Exception ex)when(ex is not OperationCanceledException){problems.Add(index);causes.Add("Bölüm "+index+": "+ex.Message);e.Log("Bölüm "+index+" görsel sorunu: "+ex.Message);}
             finally{notify();store.Save();}
         }
+        UniqueSceneVisuals(e);
         if(problems.Count>0)throw new InvalidOperationException("Görseli tamamlanamayan bölümler: "+string.Join(", ",problems)+". Hazır işler ve AI planı korundu. Neden: "+string.Join(" | ",causes));
     }
     public static async Task ImportAudio(Store store,Episode e,string source,CancellationToken ct)

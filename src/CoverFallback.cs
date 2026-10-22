@@ -1,4 +1,4 @@
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -43,6 +43,7 @@ public sealed class CoverFallback(Store store, Action<string> log, HttpClient? c
             async Task GenerateLocal()
             {
                 try {
+                    if(client==null&&scenePrompt!=null){await LocalGpuMemory.ReleaseText(store,ct);await LocalGpuMemory.FreeIdleComfy(8189,ct);}
                     if(!File.Exists(settings.CoverLocalWorkflow))settings.CoverLocalWorkflow=LocalCoverEngine.FindInstalledWorkflow();
                     if(client==null)await LocalCoverEngine.Start(settings.CoverLocalWorkflow,log,ct,Path.Combine(store.Root,"logs","local-engine"));
                     if(client==null && styleReference)await LocalCoverEngine.CheckStorySupport(ct,settings.CoverLocalWorkflow);
@@ -50,7 +51,7 @@ public sealed class CoverFallback(Store store, Action<string> log, HttpClient? c
                     if (scenePrompt != null) prompt = scenePrompt;
                     else if(copy.CoverTitleStyle=="3D Telkari Altın"&&LocalCoverEngine.ModelOf(settings.CoverLocalWorkflow)=="FLUX.2")prompt="Subject: "+topic+". Direction: "+copy.CoverDesignInstructions+". Cinematic rich-color illustration on right. On left, massive embossed metallic gold serif title reading exactly: '"+title+"'. Ottoman floral filigree engraved in the gold letters, bevelled edges, delicate gold corner ornaments, warm light, empty emerald subtitle banner. Do not add any other words or logos.";
                     else if(styleReference)prompt+=" Use the supplied image only as a style reference for palette, lighting, mood and visual hierarchy. Depict the NEW subject described above; do not copy its people, old title, letters, logo or unrelated objects. No text; the current approved title is added separately.";
-                    var bytes = await LocalCoverEngine.Generate(settings.CoverLocalWorkflow, prompt, vertical, log, ct, client:client, square: scenePrompt!=null && referenceImage==null, referenceImage: referenceImage,castCount:castCount,characterIds:characterIds,styleReference:styleReference,quality:settings.CoverLocalQuality??"Dengeli",resolution:settings.CoverLocalResolution);
+                    var bytes = await LocalCoverEngine.Generate(settings.CoverLocalWorkflow, prompt, vertical, log, ct, client:client, square: scenePrompt!=null && referenceImage==null && castCount<=1 && !sceneStyleReference, referenceImage: referenceImage,castCount:castCount,characterIds:characterIds,styleReference:styleReference,quality:settings.CoverLocalQuality??"Dengeli",resolution:settings.CoverLocalResolution);
                     using var stream = new MemoryStream(bytes); using var image = Image.FromStream(stream);
                     if (image.Width < 256 || image.Height < 256 || (long)image.Width * image.Height > 40_000_000) throw new InvalidOperationException("Yerel görsel ölçüsü uygun değil.");
                     var localBackground = Path.Combine(Path.GetDirectoryName(path)!, "ai-cover-background.png"); image.Save(localBackground, System.Drawing.Imaging.ImageFormat.Png); copy.CoverBackground = localBackground;copy.CoverTitleRendered=scenePrompt==null&&copy.CoverTitleStyle=="3D Telkari Altın"&&LocalCoverEngine.ModelOf(settings.CoverLocalWorkflow)=="FLUX.2";

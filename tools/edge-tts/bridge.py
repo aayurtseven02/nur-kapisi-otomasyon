@@ -5,7 +5,10 @@ import os
 from pathlib import Path
 import sys
 
-sys.path.insert(0, str(Path(__file__).resolve().parent / "packages"))
+for packages in (Path(sys.executable).resolve().parent.parent / "packages",
+                 Path(__file__).resolve().parent / "packages"):
+    if packages.is_dir():
+        sys.path.insert(0, str(packages))
 import edge_tts
 from edge_tts import communicate, voices
 
@@ -57,4 +60,8 @@ async def main():
         temporary.unlink(missing_ok=True)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except Exception as error:
+        print(f"{type(error).__name__}: {error}", file=sys.stderr)
+        raise SystemExit(1)

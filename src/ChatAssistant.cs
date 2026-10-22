@@ -52,7 +52,7 @@ public sealed class ChatAssistant : UserControl
 
         foreach (var h in new[] { 70, 38, 112, 0, 28, 82, 60 }) layout.RowStyles.Add(h == 0 ? new RowStyle(SizeType.Percent, 100) : new RowStyle(SizeType.Absolute, h));
 
-        var note = Theme.Label("Asistan ses, sahne, altyazı ve müzik ayarlarını düzenler; hataları inceler ve isteğinle üretimi yeniden dener. Koda müdahale etmez, video silmez/yayımlamaz. Seçili AI sağlayıcısını kullanır; proje metnini paylaşmak isteğe bağlıdır.", 9, width: 460, height: 118); note.Dock = DockStyle.Fill;
+        var note = Theme.Label("Asistan ses, sahne, altyazı ve müzik ayarlarını düzenler; hataları inceler ve isteğinle üretimi yeniden dener. Koda müdahale etmez, video silmez/yayımlamaz. Yerel öncelik açıksa Ollama, kapalıysa seçili AI sağlayıcısını kullanır; proje metnini paylaşmak isteğe bağlıdır.", 9, width: 460, height: 118); note.Dock = DockStyle.Fill;
 
         input.Dock = DockStyle.Fill; input.BackColor=Theme.Elevated; input.Margin=new Padding(0,8,0,6); input.MaxLength = 6000; input.PlaceholderText = "Mesajını yaz… (Ctrl+Enter: gönder)";
 
@@ -154,7 +154,7 @@ public sealed class ChatAssistant : UserControl
             string raw="";int mutations=0,retries=0;var results=new List<string>();
             for(int round=0;round<8;round++){
                 cancellation.Token.ThrowIfCancellationRequested();
-                raw=await services.Generate(system,prompt,cancellation.Token,text=>{using var doc=JsonDocument.Parse(Services.ExtractJson(text));return doc.RootElement.TryGetProperty("answer",out var a)&&a.ValueKind==JsonValueKind.String;},onPartial:Partial);
+                raw=await CortexProvider.Generate(store.Settings,cancellation.Token,(token,provider)=>services.Generate(system,prompt,token,text=>{using var doc=JsonDocument.Parse(Services.ExtractJson(text));return doc.RootElement.TryGetProperty("answer",out var a)&&a.ValueKind==JsonValueKind.String;},onlyProvider:provider,maxOutputTokens:2048,onPartial:Partial));
                 using var response=JsonDocument.Parse(Services.ExtractJson(raw));
                 if(!response.RootElement.TryGetProperty("tool",out var tool)||tool.ValueKind==JsonValueKind.Null)break;
                 string result;
@@ -189,4 +189,5 @@ public sealed class ChatAssistant : UserControl
     }
 
 }
+
 

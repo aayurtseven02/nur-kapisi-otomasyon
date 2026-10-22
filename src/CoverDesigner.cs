@@ -109,7 +109,8 @@ public static class CoverDesigner
 
         using var small = new Font(typeface, 22, FontStyle.Bold); if (settings.CoverShowChannelName) g.DrawString(settings.ChannelName, small, color, margin, 68);
 
-        var area = new RectangleF(margin, vertical ? 250 : 205, width - margin * 2, vertical ? 660 : 340);
+        // Reserve the upper title-safe area for portrait covers; do not paint over a centered face.
+        var area = new RectangleF(margin, vertical ? 55 : 205, width - margin * 2, vertical ? 240 : 340);
 
         using var format = new StringFormat { Trimming = StringTrimming.EllipsisWord, LineAlignment = StringAlignment.Center };
 

@@ -35,7 +35,7 @@ public sealed partial class StudioForm
 
         status.AccessibleName = "Ollama servis ve model durumu";
 
-        var buttons = new FlowLayoutPanel { Width = panel.Width, Height = 110, WrapContents = true, BackColor = Color.Transparent };
+        var buttons = new FlowLayoutPanel { Width = panel.Width, MaximumSize=new Size(panel.Width,0), AutoSize=true, AutoSizeMode=AutoSizeMode.GrowAndShrink, WrapContents = true, BackColor = Color.Transparent };
 
         var local = new LocalAi(store);
 

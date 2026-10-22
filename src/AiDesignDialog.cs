@@ -25,7 +25,7 @@ internal sealed class AiDesignDialog : Form
         var instruction=Theme.Input("",true,350);instruction.Height=100;left.Controls.Add(instruction);
         var preferences=coverSettings??store.Settings;
         left.Controls.Add(Theme.Label("Hazır motor",10,true,width:350,height:28));var model=Theme.Combo(LocalCoverEngine.Models.Where(x=>x!="Otomatik").ToArray(),LocalCoverEngine.Models.Contains(preferences.CoverLocalModel??"")?preferences.CoverLocalModel!:LocalCoverEngine.ModelOf(preferences.CoverLocalWorkflow),350);model.AccessibleName="Kapak hazır motoru";left.Controls.Add(model);
-        var quality=Theme.Combo(LocalImageProfiles.Labels,"Orta",350);quality.AccessibleName="Kapak üretim kalitesi";quality.Visible=false;left.Controls.Add(quality);
+        var quality=Theme.Combo(new[]{"Otomatik","Hafif","Orta","Yüksek"},preferences.CoverLocalQuality??"Otomatik",350);quality.AccessibleName="Kapak üretim kalitesi";quality.Visible=true;left.Controls.Add(quality);
         left.Controls.Add(Theme.Label("Çözünürlük • piksel",10,true,width:350,height:28));
         string[] dimensions=logo?["768x768","1024x1024","1536x1536"]:vertical?["576x1024","720x1280","864x1536"]:["1024x576","1280x720","1536x864"];
         var resolution=Theme.Combo(new[]{"Otomatik • ekran kartına göre"}.Concat(dimensions.Select(x=>x.Replace("x"," × ")+" piksel")).ToArray(),"",350);resolution.AccessibleName="Yerel görsel çözünürlüğü";int savedResolution=Array.IndexOf(dimensions,preferences.CoverLocalResolution);resolution.SelectedIndex=savedResolution<0?0:savedResolution+1;left.Controls.Add(resolution);
@@ -33,7 +33,7 @@ internal sealed class AiDesignDialog : Form
         var qualityInfo=Theme.Label("",9,width:350,height:60);left.Controls.Add(qualityInfo);
         var workflow=Theme.Input(File.Exists(preferences.CoverLocalWorkflow)?preferences.CoverLocalWorkflow:LocalCoverEngine.FindInstalledWorkflow(),width:320);
         var details=new StudioDisclosure("Gelişmiş • motor dosyası",350);details.Content.Controls.Add(workflow);details.Content.Controls.Add(Theme.Button("Motor dosyasını seç",()=>{using var picker=new OpenFileDialog {Filter="ComfyUI iş akışı|*.json"};if(picker.ShowDialog(this)==DialogResult.OK)workflow.Text=picker.FileName;},false,320));left.Controls.Add(details);
-        void RefreshEngine(){workflow.Text=SelectedWorkflow(model.Text,workflow.Text.Trim());qualityInfo.Text=LocalCoverEngine.Describe(EngineQuality(quality.Text),model.Text);qualityInfo.Text="Kalite cihazdan otomatik belirlenir. "+model.Text+" • "+(resolution.SelectedIndex==0?"Piksel boyutu boş ekran kartı belleğine göre ayarlanır.":resolution.Text)+" • "+(logo?"Kare logo":vertical?"Dikey kapak":"Yatay kapak");}model.SelectedIndexChanged+=(_,_)=>RefreshEngine();quality.SelectedIndexChanged+=(_,_)=>RefreshEngine();resolution.SelectedIndexChanged+=(_,_)=>RefreshEngine();RefreshEngine();
+        void RefreshEngine(){workflow.Text=SelectedWorkflow(model.Text,workflow.Text.Trim());qualityInfo.Text=LocalCoverEngine.Describe(EngineQuality(quality.Text),model.Text);qualityInfo.Text=(quality.Text=="Otomatik"?"Kalite cihazdan otomatik belirlenir. ":"Seçilen kalite: "+quality.Text+". ")+model.Text+" • "+(resolution.SelectedIndex==0?"Piksel boyutu boş ekran kartı belleğine göre ayarlanır.":resolution.Text)+" • "+(logo?"Kare logo":vertical?"Dikey kapak":"Yatay kapak");}model.SelectedIndexChanged+=(_,_)=>RefreshEngine();quality.SelectedIndexChanged+=(_,_)=>RefreshEngine();resolution.SelectedIndexChanged+=(_,_)=>RefreshEngine();RefreshEngine();
         var status=Theme.Label("Hazır • yerel motor kullanılır.",10,color:Theme.Success,width:350,height:90);left.Controls.Add(status);
         var bar=new TurquoisePackageBar {Width=350,Height=32,Text="Tasarım bekleniyor"};left.Controls.Add(bar);
         var cancellation=new CancellationTokenSource();FormClosed+=(_,_)=>{cancellation.Cancel();cancellation.Dispose();picture.Image?.Dispose();};
@@ -50,7 +50,7 @@ internal sealed class AiDesignDialog : Form
             running=true;generate!.Enabled=false;approve.Enabled=false;topic.Enabled=instruction.Enabled=details.Enabled=model.Enabled=quality.Enabled=resolution.Enabled=false;bar.Busy=true;bar.Value=0;
             try{
                 void Report(string message){if(!IsDisposed)status.Text=message;}
-                string selectedWorkflow=SelectedWorkflow(model.Text,workflow.Text.Trim()),selectedQuality="Otomatik";workflow.Text=selectedWorkflow;LocalCoverEngine.Prepare(selectedWorkflow,"test",vertical,square:logo,quality:selectedQuality);
+                string selectedWorkflow=SelectedWorkflow(model.Text,workflow.Text.Trim()),selectedQuality=quality.Text;workflow.Text=selectedWorkflow;LocalCoverEngine.Prepare(selectedWorkflow,"test",vertical,square:logo,quality:selectedQuality);
                 preferences.CoverLocalResolution=resolution.SelectedIndex<=0?"auto":dimensions[resolution.SelectedIndex-1];preferences.CoverLocalModel=model.Text;preferences.CoverLocalQuality=selectedQuality;preferences.CoverLocalWorkflow=selectedWorkflow;preferences.CoverLocalEnabled=true;if(coverSettings==null)store.Save();
                 await LocalCoverEngine.Start(selectedWorkflow,Report,cancellation.Token);await LocalCoverEngine.Check(selectedWorkflow,cancellation.Token);
                 string subject=topic.Text.Trim(),direction=instruction.Text.Trim();

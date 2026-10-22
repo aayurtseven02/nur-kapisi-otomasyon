@@ -27,7 +27,9 @@ public static class Reliability
             scenes = item.Script.Scenes.Select(s => new { s.Narration, s.SubtitleText, s.VisualQuery, s.OnScreen, s.TitlePlacement, s.TitleStart, s.TitleDuration, s.StockFile, s.Duration, s.AiImageHash, s.AiImagePrompt, s.AiCharacterIds }) });
 
         var raw = JsonSerializer.Serialize(scripts, Json.Options);
+        if(episode.AiStoryAutonomous&&episode.Creation?.SceneVideoModel==AnimationVideo.Model)raw+="|"+FilmMotionPolicy.Version;
         if(SceneComposition.Enabled(episode))raw+=JsonSerializer.Serialize(Rules.Scripts(episode).Where(x=>key==null||x.Key==key).SelectMany(x=>x.Script.Scenes).Select(s=>new{s.VisualKind,s.VideoMotionPrompt,s.AiVideoHash,VideoHash=FileHash(s.AiVideoFile)}),Json.Options);
+        if(Rules.Scripts(episode).Any(x=>x.Script.ExtraTracks?.Count>0))raw+=JsonSerializer.Serialize(Rules.Scripts(episode).Where(x=>key==null||x.Key==key).Select(x=>new{x.Script.ExtraTracks,Files=x.Script.ExtraTracks?.SelectMany(t=>t.Clips).Select(c=>FileHash(c.File))}),Json.Options);
         if(episode.PhotosOnly)raw += "|stock-photos-v1";
         if(episode.AiStoryImages)raw += JsonSerializer.Serialize(new { episode.AiStoryImages, episode.AiStoryStyle, episode.AiStoryCharacters, episode.AiStoryMotion, episode.AiStoryCinematic, CinemaVersion=StoryCinema.Version, episode.AiStoryLocal });
 
@@ -40,7 +42,7 @@ public static class Reliability
 
         if (UserNarration.Active(episode) || ManualVideos.Active(episode)) raw += JsonSerializer.Serialize(episode.UserNarration, Json.Options);
 
-        if(episode.Creation is {CoverChoice:not "legacy"} workflow)raw+=JsonSerializer.Serialize(new{workflow.Voice,workflow.AudioHash,SourceAudioHash=FileHash(workflow.AudioFile),workflow.Fit,workflow.PhotoMotion},Json.Options);
+        if(episode.Creation is {CoverChoice:not "legacy"} workflow)raw+=JsonSerializer.Serialize(new{workflow.Voice,workflow.AudioHash,SourceAudioHash=FileHash(workflow.AudioFile),workflow.Fit,workflow.PhotoMotion,workflow.SceneVideoModel},Json.Options);
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(raw)));
 
     }
@@ -67,7 +69,7 @@ public static class Reliability
 
             settings.ShortVoiceOverride, settings.ShortVoiceProvider, settings.ShortVoiceId, settings.ShortVoiceSpeed, settings.ShortMusicVolume,
 
-            voice = NarrationFlow.Fingerprint(script, settings), settings.MusicVolume, musicFileHash = FileHash(script.MusicTrack?.File ?? settings.MusicPath),
+            voice = NarrationFlow.Fingerprint(script, settings), settings.LocalVideoModel, SceneVideoModel=episode.Creation?.SceneVideoModel, settings.MusicVolume, musicFileHash = FileHash(script.MusicTrack?.File ?? settings.MusicPath),
 
             settings.OpeningCardEnabled, settings.OpeningCardSeconds, openingCard = FileHash(settings.OpeningCardFile),
 
@@ -81,7 +83,7 @@ public static class Reliability
 
             media = script.Scenes.Select(s => FileHash(s.StockFile)).ToArray(), generatedVideo=SceneComposition.Enabled(episode)?script.Scenes.Select(s=>FileHash(s.AiVideoFile)).ToArray():Array.Empty<string>() };
 
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(pipelineVersion + JsonSerializer.Serialize(design, Json.Options)+(episode.Creation is {CoverChoice:not "legacy"} flow?JsonSerializer.Serialize(new{flow.CoverChoice,flow.Voice,AudioHash=FileHash(flow.AudioFile),flow.Fit}):""))));
+        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(pipelineVersion + (episode.AiStoryAutonomous&&episode.Creation?.SceneVideoModel==AnimationVideo.Model?FilmMotionPolicy.Version:"") + (script.ExtraTracks?.Count>0?JsonSerializer.Serialize(script.ExtraTracks.SelectMany(t=>t.Clips).Select(c=>FileHash(c.File))):"") + JsonSerializer.Serialize(design, Json.Options)+(episode.Creation is {CoverChoice:not "legacy"} flow?JsonSerializer.Serialize(new{flow.CoverChoice,flow.Voice,AudioHash=FileHash(flow.AudioFile),flow.Fit}):""))));
 
     }
 

@@ -8,31 +8,39 @@
     <AssemblyName>TubeFlow</AssemblyName>
     <RootNamespace>AnkaStudio</RootNamespace>
     <ApplicationIcon>Assets\anka-studio.ico</ApplicationIcon>
-    <Version>0.4.31</Version>
+    <Version>0.4.43</Version>
     <Product>TubeFlow</Product>
     <Company>TubeFlow</Company>
     <Title>TubeFlow</Title>
+    <VlcWindowsX64Enabled>true</VlcWindowsX64Enabled><VlcWindowsX86Enabled>false</VlcWindowsX86Enabled><VlcWindowsArm64Enabled>false</VlcWindowsArm64Enabled>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
   </PropertyGroup>
   <PropertyGroup Condition="'$(CleanDistribution)' == 'true'">
     <DefineConstants>$(DefineConstants);CLEAN_DISTRIBUTION</DefineConstants>
   </PropertyGroup>
-  <ItemGroup><PackageReference Include="Sodium.Core" Version="1.4.1" /></ItemGroup>
+  <ItemGroup><PackageReference Include="Sodium.Core" Version="1.4.1" /><PackageReference Include="LibVLCSharp.WinForms" Version="3.10.2" /><PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.24" /></ItemGroup>
+  <ItemGroup><Content Include="..\THIRD-PARTY-NOTICES.md" Link="THIRD-PARTY-NOTICES.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Content Include="..\tools\Update-Install.ps1" Link="Update-Install.ps1" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="Assets\anka-studio-3d.png" /><EmbeddedResource Include="Assets\tubeflow-horizontal.png" /><EmbeddedResource Include="Assets\tubeflow-dark.png" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="Assets\anka-studio.ico" /><EmbeddedResource Include="Assets\cortex-assistant.png" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="Assets\requirements-*.png" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="UserGuide.md" /></ItemGroup>
+  <ItemGroup><Content Include="Assets\Characters\elderly-man-cartoon.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Content Include="Assets\Fonts\Inter-Regular.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /><Content Include="Assets\Fonts\Inter-Bold.ttf" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /><Content Include="Assets\Fonts\LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Content Include="Assets\nur-kapisi-background.png" Link="ChannelPackages\NurKapisi\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Content Include="Assets\nur-kapisi-destek-*.png" Link="ChannelPackages\NurKapisi\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Content Include="Assets\nur-kapisi-kanal-logo.png" Link="ChannelPackages\NurKapisi\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="Assets\pairing-firebase.json" /></ItemGroup>
   <ItemGroup><Content Include="..\tools\audio-alignment\align.py" Link="tools\audio-alignment\align.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Content Include="..\tools\edge-tts\bridge.py" Link="tools\edge-tts\bridge.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Content Include="..\tools\animation-engine\launch.py" Link="tools\animation-engine\launch.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Content Include="..\tools\visual-quality\hands.py" Link="tools\visual-quality\hands.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <ItemGroup><Content Include="..\tools\workflows\*.json" Link="tools\workflows\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
   <Target Name="LegacyUpdateCompatibility" AfterTargets="Build">
     <Copy SourceFiles="$(TargetDir)TubeFlow.dll" DestinationFiles="$(TargetDir)AnkaStudio.dll" />
     <Copy SourceFiles="$(TargetDir)TubeFlow.exe" DestinationFiles="$(TargetDir)AnkaStudio.exe" Condition="Exists('$(TargetDir)TubeFlow.exe')" />
   </Target>
 </Project>
+
+
 

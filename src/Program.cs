@@ -19,6 +19,9 @@ internal static class Program
     {
 
         ApplicationConfiguration.Initialize();
+        Application.SetDefaultFont(Theme.Font());
+        if(Arg(args,"--animation-preview") is string animationPreview){using var host=new Form();WorkflowVideoDialog.Show(host,Path.GetFullPath(animationPreview));return;}
+        if(args.Contains("--animation-self-test")){try{AnimationVideoTests.Run(Arg(args,"--report")??"animation-tests.txt").GetAwaiter().GetResult();}catch(Exception ex){Console.Error.WriteLine(ex);Environment.ExitCode=1;}return;}
         if(args.Contains("--source-safety-test")){
             try{GitHub.ValidateSourceBundle(Arg(args,"--source")??throw new InvalidOperationException("Kaynak klasörü gerekli."));Console.WriteLine("PASS kaynak gizli bilgi ve paket bütünlüğü kontrolü");}catch(Exception ex){Console.Error.WriteLine(ex.Message);Environment.ExitCode=1;}return;
         }
@@ -131,7 +134,7 @@ internal static class Program
 
             {
 
-                if (args.Contains("--youtube-upload")) RemoteYouTubeWorker.Run(store, args).GetAwaiter().GetResult(); else Worker.Run(store, args).GetAwaiter().GetResult();
+                if(Arg(args,"--scenario-check") is string scenarioCheck)Task.Run(()=>AutonomousFilmTest.CheckScenario(store,scenarioCheck)).GetAwaiter().GetResult(); else if(Arg(args,"--visual-check") is string visualCheck)Task.Run(()=>AutonomousFilmTest.CheckVisual(store,visualCheck)).GetAwaiter().GetResult(); else if(args.Contains("--speech-check"))Task.Run(()=>AutonomousFilmTest.CheckSpeech(store)).GetAwaiter().GetResult(); else if(Arg(args,"--autonomous-topic") is string autonomousTopic)Task.Run(()=>AutonomousFilmTest.Run(store,autonomousTopic,Arg(args,"--episode"))).GetAwaiter().GetResult(); else if(Arg(args,"--storyboard") is string localStoryboard)Task.Run(()=>StoryboardProduction.Run(store,localStoryboard,Arg(args,"--episode"))).GetAwaiter().GetResult(); else if (args.Contains("--youtube-upload")) RemoteYouTubeWorker.Run(store, args).GetAwaiter().GetResult(); else Worker.Run(store, args).GetAwaiter().GetResult();
 
                 return;
 
@@ -164,6 +167,7 @@ internal static class Program
             }
 
             using var form = new StudioForm(store);
+            if(Arg(args,"--produce-storyboard") is string storyboardRequest)form.Shown+=async(_,_)=>await form.ProduceStoryboard(storyboardRequest);
 
             if (Arg(args, "--ui-test") is string screenFolder) form.Shown += (_, _) => { if (args.Contains("--dark-reference-preview")) form.CaptureDarkReference(screenFolder); else if (args.Contains("--compact-center-preview")) form.CaptureCompactCenter(screenFolder); else if (args.Contains("--wizard-preview")) form.CaptureProductionWizard(screenFolder); else if (args.Contains("--laptop-layout-preview")) form.CaptureLaptopLayout(screenFolder); else if (args.Contains("--organized-ui-preview")) form.CaptureOrganizedUi(screenFolder); else if (args.Contains("--package-progress-preview")) form.CapturePackageProgress(screenFolder); else if (args.Contains("--archive-actions-preview")) form.CaptureArchiveActions(screenFolder); else if (args.Contains("--scene-editor-preview")) form.CaptureSceneEditor(screenFolder); else if (args.Contains("--new-features-preview")) form.CaptureNewFeatures(screenFolder); else if (args.Contains("--publication-help-preview")) form.CapturePublicationHelp(screenFolder); else if (args.Contains("--queue-preview")) form.CaptureQueue(screenFolder); else if (args.Contains("--upload-status-preview")) form.CaptureUploadStatus(screenFolder); else if (args.Contains("--connections-preview")) form.CaptureConnections(screenFolder); else if (args.Contains("--package-logs-preview")) form.CapturePackageLogs(screenFolder); else if (args.Contains("--stock-settings-preview")) form.CaptureStockSettings(screenFolder); else if (args.Contains("--ai-settings-preview")) form.CaptureAiSettings(screenFolder); else form.CapturePages(screenFolder); form.Close(); };
 

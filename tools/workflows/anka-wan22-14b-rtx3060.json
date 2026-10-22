@@ -1,0 +1,203 @@
+{
+  "1": {
+    "class_type": "UnetLoaderGGUF",
+    "inputs": {
+      "unet_name": "wan22-14b-high-Q4_K_S.gguf"
+    }
+  },
+  "2": {
+    "class_type": "UnetLoaderGGUF",
+    "inputs": {
+      "unet_name": "wan22-14b-low-Q4_K_S.gguf"
+    }
+  },
+  "3": {
+    "class_type": "CLIPLoaderGGUF",
+    "inputs": {
+      "clip_name": "umt5-xxl-Q5_K_M.gguf",
+      "type": "wan"
+    }
+  },
+  "4": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "wan_2.1_vae.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        0
+      ],
+      "text": "A polished stylized 3D animated film. A young man beside the river raises the red apple in his hand toward his face, looks carefully at the apple, then smiles softly. One deliberate arm movement, restrained facial acting. His head and torso stay steady. The apple remains one apple and his fingers keep a natural grip. River water flows gently with stable golden reflections. Locked tripod camera, continuous shot, consistent face, clothing and light."
+    }
+  },
+  "6": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "3",
+        0
+      ],
+      "text": "camera shake, swaying body, rocking, flicker, flashing light, morphing, distorted face, extra fingers, duplicate apple, duplicate person, text, watermark, blurry, frozen image"
+    }
+  },
+  "7": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "wan-source.png"
+    }
+  },
+  "8": {
+    "class_type": "WanImageToVideo",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "negative": [
+        "6",
+        0
+      ],
+      "vae": [
+        "4",
+        0
+      ],
+      "width": 480,
+      "height": 832,
+      "length": 97,
+      "batch_size": 1,
+      "start_image": [
+        "7",
+        0
+      ]
+    }
+  },
+  "9": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "lora_name": "wan22-i2v-lightning-seko-high.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "10": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "2",
+        0
+      ],
+      "lora_name": "wan22-i2v-lightning-seko-low.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "11": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": [
+        "9",
+        0
+      ],
+      "shift": 5.0
+    }
+  },
+  "12": {
+    "class_type": "ModelSamplingSD3",
+    "inputs": {
+      "model": [
+        "10",
+        0
+      ],
+      "shift": 5.0
+    }
+  },
+  "13": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "11",
+        0
+      ],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "8",
+        1
+      ],
+      "latent_image": [
+        "8",
+        2
+      ],
+      "add_noise": "enable",
+      "noise_seed": 384911,
+      "steps": 4,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 0,
+      "end_at_step": 2,
+      "return_with_leftover_noise": "enable"
+    }
+  },
+  "14": {
+    "class_type": "KSamplerAdvanced",
+    "inputs": {
+      "model": [
+        "12",
+        0
+      ],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "8",
+        1
+      ],
+      "latent_image": [
+        "13",
+        0
+      ],
+      "add_noise": "disable",
+      "noise_seed": 384911,
+      "steps": 4,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "start_at_step": 2,
+      "end_at_step": 4,
+      "return_with_leftover_noise": "disable"
+    }
+  },
+  "15": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "14",
+        0
+      ],
+      "vae": [
+        "4",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "15",
+        0
+      ],
+      "filename_prefix": "wan14-six/frame"
+    }
+  }
+}

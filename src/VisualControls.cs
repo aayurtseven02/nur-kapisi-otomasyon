@@ -107,9 +107,10 @@ public class StudioButton : Button
 
     public Rectangle HelpBounds => new(Math.Max(0,Width-24),3,18,18);
 
+    readonly HoverCaption caption;
     bool pressed; bool hovered;
 
-    public StudioButton() { DoubleBuffered = true; SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true); TextAlign = ContentAlignment.MiddleLeft;FlatStyle=FlatStyle.Flat;FlatAppearance.BorderSize=0; }
+    public StudioButton() { caption=new HoverCaption(this); DoubleBuffered = true; SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true); TextAlign = ContentAlignment.MiddleLeft;FlatStyle=FlatStyle.Flat;FlatAppearance.BorderSize=0; }
 
     Color SurfaceColor {get{for(Control? parent=Parent;parent!=null;parent=parent.Parent)if(parent.BackColor.A==255)return parent.BackColor;return Theme.Bg;}}
     protected override void OnPaintBackground(PaintEventArgs e)=>e.Graphics.Clear(SurfaceColor);
@@ -195,29 +196,21 @@ public class StudioButton : Button
 
         if(Text is "i" or "ⓘ")rect=new Rectangle(0,offset,Width,Height-offset);
 
-        var alignment=TextAlign is ContentAlignment.TopLeft or ContentAlignment.MiddleLeft or ContentAlignment.BottomLeft ? TextFormatFlags.Left : TextAlign is ContentAlignment.TopRight or ContentAlignment.MiddleRight or ContentAlignment.BottomRight ? TextFormatFlags.Right : TextFormatFlags.HorizontalCenter;
+        var alignment=Text.Any(char.IsLetterOrDigit) && Text is not ("i" or "ⓘ") ? TextFormatFlags.Left : TextFormatFlags.HorizontalCenter;
         if(Text is "i" or "ⓘ")alignment=TextFormatFlags.HorizontalCenter;
         var flags = alignment | TextFormatFlags.VerticalCenter | (WrapCaption ? TextFormatFlags.WordBreak : TextFormatFlags.SingleLine) | TextFormatFlags.EndEllipsis;
 
         // Fit text inside the existing button; painting never changes its bounds.
         var displayText=Text.Replace('\r',' ').Replace('\n',' ');
         if (UppercaseCaption) displayText = displayText.ToUpper(System.Globalization.CultureInfo.GetCultureInfo("tr-TR"));
-        float fittedSize = Font.Size;
-        Font? fitted = null;
-        try {
-            while (!WrapCaption && fittedSize > 8f && TextRenderer.MeasureText(displayText, fitted ?? Font, Size.Empty, flags & ~TextFormatFlags.EndEllipsis).Width > rect.Width) {
-                fittedSize -= .25f; fitted?.Dispose(); fitted = new Font(Font.FontFamily, fittedSize, Font.Style);
-            }
-            var paintFont = fitted ?? Font;
-            if(!ButtonHelp.NeedsInfo(Text) && TextRenderer.MeasureText(displayText,paintFont,Size.Empty,flags & ~TextFormatFlags.EndEllipsis).Width>rect.Width)helpTip.SetToolTip(this,Text);
-            TextRenderer.DrawText(g, displayText, paintFont, rect, Text is "i" or "ⓘ" ? Theme.Warning : ink, flags);
-        } finally { fitted?.Dispose(); }
+        if (!caption.Draw(g, displayText, Font, rect, ink, WrapCaption))
+            TextRenderer.DrawText(g, displayText, Font, rect, Text is "i" or "ⓘ" ? Theme.Warning : ink, flags | TextFormatFlags.NoPrefix);
 
         if(HasHelp){var infoColor=Theme.Warning;using var infoPen=new Pen(infoColor,1.2f);g.DrawEllipse(infoPen,HelpBounds);using var infoFont=Theme.Font(8,true);TextRenderer.DrawText(g,"i",infoFont,HelpBounds,infoColor,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter);}
 
         if (LeadingChevron != null) TextRenderer.DrawText(g, LeadingChevron, Font, new Rectangle(7, offset, 15, Height-offset), ink, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine);
         if (LeadingIcon != null && LeadingChevron == null && !Completed) {
-            float x = 11, y = (Height - 16) / 2f + offset;
+            float x = string.IsNullOrWhiteSpace(Text)?(Width-16)/2f:11, y = (Height - 16) / 2f + offset;
             using var iconPen = new Pen(ink, 1.5f) { LineJoin = LineJoin.Round, StartCap = LineCap.Round, EndCap = LineCap.Round };
             if (LeadingIcon == "music") {
                 g.DrawLine(iconPen, x + 6, y + 12, x + 6, y + 2); g.DrawLine(iconPen, x + 6, y + 2, x + 15, y);
@@ -316,7 +309,7 @@ public sealed class StudioHeader : Control
 
     {
 
-        base.OnPaint(e); var g = e.Graphics; g.SmoothingMode=SmoothingMode.AntiAlias; using(var outline=Shapes.Round(new Rectangle(0,0,Width-1,Height+18),18)) { using var edge=new Pen(Theme.Border); g.DrawPath(edge,outline); } using var f = Theme.Font(10); using var b = Theme.Font(10, true);
+        base.OnPaint(e); var g = e.Graphics; g.SmoothingMode=SmoothingMode.AntiAlias; using(var edge=new Pen(Theme.Border)) g.DrawRectangle(edge,0,0,Width-1,Height+18); using var f = Theme.Font(10); using var b = Theme.Font(10, true);
 
         TextRenderer.DrawText(g, "Çalışma alanı  /  " + PageName, b, new Rectangle(28, 32, Math.Max(100, Width - 210), 28), Theme.Muted, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
         int workspaceWidth=TextRenderer.MeasureText("Çalışma alanı  /  "+PageName,b).Width;

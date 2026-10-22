@@ -18,7 +18,7 @@ public static class EdgeTts
         }
         throw new InvalidOperationException("Edge ses motoru bulunamadı. Tam paketi güncelle veya Edge Python yolunda edge-tts 7.3.1 kurulu ortamı seç.");
     }
-    public static async Task Speak(string text,string path,Settings settings,CancellationToken ct)
+    public static async Task Speak(string text,string path,Settings settings,CancellationToken ct,Action<string>? log=null)
     {
         if(!TurkishVoices.Any(x=>x.Id==settings.EdgeTtsVoice))throw new InvalidOperationException("Geçerli Türkçe Edge sesi seç; başka anlatıcıya geçilmedi.");
         string python=await Python(settings,ct),folder=Path.GetDirectoryName(Path.GetFullPath(path))!;Directory.CreateDirectory(folder);
@@ -26,7 +26,7 @@ public static class EdgeTts
         try{
             Json.Write(request,new{Text=text,Voice=settings.EdgeTtsVoice,Speed=settings.VoiceSpeed});
             using var budget=CancellationTokenSource.CreateLinkedTokenSource(ct);budget.CancelAfter(TimeSpan.FromMinutes(4));
-            try{await Media.Exec(python,[Path.Combine(Folder,"bridge.py"),request,audio],folder,budget.Token);}
+            try{for(int attempt=0;;attempt++){try{await Media.Exec(python,[Path.Combine(Folder,"bridge.py"),request,audio],folder,budget.Token);break;}catch(InvalidOperationException transient)when(attempt<7&&(transient.Message.Contains("NoAudioReceived")||transient.Message.Contains("No speech audio received"))){log?.Invoke($"Ses servisi boş yanıt verdi • aynı anlatıcı yeniden deneniyor ({attempt+2}/8).");await Task.Delay(1500*(attempt+1),budget.Token);}}}
             catch(InvalidOperationException error) when(error.Message.Contains("NoAudioReceived")||error.Message.Contains("No speech audio received")){
                 throw new InvalidOperationException($"Microsoft Edge seçilen {settings.EdgeTtsVoice} sesi için ses verisi döndürmedi. Ses önizlemesini yeniden dene veya ses ayarlarından başka bir sesi kendin seç. Anlatıcı değiştirilmedi.",error);
             }

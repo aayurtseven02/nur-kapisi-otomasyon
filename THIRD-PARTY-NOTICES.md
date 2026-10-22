@@ -40,3 +40,11 @@ Project: https://github.com/rany2/edge-tts
 
 ## Local LTX inference
 TubeFlow's adapter builds its own ComfyUI graph and calls the local server. ComfyUI, VideoHelperSuite and LTX model weights are installed separately and retain their upstream licenses. No model weights are bundled in the TubeFlow update ZIP. LTX project: https://github.com/Lightricks/LTX-Video ; ComfyUI: https://github.com/Comfy-Org/ComfyUI ; VideoHelperSuite: https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite .
+
+## Inter 4.1 arayüz fontu
+
+Inter Regular ve Bold, Rasmus Andersson ve katkıda bulunanlar; SIL Open Font License 1.1. Özgün fontlar değiştirilmeden Assets/Fonts altında paketlenir; LICENSE.txt aynı dizindedir. Kaynak: https://github.com/rsms/inter/releases/tag/v4.1 . Fontlar yalnız uygulama sürecine kaydedilir, Windows sistem fontlarını değiştirmez.
+
+## Gömülü video oynatıcı
+LibVLCSharp.WinForms 3.10.2 ve VideoLAN.LibVLC.Windows 3.0.24; LGPL-2.1-or-later. Kaynak ve lisanslar: https://code.videolan.org/videolan/LibVLCSharp ve https://www.videolan.org/vlc/download-sources.html . Yerel oynatıcı kitaplıkları libvlc/win-x64 altında ayrı dinamik dosyalar olarak korunur.
+
