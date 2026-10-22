@@ -779,7 +779,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-22-gun14-normal1-namazinonemi
-  status: pending
+  status: failed
   publish_at: '2026-10-22T09:00:00+03:00'
   format: long
   type: tema
@@ -790,6 +790,8 @@ videos:
   title_hint: 'Namazın Dindeki Yeri: Belirli Vakitlere Bağlı Bir Farz'
   thumb_title: Namazın Önemi
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-22-gun14-short1-gusulabdesti
   status: pending
   publish_at: '2026-10-22T12:00:00+03:00'
