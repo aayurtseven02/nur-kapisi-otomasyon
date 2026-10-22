@@ -807,7 +807,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-22-gun14-normal2-orucunhikmeti
-  status: pending
+  status: failed
   publish_at: '2026-10-22T15:00:00+03:00'
   format: long
   type: tema
@@ -818,6 +818,8 @@ videos:
   title_hint: 'Orucun Hikmeti: Sadece Aç Kalmak Değil, Takva Kazanmak'
   thumb_title: Orucun Hikmeti
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-22-gun14-short2-teyemmum
   status: pending
   publish_at: '2026-10-22T19:00:00+03:00'
