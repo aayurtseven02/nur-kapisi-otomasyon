@@ -835,7 +835,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-23-gun15-normal1-musafiravun
-  status: pending
+  status: failed
   publish_at: '2026-10-23T09:00:00+03:00'
   format: long
   type: tema
@@ -846,6 +846,8 @@ videos:
   title_hint: Hz. Musa'nın Firavun'a Gitmeden Önceki Duası
   thumb_title: Hz. Musa'nın Duası
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-23-gun15-short1-zekeriyaduasi
   status: pending
   publish_at: '2026-10-23T12:00:00+03:00'
