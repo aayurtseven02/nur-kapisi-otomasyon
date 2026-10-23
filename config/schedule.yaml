@@ -863,7 +863,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-23-gun15-normal2-suleymankarinca
-  status: pending
+  status: failed
   publish_at: '2026-10-23T15:00:00+03:00'
   format: long
   type: tema
@@ -874,6 +874,8 @@ videos:
   title_hint: 'Hz. Süleyman ve Karınca Kıssası: Gücün İçindeki Adalet'
   thumb_title: Hz. Süleyman ve Karınca
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-23-gun15-short2-davudcalut
   status: pending
   publish_at: '2026-10-23T19:00:00+03:00'
