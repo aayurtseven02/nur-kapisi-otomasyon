@@ -877,7 +877,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-23-gun15-short2-davudcalut
-  status: pending
+  status: failed
   publish_at: '2026-10-23T19:00:00+03:00'
   format: short
   type: tema
@@ -888,6 +888,8 @@ videos:
   title_hint: 'Hz. Davud''un Calut''u Yenmesi: Küçük Ordunun Büyük Zaferi'
   thumb_title: Davud ve Calut Kıssası
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-24-gun16-normal1-haticefedakarlik
   status: pending
   publish_at: '2026-10-24T09:00:00+03:00'
