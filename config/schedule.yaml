@@ -891,7 +891,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-24-gun16-normal1-haticefedakarlik
-  status: pending
+  status: failed
   publish_at: '2026-10-24T09:00:00+03:00'
   format: long
   type: tema
@@ -902,6 +902,8 @@ videos:
   title_hint: 'Hz. Hatice''nin Fedakarlığı: Cennetle Müjdelenen Sahabi'
   thumb_title: Hz. Hatice'nin Fedakarlığı
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-24-gun16-short1-selmanhikmet
   status: pending
   publish_at: '2026-10-24T12:00:00+03:00'
