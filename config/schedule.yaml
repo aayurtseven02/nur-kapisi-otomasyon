@@ -933,7 +933,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-24-gun16-short2-musabfedakarlik
-  status: pending
+  status: failed
   publish_at: '2026-10-24T19:00:00+03:00'
   format: short
   type: tema
@@ -944,6 +944,8 @@ videos:
   title_hint: 'Mus''ab bin Umeyr''in Fedakarlığı: Zenginlikten Şehadete'
   thumb_title: Mus'ab bin Umeyr'in Fedakarlığı
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-25-gun17-normal1-tevbekapisi
   status: pending
   publish_at: '2026-10-25T09:00:00+03:00'
