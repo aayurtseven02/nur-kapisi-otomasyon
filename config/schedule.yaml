@@ -919,7 +919,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-24-gun16-normal2-bilalsabri
-  status: pending
+  status: failed
   publish_at: '2026-10-24T15:00:00+03:00'
   format: long
   type: tema
@@ -930,6 +930,8 @@ videos:
   title_hint: 'Bilal-i Habeşi''nin Sabrı: "Ehad, Ehad"'
   thumb_title: Bilal-i Habeşi'nin Sabrı
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-24-gun16-short2-musabfedakarlik
   status: pending
   publish_at: '2026-10-24T19:00:00+03:00'
