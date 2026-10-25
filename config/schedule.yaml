@@ -961,7 +961,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-25-gun17-short1-kalphuzuru
-  status: pending
+  status: failed
   publish_at: '2026-10-25T12:00:00+03:00'
   format: short
   type: tema
@@ -972,6 +972,8 @@ videos:
   title_hint: 'Gerçek Huzurun Kaynağı: Kalpler Ancak Onunla Huzur Bulur'
   thumb_title: Kalp Huzurunun Sırrı
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-25-gun17-normal2-cennettasviri
   status: pending
   publish_at: '2026-10-25T15:00:00+03:00'
