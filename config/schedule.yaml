@@ -947,7 +947,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-25-gun17-normal1-tevbekapisi
-  status: pending
+  status: failed
   publish_at: '2026-10-25T09:00:00+03:00'
   format: long
   type: tema
@@ -958,6 +958,8 @@ videos:
   title_hint: 'Umudunuzu Kesmeyin: Tevbe Kapısı Her Zaman Açık'
   thumb_title: Tevbe Kapısı Açık
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-25-gun17-short1-kalphuzuru
   status: pending
   publish_at: '2026-10-25T12:00:00+03:00'
