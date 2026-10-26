@@ -1017,7 +1017,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-26-gun18-short1-ilimfazileti
-  status: pending
+  status: failed
   publish_at: '2026-10-26T12:00:00+03:00'
   format: short
   type: tema
@@ -1028,6 +1028,8 @@ videos:
   title_hint: 'İlim Öğrenmenin Fazileti: Peygamberlerin Mirası'
   thumb_title: İlmin Fazileti
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-26-gun18-normal2-silairahim
   status: pending
   publish_at: '2026-10-26T15:00:00+03:00'
