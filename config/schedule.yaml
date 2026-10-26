@@ -1003,7 +1003,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-26-gun18-normal1-kulhakki
-  status: pending
+  status: failed
   publish_at: '2026-10-26T09:00:00+03:00'
   format: long
   type: tema
@@ -1014,6 +1014,8 @@ videos:
   title_hint: Gerçek Müflis Kimdir? İbadeti Çok Ama Kul Hakkı Yiyen
   thumb_title: Gerçek Müflis Kimdir?
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-26-gun18-short1-ilimfazileti
   status: pending
   publish_at: '2026-10-26T12:00:00+03:00'
