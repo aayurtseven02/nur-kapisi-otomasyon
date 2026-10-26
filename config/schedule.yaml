@@ -1031,7 +1031,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-26-gun18-normal2-silairahim
-  status: pending
+  status: failed
   publish_at: '2026-10-26T15:00:00+03:00'
   format: long
   type: tema
@@ -1042,6 +1042,8 @@ videos:
   title_hint: 'Rızkın Bollaşmasının Sırrı: Sıla-i Rahim'
   thumb_title: Sıla-i Rahimin Bereketi
   background_mode: none
+  error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
+    ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-26-gun18-short2-affetmek
   status: pending
   publish_at: '2026-10-26T19:00:00+03:00'
