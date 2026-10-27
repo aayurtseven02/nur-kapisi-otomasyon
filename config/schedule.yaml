@@ -1073,7 +1073,7 @@ videos:
   error: '(''invalid_grant: Token has been expired or revoked.'', {''error'': ''invalid_grant'',
     ''error_description'': ''Token has been expired or revoked.''})'
 - id: 2026-10-27-gun19-short1-adaletayeti
-  status: pending
+  status: failed
   publish_at: '2026-10-27T12:00:00+03:00'
   format: short
   type: tema
@@ -1084,6 +1084,8 @@ videos:
   title_hint: 'Kuran''ın En Kapsamlı Ayetlerinden Biri: Adalet Ayeti'
   thumb_title: Adalet Ayeti
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-27-gun19-normal2-amenerrasulu
   status: pending
   publish_at: '2026-10-27T15:00:00+03:00'
