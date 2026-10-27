@@ -1087,7 +1087,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-27-gun19-normal2-amenerrasulu
-  status: pending
+  status: failed
   publish_at: '2026-10-27T15:00:00+03:00'
   format: long
   type: tema
@@ -1098,6 +1098,8 @@ videos:
   title_hint: 'Amenerrasulu: Bakara Suresi''nin Son İki Ayeti'
   thumb_title: Amenerrasulu'nun Fazileti
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-27-gun19-short2-meryemiffeti
   status: pending
   publish_at: '2026-10-27T19:00:00+03:00'
