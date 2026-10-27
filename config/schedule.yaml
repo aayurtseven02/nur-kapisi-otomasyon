@@ -1101,7 +1101,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-27-gun19-short2-meryemiffeti
-  status: pending
+  status: failed
   publish_at: '2026-10-27T19:00:00+03:00'
   format: short
   type: tema
@@ -1112,6 +1112,8 @@ videos:
   title_hint: 'Hz. Meryem''in İffeti: "Dünyaların Kadınlarından Üstün"'
   thumb_title: Hz. Meryem'in İffeti
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-28-gun20-normal1-istigfarinetkileri
   status: pending
   publish_at: '2026-10-28T09:00:00+03:00'
