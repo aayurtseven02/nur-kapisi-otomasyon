@@ -1157,7 +1157,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-28-gun20-short2-sabahduasi
-  status: pending
+  status: failed
   publish_at: '2026-10-28T19:00:00+03:00'
   format: short
   type: tema
@@ -1168,6 +1168,8 @@ videos:
   title_hint: Sabah Namazından Sonra Okunan Üç Kelimelik Dua
   thumb_title: Sabah Duası
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-29-gun21-normal1-zekatinhikmeti
   status: pending
   publish_at: '2026-10-29T09:00:00+03:00'
