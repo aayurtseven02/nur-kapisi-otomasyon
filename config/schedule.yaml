@@ -1143,7 +1143,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-28-gun20-normal2-zikrullah
-  status: pending
+  status: failed
   publish_at: '2026-10-28T15:00:00+03:00'
   format: long
   type: tema
@@ -1154,6 +1154,8 @@ videos:
   title_hint: 'Allah''ı Çok Anın: Zikrin Kalbe Kattığı Huzur'
   thumb_title: Zikrin Gücü
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-28-gun20-short2-sabahduasi
   status: pending
   publish_at: '2026-10-28T19:00:00+03:00'
