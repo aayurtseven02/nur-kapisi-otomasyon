@@ -1115,7 +1115,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-28-gun20-normal1-istigfarinetkileri
-  status: pending
+  status: failed
   publish_at: '2026-10-28T09:00:00+03:00'
   format: long
   type: tema
@@ -1126,6 +1126,8 @@ videos:
   title_hint: İstiğfarın Hayatınıza Getireceği Bereket
   thumb_title: İstiğfarın Gücü
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-28-gun20-short1-namazsonrasitesbih
   status: pending
   publish_at: '2026-10-28T12:00:00+03:00'
