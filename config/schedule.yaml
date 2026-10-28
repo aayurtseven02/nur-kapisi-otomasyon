@@ -1129,7 +1129,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-28-gun20-short1-namazsonrasitesbih
-  status: pending
+  status: failed
   publish_at: '2026-10-28T12:00:00+03:00'
   format: short
   type: tema
@@ -1140,6 +1140,8 @@ videos:
   title_hint: Namaz Sonrası Bu Tesbihi Yapan Affedilir
   thumb_title: Namaz Sonrası Tesbih
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-28-gun20-normal2-zikrullah
   status: pending
   publish_at: '2026-10-28T15:00:00+03:00'
