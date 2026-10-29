@@ -1185,7 +1185,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-29-gun21-short1-cumanamazi
-  status: pending
+  status: failed
   publish_at: '2026-10-29T12:00:00+03:00'
   format: short
   type: tema
@@ -1196,6 +1196,8 @@ videos:
   title_hint: 'Cuma Namazının Önemi: Koşarak Gidilmesi Emredilen İbadet'
   thumb_title: Cuma Namazının Önemi
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-29-gun21-normal2-hacibadeti
   status: pending
   publish_at: '2026-10-29T15:00:00+03:00'
