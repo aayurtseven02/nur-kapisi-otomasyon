@@ -1199,7 +1199,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-29-gun21-normal2-hacibadeti
-  status: pending
+  status: failed
   publish_at: '2026-10-29T15:00:00+03:00'
   format: long
   type: tema
@@ -1210,6 +1210,8 @@ videos:
   title_hint: 'Hac İbadeti Özeti: Gücü Yetene Farz Olan Yolculuk'
   thumb_title: Hac İbadetinin Özeti
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-29-gun21-short2-kurbanibadeti
   status: pending
   publish_at: '2026-10-29T19:00:00+03:00'
