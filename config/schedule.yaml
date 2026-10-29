@@ -1171,7 +1171,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-29-gun21-normal1-zekatinhikmeti
-  status: pending
+  status: failed
   publish_at: '2026-10-29T09:00:00+03:00'
   format: long
   type: tema
@@ -1182,6 +1182,8 @@ videos:
   title_hint: 'Zekatın Hikmeti: Malı ve Kalbi Arındıran İbadet'
   thumb_title: Zekatın Hikmeti
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-29-gun21-short1-cumanamazi
   status: pending
   publish_at: '2026-10-29T12:00:00+03:00'
