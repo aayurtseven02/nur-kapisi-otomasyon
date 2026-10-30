@@ -1255,7 +1255,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-30-gun22-normal2-hiramagarasi
-  status: pending
+  status: failed
   publish_at: '2026-10-30T15:00:00+03:00'
   format: long
   type: tema
@@ -1266,6 +1266,8 @@ videos:
   title_hint: 'Hira Mağarası''nda İlk Vahiy: "Oku!"'
   thumb_title: Hira Mağarası'nda İlk Vahiy
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-30-gun22-short2-hicretyolculugu
   status: pending
   publish_at: '2026-10-30T19:00:00+03:00'
