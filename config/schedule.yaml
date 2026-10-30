@@ -1269,7 +1269,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-30-gun22-short2-hicretyolculugu
-  status: pending
+  status: failed
   publish_at: '2026-10-30T19:00:00+03:00'
   format: short
   type: tema
@@ -1280,6 +1280,8 @@ videos:
   title_hint: 'Hicret Yolculuğu: Sabrın ve Tevekkülün Hikayesi'
   thumb_title: Hicret Yolculuğu
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-31-gun23-normal1-aisyeninilmi
   status: pending
   publish_at: '2026-10-31T09:00:00+03:00'
