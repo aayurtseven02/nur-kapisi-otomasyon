@@ -1311,7 +1311,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-31-gun23-normal2-halidbinvelid
-  status: pending
+  status: failed
   publish_at: '2026-10-31T15:00:00+03:00'
   format: long
   type: tema
@@ -1322,6 +1322,8 @@ videos:
   title_hint: 'Halid bin Velid: Allah''ın Kılıcı Unvanının Hikayesi'
   thumb_title: 'Halid bin Velid: Seyfullah'
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-31-gun23-short2-fatimaninornekligi
   status: pending
   publish_at: '2026-10-31T19:00:00+03:00'
