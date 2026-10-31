@@ -1283,7 +1283,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-31-gun23-normal1-aisyeninilmi
-  status: pending
+  status: failed
   publish_at: '2026-10-31T09:00:00+03:00'
   format: long
   type: tema
@@ -1294,6 +1294,8 @@ videos:
   title_hint: 'Hz. Aişe''nin İlmi: Tiridin Yemeklere Üstünlüğü Gibi'
   thumb_title: Hz. Aişe'nin İlmi
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-31-gun23-short1-ebuhureyre
   status: pending
   publish_at: '2026-10-31T12:00:00+03:00'
