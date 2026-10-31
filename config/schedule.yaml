@@ -1297,7 +1297,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-10-31-gun23-short1-ebuhureyre
-  status: pending
+  status: failed
   publish_at: '2026-10-31T12:00:00+03:00'
   format: short
   type: tema
@@ -1308,6 +1308,8 @@ videos:
   title_hint: Ebu Hureyre'nin Hadis İlmindeki Eşsiz Yeri
   thumb_title: Ebu Hureyre'nin Hadis İlmi
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-10-31-gun23-normal2-halidbinvelid
   status: pending
   publish_at: '2026-10-31T15:00:00+03:00'
