@@ -1381,7 +1381,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-01-gun24-short2-sukur
-  status: pending
+  status: failed
   publish_at: '2026-11-01T19:00:00+03:00'
   format: short
   type: tema
@@ -1392,6 +1392,8 @@ videos:
   title_hint: Allah'ın Nimetlerini Saymaya Kalksanız Bitiremezsiniz
   thumb_title: Şükrün Önemi
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-02-gun25-normal1-misafirperverlik
   status: pending
   publish_at: '2026-11-02T09:00:00+03:00'
