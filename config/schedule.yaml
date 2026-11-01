@@ -1367,7 +1367,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-01-gun24-normal2-ihlasinonemi
-  status: pending
+  status: failed
   publish_at: '2026-11-01T15:00:00+03:00'
   format: long
   type: tema
@@ -1378,6 +1378,8 @@ videos:
   title_hint: 'İbadetin Kabulünün Tek Şartı: İhlas'
   thumb_title: İhlasın Önemi
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-01-gun24-short2-sukur
   status: pending
   publish_at: '2026-11-01T19:00:00+03:00'
