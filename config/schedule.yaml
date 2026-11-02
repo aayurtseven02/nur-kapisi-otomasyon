@@ -1409,7 +1409,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-02-gun25-short1-duakabulusartlari
-  status: pending
+  status: failed
   publish_at: '2026-11-02T12:00:00+03:00'
   format: short
   type: tema
@@ -1420,6 +1420,8 @@ videos:
   title_hint: Kabul Olunduğundan Şüphe Olmayan Üç Dua
   thumb_title: Kabul Olan Üç Dua
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-02-gun25-normal2-buyuklereyaygi
   status: pending
   publish_at: '2026-11-02T15:00:00+03:00'
