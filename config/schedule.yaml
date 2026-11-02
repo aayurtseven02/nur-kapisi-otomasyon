@@ -1423,7 +1423,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-02-gun25-normal2-buyuklereyaygi
-  status: pending
+  status: failed
   publish_at: '2026-11-02T15:00:00+03:00'
   format: long
   type: tema
@@ -1434,6 +1434,8 @@ videos:
   title_hint: '"Büyüklerimize Saygı Göstermeyen Bizden Değildir"'
   thumb_title: Büyüklere Saygının Önemi
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-02-gun25-short2-kuslugusurdurmemek
   status: pending
   publish_at: '2026-11-02T19:00:00+03:00'
