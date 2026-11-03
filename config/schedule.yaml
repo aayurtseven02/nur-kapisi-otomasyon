@@ -1465,7 +1465,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-03-gun26-short1-filsuresi
-  status: pending
+  status: failed
   publish_at: '2026-11-03T12:00:00+03:00'
   format: short
   type: tema
@@ -1476,6 +1476,8 @@ videos:
   title_hint: 'Fil Suresi: Kabe''yi Yıkmaya Gelen Orduya Ne Oldu?'
   thumb_title: Fil Suresi'nin Kıssası
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-03-gun26-normal2-fetihsuresi
   status: pending
   publish_at: '2026-11-03T15:00:00+03:00'
