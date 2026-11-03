@@ -1451,7 +1451,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-03-gun26-normal1-yusufkardesplanlari
-  status: pending
+  status: failed
   publish_at: '2026-11-03T09:00:00+03:00'
   format: long
   type: tema
@@ -1462,6 +1462,8 @@ videos:
   title_hint: 'Yusuf Kıssası: Kardeşlerin Kurduğu Plan'
   thumb_title: 'Yusuf Kıssası: Kardeşlerin Planı'
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-03-gun26-short1-filsuresi
   status: pending
   publish_at: '2026-11-03T12:00:00+03:00'
