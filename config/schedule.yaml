@@ -1493,7 +1493,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-03-gun26-short2-kureyssuresi
-  status: pending
+  status: failed
   publish_at: '2026-11-03T19:00:00+03:00'
   format: short
   type: tema
@@ -1504,6 +1504,8 @@ videos:
   title_hint: 'Kureyş Suresi: Ticaret Güvenliğinin Arkasındaki Nimet'
   thumb_title: Kureyş Suresi'nin Mesajı
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-04-gun27-normal1-evlilikduasi
   status: pending
   publish_at: '2026-11-04T09:00:00+03:00'
