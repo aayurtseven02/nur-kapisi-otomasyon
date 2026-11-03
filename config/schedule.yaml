@@ -1479,7 +1479,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-03-gun26-normal2-fetihsuresi
-  status: pending
+  status: failed
   publish_at: '2026-11-03T15:00:00+03:00'
   format: long
   type: tema
@@ -1490,6 +1490,8 @@ videos:
   title_hint: 'Fetih Suresi: Görünmeyen Bir Zaferin Hikayesi'
   thumb_title: Fetih Suresi'nin Mesajı
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-03-gun26-short2-kureyssuresi
   status: pending
   publish_at: '2026-11-03T19:00:00+03:00'
