@@ -1507,7 +1507,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-04-gun27-normal1-evlilikduasi
-  status: pending
+  status: failed
   publish_at: '2026-11-04T09:00:00+03:00'
   format: long
   type: tema
@@ -1518,6 +1518,8 @@ videos:
   title_hint: Peygamberimizin Evlenenlere Öğrettiği Dua
   thumb_title: Evlilik Duası
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-04-gun27-short1-rabbenaheblena
   status: pending
   publish_at: '2026-11-04T12:00:00+03:00'
