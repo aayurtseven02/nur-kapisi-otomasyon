@@ -1577,7 +1577,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-05-gun28-short1-namazvakitlerininhikmeti
-  status: pending
+  status: failed
   publish_at: '2026-11-05T12:00:00+03:00'
   format: short
   type: tema
@@ -1588,6 +1588,8 @@ videos:
   title_hint: 'Namaz Vakitlerinin Hikmeti: Sabah Namazına Melekler Şahit'
   thumb_title: Namaz Vakitlerinin Hikmeti
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-05-gun28-normal2-zekatsadakafarki
   status: pending
   publish_at: '2026-11-05T15:00:00+03:00'
