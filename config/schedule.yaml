@@ -1605,7 +1605,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-05-gun28-short2-abdestibozanseyler
-  status: pending
+  status: failed
   publish_at: '2026-11-05T19:00:00+03:00'
   format: short
   type: tema
@@ -1616,6 +1616,8 @@ videos:
   title_hint: 'Abdest Konusunda Vesveseye Düşmeyin: Peygamberimizin Tavsiyesi'
   thumb_title: Abdesti Bozan Şeyler
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-06-gun29-normal1-muhammedindogumu
   status: pending
   publish_at: '2026-11-06T09:00:00+03:00'
