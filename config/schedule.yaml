@@ -1563,7 +1563,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-05-gun28-normal1-itikaf
-  status: pending
+  status: failed
   publish_at: '2026-11-05T09:00:00+03:00'
   format: long
   type: tema
@@ -1574,6 +1574,8 @@ videos:
   title_hint: 'İtikaf: Mescidde Allah''a Kapanmanın İbadeti'
   thumb_title: İtikaf İbadeti
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-05-gun28-short1-namazvakitlerininhikmeti
   status: pending
   publish_at: '2026-11-05T12:00:00+03:00'
