@@ -1661,7 +1661,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-06-gun29-short2-isaninogumu
-  status: pending
+  status: failed
   publish_at: '2026-11-06T19:00:00+03:00'
   format: short
   type: tema
@@ -1672,6 +1672,8 @@ videos:
   title_hint: 'Hz. İsa''nın Doğumu: Hurma Ağacının Dibindeki Teselli'
   thumb_title: Hz. İsa'nın Doğumu
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-07-gun30-normal1-ebueyyupevsahipligi
   status: pending
   publish_at: '2026-11-07T09:00:00+03:00'
