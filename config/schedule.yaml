@@ -1703,7 +1703,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-07-gun30-normal2-otugunozeti
-  status: pending
+  status: failed
   publish_at: '2026-11-07T15:00:00+03:00'
   format: long
   type: tema
@@ -1714,6 +1714,8 @@ videos:
   title_hint: '30 Günün Özeti: Bu Yolculuktan Ne Öğrendik?'
   thumb_title: 30 Günün Kapanışı
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-07-gun30-short2-hayirlihayatduasi
   status: pending
   publish_at: '2026-11-07T19:00:00+03:00'
