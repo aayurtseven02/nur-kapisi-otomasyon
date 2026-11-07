@@ -1689,7 +1689,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-07-gun30-short1-meclisduasi
-  status: pending
+  status: failed
   publish_at: '2026-11-07T12:00:00+03:00'
   format: short
   type: tema
@@ -1700,6 +1700,8 @@ videos:
   title_hint: Her Meclisin Sonunda Okunan Kefaret Duası
   thumb_title: Meclis Duası
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-07-gun30-normal2-otugunozeti
   status: pending
   publish_at: '2026-11-07T15:00:00+03:00'
