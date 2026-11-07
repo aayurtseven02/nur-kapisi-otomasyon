@@ -1675,7 +1675,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-07-gun30-normal1-ebueyyupevsahipligi
-  status: pending
+  status: failed
   publish_at: '2026-11-07T09:00:00+03:00'
   format: long
   type: tema
@@ -1686,6 +1686,8 @@ videos:
   title_hint: 'Ebu Eyyüb el-Ensari: Peygamberimizin İlk Ev Sahibi'
   thumb_title: Ebu Eyyüb el-Ensari'nin Ev Sahipliği
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
 - id: 2026-11-07-gun30-short1-meclisduasi
   status: pending
   publish_at: '2026-11-07T12:00:00+03:00'
