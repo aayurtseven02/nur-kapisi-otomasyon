@@ -1717,7 +1717,7 @@ videos:
   error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
     ''Bad Request''})'
 - id: 2026-11-07-gun30-short2-hayirlihayatduasi
-  status: pending
+  status: failed
   publish_at: '2026-11-07T19:00:00+03:00'
   format: short
   type: tema
@@ -1728,3 +1728,5 @@ videos:
   title_hint: Hayırlı Bir Hayat ve Güzel Bir Son İçin Dua
   thumb_title: Hayırlı Hayat Duası
   background_mode: none
+  error: '(''invalid_grant: Bad Request'', {''error'': ''invalid_grant'', ''error_description'':
+    ''Bad Request''})'
